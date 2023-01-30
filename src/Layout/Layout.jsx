@@ -1,3 +1,4 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import { Fragment, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
@@ -21,16 +22,14 @@ const sidebarNavigation = [
   { name: "Albums", href: "#", icon: RectangleStackIcon, current: false },
   { name: "Settings", href: "#", icon: CogIcon, current: false },
 ];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Sign out", href: "#" },
-];
+const userNavigation = [{ name: "Your Profile", href: "#" }];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Layout() {
+  const { logout } = useAuth0();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -247,6 +246,26 @@ export default function Layout() {
                             )}
                           </Menu.Item>
                         ))}
+                        {/* Sign Out Button */}
+                        <Menu.Item key={"sign-out-button"}>
+                          {({ active }) => (
+                            <a
+                              onClick={() => {
+                                logout({
+                                  logoutParams: {
+                                    returnTo: window.location.origin,
+                                  },
+                                });
+                              }}
+                              className={classNames(
+                                active ? "bg-gray-100" : "",
+                                "block px-4 py-2 text-sm text-gray-700"
+                              )}
+                            >
+                              Sign Out
+                            </a>
+                          )}
+                        </Menu.Item>
                       </Menu.Items>
                     </Transition>
                   </Menu>
