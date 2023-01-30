@@ -14,7 +14,6 @@ import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const VITE_HOMEPAGE_URL = import.meta.env.VITE_HOMEPAGE_URL;
-console.log(VITE_HOMEPAGE_URL); // DEV
 
 const navigation = [
   {
