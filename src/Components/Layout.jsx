@@ -23,12 +23,12 @@ const navigation = [
   { name: "Home", to: "/", icon: HomeIcon, current: true },
   { name: "Journal", to: "/journal", icon: ChartBarIcon, current: false },
   { name: "Market Data", to: "/data", icon: FolderIcon, current: false },
-  { name: "Settings", to: "/settings", icon: CalendarIcon, current: false },
 ];
 
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
+  { name: "Profile", to: "/profile" },
+  { name: "Settings", to: "/settings" },
+  //-- Sign out inlucded with onClick instead of as NavLink --//
 ];
 
 //-- Allows programatic naming of classes?? --//
@@ -43,7 +43,7 @@ export default function Layout() {
 
   //-- If not authenticated, return LandingPage --//
   if (isLoading) {
-    return <div>loading...</div>; // TODO - improve loading page
+    return <div>loading...</div>; // TODO - improve loading page. (a) skeleton similar to Layout?, (b) simple spinner?
   } else if (!isAuthenticated) {
     return <LandingPage />;
   }
@@ -256,15 +256,15 @@ export default function Layout() {
                       {userNavigation.map((item) => (
                         <Menu.Item key={item.name}>
                           {({ active }) => (
-                            <a
-                              href={item.href}
+                            <NavLink
+                              to={item.to}
                               className={classNames(
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700"
                               )}
                             >
                               {item.name}
-                            </a>
+                            </NavLink>
                           )}
                         </Menu.Item>
                       ))}
@@ -297,8 +297,6 @@ export default function Layout() {
 
           <main className="flex-1">
             <Outlet />
-            <NavLink to={"/data"}>data</NavLink>
-            <NavLink to={"/journal"}>journal</NavLink>
           </main>
         </div>
       </div>

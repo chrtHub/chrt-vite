@@ -17,6 +17,7 @@ import Home from "./Components/Home/Home";
 import Journal from "./Components/JournalService/Journal";
 import Data from "./Components/DataService/Data";
 import Settings from "./Components/Settings/Settings";
+import Profile from "./Components/Profile/Profile";
 
 import "./index.css";
 
@@ -27,6 +28,7 @@ const router = createBrowserRouter(
       <Route path="journal" element={<Journal />} />
       <Route path="data" element={<Data />} />
       <Route path="settings" element={<Settings />} />
+      <Route path="profile" element={<Profile />} />
     </Route>
   )
 );
