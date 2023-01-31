@@ -14,6 +14,10 @@ import {
 } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
+import { Outlet } from "react-router-dom";
+
+import LandingPage from "../LandingPage/LandingPage";
+
 const sidebarNavigation = [
   { name: "Home", href: "#", icon: HomeIcon, current: false },
   { name: "All Files", href: "#", icon: Squares2X2Icon, current: false },
@@ -29,11 +33,23 @@ function classNames(...classes) {
 }
 
 export default function Layout() {
-  const { logout } = useAuth0();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const { logout, isLoading, isAuthenticated } = useAuth0();
+
+  //-- If not authenticated, return LandingPage --//
+  if (isLoading) {
+    return <div>loading...</div>; // TODO - improve loading page
+  } else if (!isAuthenticated) {
+    return <LandingPage />;
+  }
+
+  // TODO
+  // // Use Dark Sidebar, Light Header template from Tailwind UI
+  // // use Outlet
   return (
     <>
+      <Outlet />
       <div className="flex h-full">
         {/* Narrow sidebar */}
         <div className="hidden w-28 overflow-y-auto bg-indigo-700 md:block">
