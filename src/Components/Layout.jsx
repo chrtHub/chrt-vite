@@ -14,13 +14,13 @@ import {
 } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
-import { Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 
 import LandingPage from "../LandingPage/LandingPage";
 
 const sidebarNavigation = [
-  { name: "Home", href: "#", icon: HomeIcon, current: false },
-  { name: "All Files", href: "#", icon: Squares2X2Icon, current: false },
+  { name: "Journal", href: "/journal", icon: HomeIcon, current: false },
+  { name: "Data", href: "/data", icon: Squares2X2Icon, current: false },
   { name: "Photos", href: "#", icon: PhotoIcon, current: true },
   { name: "Shared", href: "#", icon: UserGroupIcon, current: false },
   { name: "Albums", href: "#", icon: RectangleStackIcon, current: false },
@@ -50,6 +50,8 @@ export default function Layout() {
   return (
     <>
       <Outlet />
+      <NavLink to={"/data"}>data</NavLink>
+      <NavLink to={"/journal"}>journal</NavLink>
       <div className="flex h-full">
         {/* Narrow sidebar */}
         <div className="hidden w-28 overflow-y-auto bg-indigo-700 md:block">
