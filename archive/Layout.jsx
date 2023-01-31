@@ -1,3 +1,4 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import { Fragment, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
@@ -13,18 +14,19 @@ import {
 } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
+import { NavLink, Outlet } from "react-router-dom";
+
+import LandingPage from "../src/LandingPage/LandingPage";
+
 const sidebarNavigation = [
-  { name: "Home", href: "#", icon: HomeIcon, current: false },
-  { name: "All Files", href: "#", icon: Squares2X2Icon, current: false },
+  { name: "Journal", href: "/journal", icon: HomeIcon, current: false },
+  { name: "Data", href: "/data", icon: Squares2X2Icon, current: false },
   { name: "Photos", href: "#", icon: PhotoIcon, current: true },
   { name: "Shared", href: "#", icon: UserGroupIcon, current: false },
   { name: "Albums", href: "#", icon: RectangleStackIcon, current: false },
   { name: "Settings", href: "#", icon: CogIcon, current: false },
 ];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Sign out", href: "#" },
-];
+const userNavigation = [{ name: "Your Profile", href: "#" }];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -33,8 +35,20 @@ function classNames(...classes) {
 export default function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const { logout, isLoading, isAuthenticated } = useAuth0();
+
+  //-- If not authenticated, return LandingPage --//
+  if (isLoading) {
+    return <div>loading...</div>; // TODO - improve loading page
+  } else if (!isAuthenticated) {
+    return <LandingPage />;
+  }
+
   return (
     <>
+      <Outlet />
+      <NavLink to={"/data"}>data</NavLink>
+      <NavLink to={"/journal"}>journal</NavLink>
       <div className="flex h-full">
         {/* Narrow sidebar */}
         <div className="hidden w-28 overflow-y-auto bg-indigo-700 md:block">
@@ -247,6 +261,26 @@ export default function Layout() {
                             )}
                           </Menu.Item>
                         ))}
+                        {/* Sign Out Button */}
+                        <Menu.Item key={"sign-out-button"}>
+                          {({ active }) => (
+                            <a
+                              onClick={() => {
+                                logout({
+                                  logoutParams: {
+                                    returnTo: window.location.origin,
+                                  },
+                                });
+                              }}
+                              className={classNames(
+                                active ? "bg-gray-100" : "",
+                                "block px-4 py-2 text-sm text-gray-700"
+                              )}
+                            >
+                              Sign Out
+                            </a>
+                          )}
+                        </Menu.Item>
                       </Menu.Items>
                     </Transition>
                   </Menu>

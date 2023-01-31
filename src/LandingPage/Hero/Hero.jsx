@@ -8,13 +8,13 @@ import BackgroundGradientTop from "./BackgroundGradientTop";
 import BackgroundGradientBottom from "./BackgroundGradientBottom";
 
 //-- npm Package Functions --//
+import { useAuth0 } from "@auth0/auth0-react";
 import { Dialog } from "@headlessui/react";
 
 //-- npm Package Components --//
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const VITE_HOMEPAGE_URL = import.meta.env.VITE_HOMEPAGE_URL;
-console.log(VITE_HOMEPAGE_URL); // DEV
 
 const navigation = [
   {
@@ -29,6 +29,8 @@ const navigation = [
 ];
 
 export default function Hero() {
+  const { loginWithRedirect } = useAuth0();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -77,12 +79,14 @@ export default function Hero() {
 
           {/* SIGN IN BUTTON */}
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a
-              href={`${VITE_HOMEPAGE_URL}/signin`}
+            <button
               className="text-sm font-semibold leading-6 text-gray-900"
+              onClick={() => {
+                loginWithRedirect();
+              }}
             >
-              Sign In<span aria-hidden="true">&rarr;</span>
-            </a>
+              Sign In
+            </button>
           </div>
         </nav>
 
@@ -129,8 +133,10 @@ export default function Hero() {
                 {/* SIGN IN BUTTON */}
                 <div className="py-6">
                   <a
-                    href={`${VITE_HOMEPAGE_URL}/signin`}
-                    className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
+                    className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10 cursor-pointer"
+                    onClick={() => {
+                      loginWithRedirect();
+                    }}
                   >
                     Sign In
                   </a>
