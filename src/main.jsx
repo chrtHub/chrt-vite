@@ -18,6 +18,7 @@ import Journal from "./Components/JournalService/Journal";
 import Data from "./Components/DataService/Data";
 import Settings from "./Components/Settings/Settings";
 import Profile from "./Components/Profile/Profile";
+import Callback from "./Loading/Callback";
 
 import "./index.css";
 
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
       <Route path="data" element={<Data />} />
       <Route path="settings" element={<Settings />} />
       <Route path="profile" element={<Profile />} />
+      <Route path="callback" element={<Callback />} />
     </Route>
   )
 );
@@ -39,7 +41,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       domain="dev-u4trvdw25pkfbgaq.us.auth0.com"
       clientId="nJH6eXO0snTYdLQ2W9Zm6JndVwD4ActU" //-- Application: chrt-vite --//
       authorizationParams={{
-        redirect_uri: window.location.origin,
+        redirect_uri: `${window.location.origin}/callback`,
         // audience: "https://dev-u4trvdw25pkfbgaq.us.auth0.com/api/v2/", //-- Auth0 Management API --//
         // // "TODO"//-- chrt API --//
         // scope: "read:current_user update:current_user_metadata",
