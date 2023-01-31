@@ -12,9 +12,11 @@ import {
 import { Auth0Provider } from "@auth0/auth0-react";
 
 import Layout from "./Components/Layout";
+
 import Home from "./Components/Home/Home";
 import Journal from "./Components/JournalService/Journal";
 import Data from "./Components/DataService/Data";
+import Settings from "./Components/Settings/Settings";
 
 import "./index.css";
 
@@ -24,6 +26,7 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="journal" element={<Journal />} />
       <Route path="data" element={<Data />} />
+      <Route path="settings" element={<Settings />} />
     </Route>
   )
 );
