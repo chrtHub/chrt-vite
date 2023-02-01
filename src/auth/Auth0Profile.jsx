@@ -1,6 +1,20 @@
+//-- react, react-router-dom, Auth0 --//
 import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
+//-- JSX Components --//
+
+//-- NPM Components --//
+
+//-- Icons --//
+
+//-- NPM Functions --//
+
+//-- Utility Functions --//
+
+//-- Data Objects --//
+
+//-- ***** ***** ***** Exported Component ***** ***** ***** --//
 const Profile = () => {
   const [userMetadata, setUserMetadata] = useState(null);
 
