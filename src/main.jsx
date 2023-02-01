@@ -30,9 +30,9 @@ const router = createBrowserRouter(
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
         <Route path="/journal" element={<AuthGuard component={Journal} />} />
-        <Route path="/data" element={<Data />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/data" element={<AuthGuard component={Data} />} />
+        <Route path="/settings" element={<AuthGuard component={Settings} />} />
+        <Route path="/profile" element={<AuthGuard component={Profile} />} />
         <Route path="/callback" element={<Callback />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
