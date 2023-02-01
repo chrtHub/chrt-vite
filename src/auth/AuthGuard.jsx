@@ -20,7 +20,7 @@ export default function AuthGuard({ component }) {
   const Component = withAuthenticationRequired(component, {
     onRedirecting: () => (
       <div className="flex justify-center">
-        <LockClosedIcon className="h-64 w-64 text-gray-500" />
+        <LockClosedIcon className="h-64 w-64 text-gray-400" />
       </div>
     ),
   });
