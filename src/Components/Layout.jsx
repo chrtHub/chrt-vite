@@ -3,12 +3,9 @@ import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   Bars3BottomLeftIcon,
   BellIcon,
-  CalendarIcon,
   ChartBarIcon,
   FolderIcon,
   HomeIcon,
-  InboxIcon,
-  UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
@@ -17,7 +14,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
 import LandingPage from "../LandingPage/LandingPage";
-import Loading from "../Loading/Loading";
+import LayoutSkeleton from "../Routing/LayoutSkeleton";
 
 // TODO - use current location path to determine 'current' (in a state value?)
 const navigation = [
@@ -40,13 +37,17 @@ function classNames(...classes) {
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const { logout, isLoading, isAuthenticated } = useAuth0();
+  const { isLoading, isAuthenticated, logout } = useAuth0();
 
-  //-- If not authenticating and not authenticated, return LandingPage --//
+  //-- While Auth0 SDK loads state of user, show skeleton (LandingPage should skip this paint - is working fine as of 2023-02-01 @ 1:18AM CT) --//
+  if (isLoading) {
+    return <LayoutSkeleton />;
+  }
+  //-- After loading, show LandingPage or Layout based on isAuthenticated --//
   if (!isLoading && !isAuthenticated) {
     return <LandingPage />;
-  } //-- If auth'd or loading, show layout. While isLoading, show <Loading />, then show <Outlet /> content. --//
-  else {
+  }
+  if (isAuthenticated) {
     return (
       <>
         <div>
@@ -295,7 +296,7 @@ export default function Layout() {
             </div>
             {/* While auth is loading, show <Loading />, then show <Outlet /> content */}
             <main className="flex-1">
-              {isLoading ? <Loading /> : <Outlet />}
+              <Outlet />
             </main>
           </div>
         </div>

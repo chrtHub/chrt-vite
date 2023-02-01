@@ -17,7 +17,9 @@ import Journal from "./Components/JournalService/Journal";
 import Data from "./Components/DataService/Data";
 import Settings from "./Components/Settings/Settings";
 import Profile from "./Components/Profile/Profile";
-import Callback from "./Loading/Callback";
+
+import Callback from "./Routing/Callback";
+import NotFoundPage from "./Routing/NotFoundPage";
 
 import "./index.css";
 
@@ -32,6 +34,7 @@ const router = createBrowserRouter(
         <Route path="profile" element={<Profile />} />
         <Route path="callback" element={<Callback />} />
       </Route>
+      <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
 );
