@@ -1,5 +1,5 @@
 //-- react, react-router-dom, Auth0 --//
-import Auth0Profile from "../auth/Auth0Profile"; // DEV
+import Auth0Profile from "../Auth/Auth0Profile"; // DEV
 
 //-- JSX Components --//
 import Hero from "./Hero/Hero";
