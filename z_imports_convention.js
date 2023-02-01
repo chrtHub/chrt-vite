@@ -13,10 +13,3 @@
 //-- Data Objects --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export const Callback = () => {
-  return (
-    <>
-      <div>this is the callback component</div>
-    </>
-  );
-};
