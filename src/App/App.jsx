@@ -28,7 +28,6 @@ export default function App() {
   if (isAuthenticated) {
     return <Layout />;
   }
-
   if (!isLoading && !isAuthenticated) {
     if (window.location.pathname === "/") {
       return <LandingPage />;
