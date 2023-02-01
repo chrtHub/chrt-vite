@@ -18,8 +18,8 @@ import Data from "./Components/DataService/Data";
 import Settings from "./Components/Settings/Settings";
 import Profile from "./Components/Profile/Profile";
 
-import Callback from "./Routing/Callback";
-import NotFoundPage from "./Routing/NotFoundPage";
+import Callback from "./UI/Callback";
+import NotFoundPage from "./UI/NotFoundPage";
 
 import "./index.css";
 

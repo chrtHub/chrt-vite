@@ -14,7 +14,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
 import LandingPage from "../LandingPage/LandingPage";
-import LayoutSkeleton from "../Routing/LayoutSkeleton";
+import LayoutSkeleton from "../UI/LayoutSkeleton";
 
 // TODO - use current location path to determine 'current' (in a state value?)
 const navigation = [
