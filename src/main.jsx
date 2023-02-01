@@ -11,7 +11,7 @@ import Auth0ProviderWithNavigate from "./auth/Auth0ProviderWithNavigate";
 
 //-- JSX Components --//
 import AuthGuard from "./auth/AuthGuard";
-import Layout from "./App/App";
+import App from "./App/App";
 import Home from "./App/Home/Home";
 import Journal from "./App/JournalService/Journal";
 import Data from "./App/DataService/Data";
@@ -27,7 +27,7 @@ import "./index.css";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Auth0ProviderWithNavigate />}>
-      <Route path="/" element={<Layout />}>
+      <Route path="/" element={<App />}>
         <Route index element={<Home />} />
         <Route path="/journal" element={<AuthGuard component={Journal} />} />
         <Route path="/data" element={<Data />} />

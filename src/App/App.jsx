@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Layout from "./Layout/Layout";
 import LandingPage from "../LandingPage/LandingPage";
 import LayoutSkeleton from "../UI/LayoutSkeleton";
+import LayoutSkeletonWithOutlet from "../UI/LayoutSkeletonWithOutlet";
 
 //-- NPM Components --//
 
@@ -27,16 +28,12 @@ export default function App() {
   if (isAuthenticated) {
     return <Layout />;
   }
+
   if (!isLoading && !isAuthenticated) {
-    //-- If user requested path other than "/", redirect to login --//
-    if (window.location.pathname !== "/") {
-      loginWithRedirect({
-        appState: {
-          returnTo: window.location.pathname,
-        },
-      });
-    } else {
+    if (window.location.pathname === "/") {
       return <LandingPage />;
+    } else {
+      return <LayoutSkeletonWithOutlet />;
     }
   }
 }

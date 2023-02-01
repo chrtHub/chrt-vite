@@ -5,6 +5,7 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 //-- JSX Components --//
 
 //-- NPM Components --//
+import { LockClosedIcon } from "@heroicons/react/24/outline";
 
 //-- Icons --//
 
@@ -17,7 +18,7 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function AuthGuard({ component }) {
   const Component = withAuthenticationRequired(component, {
-    onRedirecting: () => <div>redirecting...</div>,
+    onRedirecting: () => <LockClosedIcon className="h-64 w-64 text-gray-500" />,
   });
 
   return <Component />;
