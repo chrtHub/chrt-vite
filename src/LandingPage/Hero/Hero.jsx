@@ -31,6 +31,17 @@ const navigation = [
 export default function Hero() {
   const { loginWithRedirect } = useAuth0();
 
+  const handleSignUp = async () => {
+    await loginWithRedirect({
+      appState: {
+        returnTo: window.location.pathname,
+      },
+      authorizationParams: {
+        screen_hint: "signup",
+      },
+    });
+  };
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -166,14 +177,14 @@ export default function Hero() {
                   href="#"
                   className="rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                  Get Started
+                  Do a Demo
                 </a>
-                {/* <a
-                  href="#"
-                  className="text-base font-semibold leading-7 text-gray-900"
+                <button
+                  onClick={handleSignUp}
+                  className="rounded-md bg-gray-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
                 >
-                  Learn more <span aria-hidden="true">→</span>
-                </a> */}
+                  Sign Up
+                </button>
               </div>
             </div>
             {/* SCREENSHOT */}
