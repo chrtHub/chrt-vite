@@ -39,13 +39,14 @@ export default function Layout() {
 
   const { isLoading, isAuthenticated, logout } = useAuth0();
 
-  //-- While Auth0 SDK loads state of user, show skeleton (LandingPage should skip this paint - is working fine as of 2023-02-01 @ 1:18AM CT) --//
-  if (isLoading) {
-    return <LayoutSkeleton />;
-  }
-  //-- After loading, show LandingPage or Layout based on isAuthenticated --//
+  console.log(isLoading);
+
+  //-- After SPA loads, Auth0 SDK always initializes isLoading to 'true', but if no user cookie is found, isLoading can become 'false' before first paint, avoiding UI flicker --//
   if (!isLoading && !isAuthenticated) {
     return <LandingPage />;
+  }
+  if (isLoading) {
+    return <LayoutSkeleton />;
   }
   if (isAuthenticated) {
     return (
