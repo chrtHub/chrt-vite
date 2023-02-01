@@ -18,16 +18,25 @@ import LayoutSkeleton from "../UI/LayoutSkeleton";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function App() {
-  const { isLoading, isAuthenticated } = useAuth0();
+  const { isLoading, isAuthenticated, loginWithRedirect } = useAuth0();
 
   //-- After SPA loads, Auth0 SDK always initializes isLoading to 'true', but if no user cookie is found, isLoading can become 'false' before first paint, avoiding UI flicker --//
-  if (!isLoading && !isAuthenticated) {
-    return <LandingPage />;
-  }
   if (isLoading) {
     return <LayoutSkeleton />;
   }
   if (isAuthenticated) {
     return <Layout />;
+  }
+  if (!isLoading && !isAuthenticated) {
+    //-- If user requested path other than "/", redirect to login --//
+    if (window.location.pathname !== "/") {
+      loginWithRedirect({
+        appState: {
+          returnTo: window.location.pathname,
+        },
+      });
+    } else {
+      return <LandingPage />;
+    }
   }
 }

@@ -10,6 +10,7 @@ import {
 import Auth0ProviderWithNavigate from "./auth/Auth0ProviderWithNavigate";
 
 //-- JSX Components --//
+import AuthGuard from "./auth/AuthGuard";
 import Layout from "./App/App";
 import Home from "./App/Home/Home";
 import Journal from "./App/JournalService/Journal";
@@ -28,11 +29,11 @@ const router = createBrowserRouter(
     <Route element={<Auth0ProviderWithNavigate />}>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="journal" element={<Journal />} />
-        <Route path="data" element={<Data />} />
-        <Route path="settings" element={<Settings />} />
-        <Route path="profile" element={<Profile />} />
-        <Route path="callback" element={<Callback />} />
+        <Route path="/journal" element={<AuthGuard component={Journal} />} />
+        <Route path="/data" element={<Data />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/callback" element={<Callback />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Route>
