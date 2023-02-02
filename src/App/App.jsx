@@ -19,7 +19,7 @@ import LayoutSkeletonWithOutlet from "../UI/LayoutSkeletonWithOutlet";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function App() {
-  const { isLoading, isAuthenticated, loginWithRedirect } = useAuth0();
+  const { isLoading, isAuthenticated } = useAuth0();
 
   //-- After SPA loads, Auth0 SDK always initializes isLoading to 'true', but if no user cookie is found, isLoading can become 'false' before first paint, avoiding UI flicker --//
   if (isLoading) {

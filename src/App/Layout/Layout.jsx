@@ -1,5 +1,5 @@
 //-- react, react-router-dom, Auth0 --//
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -28,11 +28,10 @@ function classNames(...classes) {
 
 //-- Data Objects --//
 const navigation = [
-  { name: "Home", to: "/", icon: HomeIcon, current: true },
-  { name: "Journal", to: "/journal", icon: ChartBarIcon, current: false },
-  { name: "Market Data", to: "/data", icon: FolderIcon, current: false },
+  { name: "Home", to: "/", icon: HomeIcon },
+  { name: "Journal", to: "/journal", icon: ChartBarIcon },
+  { name: "Market Data", to: "/data", icon: FolderIcon },
 ];
-// TODO - use current location path to determine 'current' (in a state value?)
 
 const userNavigation = [
   { name: "Profile", to: "/profile" },
@@ -43,6 +42,10 @@ const userNavigation = [
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [currentNavItem, setCurrentNavItem] = useState(
+    window.location.pathname
+  );
+
   const { logout } = useAuth0();
 
   return (
@@ -114,8 +117,11 @@ export default function Layout() {
                         <NavLink
                           key={item.name}
                           to={item.to}
+                          onClick={() => {
+                            setCurrentNavItem(item.to);
+                          }}
                           className={classNames(
-                            item.current
+                            item.to === currentNavItem
                               ? "bg-gray-900 text-white"
                               : "text-gray-300 hover:bg-gray-700 hover:text-white",
                             "group flex items-center px-2 py-2 text-base font-medium rounded-md"
@@ -123,7 +129,7 @@ export default function Layout() {
                         >
                           <item.icon
                             className={classNames(
-                              item.current
+                              item.to === currentNavItem
                                 ? "text-gray-300"
                                 : "text-gray-400 group-hover:text-gray-300",
                               "mr-4 flex-shrink-0 h-6 w-6"
@@ -162,8 +168,11 @@ export default function Layout() {
                   <NavLink
                     key={item.name}
                     to={item.to}
+                    onClick={() => {
+                      setCurrentNavItem(item.to);
+                    }}
                     className={classNames(
-                      item.current
+                      item.to === currentNavItem
                         ? "bg-gray-900 text-white"
                         : "text-gray-300 hover:bg-gray-700 hover:text-white",
                       "group flex items-center px-2 py-2 text-sm font-medium rounded-md"
@@ -171,7 +180,7 @@ export default function Layout() {
                   >
                     <item.icon
                       className={classNames(
-                        item.current
+                        item.to === currentNavItem
                           ? "text-gray-300"
                           : "text-gray-400 group-hover:text-gray-300",
                         "mr-3 flex-shrink-0 h-6 w-6"
@@ -255,6 +264,7 @@ export default function Layout() {
                           {({ active }) => (
                             <NavLink
                               to={item.to}
+                              onClick={() => setCurrentNavItem(item.to)}
                               className={classNames(
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700"
