@@ -29,8 +29,10 @@ export default function Auth0ProviderWithNavigate() {
       clientId="nJH6eXO0snTYdLQ2W9Zm6JndVwD4ActU" //-- Application: chrt-vite --//
       authorizationParams={{
         redirect_uri: `${window.location.origin}/callback`,
+        audience: "https://chrt.com", //-- chrt API, also includes '/userinfo' by default  --//
         // audience: "https://dev-u4trvdw25pkfbgaq.us.auth0.com/api/v2/", //-- Auth0 Management API --//
-        // // "TODO"//-- chrt API --//
+
+        //-- If no scope, default are the OpenID Connect scopes: openid profile email --//
         // scope: "read:current_user update:current_user_metadata",
       }}
       onRedirectCallback={onRedirectCallback}
