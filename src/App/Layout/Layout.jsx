@@ -9,16 +9,22 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 
 //-- Icons --//
-import { MagnifyingGlassIcon, UserCircleIcon } from "@heroicons/react/20/solid";
+import {
+  MagnifyingGlassIcon,
+  UserCircleIcon,
+  MoonIcon,
+} from "@heroicons/react/20/solid";
 import {
   Bars3BottomLeftIcon,
   BellIcon,
   ChartBarIcon,
   CalendarDaysIcon,
+  ComputerDesktopIcon,
   PresentationChartLineIcon,
   PresentationChartBarIcon,
   FolderIcon,
   HomeIcon,
+  SunIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 
@@ -54,7 +60,7 @@ export default function Layout() {
 
   return (
     <>
-      <div>
+      <div className="h-full bg-zinc-100 dark:bg-zinc-700">
         {/* Mobile Sidebar */}
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
@@ -163,9 +169,9 @@ export default function Layout() {
                 chrt
               </p>
             </div>
+            {/* Nav items below */}
             <div className="flex flex-1 flex-col overflow-y-auto">
               <nav className="flex-1 space-y-1 px-2 py-4">
-                {/* New nav below */}
                 {navigation.map((item) => (
                   <NavLink
                     key={item.name}
@@ -192,12 +198,11 @@ export default function Layout() {
                     {item.name}
                   </NavLink>
                 ))}
-                {/* New nav above */}
               </nav>
             </div>
           </div>
         </div>
-        <div className="flex flex-col md:pl-64">
+        <div className="flex flex-col  md:pl-64">
           {/* Hamburger button */}
           <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow dark:bg-zinc-800">
             <button
@@ -263,20 +268,55 @@ export default function Layout() {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-900 dark:ring-zinc-800">
+                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-900 dark:ring-zinc-500">
                       {/* Light/Dark Mode Button - uses onClick isntead of href */}
                       <Menu.Item key={"light-dark-mode-button"}>
                         {({ active }) => (
                           <a
-                            onClick={() => {
-                              console.log("TODO - toggle light/dark mode");
-                            }}
                             className={classNames(
                               active ? "bg-zinc-100 dark:bg-zinc-800" : "",
                               "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
                             )}
                           >
-                            Switch to TODO mode
+                            <span className="isolate inline-flex rounded-md shadow-sm">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  localStorage.setItem("theme", "light")
+                                }
+                                className="relative inline-flex items-center rounded-l-md border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                              >
+                                <span className="sr-only">Light Mode</span>
+                                <SunIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => localStorage.removeItem("theme")}
+                                className="relative -ml-px inline-flex items-center border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                              >
+                                <span className="sr-only">Match OS Mode</span>
+                                <ComputerDesktopIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  localStorage.setItem("theme", "dark")
+                                }
+                                className="relative -ml-px inline-flex items-center rounded-r-md border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                              >
+                                <span className="sr-only">Dark Mode</span>
+                                <MoonIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </button>
+                            </span>
                           </a>
                         )}
                       </Menu.Item>
@@ -326,7 +366,8 @@ export default function Layout() {
             </div>
           </div>
           {/* While auth is loading, show <Loading />, then show <Outlet /> content */}
-          <main className="flex-1">
+
+          <main className="flex-1 ">
             <Outlet />
           </main>
         </div>
