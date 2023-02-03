@@ -70,7 +70,7 @@ export default function Layout() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div className="fixed inset-0 bg-zinc-600 bg-opacity-75" />
+              <div className="fixed inset-0 bg-zinc-500 bg-opacity-75 dark:bg-zinc-600" />
             </Transition.Child>
 
             <div className="fixed inset-0 z-40 flex">
@@ -83,7 +83,7 @@ export default function Layout() {
                 leaveFrom="translate-x-0"
                 leaveTo="-translate-x-full"
               >
-                <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-zinc-800 pt-5 pb-4">
+                <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-zinc-200 pt-5 pb-4 dark:bg-zinc-800">
                   <Transition.Child
                     as={Fragment}
                     enter="ease-in-out duration-300"
@@ -96,19 +96,19 @@ export default function Layout() {
                     <div className="absolute top-0 right-0 -mr-12 pt-2">
                       <button
                         type="button"
-                        className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                        className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black dark:focus:ring-white"
                         onClick={() => setSidebarOpen(false)}
                       >
                         <span className="sr-only">Close sidebar</span>
                         <XMarkIcon
-                          className="h-6 w-6 text-white"
+                          className="h-6 w-6 text-black dark:text-white"
                           aria-hidden="true"
                         />
                       </button>
                     </div>
                   </Transition.Child>
                   <div className="flex flex-shrink-0 items-center px-4">
-                    <p className="h-8 w-auto font-sans text-3xl font-semibold text-white ">
+                    <p className="h-8 w-auto font-sans text-3xl font-semibold text-black dark:text-white ">
                       chrt
                     </p>
                   </div>
@@ -123,16 +123,16 @@ export default function Layout() {
                           }}
                           className={classNames(
                             item.to === currentNavItem
-                              ? "bg-zinc-900 text-white"
-                              : "text-zinc-300 hover:bg-zinc-700 hover:text-white",
+                              ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:text-white"
+                              : "hover:text-zinc:800 text-zinc-700 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white",
                             "group flex items-center rounded-md px-2 py-2 text-base font-medium"
                           )}
                         >
                           <item.icon
                             className={classNames(
                               item.to === currentNavItem
-                                ? "text-zinc-300"
-                                : "text-zinc-400 group-hover:text-zinc-300",
+                                ? "text-zinc-800 dark:text-zinc-300"
+                                : "text-zinc-900 group-hover:text-zinc-600  dark:text-zinc-400 dark:group-hover:text-zinc-300",
                               "mr-4 h-6 w-6 flex-shrink-0"
                             )}
                             aria-hidden="true"
@@ -154,11 +154,11 @@ export default function Layout() {
         {/* Static sidebar for desktop */}
         <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex min-h-0 flex-1 flex-col bg-zinc-800">
+          <div className="flex min-h-0 flex-1 flex-col bg-zinc-200 dark:bg-zinc-800">
             <div
-              className={`flex h-16 flex-shrink-0 items-center bg-zinc-900 px-4`}
+              className={`flex h-16 flex-shrink-0 items-center bg-zinc-300 px-4 dark:bg-zinc-900`}
             >
-              <p className="h-8 w-auto font-sans text-3xl font-semibold text-white ">
+              <p className="h-8 w-auto font-sans text-3xl font-semibold text-zinc-900 dark:text-white ">
                 chrt
               </p>
             </div>
@@ -174,16 +174,16 @@ export default function Layout() {
                     }}
                     className={classNames(
                       item.to === currentNavItem
-                        ? `bg-zinc-900 text-white`
-                        : `text-zinc-300 hover:bg-zinc-700 hover:text-white`,
+                        ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:text-white"
+                        : "text-zinc-700 hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white",
                       "group flex items-center rounded-md px-2 py-2 text-sm font-medium"
                     )}
                   >
                     <item.icon
                       className={classNames(
                         item.to === currentNavItem
-                          ? "text-zinc-300"
-                          : "text-zinc-400 group-hover:text-zinc-300",
+                          ? "text-zinc-900 dark:text-white"
+                          : "text-zinc-700 group-hover:text-zinc-800 dark:text-zinc-400 dark:group-hover:text-zinc-300",
                         "mr-3 h-6 w-6 flex-shrink-0"
                       )}
                       aria-hidden="true"
@@ -197,10 +197,11 @@ export default function Layout() {
           </div>
         </div>
         <div className="flex flex-col md:pl-64">
-          <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
+          {/* DEV - Where's this button */}
+          <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow dark:bg-zinc-800">
             <button
               type="button"
-              className="border-r border-zinc-200 px-4 text-zinc-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-500 md:hidden"
+              className="border-r border-zinc-800 px-4 text-zinc-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-500 dark:border-zinc-200 md:hidden"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
@@ -212,7 +213,7 @@ export default function Layout() {
                   <label htmlFor="search-field" className="sr-only">
                     Search
                   </label>
-                  <div className="relative w-full text-zinc-400 focus-within:text-zinc-600">
+                  <div className="relative w-full text-zinc-600 focus-within:text-zinc-800 dark:text-zinc-400  dark:focus-within:text-white">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
                       <MagnifyingGlassIcon
                         className="h-5 w-5"
@@ -221,7 +222,7 @@ export default function Layout() {
                     </div>
                     <input
                       id="search-field"
-                      className="block h-full w-full border-transparent py-2 pl-8 pr-3 text-zinc-900 placeholder-zinc-500 focus:border-transparent focus:placeholder-zinc-400 focus:outline-none focus:ring-0 sm:text-sm"
+                      className="block h-full w-full border-transparent py-2 pl-8 pr-3 text-zinc-900 placeholder-zinc-500 focus:border-transparent focus:placeholder-zinc-400 focus:outline-none focus:ring-0 dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-400 dark:focus:placeholder-zinc-500 sm:text-sm"
                       placeholder="Search"
                       type="search"
                       name="search"
@@ -242,12 +243,12 @@ export default function Layout() {
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2">
+                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 dark:bg-zinc-500 dark:focus:ring-zinc-700">
                       <span className="sr-only">Open user menu</span>
                       <UserCircleIcon className="h-8 w-8 rounded-full" />
                       {/* <img
                         className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        src=""
                         alt="profile image"
                       /> */}
                     </Menu.Button>
@@ -261,7 +262,7 @@ export default function Layout() {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-900">
                       {userNavigation.map((item) => (
                         <Menu.Item key={item.name}>
                           {({ active }) => (
@@ -269,8 +270,8 @@ export default function Layout() {
                               to={item.to}
                               onClick={() => setCurrentNavItem(item.to)}
                               className={classNames(
-                                active ? "bg-zinc-100" : "",
-                                "block px-4 py-2 text-sm text-zinc-700"
+                                active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                                "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
                               )}
                             >
                               {item.name}
@@ -290,8 +291,8 @@ export default function Layout() {
                               });
                             }}
                             className={classNames(
-                              active ? "bg-zinc-100" : "",
-                              "block px-4 py-2 text-sm text-zinc-700"
+                              active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                              "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
                             )}
                           >
                             Sign Out
