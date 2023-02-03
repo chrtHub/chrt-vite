@@ -17,9 +17,7 @@ import { EllipsisHorizontalCircleIcon } from "@heroicons/react/24/outline";
 let DIV_COUNT = [{ id: 1 }, { id: 2 }, { id: 3 }];
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function LayoutSkeleton(props) {
-  let { hideOutlet } = props;
-
+export default function LayoutSkeleton() {
   return (
     <div className="h-full bg-zinc-100 dark:bg-zinc-700">
       {/* Static sidebar for desktop */}
@@ -95,7 +93,9 @@ export default function LayoutSkeleton(props) {
             {/*  */}
           </div>
         </div>
-        <main className="flex-1">{!hideOutlet && <Outlet />}</main>
+        <main className="flex-1">
+          <Outlet />
+        </main>
       </div>
     </div>
   );

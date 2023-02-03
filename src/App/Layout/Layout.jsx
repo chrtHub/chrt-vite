@@ -149,9 +149,12 @@ export default function Layout() {
                     </div>
                   </Transition.Child>
                   <div className="flex flex-shrink-0 items-center px-4">
-                    <p className="h-8 w-auto font-sans text-3xl font-semibold text-black dark:text-white ">
+                    <a
+                      href={window.location.origin}
+                      className="h-8 w-auto font-sans text-3xl font-semibold text-black dark:text-white "
+                    >
                       chrt
-                    </p>
+                    </a>
                   </div>
                   <div className="mt-5 h-0 flex-1 overflow-y-auto">
                     <nav className="space-y-1 px-2">
@@ -199,9 +202,12 @@ export default function Layout() {
             <div
               className={`flex h-16 flex-shrink-0 items-center bg-zinc-300 px-4 dark:bg-zinc-900`}
             >
-              <p className="h-8 w-auto font-sans text-3xl font-semibold text-zinc-900 dark:text-white ">
+              <a
+                href={window.location.origin}
+                className="h-8 w-auto font-sans text-3xl font-semibold text-zinc-900 dark:text-white "
+              >
                 chrt
-              </p>
+              </a>
             </div>
             {/* Nav items below */}
             <div className="flex flex-1 flex-col overflow-y-auto">
@@ -249,6 +255,7 @@ export default function Layout() {
             </button>
             <div className="flex flex-1 justify-between px-4">
               <div className="flex flex-1">
+                {/*  */}
                 <form className="flex w-full md:ml-0" action="#" method="GET">
                   <label htmlFor="search-field" className="sr-only">
                     Search
