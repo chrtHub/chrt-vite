@@ -39,7 +39,8 @@ const navigation = [
 const userNavigation = [
   { name: "Profile", to: "/profile" },
   { name: "Settings", to: "/settings" },
-  //-- Sign out button created inline as anchor tag with 'onClick' method, not NavLink with 'to' prop --//
+  //-- Light/Dark Mode button created inline as anchor tag with 'onClick' method, not NavLink with 'to' prop --//
+  //-- Sign out button - also uses onClick --//
 ];
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
@@ -197,11 +198,11 @@ export default function Layout() {
           </div>
         </div>
         <div className="flex flex-col md:pl-64">
-          {/* DEV - Where's this button */}
+          {/* Hamburger button */}
           <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow dark:bg-zinc-800">
             <button
               type="button"
-              className="border-r border-zinc-800 px-4 text-zinc-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-500 dark:border-zinc-200 md:hidden"
+              className="border-r border-zinc-300 px-4 text-zinc-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-500 dark:border-zinc-600 md:hidden"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
@@ -243,7 +244,7 @@ export default function Layout() {
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 dark:bg-zinc-500 dark:focus:ring-zinc-700">
+                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 dark:bg-zinc-500 dark:focus:ring-zinc-500">
                       <span className="sr-only">Open user menu</span>
                       <UserCircleIcon className="h-8 w-8 rounded-full" />
                       {/* <img
@@ -262,7 +263,25 @@ export default function Layout() {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-900">
+                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-900 dark:ring-zinc-800">
+                      {/* Light/Dark Mode Button - uses onClick isntead of href */}
+                      <Menu.Item key={"light-dark-mode-button"}>
+                        {({ active }) => (
+                          <a
+                            onClick={() => {
+                              console.log("TODO - toggle light/dark mode");
+                            }}
+                            className={classNames(
+                              active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                              "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                            )}
+                          >
+                            Switch to TODO mode
+                          </a>
+                        )}
+                      </Menu.Item>
+
+                      {/* Buttons mapped from user navigation array */}
                       {userNavigation.map((item) => (
                         <Menu.Item key={item.name}>
                           {({ active }) => (
@@ -279,6 +298,7 @@ export default function Layout() {
                           )}
                         </Menu.Item>
                       ))}
+
                       {/* Sign Out Button - uses onClick isntead of href */}
                       <Menu.Item key={"sign-out-button"}>
                         {({ active }) => (
