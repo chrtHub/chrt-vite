@@ -58,6 +58,42 @@ export default function Layout() {
 
   const { logout } = useAuth0();
 
+const useManualDarkMode = () => {
+  //-- Set theme to dark in localStorage --//
+  localStorage.setItem("theme", "dark");
+  //-- Update theme to dark mode --//
+  document.documentElement.classList.add(
+    "dark"
+  );
+}
+const useOSTheme = () => {
+  //-- Remove theme from localStorage --//
+  localStorage.removeItem("theme");
+  //-- Update theme to match current OS theme --//
+  if (
+    window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches
+  ) {
+    document.documentElement.classList.add(
+      "dark"
+    );
+  } else {
+    document.documentElement.classList.remove(
+      "dark"
+    );
+  }
+  console.log("detect current theme setting");
+}
+cosnt useManualLightMode = () => {
+  //-- Set theme to light in localStorage --//
+  localStorage.setItem("theme", "light");
+  //-- Update theme to light mode --//
+  document.documentElement.classList.remove(
+    "dark"
+  );
+}
+
   return (
     <>
       <div className="h-full bg-zinc-100 dark:bg-zinc-700">
@@ -281,12 +317,7 @@ export default function Layout() {
                             <span className="isolate inline-flex rounded-md shadow-sm">
                               <button
                                 type="button"
-                                onClick={() => {
-                                  localStorage.setItem("theme", "light");
-                                  document.documentElement.classList.remove(
-                                    "dark"
-                                  );
-                                }}
+                                onClick={useManualLightMode}
                                 className="relative inline-flex items-center rounded-l-md border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-300 focus:z-10  focus:outline-none "
                               >
                                 <span className="sr-only">Light Mode</span>
@@ -297,23 +328,7 @@ export default function Layout() {
                               </button>
                               <button
                                 type="button"
-                                onClick={() => {
-                                  localStorage.removeItem("theme");
-                                  if (
-                                    window.matchMedia(
-                                      "(prefers-color-scheme: dark)"
-                                    ).matches
-                                  ) {
-                                    document.documentElement.classList.add(
-                                      "dark"
-                                    );
-                                  } else {
-                                    document.documentElement.classList.remove(
-                                      "dark"
-                                    );
-                                  }
-                                  console.log("detect current theme setting");
-                                }}
+                                onClick={useOSTheme}
                                 className="relative -ml-px inline-flex items-center border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-300 focus:z-10  focus:outline-none "
                               >
                                 <span className="sr-only">Match OS Mode</span>
@@ -324,12 +339,7 @@ export default function Layout() {
                               </button>
                               <button
                                 type="button"
-                                onClick={() => {
-                                  localStorage.setItem("theme", "dark");
-                                  document.documentElement.classList.add(
-                                    "dark"
-                                  );
-                                }}
+                                onClick={useManualDarkMode}
                                 className="relative -ml-px inline-flex items-center rounded-r-md border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-300 focus:z-10  focus:outline-none "
                               >
                                 <span className="sr-only">Dark Mode</span>
