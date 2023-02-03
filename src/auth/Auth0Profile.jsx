@@ -18,7 +18,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 const Profile = () => {
   const [userMetadata, setUserMetadata] = useState(null);
 
-  const { user, isAuthenticated, isLoading, getAccessTokenSilently } =
+  const { isLoading, isAuthenticated, user, getAccessTokenSilently } =
     useAuth0();
 
   useEffect(() => {
@@ -41,12 +41,11 @@ const Profile = () => {
             },
           }
         );
-
         const { user_metadata } = await metadataResponse.json();
-
+        console.log("user_metadata: " + user_metadata); // DEV
         setUserMetadata(user_metadata);
-      } catch (e) {
-        console.log(e.message);
+      } catch (err) {
+        console.log("error: " + err.message);
       }
     };
 

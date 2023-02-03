@@ -1,13 +1,42 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-gray-100">
+<html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link
+      rel="icon"
+      type="image"
+      href="./src/Assets/twemoji_bar_chart/favicon.ico"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CHRT</title>
+    <script>
+      //-- Detect theme value (a) set in localStorage, or (b) from OS theme --//
+      if (
+        localStorage.theme === "dark" ||
+        (!("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+
+      //-- Change theme when OS theme changes (if no 'theme' value set in localStorage) --//
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", ({ matches }) => {
+          if (!("theme" in localStorage)) {
+            if (matches) {
+              document.documentElement.classList.add("dark");
+            } else {
+              document.documentElement.classList.remove("dark");
+            }
+          }
+        });
+    </script>
   </head>
   <body class="h-full overflow-auto">
     <div id="root" class="h-full"></div>
-    <script type="module" src="./src/Main.jsx"></script>
+    <script type="module" src="./src/index.jsx"></script>
   </body>
 </html>

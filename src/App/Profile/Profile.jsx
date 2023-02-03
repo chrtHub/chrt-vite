@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- JSX Components --//
+import Auth0Profile from "../../Auth/Auth0Profile";
 
 //-- NPM Components --//
 
@@ -14,9 +15,5 @@
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Profile() {
-  return (
-    <>
-      <div>profile</div>
-    </>
-  );
+  return <Auth0Profile />;
 }
