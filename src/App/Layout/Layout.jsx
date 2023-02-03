@@ -281,9 +281,12 @@ export default function Layout() {
                             <span className="isolate inline-flex rounded-md shadow-sm">
                               <button
                                 type="button"
-                                onClick={() =>
-                                  localStorage.setItem("theme", "light")
-                                }
+                                onClick={() => {
+                                  localStorage.setItem("theme", "light");
+                                  document.documentElement.classList.remove(
+                                    "dark"
+                                  );
+                                }}
                                 className="relative inline-flex items-center rounded-l-md border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-300 focus:z-10  focus:outline-none "
                               >
                                 <span className="sr-only">Light Mode</span>
@@ -294,7 +297,23 @@ export default function Layout() {
                               </button>
                               <button
                                 type="button"
-                                onClick={() => localStorage.removeItem("theme")}
+                                onClick={() => {
+                                  localStorage.removeItem("theme");
+                                  if (
+                                    window.matchMedia(
+                                      "(prefers-color-scheme: dark)"
+                                    ).matches
+                                  ) {
+                                    document.documentElement.classList.add(
+                                      "dark"
+                                    );
+                                  } else {
+                                    document.documentElement.classList.remove(
+                                      "dark"
+                                    );
+                                  }
+                                  console.log("detect current theme setting");
+                                }}
                                 className="relative -ml-px inline-flex items-center border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-300 focus:z-10  focus:outline-none "
                               >
                                 <span className="sr-only">Match OS Mode</span>
@@ -305,9 +324,12 @@ export default function Layout() {
                               </button>
                               <button
                                 type="button"
-                                onClick={() =>
-                                  localStorage.setItem("theme", "dark")
-                                }
+                                onClick={() => {
+                                  localStorage.setItem("theme", "dark");
+                                  document.documentElement.classList.add(
+                                    "dark"
+                                  );
+                                }}
                                 className="relative -ml-px inline-flex items-center rounded-r-md border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-300 focus:z-10  focus:outline-none "
                               >
                                 <span className="sr-only">Dark Mode</span>
