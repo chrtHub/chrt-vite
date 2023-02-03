@@ -56,43 +56,41 @@ export default function Layout() {
     window.location.pathname
   );
 
+  let theme = localStorage.getItem("theme");
+  const [currentMode, setCurrentMode] = useState(theme);
+
   const { logout } = useAuth0();
 
-const useManualDarkMode = () => {
-  //-- Set theme to dark in localStorage --//
-  localStorage.setItem("theme", "dark");
-  //-- Update theme to dark mode --//
-  document.documentElement.classList.add(
-    "dark"
-  );
-}
-const useOSTheme = () => {
-  //-- Remove theme from localStorage --//
-  localStorage.removeItem("theme");
-  //-- Update theme to match current OS theme --//
-  if (
-    window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches
-  ) {
-    document.documentElement.classList.add(
-      "dark"
-    );
-  } else {
-    document.documentElement.classList.remove(
-      "dark"
-    );
-  }
-  console.log("detect current theme setting");
-}
-cosnt useManualLightMode = () => {
-  //-- Set theme to light in localStorage --//
-  localStorage.setItem("theme", "light");
-  //-- Update theme to light mode --//
-  document.documentElement.classList.remove(
-    "dark"
-  );
-}
+  const useManualDarkMode = () => {
+    //-- Set theme to dark in localStorage --//
+    localStorage.setItem("theme", "dark");
+    //-- Update theme to dark mode --//
+    document.documentElement.classList.add("dark");
+    //-- Update currentMode --//
+    setCurrentMode("dark");
+  };
+
+  const useOSTheme = () => {
+    //-- Remove theme from localStorage --//
+    localStorage.removeItem("theme");
+    //-- Update theme to match current OS theme --//
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    //-- Update currentMode --//
+    setCurrentMode(null);
+  };
+
+  const useManualLightMode = () => {
+    //-- Set theme to light in localStorage --//
+    localStorage.setItem("theme", "light");
+    //-- Update theme to light mode --//
+    document.documentElement.classList.remove("dark");
+    //-- Update currentMode --//
+    setCurrentMode("light");
+  };
 
   return (
     <>
@@ -318,7 +316,12 @@ cosnt useManualLightMode = () => {
                               <button
                                 type="button"
                                 onClick={useManualLightMode}
-                                className="relative inline-flex items-center rounded-l-md border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                                className={classNames(
+                                  currentMode === "light"
+                                    ? "bg-zinc-700 text-white"
+                                    : "bg-white text-zinc-700",
+                                  "relative inline-flex items-center rounded-l-md border border-zinc-300 px-4 py-2 text-sm font-medium  hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                                )}
                               >
                                 <span className="sr-only">Light Mode</span>
                                 <SunIcon
@@ -329,7 +332,12 @@ cosnt useManualLightMode = () => {
                               <button
                                 type="button"
                                 onClick={useOSTheme}
-                                className="relative -ml-px inline-flex items-center border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                                className={classNames(
+                                  !currentMode
+                                    ? "bg-zinc-700 text-white"
+                                    : "bg-white text-zinc-700",
+                                  "relative -ml-px inline-flex items-center border border-zinc-300 px-4 py-2 text-sm font-medium  hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                                )}
                               >
                                 <span className="sr-only">Match OS Mode</span>
                                 <ComputerDesktopIcon
@@ -340,7 +348,12 @@ cosnt useManualLightMode = () => {
                               <button
                                 type="button"
                                 onClick={useManualDarkMode}
-                                className="relative -ml-px inline-flex items-center rounded-r-md border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                                className={classNames(
+                                  currentMode === "dark"
+                                    ? "bg-zinc-700 text-white"
+                                    : "bg-white text-zinc-700",
+                                  "relative -ml-px inline-flex items-center rounded-r-md border border-zinc-300 px-4 py-2 text-sm font-medium  hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                                )}
                               >
                                 <span className="sr-only">Dark Mode</span>
                                 <MoonIcon
