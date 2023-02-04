@@ -25,17 +25,13 @@ export default function Auth0ProviderWithNavigate() {
 
   return (
     <Auth0Provider
-      domain="dev-u4trvdw25pkfbgaq.us.auth0.com"
-      clientId="nJH6eXO0snTYdLQ2W9Zm6JndVwD4ActU" //-- Application: chrt-vite --//
+      //-- domain + clientID are for Tenant: chrt-prod, App: chrt-prod-app --//
+      domain="chrt-prod.us.auth0.com"
+      clientId="8bDLHYeEUfPHH81VRDBsCTN5TYklAMCu"
       authorizationParams={{
         redirect_uri: `${window.location.origin}/callback`,
         audience: "https://chrt.com", //-- chrt API, also includes '/userinfo' by default  --//
-        // scope: "read:journal write:journal read:data",
-
-        // audience: "https://dev-u4trvdw25pkfbgaq.us.auth0.com/api/v2/", //-- Auth0 Management API --//
-
-        //-- If no scope, default are the OpenID Connect scopes: openid profile email --//
-        // scope: "read:current_user update:current_user_metadata",
+        scope: "read:journal write:journal read:data",
       }}
       onRedirectCallback={onRedirectCallback}
     >
