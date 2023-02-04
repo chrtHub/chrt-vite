@@ -419,7 +419,7 @@ export default function Layout() {
           </div>
           {/* While auth is loading, show <Loading />, then show <Outlet /> content */}
 
-          <main className="flex-1 ">
+          <main className="flex-1">
             <Outlet />
           </main>
         </div>
