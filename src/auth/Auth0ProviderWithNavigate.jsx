@@ -30,6 +30,8 @@ export default function Auth0ProviderWithNavigate() {
       authorizationParams={{
         redirect_uri: `${window.location.origin}/callback`,
         audience: "https://chrt.com", //-- chrt API, also includes '/userinfo' by default  --//
+        // scope: "read:journal write:journal read:data",
+
         // audience: "https://dev-u4trvdw25pkfbgaq.us.auth0.com/api/v2/", //-- Auth0 Management API --//
 
         //-- If no scope, default are the OpenID Connect scopes: openid profile email --//
