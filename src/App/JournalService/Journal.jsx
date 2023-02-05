@@ -19,7 +19,7 @@ import axios from "axios";
 export default function Journal() {
   const [journalData, setJournalData] = useState(null);
 
-  const { isLoading, getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently } = useAuth0();
 
   //-- Side Effect for fetching journal data --//
   useEffect(() => {
@@ -44,11 +44,6 @@ export default function Journal() {
     getJournalData();
   }, [getAccessTokenSilently]);
 
-  // TODO - use inline loading skeleton instead of this div
-  if (isLoading) {
-    return <div>Loading ...</div>;
-  }
-
   return (
     <>
       <div className="m-2 divide-y divide-zinc-200 overflow-hidden rounded-lg bg-white text-black shadow dark:divide-zinc-600 dark:bg-zinc-800 dark:text-white">
@@ -58,7 +53,7 @@ export default function Journal() {
               {JSON.stringify(journalData, null, 2)}
             </pre>
           ) : (
-            "No journal data"
+            "..." // TODO - use a loading skeleton here
           )}
         </div>
         <div className="px-4 py-4 sm:px-6">Journal Data</div>
