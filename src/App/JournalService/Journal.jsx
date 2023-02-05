@@ -24,33 +24,22 @@ export default function Journal() {
   useEffect(() => {
     const getJournalData = async () => {
       try {
-        const accessToken = await getAccessTokenSilently({
-          authorizationParams: {
-            audience: "https://chrt.com",
-          },
-        });
-        console.log("accessToken: " + accessToken); // DEV
-
-        //-- Request parameters --//
-        const url = "https://alb.chrt.com/";
-        const headersObject = {
-          authorization: `Bearer ${accessToken}`,
-        };
+        //-- Get access token from memory or request new token --//
+        let accessToken = await getAccessTokenSilently();
 
         //-- Make GET request --//
-        try {
-          let res = await axios.get(url, { headers: headersObject });
-          let data = res.data;
-          setJournalData(data);
-          //----//
-        } catch (err) {
-          console.log(err);
-        }
+        let res = await axios.get("https://alb.chrt.com/", {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        setJournalData(res.data);
+        //----//
       } catch (err) {
-        console.log("error: " + err.message);
+        console.log(err);
       }
     };
-
     getJournalData();
   }, [getAccessTokenSilently]);
 

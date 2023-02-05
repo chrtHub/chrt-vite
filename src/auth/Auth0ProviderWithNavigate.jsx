@@ -30,9 +30,9 @@ export default function Auth0ProviderWithNavigate() {
       authorizationParams={{
         redirect_uri: `${window.location.origin}/callback`, //-- redirect_uri NOTE - localhost not allowed by Auth0 for prod tenant (which is 'chrt-prod') --//
         audience: "https://chrt.com", //-- API: 'chrt' (also /userinfo by default) --//
-        scope: "profile email read:journal write:journal read:data",
+        scope: "openid profile email read:journal write:journal read:data",
         //-- Scope guide:
-        //-- 'openid' gets included by default --//
+        //-- 'openid' included by default, indicates app will use OIDC --//
         //-- 'profile' allows name and profile photo --//
         //-- 'email' allows email --//
         //-- 'read:journal' and other custom API claims will get included in the access token's 'scope' and 'permissions' only if the user has those permissions granted either directly or via a role --//

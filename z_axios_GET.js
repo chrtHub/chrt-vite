@@ -2,15 +2,18 @@
 
 import axios from "axios";
 
-//-- Request parameters --//
-const url = "https://alb.chrt.com";
-const headersObject = {
-  authorization: `Bearer ${accessToken}`,
-};
+const { getAccessTokenSilently } = useAuth0();
 
-//-- Make GET request --//
 try {
-  let res = await axios.get(url, { headers: headersObject });
+  //-- Get access token from memory or request new token --//
+  let accessToken = await getAccessTokenSilently();
+
+  //-- Make GET request --//
+  let res = await axios.get("https://alb.chrt.com", {
+    headers: {
+      authorization: `Bearer ${accessToken}`,
+    },
+  });
   console.log(res); // DEV
   //----//
 } catch (err) {

@@ -2,19 +2,26 @@
 
 import axios from "axios";
 
-//-- Request parameters --//
-const url = "https://alb.chrt.com";
-const content = {
-  key1: "value1",
-  key2: "value2",
-};
-const headersObject = {
-  authorization: `Bearer ${accessToken}`,
-};
+const { getAccessTokenSilently } = useAuth0();
 
-//-- Make POST request --//
 try {
-  let res = await axios.post(url, content, { headers: headersObject });
+  //-- Get access token from memory or request new token --//
+  let accessToken = await getAccessTokenSilently();
+
+  //-- Make POST request --//
+  let res = await axios.post(
+    "https://alb.chrt.com",
+    //-- Body Content --//
+    {
+      key1: "value1",
+      key2: "value2",
+    },
+    {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
   console.log(res); // DEV
   //----//
 } catch (err) {
