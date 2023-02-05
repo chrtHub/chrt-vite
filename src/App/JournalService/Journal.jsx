@@ -21,6 +21,7 @@ export default function Journal() {
 
   const { isLoading, getAccessTokenSilently } = useAuth0();
 
+  //-- Side Effect for fetching journal data --//
   useEffect(() => {
     const getJournalData = async () => {
       try {
@@ -43,6 +44,7 @@ export default function Journal() {
     getJournalData();
   }, [getAccessTokenSilently]);
 
+  // TODO - use inline loading skeleton instead of this div
   if (isLoading) {
     return <div>Loading ...</div>;
   }
