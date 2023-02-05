@@ -9,6 +9,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 //-- Icons --//
 
 //-- NPM Functions --//
+import axios from "axios";
 
 //-- Utility Functions --//
 
@@ -38,9 +39,13 @@ export default function Journal() {
         };
 
         //-- Make GET request --//
-        let res = await axios.get(url, { headers: headersObject });
-
-        setJournalData(res);
+        try {
+          let res = await axios.get(url, { headers: headersObject });
+          setJournalData(res);
+          //----//
+        } catch (err) {
+          console.log(err);
+        }
       } catch (err) {
         console.log("error: " + err.message);
       }
@@ -73,9 +78,11 @@ export default function Journal() {
         <div className="px-4 py-4 sm:px-6">Footer</div>
       </div>
 
-      <h3>Journal Data</h3>
+      <h3 className="text-zinc-900 dark:text-white">Journal Data</h3>
       {journalData ? (
-        <pre>{JSON.stringify(journalData, null, 2)}</pre>
+        <pre className="text-zinc-900 dark:text-white">
+          {JSON.stringify(journalData, null, 2)}
+        </pre>
       ) : (
         "No journal data"
       )}
