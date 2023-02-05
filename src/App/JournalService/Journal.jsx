@@ -19,21 +19,20 @@ import axios from "axios";
 export default function Journal() {
   const [journalData, setJournalData] = useState(null);
 
-  const { isLoading, isAuthenticated, user, getAccessTokenSilently } =
-    useAuth0();
+  const { isLoading, getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
-    const getUserMetadata = async () => {
+    const getJournalData = async () => {
       try {
         const accessToken = await getAccessTokenSilently({
           authorizationParams: {
             audience: "https://chrt.com",
           },
         });
-        console.log("accessToken1: " + accessToken); // DEV
+        console.log("accessToken: " + accessToken); // DEV
 
         //-- Request parameters --//
-        const url = "https://alb.chrt.com";
+        const url = "https://alb.chrt.com/";
         const headersObject = {
           authorization: `Bearer ${accessToken}`,
         };
@@ -41,7 +40,8 @@ export default function Journal() {
         //-- Make GET request --//
         try {
           let res = await axios.get(url, { headers: headersObject });
-          setJournalData(res);
+          let data = res.data;
+          setJournalData(data);
           //----//
         } catch (err) {
           console.log(err);
@@ -51,8 +51,8 @@ export default function Journal() {
       }
     };
 
-    getUserMetadata();
-  }, [getAccessTokenSilently, user?.sub]);
+    getJournalData();
+  }, [getAccessTokenSilently]);
 
   if (isLoading) {
     return <div>Loading ...</div>;
@@ -62,30 +62,17 @@ export default function Journal() {
     <>
       {/*  */}
       <div className="m-2 divide-y divide-zinc-200 overflow-hidden rounded-lg bg-white text-black shadow dark:divide-zinc-600 dark:bg-zinc-800 dark:text-white">
-        <div className="px-4 py-5 sm:p-6">Content</div>
-        <div className="px-4 py-4 sm:px-6">Footer</div>
+        <div className="px-4 py-5 sm:p-6">
+          {journalData ? (
+            <pre className="text-zinc-900 dark:text-white">
+              {JSON.stringify(journalData, null, 2)}
+            </pre>
+          ) : (
+            "No journal data"
+          )}
+        </div>
+        <div className="px-4 py-4 sm:px-6">Journal Data</div>
       </div>
-
-      {/*  */}
-      <div className="m-2 divide-y divide-zinc-200 overflow-hidden rounded-lg bg-white text-black shadow dark:divide-zinc-600 dark:bg-zinc-800 dark:text-white">
-        <div className="px-4 py-5 sm:p-6">Content</div>
-        <div className="px-4 py-4 sm:px-6">Footer</div>
-      </div>
-
-      {/*  */}
-      <div className="m-2 divide-y divide-zinc-200 overflow-hidden rounded-lg bg-white text-black shadow dark:divide-zinc-600 dark:bg-zinc-800 dark:text-white">
-        <div className="px-4 py-5 sm:p-6">Content</div>
-        <div className="px-4 py-4 sm:px-6">Footer</div>
-      </div>
-
-      <h3 className="text-zinc-900 dark:text-white">Journal Data</h3>
-      {journalData ? (
-        <pre className="text-zinc-900 dark:text-white">
-          {JSON.stringify(journalData, null, 2)}
-        </pre>
-      ) : (
-        "No journal data"
-      )}
     </>
   );
 }
