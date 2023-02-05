@@ -39,6 +39,7 @@ export default function LayoutSkeleton(props) {
               {/*  */}
               {DIV_COUNT.map((item) => (
                 <div
+                  key={item.id}
                   id={item.id}
                   className="group flex animate-pulse items-center rounded-md bg-zinc-300 px-2 py-2 text-sm font-medium text-zinc-900 dark:bg-zinc-900 dark:text-white"
                 >
