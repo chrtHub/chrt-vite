@@ -17,7 +17,7 @@ export default function Info() {
   return (
     <div>
       <p>
-        TODO - add links to "/terms", "/privacy", "/oauth2_google",
+        /info TODO - add links to "/terms", "/privacy", "/oauth2_google",
         "system_requirements"
       </p>
     </div>
