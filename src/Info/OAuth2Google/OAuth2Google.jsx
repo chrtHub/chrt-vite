@@ -13,10 +13,10 @@
 //-- Data Objects --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function ComponentName() {
+export default function OAuth2Google() {
   return (
     <div>
-      <p>content</p>
+      <p>TODO - OAuth2_Google</p>
     </div>
   );
 }

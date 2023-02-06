@@ -13,10 +13,10 @@
 //-- Data Objects --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function ComponentName() {
+export default function SystemRequirements() {
   return (
     <div>
-      <p>content</p>
+      <p>system requirements</p>
     </div>
   );
 }

@@ -46,6 +46,7 @@ const navigation = [
 const userNavigation = [
   { name: "Profile", to: "/profile" },
   { name: "Settings", to: "/settings" },
+  { name: "Terms, Privacy, & More", to: "/info" },
   //-- Light/Dark Mode button created inline as anchor tag with 'onClick' method, not NavLink with 'to' prop --//
   //-- Sign out button - also uses onClick --//
 ];

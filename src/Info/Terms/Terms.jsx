@@ -13,10 +13,10 @@
 //-- Data Objects --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function ComponentName() {
+export default function Terms() {
   return (
     <div>
-      <p>content</p>
+      <p>TODO - terms</p>
     </div>
   );
 }

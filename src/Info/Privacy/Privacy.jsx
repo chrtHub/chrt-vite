@@ -13,10 +13,10 @@
 //-- Data Objects --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function ComponentName() {
+export default function Privacy() {
   return (
     <div>
-      <p>content</p>
+      <p>TODO - privacy</p>
     </div>
   );
 }

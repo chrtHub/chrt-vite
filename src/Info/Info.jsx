@@ -13,10 +13,13 @@
 //-- Data Objects --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function ComponentName() {
+export default function Info() {
   return (
     <div>
-      <p>content</p>
+      <p>
+        TODO - add links to "/terms", "/privacy", "/oauth2_google",
+        "system_requirements"
+      </p>
     </div>
   );
 }
