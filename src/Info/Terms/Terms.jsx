@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- JSX Components --//
+import TermsDoc from "./TermsDoc";
 
 //-- NPM Components --//
 
@@ -15,8 +16,8 @@
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Terms() {
   return (
-    <div>
-      <p>TODO - terms</p>
-    </div>
+    <article class="prose lg:prose-xl">
+      <TermsDoc />
+    </article>
   );
 }
