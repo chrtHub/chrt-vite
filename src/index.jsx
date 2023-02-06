@@ -25,6 +25,9 @@ import Terms from "./Info/Terms/Terms";
 import Privacy from "./Info/Privacy/Privacy";
 import OAuth2Google from "./Info/OAuth2Google/OAuth2Google";
 import SystemRequirements from "./Info/SystemRequirements/SystemRequirements";
+import Cookies from "./Info/Cookies/Cookies";
+import FAQ from "./Info/FAQ/FAQ";
+import ProductSpecificTerms from "./Info/ProductSpecificTerms/ProductSpecificTerms";
 
 import Callback from "./UI/Callback";
 import NotFoundPage from "./UI/NotFoundPage";
@@ -52,6 +55,12 @@ const router = createBrowserRouter(
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/oauth2_google" element={<OAuth2Google />} />
         <Route path="/system_requirements" element={<SystemRequirements />} />
+        <Route path="/cookies" element={<Cookies />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route
+          path="/product_specific_terms"
+          element={<ProductSpecificTerms />}
+        />
 
         {/* Callback */}
         <Route path="/callback" element={<Callback />} />
