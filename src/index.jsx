@@ -52,6 +52,8 @@ const router = createBrowserRouter(
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/oauth2_google" element={<OAuth2Google />} />
         <Route path="/system_requirements" element={<SystemRequirements />} />
+
+        {/* Callback */}
         <Route path="/callback" element={<Callback />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
