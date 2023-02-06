@@ -8,12 +8,13 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Auth0ProviderWithNavigate from "./Auth/Auth0ProviderWithNavigate";
+import AuthGuard from "./Auth/AuthGuard";
 
 //-- JSX Components --//
-import AuthGuard from "./Auth/AuthGuard";
 import App from "./App/App";
 import Home from "./App/Home/Home";
 import Journal from "./App/JournalService/Journal";
+import Files from "./App/JournalService/Files";
 import Data from "./App/DataService/Data";
 import Settings from "./App/Settings/Settings";
 import Profile from "./App/Profile/Profile";
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
         <Route path="/journal" element={<AuthGuard component={Journal} />} />
+        <Route path="/files" element={<AuthGuard component={Files} />} />
         <Route path="/data" element={<AuthGuard component={Data} />} />
         <Route path="/settings" element={<AuthGuard component={Settings} />} />
         <Route path="/profile" element={<AuthGuard component={Profile} />} />

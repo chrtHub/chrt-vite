@@ -39,6 +39,7 @@ function classNames(...classes) {
 const navigation = [
   { name: "Home", to: "/", icon: HomeIcon },
   { name: "Journal", to: "/journal", icon: CalendarDaysIcon },
+  { name: "Journal Files", to: "/files", icon: FolderIcon },
   { name: "Market Data", to: "/data", icon: PresentationChartLineIcon },
 ];
 
