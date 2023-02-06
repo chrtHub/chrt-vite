@@ -15,14 +15,14 @@ const navigation = [
   { name: "Terms of Service", to: "/terms" },
   { name: "Privacy Statement", to: "/privacy" },
   { name: "System Requirements", to: "/system_requirements" },
-  { name: "OAuth 2.0 connection via Google", to: "/oauth2_google" },
+  { name: "OAuth2 Google", to: "/oauth2_google" },
 ];
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Info() {
   return (
-    // TODO - format links
     <div>
+      TODO - format links
       {navigation.map((item) => {
         return (
           <NavLink key={item.name} to={item.to}>

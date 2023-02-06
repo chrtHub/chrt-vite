@@ -16,7 +16,7 @@
 export default function OAuth2Google() {
   return (
     <div>
-      <p>TODO - OAuth2_Google</p>
+      <p>TODO - OAuth2 Google</p>
     </div>
   );
 }
