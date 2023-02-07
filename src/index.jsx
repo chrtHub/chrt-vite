@@ -33,7 +33,7 @@ import Terms from "./Info/Terms/Terms";
 import Callback from "./Navigation/Callback";
 import NotFoundPage from "./Navigation/NotFoundPage";
 
-import AuthProviderWithNavigate from "./Auth/AuthProviderWithNavigate.jsx";
+import AuthProviderWithNavigate from "./Auth/AuthProviderWithNavigate";
 import AuthGuard from "./Auth/AuthGuard";
 
 //-- CSS --//
