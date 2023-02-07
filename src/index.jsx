@@ -12,6 +12,9 @@ import App from "./App/App";
 
 //-- JSX Components: Home --//
 import Home from "./App/Home/Home";
+// import AuthProviderWithNavigate from "./Auth/AuthProviderWithNavigate";
+import DummyProvider from "./Auth/DummyProvider";
+import AuthGuard from "./Auth/AuthGuard";
 
 //-- JSX Components: App --//
 import Data from "./App/DataService/Data";
@@ -33,16 +36,16 @@ import Terms from "./Info/Terms/Terms";
 import Callback from "./Navigation/Callback";
 import NotFoundPage from "./Navigation/NotFoundPage";
 
-import AuthProviderWithNavigate from "./Auth/AuthProviderWithNavigate";
-import AuthGuard from "./Auth/AuthGuard";
-
 //-- CSS --//
 import "./index.css";
 
 //-- Create router object --//
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route element={<AuthProviderWithNavigate />}>
+    <Route
+      // element={<AuthProviderWithNavigate />
+      element={<DummyProvider />}
+    >
       {/* App */}
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
