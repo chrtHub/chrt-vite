@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: latest
+    commands:
+      - aws codeartifact login --tool npm --domain-owner 897621100871 --domain chrt --repository chrt-npm-packages
+      - npm install --legacy-peer-deps
+  build:
+    commands:
+      - npm run build
+  post_build:
+    commands:
+      - aws cloudfront create-invalidation --distribution-id=EM4IOR3AXZTHT --paths '/*'
+artifacts:
+  files:
+    - "build/**/*"
+  discard-paths: no
+#reports:
+#  jest_reports: # test reports
+#    files:
+#      - "junit.xml"
+#    file-format: JUNITXML
+#  clover_reports: # coverage reports
+#    files:
+#      - "coverage/clover.xml"
+#    file-format: "CLOVERXML"
