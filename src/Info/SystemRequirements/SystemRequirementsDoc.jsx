@@ -2,7 +2,7 @@ export default function SystemRequirementsDoc() {
   return (
     <>
       <h1 id="system-requirements">System Requirements</h1>
-      <p>Effective date: TBD</p>
+      <p>Effective date: January 1, 2023</p>
 
       <h1 id="minimum-system-requirements">Minimum System Requirements</h1>
       <h3 id="browser-software">Browser Software</h3>

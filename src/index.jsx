@@ -27,7 +27,6 @@ import FAQ from "./Info/FAQ/FAQ";
 import Info from "./Info/Info";
 import OAuth2Google from "./Info/OAuth2Google/OAuth2Google";
 import Privacy from "./Info/Privacy/Privacy";
-import ProductSpecificTerms from "./Info/ProductSpecificTerms/ProductSpecificTerms";
 import SystemRequirements from "./Info/SystemRequirements/SystemRequirements";
 import Terms from "./Info/Terms/Terms";
 
@@ -58,10 +57,6 @@ const router = createBrowserRouter(
         <Route path="/faq" element={<FAQ />} />
         <Route path="/oauth2_google" element={<OAuth2Google />} />
         <Route path="/privacy" element={<Privacy />} />
-        <Route
-          path="/product_specific_terms"
-          element={<ProductSpecificTerms />}
-        />
         <Route path="/system_requirements" element={<SystemRequirements />} />
         <Route path="/terms" element={<Terms />} />
       </Route>

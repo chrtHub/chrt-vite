@@ -2,7 +2,7 @@ export default function TermsDoc() {
   return (
     <>
       <h1 id="terms-of-service">Terms of Service</h1>
-      <p>Effective date: TBD</p>
+      <p>Effective date: January 1, 2023</p>
 
       <h1 id="chrt-customer-agreement">CHRT Customer Agreement</h1>
       <p>

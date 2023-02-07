@@ -50,11 +50,6 @@ const navigation = [
   },
   { name: "Cookies Policy", to: "/cookies", icon: ShieldCheckIcon },
   {
-    name: "Product Specific Terms",
-    to: "/product_specific_terms",
-    icon: DocumentTextIcon,
-  },
-  {
     name: "OAuth 2 - Google Accounts",
     to: "/oauth2_google",
     icon: LockClosedIcon,

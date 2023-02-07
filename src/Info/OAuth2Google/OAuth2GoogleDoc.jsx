@@ -145,7 +145,9 @@ export default function TermsDoc() {
       <ul>
         <li>
           CHRT&#39;s{" "}
-          <a href={`${window.location.origin}/privacy`}>Privacy Policy</a>
+          <a href={`${window.location.origin}/privacy`}>
+            Privacy Statement (a.k.a. Privacy Policy)
+          </a>
         </li>
         <li>
           Other info, such as our Terms of Service and Cookies policy, can be
