@@ -12,8 +12,8 @@ import App from "./App/App";
 
 //-- JSX Components: Home --//
 import Home from "./App/Home/Home";
-import AuthProviderWithNavigate from "./Foo/AuthProviderWithNavigate";
-import AuthGuard from "./Foo/AuthGuard";
+import AuthProviderWithNavigate from "./Auth/AuthProviderWithNavigate";
+import AuthGuard from "./Auth/AuthGuard";
 
 //-- JSX Components: App --//
 import Data from "./App/DataService/Data";
