@@ -3,7 +3,7 @@ export default function TermsDoc() {
     <>
       <h1 id="terms-of-service">Terms of Service</h1>
       <p>Effective date: TBD</p>
-      <hr />
+
       <h1 id="chrt-customer-agreement">CHRT Customer Agreement</h1>
       <p>
         This Agreement consists of the General Terms, the applicable Product
@@ -13,12 +13,13 @@ export default function TermsDoc() {
         that they are authorized to enter into this Agreement on behalf of
         Customer.
       </p>
-      <hr />
+
       <h2 id="general-terms">General Terms</h2>
       <p>
         These General Terms apply to all of Customer’s orders under this
         Agreement. Capitalized terms have the meanings given under Definitions.
       </p>
+
       <h3 id="a-license-to-use-chrt-products">
         A. License to use CHRT Products
       </h3>
@@ -114,6 +115,7 @@ export default function TermsDoc() {
           </ol>
         </li>
       </ol>
+
       <h3 id="b-data-protection">B. Data Protection</h3>
       <ol>
         <li>
@@ -121,6 +123,7 @@ export default function TermsDoc() {
           applicable data protection laws.
         </li>
       </ol>
+
       <h3 id="c-confidentiality">C. Confidentiality</h3>
       <ol>
         <li>
@@ -184,6 +187,7 @@ export default function TermsDoc() {
           receives the Confidential Information.
         </li>
       </ol>
+
       <h3 id="d-warranties">D. Warranties</h3>
       <ol>
         <li>
@@ -224,6 +228,7 @@ export default function TermsDoc() {
           merchantability, and fitness for a particular purpose.
         </li>
       </ol>
+
       <h3 id="e-third-party-claims">E. Third party claims</h3>
       <ol>
         <li>
@@ -273,6 +278,7 @@ export default function TermsDoc() {
           </ol>
         </li>
       </ol>
+
       <h3 id="f-limitation-of-liability">F. Limitation of liability</h3>
       <ol>
         <li>
@@ -309,6 +315,7 @@ export default function TermsDoc() {
           </ol>
         </li>
       </ol>
+
       <h3 id="g-pricing-and-payment">G. Pricing and payment</h3>
       <ol>
         <li>
@@ -340,6 +347,7 @@ export default function TermsDoc() {
           law.
         </li>
       </ol>
+
       <h3 id="h-term-and-termination">H. Term and termination</h3>
       <ol>
         <li>
@@ -386,6 +394,7 @@ export default function TermsDoc() {
           fees.
         </li>
       </ol>
+
       <h3 id="i-miscellaneous">I. Miscellaneous</h3>
       <ol>
         <li>
@@ -464,27 +473,24 @@ export default function TermsDoc() {
             service notice on CHRT, it must be made through CHRT&#39;s
             registered agent:
           </p>
-          <blockquote>
-            <p>
-              CHRT, Inc.
-              <br />
-              c/o registered agent
-              <br />
-              address forthcoming
-            </p>
-            <blockquote>
-              <p>
-                Notices must be in writing and will be treated as delivered on
-                the date received at the address, date shown on the return
-                receipt, email transmission date, or date on the courier
-                confirmation of delivery. Notices to Customer will be sent to
-                the individual at the address Customer identifies on its account
-                as its contact for notices. CHRT may send notices and other
-                information to Customer by email or other electronic form.
-              </p>
-            </blockquote>
-            //{" "}
-          </blockquote>
+
+          <p>
+            CHRT, Inc.
+            <br />
+            c/o registered agent
+            <br />
+            address forthcoming
+          </p>
+
+          <p>
+            Notices must be in writing and will be treated as delivered on the
+            date received at the address, date shown on the return receipt,
+            email transmission date, or date on the courier confirmation of
+            delivery. Notices to Customer will be sent to the individual at the
+            address Customer identifies on its account as its contact for
+            notices. CHRT may send notices and other information to Customer by
+            email or other electronic form.
+          </p>
         </li>
         <li>
           <p>
@@ -522,6 +528,7 @@ export default function TermsDoc() {
           (3) this Agreement satisfies all applicable procurement requirements.
         </li>
       </ol>
+
       <h3 id="j-definitions">J. Definitions</h3>
       <ul>
         <li>
@@ -630,6 +637,7 @@ export default function TermsDoc() {
           </p>
         </li>
       </ul>
+
       <h3 id="k-license">K. License</h3>
       <ol>
         <li>

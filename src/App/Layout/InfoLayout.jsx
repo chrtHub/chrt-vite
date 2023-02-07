@@ -5,18 +5,24 @@ import { NavLink, Outlet } from "react-router-dom";
 //-- JSX Components --//
 
 //-- NPM Components --//
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, Menu, Transition } from "@headlessui/react";
 
 //-- Icons --//
 import {
+  MagnifyingGlassIcon,
+  UserCircleIcon,
+  MoonIcon,
+} from "@heroicons/react/20/solid";
+import {
   Bars3BottomLeftIcon,
-  QuestionMarkCircleIcon,
-  InformationCircleIcon,
   ClipboardDocumentListIcon,
-  DocumentTextIcon,
-  LockClosedIcon,
   ComputerDesktopIcon,
+  DocumentTextIcon,
+  InformationCircleIcon,
+  LockClosedIcon,
+  QuestionMarkCircleIcon,
   ShieldCheckIcon,
+  SunIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 
@@ -257,9 +263,11 @@ export default function InfoLayout() {
               <span className="sr-only">Open sidebar</span>
               <Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
             </button>
+
+            {/* App Bar */}
             <div className="flex flex-1 justify-between px-4">
               <div className="flex flex-1">
-                {/*  */}
+                {/* Search Bar */}
                 {/* <form className="flex w-full md:ml-0" action="#" method="GET">
                   <label htmlFor="search-field" className="sr-only">
                     Search
@@ -281,6 +289,58 @@ export default function InfoLayout() {
                   </div>
                 </form> */}
               </div>
+
+              {/* Light / Dark Mode buttons */}
+              <div className="ml-4 flex items-center md:ml-6">
+                {/* Profile dropdown */}
+                <div as="div" className="relative ml-3">
+                  <span className="isolate inline-flex rounded-md shadow-sm">
+                    <button
+                      type="button"
+                      onClick={useManualLightMode}
+                      className={classNames(
+                        currentMode === "light"
+                          ? "bg-zinc-700 text-white"
+                          : "bg-white text-zinc-700",
+                        "relative inline-flex items-center rounded-l-md border border-zinc-300 px-4 py-2 text-sm font-medium  hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                      )}
+                    >
+                      <span className="sr-only">Light Mode</span>
+                      <SunIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={useOSTheme}
+                      className={classNames(
+                        !currentMode
+                          ? "bg-zinc-700 text-white"
+                          : "bg-white text-zinc-700",
+                        "relative -ml-px inline-flex items-center border border-zinc-300 px-4 py-2 text-sm font-medium  hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                      )}
+                    >
+                      <span className="sr-only">Match OS Mode</span>
+                      <ComputerDesktopIcon
+                        className="h-5 w-5"
+                        aria-hidden="true"
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={useManualDarkMode}
+                      className={classNames(
+                        currentMode === "dark"
+                          ? "bg-zinc-700 text-white"
+                          : "bg-white text-zinc-700",
+                        "relative -ml-px inline-flex items-center rounded-r-md border border-zinc-300 px-4 py-2 text-sm font-medium  hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                      )}
+                    >
+                      <span className="sr-only">Dark Mode</span>
+                      <MoonIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                  </span>
+                </div>
+              </div>
+              {/*  */}
             </div>
           </div>
           <main className="flex-1">
