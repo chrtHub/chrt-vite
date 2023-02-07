@@ -3,7 +3,7 @@ export default function TermsDoc() {
     <>
       <h1 id="cookies-policy">Cookies Policy</h1>
       <p>Effective date: TBD</p>
-      <hr />
+
       <h1 id="introduction">Introduction</h1>
       <p>
         CHRT may use cookies to provide and secure our websites, as well as to
@@ -16,7 +16,7 @@ export default function TermsDoc() {
         of your information. This policy specifically explains our use of
         cookies as well as the options you have to control them.
       </p>
-      <hr />
+
       <h2 id="what-are-cookies-">What are cookies?</h2>
       <p>
         Cookies are small pieces of data, stored in text files, that are stored
@@ -28,15 +28,24 @@ export default function TermsDoc() {
         parties, such as those who serve content or provide advertising or
         analytics services on the website (“third party cookies”).
       </p>
-      <hr />
+
       <h2 id="first-party-cookies">First party cookies</h2>
       <p>We don&#39;t use first-party cookies at this time.</p>
-      <hr />
+
       <h2 id="third-party-cookies">Third party cookies</h2>
       <ul>
         <li>
           Strictly necessary (exempt from informed consent, no opt-out)
           <ul>
+            <li>
+              Cookie(s) related to Auth0&#39;s authentication and authorization
+              flow using a CHRT account
+            </li>
+            <li>
+              Cookie(s) related to Google&#39;s OAuth 2 authorization and
+              authentication process when using a Google account connected with
+              a CHRT account
+            </li>
             <li>
               Cookie(s) related to Google&#39;s reCAPTCHA process used for
               verifying human users

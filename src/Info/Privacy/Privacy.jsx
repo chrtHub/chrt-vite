@@ -16,7 +16,7 @@ import PrivacyDoc from "./PrivacyDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Privacy() {
   return (
-    <article class="prose dark:text-white lg:prose-xl">
+    <article className="lg:prose-md prose prose-zinc dark:prose-invert">
       <PrivacyDoc />
     </article>
   );

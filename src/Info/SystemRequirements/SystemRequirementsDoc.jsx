@@ -3,7 +3,7 @@ export default function SystemRequirementsDoc() {
     <>
       <h1 id="system-requirements">System Requirements</h1>
       <p>Effective date: TBD</p>
-      <hr />
+
       <h1 id="minimum-system-requirements">Minimum System Requirements</h1>
       <h3 id="browser-software">Browser Software</h3>
       <ul>
@@ -43,8 +43,9 @@ export default function SystemRequirementsDoc() {
           <strong>Inputs.</strong> Standard modern keyboard and mouse inputs
         </li>
       </ul>
-      <h3 id="mobile-application-software-expected-q2-2023-">
-        Mobile Application Software [expected Q2 2023]
+
+      {/* <h3 id="mobile-application-software-expected-q2-2023-">
+        Mobile Application Software
       </h3>
       <ul>
         <li>
@@ -55,8 +56,9 @@ export default function SystemRequirementsDoc() {
           <strong>iPhone.</strong> Systems meeting the minimum system
           requirements for the latest major release of the iOS platform.
         </li>
-      </ul>
-      <h3 id="desktop-software">Desktop Software</h3>
+      </ul> */}
+
+      {/* <h3 id="desktop-software">Desktop Software</h3>
       <ul>
         <li>
           Currently we deliver our software via web browsers and mobile
@@ -67,7 +69,8 @@ export default function SystemRequirementsDoc() {
           chrt [dot] com) with the subject like &quot;please develop
           downloadable desktop software&quot;.
         </li>
-      </ul>
+      </ul> */}
+
       <h3 id="failure-to-meet-system-requirements">
         Failure to meet system requirements
       </h3>

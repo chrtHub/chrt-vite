@@ -16,7 +16,7 @@ import TermsDoc from "./TermsDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Terms() {
   return (
-    <article class="prose dark:text-white lg:prose-xl">
+    <article className="lg:prose-md prose prose-zinc dark:prose-invert">
       <TermsDoc />
     </article>
   );

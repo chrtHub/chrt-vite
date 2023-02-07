@@ -16,7 +16,7 @@ import ProductSpecificTermsDoc from "./ProductSpecificTermsDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ProductSpecificTerms() {
   return (
-    <article class="prose dark:text-white lg:prose-xl">
+    <article className="lg:prose-md prose prose-zinc dark:prose-invert">
       <ProductSpecificTermsDoc />
     </article>
   );

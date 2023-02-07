@@ -3,7 +3,7 @@ export default function PrivacyDoc() {
     <>
       <h1 id="privacy-statement">Privacy Statement</h1>
       <p>Effective date: TBD</p>
-      <hr />
+
       <h2 id="introduction">Introduction</h2>
       <p>
         Thanks for entrusting CHRT Inc. (&quot;CHRT&quot;, &quot;chrt&quot;,
@@ -20,7 +20,7 @@ export default function PrivacyDoc() {
         <a href="https://chrt.com/terms">CHRT&#39;s Terms of Service</a>, unless
         otherwise noted here.
       </p>
-      <hr />
+
       <h2 id="the-short-version">The short version</h2>
       <p>
         We use your personal information as this Privacy Statement describes. No
@@ -34,12 +34,12 @@ export default function PrivacyDoc() {
         &quot;Notice to California residents&quot; section of this Privacy
         Statement.
       </p>
-      <hr />
-      <h2 id="who-is-responsible-for-the-processing-of-your-information-">
+
+      <h2 id="responsibility">
         Who is responsible for the processing of your information?
       </h2>
       <p>The data controller of your personal data is CHRT, Inc.</p>
-      <hr />
+
       <h2 id="chrt-acting-on-your-behalf">CHRT acting on your behalf</h2>
       <p>
         In some cases, CHRT is acting only on your behalf for the personal data
@@ -47,7 +47,7 @@ export default function PrivacyDoc() {
         profiles). In such cases, CHRT will only process the data in order to
         provide the Service requested by you.
       </p>
-      <hr />
+
       <h2 id="what-information-chrt-collects">
         What information CHRT collects
       </h2>
@@ -178,7 +178,7 @@ export default function PrivacyDoc() {
         allow information that is necessary for certain services or features,
         those services or features may not be available or fully functional.
       </p>
-      <hr />
+
       <h2 id="how-chrt-uses-your-information">
         How CHRT uses your information
       </h2>
@@ -222,7 +222,7 @@ export default function PrivacyDoc() {
         We combine data we collect from different sources for these purposes and
         to give you a more seamless, consistent, and personalized experience.
       </p>
-      <hr />
+
       <h2 id="how-we-share-the-information-we-collect">
         How we share the information we collect
       </h2>
@@ -336,7 +336,7 @@ export default function PrivacyDoc() {
         learn more about the CCPA and how we comply with it in the &quot;Notice
         to California residents&quot; section of this Privacy Statement.
       </p>
-      <hr />
+
       <h2 id="your-choices-regarding-our-processing-of-your-personal-data">
         Your choices regarding our processing of your personal data
       </h2>
@@ -437,7 +437,7 @@ export default function PrivacyDoc() {
         and legal obligations, protect the security of our systems and our
         customers, or fulfill other legitimate interests.
       </p>
-      <hr />
+
       <h2 id="our-use-of-cookies-and-tracking-technologies">
         Our use of cookies and tracking technologies
       </h2>
@@ -464,7 +464,7 @@ export default function PrivacyDoc() {
         You may read more about our use of cookies in our{" "}
         <a href="https://chrt.com/cookies">Cookies Policy</a>.
       </p>
-      <hr />
+
       <h2 id="retention-of-personal-data">Retention of personal data</h2>
       <p>
         We retain personal data for as long as necessary to provide the services
@@ -479,7 +479,7 @@ export default function PrivacyDoc() {
         for longer periods, where necessary, subject to applicable law, for
         security purposes.
       </p>
-      <hr />
+
       <h3 id="how-chrt-secures-your-information">
         How CHRT secures your information
       </h3>
@@ -532,7 +532,7 @@ export default function PrivacyDoc() {
         a resident of an EU member state, you have the right to file a complaint
         with your local supervisory authority, and you might have more options.
       </p>
-      <hr />
+
       <h2 id="changes-to-our-privacy-statement">
         Changes to our Privacy Statement
       </h2>
@@ -546,7 +546,7 @@ export default function PrivacyDoc() {
         Privacy Statement, we encourage Users to watch or to check this Privacy
         Statement page frequently.
       </p>
-      <hr />
+
       <h2 id="license">License</h2>
       <p>
         This Privacy Statement is licensed under this{" "}
@@ -555,16 +555,14 @@ export default function PrivacyDoc() {
         </a>
         .
       </p>
-      <hr />
+
       <h2 id="contacting-chrt">Contacting CHRT</h2>
       <p>
         Questions or concerns regarding CHRT&#39;s Privacy Statement or
         information practices should be directed to (support [at] chrt [dot]
         com).
       </p>
-      <hr />
-      <hr />
-      <hr />
+
       <h2 id="notice-to-california-residents">
         Notice to California residents
       </h2>
