@@ -21,7 +21,7 @@ export default function AppLayoutSkeleton(props) {
   let { hideOutlet } = props;
 
   return (
-    <div className="h-full bg-zinc-100 dark:bg-zinc-700">
+    <div className="h-full overflow-auto bg-zinc-100 dark:bg-zinc-700">
       {/* Static sidebar for desktop */}
       <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
         {/* Sidebar component, swap this element with another sidebar if you like */}

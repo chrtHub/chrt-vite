@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- JSX Components --//
+import TypographyWrapper from "../TypographyWrapper";
 import PrivacyDoc from "./PrivacyDoc";
 
 //-- NPM Components --//
@@ -16,8 +17,8 @@ import PrivacyDoc from "./PrivacyDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Privacy() {
   return (
-    <article class="prose dark:text-white lg:prose-xl">
+    <TypographyWrapper>
       <PrivacyDoc />
-    </article>
+    </TypographyWrapper>
   );
 }

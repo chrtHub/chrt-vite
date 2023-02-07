@@ -97,7 +97,7 @@ export default function AppLayout() {
 
   return (
     <>
-      <div className="h-full bg-zinc-100 dark:bg-zinc-700">
+      <div className="h-full overflow-auto bg-zinc-100 dark:bg-zinc-700">
         {/* Mobile Sidebar */}
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
@@ -398,13 +398,13 @@ export default function AppLayout() {
                       <Menu.Item key={"sign-out-button"}>
                         {({ active }) => (
                           <a
-                            href={`${window.location.origin}/info`}
+                            href={`${window.location.origin}/terms`}
                             className={classNames(
                               active ? "bg-zinc-100 dark:bg-zinc-800" : "",
                               "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
                             )}
                           >
-                            Terms, Privacy, & More
+                            Terms, Privacy, FAQ, etc.
                           </a>
                         )}
                       </Menu.Item>

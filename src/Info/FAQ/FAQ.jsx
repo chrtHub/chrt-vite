@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- JSX Components --//
+import TypographyWrapper from "../TypographyWrapper";
 import FAQDoc from "./FAQDoc";
 
 //-- NPM Components --//
@@ -16,8 +17,8 @@ import FAQDoc from "./FAQDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function FAQ() {
   return (
-    <article class="prose dark:text-white lg:prose-xl">
+    <TypographyWrapper>
       <FAQDoc />
-    </article>
+    </TypographyWrapper>
   );
 }

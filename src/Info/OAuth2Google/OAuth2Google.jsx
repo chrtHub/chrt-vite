@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- JSX Components --//
+import TypographyWrapper from "../TypographyWrapper";
 import OAuth2GoogleDoc from "./OAuth2GoogleDoc";
 
 //-- NPM Components --//
@@ -16,8 +17,8 @@ import OAuth2GoogleDoc from "./OAuth2GoogleDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function OAuth2Google() {
   return (
-    <article class="prose dark:text-white lg:prose-xl">
+    <TypographyWrapper>
       <OAuth2GoogleDoc />
-    </article>
+    </TypographyWrapper>
   );
 }
