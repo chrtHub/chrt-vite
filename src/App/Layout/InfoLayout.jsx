@@ -284,7 +284,9 @@ export default function InfoLayout() {
             </div>
           </div>
           <main className="flex-1">
-            <Outlet />
+            <div className="mx-6 my-6">
+              <Outlet />
+            </div>
           </main>
         </div>
       </div>
