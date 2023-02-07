@@ -15,7 +15,7 @@ phases:
       - aws cloudfront create-invalidation --distribution-id=EM4IOR3AXZTHT --paths '/*'
 artifacts:
   files:
-    - "build/**/*"
+    - "dist/**/*"
   discard-paths: no
 #reports:
 #  jest_reports: # test reports
