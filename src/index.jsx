@@ -7,11 +7,13 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
+
+import App from "./App/App";
+
 import Auth0ProviderWithNavigate from "./Auth/Auth0ProviderWithNavigate";
 import AuthGuard from "./Auth/AuthGuard";
 
 //-- JSX Components: Home --//
-import App from "./App/App";
 import Home from "./App/Home/Home";
 
 //-- JSX Components: App --//
