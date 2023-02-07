@@ -46,8 +46,9 @@ const navigation = [
 const userNavigation = [
   { name: "Profile", to: "/profile" },
   { name: "Settings", to: "/settings" },
-  { name: "Terms, Privacy, & More", to: "/info" },
-  //-- Light/Dark Mode button created inline as anchor tag with 'onClick' method, not NavLink with 'to' prop --//
+  //-- Items using 'onClick' method, not NavLink with 'to' prop
+  //-- Light/Dark Mode buttons --//
+  //-- Terms, Privacy, & More --//
   //-- Sign out button - also uses onClick --//
 ];
 
@@ -393,7 +394,22 @@ export default function AppLayout() {
                         </Menu.Item>
                       ))}
 
-                      {/* Sign Out Button - uses onClick isntead of href */}
+                      {/* Terms, Privacy, & More */}
+                      <Menu.Item key={"sign-out-button"}>
+                        {({ active }) => (
+                          <a
+                            href={`${window.location.origin}/info`}
+                            className={classNames(
+                              active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                              "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                            )}
+                          >
+                            Terms, Privacy, & More
+                          </a>
+                        )}
+                      </Menu.Item>
+
+                      {/* Sign Out Button  */}
                       <Menu.Item key={"sign-out-button"}>
                         {({ active }) => (
                           <a

@@ -31,7 +31,7 @@ const infoRoutes = [
 export default function App() {
   const { isLoading, isAuthenticated } = useAuth0();
 
-  //-- For Info routes --//
+  //-- For Info routes, use the InfoLayout --//
   if (infoRoutes.includes(window.location.pathname)) {
     return <InfoLayout />;
   }
