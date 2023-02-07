@@ -15,7 +15,7 @@ import SystemRequirementsDoc from "./SystemRequirementsDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function SystemRequirements() {
   return (
-    <article class="prose lg:prose-xl">
+    <article class="prose dark:text-white lg:prose-xl">
       <SystemRequirementsDoc />
     </article>
   );

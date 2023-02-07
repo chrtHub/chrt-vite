@@ -16,7 +16,7 @@ import OAuth2GoogleDoc from "./OAuth2GoogleDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function OAuth2Google() {
   return (
-    <article class="prose lg:prose-xl">
+    <article class="prose dark:text-white lg:prose-xl">
       <OAuth2GoogleDoc />
     </article>
   );

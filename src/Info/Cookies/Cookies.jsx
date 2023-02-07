@@ -16,7 +16,7 @@ import CookiesDoc from "./CookiesDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Cookies() {
   return (
-    <article class="prose lg:prose-xl">
+    <article class="prose dark:text-white lg:prose-xl">
       <CookiesDoc />
     </article>
   );

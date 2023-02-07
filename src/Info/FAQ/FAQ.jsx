@@ -16,7 +16,7 @@ import FAQDoc from "./FAQDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function FAQ() {
   return (
-    <article class="prose lg:prose-xl">
+    <article class="prose dark:text-white lg:prose-xl">
       <FAQDoc />
     </article>
   );
