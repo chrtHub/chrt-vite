@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- JSX Components --//
+import CookiesDoc from "./CookiesDoc";
 
 //-- NPM Components --//
 
@@ -15,8 +16,8 @@
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Cookies() {
   return (
-    <div>
-      <p>TODO - cookies</p>
-    </div>
+    <article class="prose lg:prose-xl">
+      <CookiesDoc />
+    </article>
   );
 }

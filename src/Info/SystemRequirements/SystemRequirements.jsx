@@ -1,7 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- JSX Components --//
-
+import SystemRequirementsDoc from "./SystemRequirementsDoc";
 //-- NPM Components --//
 
 //-- Icons --//
@@ -15,8 +15,8 @@
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function SystemRequirements() {
   return (
-    <div>
-      <p>system requirements</p>
-    </div>
+    <article class="prose lg:prose-xl">
+      <SystemRequirementsDoc />
+    </article>
   );
 }

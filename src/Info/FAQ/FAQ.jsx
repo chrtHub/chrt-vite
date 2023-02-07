@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- JSX Components --//
+import FAQDoc from "./FAQDoc";
 
 //-- NPM Components --//
 
@@ -15,8 +16,8 @@
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function FAQ() {
   return (
-    <div>
-      <p>TODO - FAQ</p>
-    </div>
+    <article class="prose lg:prose-xl">
+      <FAQDoc />
+    </article>
   );
 }

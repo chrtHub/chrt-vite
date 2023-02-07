@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- JSX Components --//
+import OAuth2GoogleDoc from "./OAuth2GoogleDoc";
 
 //-- NPM Components --//
 
@@ -15,8 +16,8 @@
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function OAuth2Google() {
   return (
-    <div>
-      <p>TODO - OAuth2 Google</p>
-    </div>
+    <article class="prose lg:prose-xl">
+      <OAuth2GoogleDoc />
+    </article>
   );
 }

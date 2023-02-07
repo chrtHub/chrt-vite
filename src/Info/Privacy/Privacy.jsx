@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- JSX Components --//
+import PrivacyDoc from "./PrivacyDoc";
 
 //-- NPM Components --//
 
@@ -15,8 +16,8 @@
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Privacy() {
   return (
-    <div>
-      <p>TODO - privacy</p>
-    </div>
+    <article class="prose lg:prose-xl">
+      <PrivacyDoc />
+    </article>
   );
 }
