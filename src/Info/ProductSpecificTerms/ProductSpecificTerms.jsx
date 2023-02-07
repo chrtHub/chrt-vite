@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- JSX Components --//
+import ProductSpecificTermsDoc from "./ProductSpecificTermsDoc";
 
 //-- NPM Components --//
 
@@ -13,10 +14,10 @@
 //-- Data Objects --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function ComponentName() {
+export default function ProductSpecificTerms() {
   return (
-    <div>
-      <p>content</p>
-    </div>
+    <article class="prose dark:text-white lg:prose-xl">
+      <ProductSpecificTermsDoc />
+    </article>
   );
 }

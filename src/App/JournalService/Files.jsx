@@ -13,10 +13,6 @@
 //-- Data Objects --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function ComponentName() {
-  return (
-    <div>
-      <p>content</p>
-    </div>
-  );
+export default function Journal() {
+  return <div>files</div>;
 }

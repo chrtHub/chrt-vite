@@ -39,18 +39,21 @@ function classNames(...classes) {
 const navigation = [
   { name: "Home", to: "/", icon: HomeIcon },
   { name: "Journal", to: "/journal", icon: CalendarDaysIcon },
+  { name: "Journal Files", to: "/files", icon: FolderIcon },
   { name: "Market Data", to: "/data", icon: PresentationChartLineIcon },
 ];
 
 const userNavigation = [
   { name: "Profile", to: "/profile" },
   { name: "Settings", to: "/settings" },
-  //-- Light/Dark Mode button created inline as anchor tag with 'onClick' method, not NavLink with 'to' prop --//
+  //-- Items using 'onClick' method, not NavLink with 'to' prop
+  //-- Light/Dark Mode buttons --//
+  //-- Terms, Privacy, & More --//
   //-- Sign out button - also uses onClick --//
 ];
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function Layout() {
+export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentNavItem, setCurrentNavItem] = useState(
     window.location.pathname
@@ -149,9 +152,12 @@ export default function Layout() {
                     </div>
                   </Transition.Child>
                   <div className="flex flex-shrink-0 items-center px-4">
-                    <p className="h-8 w-auto font-sans text-3xl font-semibold text-black dark:text-white ">
+                    <a
+                      href={window.location.origin}
+                      className="h-8 w-auto font-sans text-3xl font-semibold text-black dark:text-white "
+                    >
                       chrt
-                    </p>
+                    </a>
                   </div>
                   <div className="mt-5 h-0 flex-1 overflow-y-auto">
                     <nav className="space-y-1 px-2">
@@ -199,9 +205,12 @@ export default function Layout() {
             <div
               className={`flex h-16 flex-shrink-0 items-center bg-zinc-300 px-4 dark:bg-zinc-900`}
             >
-              <p className="h-8 w-auto font-sans text-3xl font-semibold text-zinc-900 dark:text-white ">
+              <a
+                href={window.location.origin}
+                className="h-8 w-auto font-sans text-3xl font-semibold text-zinc-900 dark:text-white "
+              >
                 chrt
-              </p>
+              </a>
             </div>
             {/* Nav items below */}
             <div className="flex flex-1 flex-col overflow-y-auto">
@@ -249,6 +258,7 @@ export default function Layout() {
             </button>
             <div className="flex flex-1 justify-between px-4">
               <div className="flex flex-1">
+                {/*  */}
                 <form className="flex w-full md:ml-0" action="#" method="GET">
                   <label htmlFor="search-field" className="sr-only">
                     Search
@@ -384,7 +394,22 @@ export default function Layout() {
                         </Menu.Item>
                       ))}
 
-                      {/* Sign Out Button - uses onClick isntead of href */}
+                      {/* Terms, Privacy, & More */}
+                      <Menu.Item key={"sign-out-button"}>
+                        {({ active }) => (
+                          <a
+                            href={`${window.location.origin}/info`}
+                            className={classNames(
+                              active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                              "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                            )}
+                          >
+                            Terms, Privacy, & More
+                          </a>
+                        )}
+                      </Menu.Item>
+
+                      {/* Sign Out Button  */}
                       <Menu.Item key={"sign-out-button"}>
                         {({ active }) => (
                           <a
@@ -412,7 +437,7 @@ export default function Layout() {
           </div>
           {/* While auth is loading, show <Loading />, then show <Outlet /> content */}
 
-          <main className="flex-1 ">
+          <main className="flex-1">
             <Outlet />
           </main>
         </div>

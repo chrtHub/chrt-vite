@@ -8,15 +8,30 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Auth0ProviderWithNavigate from "./Auth/Auth0ProviderWithNavigate";
-
-//-- JSX Components --//
 import AuthGuard from "./Auth/AuthGuard";
+
+//-- JSX Components: Home --//
 import App from "./App/App";
 import Home from "./App/Home/Home";
-import Journal from "./App/JournalService/Journal";
+
+//-- JSX Components: App --//
 import Data from "./App/DataService/Data";
-import Settings from "./App/Settings/Settings";
+import Journal from "./App/JournalService/Journal";
+import Files from "./App/JournalService/Files";
 import Profile from "./App/Profile/Profile";
+import Settings from "./App/Settings/Settings";
+
+//-- JSX Components: Info --//
+import Cookies from "./Info/Cookies/Cookies";
+import FAQ from "./Info/FAQ/FAQ";
+import Info from "./Info/Info";
+import OAuth2Google from "./Info/OAuth2Google/OAuth2Google";
+import Privacy from "./Info/Privacy/Privacy";
+import ProductSpecificTerms from "./Info/ProductSpecificTerms/ProductSpecificTerms";
+import SystemRequirements from "./Info/SystemRequirements/SystemRequirements";
+import Terms from "./Info/Terms/Terms";
+
+//-- JSX Components: Navigation --//
 import Callback from "./UI/Callback";
 import NotFoundPage from "./UI/NotFoundPage";
 
@@ -27,14 +42,32 @@ import "./index.css";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Auth0ProviderWithNavigate />}>
+      {/* App */}
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
-        <Route path="/journal" element={<AuthGuard component={Journal} />} />
+
         <Route path="/data" element={<AuthGuard component={Data} />} />
-        <Route path="/settings" element={<AuthGuard component={Settings} />} />
+        <Route path="/journal" element={<AuthGuard component={Journal} />} />
+        <Route path="/files" element={<AuthGuard component={Files} />} />
         <Route path="/profile" element={<AuthGuard component={Profile} />} />
-        <Route path="/callback" element={<Callback />} />
+        <Route path="/settings" element={<AuthGuard component={Settings} />} />
+
+        {/* Info */}
+        <Route path="/info" element={<Info />} />
+        <Route path="/cookies" element={<Cookies />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/oauth2_google" element={<OAuth2Google />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route
+          path="/product_specific_terms"
+          element={<ProductSpecificTerms />}
+        />
+        <Route path="/system_requirements" element={<SystemRequirements />} />
+        <Route path="/terms" element={<Terms />} />
       </Route>
+
+      {/* Navigation */}
+      <Route path="/callback" element={<Callback />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
