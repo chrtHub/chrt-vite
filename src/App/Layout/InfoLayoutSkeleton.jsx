@@ -17,7 +17,7 @@ import { EllipsisHorizontalCircleIcon } from "@heroicons/react/24/outline";
 let DIV_COUNT = [{ id: 1 }, { id: 2 }, { id: 3 }];
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function LayoutSkeleton(props) {
+export default function InfoLayoutSkeleton(props) {
   let { hideOutlet } = props;
 
   return (

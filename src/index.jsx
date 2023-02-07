@@ -42,10 +42,10 @@ import "./index.css";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Auth0ProviderWithNavigate />}>
+      {/* App */}
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
 
-        {/* App */}
         <Route path="/data" element={<AuthGuard component={Data} />} />
         <Route path="/journal" element={<AuthGuard component={Journal} />} />
         <Route path="/files" element={<AuthGuard component={Files} />} />
@@ -53,9 +53,9 @@ const router = createBrowserRouter(
         <Route path="/settings" element={<AuthGuard component={Settings} />} />
 
         {/* Info */}
+        <Route path="/info" element={<Info />} />
         <Route path="/cookies" element={<Cookies />} />
         <Route path="/faq" element={<FAQ />} />
-        <Route path="/info" element={<Info />} />
         <Route path="/oauth2_google" element={<OAuth2Google />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route
@@ -64,10 +64,10 @@ const router = createBrowserRouter(
         />
         <Route path="/system_requirements" element={<SystemRequirements />} />
         <Route path="/terms" element={<Terms />} />
-
-        {/* Callback */}
-        <Route path="/callback" element={<Callback />} />
       </Route>
+
+      {/* Navigation */}
+      <Route path="/callback" element={<Callback />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )

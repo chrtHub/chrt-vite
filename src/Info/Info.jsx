@@ -5,6 +5,15 @@ import { NavLink } from "react-router-dom";
 //-- NPM Components --//
 
 //-- Icons --//
+import {
+  QuestionMarkCircleIcon,
+  InformationCircleIcon,
+  ClipboardDocumentListIcon,
+  DocumentTextIcon,
+  LockClosedIcon,
+  ComputerDesktopIcon,
+  ShieldCheckIcon,
+} from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
 
@@ -12,10 +21,30 @@ import { NavLink } from "react-router-dom";
 
 //-- Data Objects --//
 const navigation = [
-  { name: "Terms of Service", to: "/terms" },
-  { name: "Privacy Statement", to: "/privacy" },
-  { name: "System Requirements", to: "/system_requirements" },
-  { name: "OAuth2 Google", to: "/oauth2_google" },
+  { name: "Info", to: "/info", icon: InformationCircleIcon },
+  { name: "FAQ", to: "/faq", icon: QuestionMarkCircleIcon },
+  {
+    name: "Privacy Statement",
+    to: "/privacy",
+    icon: ClipboardDocumentListIcon,
+  },
+  { name: "Terms of Service", to: "/terms", icon: DocumentTextIcon },
+  {
+    name: "Product Specific Terms",
+    to: "/product_specific_terms",
+    icon: DocumentTextIcon,
+  },
+  {
+    name: "System Requirements",
+    to: "/system_requirements",
+    icon: ComputerDesktopIcon,
+  },
+  { name: "Cookies Policy", to: "/cookies", icon: ShieldCheckIcon },
+  {
+    name: "OAuth 2 - Google Accounts",
+    to: "/oauth2_google",
+    icon: LockClosedIcon,
+  },
 ];
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//

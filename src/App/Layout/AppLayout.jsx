@@ -52,7 +52,7 @@ const userNavigation = [
 ];
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function Layout() {
+export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentNavItem, setCurrentNavItem] = useState(
     window.location.pathname
