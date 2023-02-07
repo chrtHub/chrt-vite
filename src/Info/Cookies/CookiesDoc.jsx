@@ -2,7 +2,7 @@ export default function TermsDoc() {
   return (
     <>
       <h1 id="cookies-policy">Cookies Policy</h1>
-      <p>Effective date: TBD</p>
+      <p>Effective date: January 1, 2023</p>
 
       <h1 id="introduction">Introduction</h1>
       <p>

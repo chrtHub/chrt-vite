@@ -50,11 +50,6 @@ const navigation = [
   },
   { name: "Cookies Policy", to: "/cookies", icon: ShieldCheckIcon },
   {
-    name: "Product Specific Terms",
-    to: "/product_specific_terms",
-    icon: DocumentTextIcon,
-  },
-  {
     name: "OAuth 2 - Google Accounts",
     to: "/oauth2_google",
     icon: LockClosedIcon,
@@ -162,7 +157,7 @@ export default function InfoLayout() {
                   <div className="flex flex-shrink-0 items-center px-4">
                     <a
                       href={window.location.origin}
-                      className="h-8 w-auto font-sans text-3xl font-semibold text-black dark:text-white "
+                      className="h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500"
                     >
                       chrt
                     </a>
@@ -215,7 +210,7 @@ export default function InfoLayout() {
             >
               <a
                 href={window.location.origin}
-                className="h-8 w-auto font-sans text-3xl font-semibold text-zinc-900 dark:text-white "
+                className="h-8 w-auto font-sans text-3xl font-semibold text-zinc-900 hover:text-green-500 dark:text-white dark:hover:text-green-500"
               >
                 chrt
               </a>

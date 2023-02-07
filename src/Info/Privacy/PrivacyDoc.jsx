@@ -2,7 +2,7 @@ export default function PrivacyDoc() {
   return (
     <>
       <h1 id="privacy-statement">Privacy Statement</h1>
-      <p>Effective date: TBD</p>
+      <p>Effective date: January 1, 2023</p>
 
       <h2 id="introduction">Introduction</h2>
       <p>
