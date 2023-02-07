@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- JSX Components --//
+import TypographyWrapper from "../TypographyWrapper";
 import ProductSpecificTermsDoc from "./ProductSpecificTermsDoc";
 
 //-- NPM Components --//
@@ -16,8 +17,8 @@ import ProductSpecificTermsDoc from "./ProductSpecificTermsDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ProductSpecificTerms() {
   return (
-    <article className="lg:prose-md prose prose-zinc dark:prose-invert">
+    <TypographyWrapper>
       <ProductSpecificTermsDoc />
-    </article>
+    </TypographyWrapper>
   );
 }

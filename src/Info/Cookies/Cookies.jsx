@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- JSX Components --//
+import TypographyWrapper from "../TypographyWrapper";
 import CookiesDoc from "./CookiesDoc";
 
 //-- NPM Components --//
@@ -16,8 +17,8 @@ import CookiesDoc from "./CookiesDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Cookies() {
   return (
-    <article className="lg:prose-md prose prose-zinc dark:prose-invert">
+    <TypographyWrapper>
       <CookiesDoc />
-    </article>
+    </TypographyWrapper>
   );
 }

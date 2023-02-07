@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- JSX Components --//
+import TypographyWrapper from "../TypographyWrapper";
 import SystemRequirementsDoc from "./SystemRequirementsDoc";
 //-- NPM Components --//
 
@@ -15,8 +16,8 @@ import SystemRequirementsDoc from "./SystemRequirementsDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function SystemRequirements() {
   return (
-    <article class="lg:prose-md prose prose-zinc dark:prose-invert">
+    <TypographyWrapper>
       <SystemRequirementsDoc />
-    </article>
+    </TypographyWrapper>
   );
 }

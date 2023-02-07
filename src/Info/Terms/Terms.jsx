@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- JSX Components --//
+import TypographyWrapper from "../TypographyWrapper";
 import TermsDoc from "./TermsDoc";
 
 //-- NPM Components --//
@@ -16,8 +17,8 @@ import TermsDoc from "./TermsDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Terms() {
   return (
-    <article className="lg:prose-md prose prose-zinc dark:prose-invert">
+    <TypographyWrapper>
       <TermsDoc />
-    </article>
+    </TypographyWrapper>
   );
 }
