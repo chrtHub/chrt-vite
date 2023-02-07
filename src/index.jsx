@@ -13,7 +13,7 @@ import App from "./App/App";
 //-- JSX Components: Home --//
 import Home from "./App/Home/Home";
 // import AuthProviderWithNavigate from "./Auth/AuthProviderWithNavigate";
-import DummyProvider from "./Auth/DummyProvider";
+import DummyProvider from "./Navigation/DummyProvider";
 import AuthGuard from "./Auth/AuthGuard";
 
 //-- JSX Components: App --//
