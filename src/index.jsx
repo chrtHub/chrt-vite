@@ -12,8 +12,7 @@ import App from "./App/App";
 
 //-- JSX Components: Home --//
 import Home from "./App/Home/Home";
-// import AuthProviderWithNavigate from "./Auth/AuthProviderWithNavigate";
-import DummyProvider from "./Navigation/DummyProvider";
+import AuthProviderWithNavigate from "./Foo/AuthProviderWithNavigate";
 import AuthGuard from "./Foo/AuthGuard";
 
 //-- JSX Components: App --//
@@ -42,10 +41,7 @@ import "./index.css";
 //-- Create router object --//
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route
-      // element={<AuthProviderWithNavigate />
-      element={<DummyProvider />}
-    >
+    <Route element={<AuthProviderWithNavigate />}>
       {/* App */}
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
