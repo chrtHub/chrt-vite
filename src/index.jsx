@@ -10,7 +10,7 @@ import {
 
 import App from "./App/App";
 
-import Auth0ProviderWithNavigate from "./Auth/Auth0ProviderWithNavigate";
+import AuthProviderWithNavigate from "./Auth/AuthProviderWithNavigate";
 import AuthGuard from "./Auth/AuthGuard";
 
 //-- JSX Components: Home --//
@@ -42,7 +42,7 @@ import "./index.css";
 //-- Create router object --//
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route element={<Auth0ProviderWithNavigate />}>
+    <Route element={<AuthProviderWithNavigate />}>
       {/* App */}
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
