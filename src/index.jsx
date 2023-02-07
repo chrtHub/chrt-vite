@@ -10,9 +10,6 @@ import {
 
 import App from "./App/App";
 
-import AuthProviderWithNavigate from "./Auth/AuthProviderWithNavigate";
-import AuthGuard from "./Auth/AuthGuard";
-
 //-- JSX Components: Home --//
 import Home from "./App/Home/Home";
 
@@ -35,6 +32,9 @@ import Terms from "./Info/Terms/Terms";
 //-- JSX Components: Navigation --//
 import Callback from "./Navigation/Callback";
 import NotFoundPage from "./Navigation/NotFoundPage";
+
+import AuthProviderWithNavigate from "./Auth/AuthProviderWithNavigate";
+import AuthGuard from "./Auth/AuthGuard";
 
 //-- CSS --//
 import "./index.css";
