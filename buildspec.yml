@@ -3,7 +3,7 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      nodejs: 18
+      nodejs: latest
     commands:
       - aws codeartifact login --tool npm --domain-owner 897621100871 --domain chrt --repository chrt-npm-packages
       - npm install --legacy-peer-deps
