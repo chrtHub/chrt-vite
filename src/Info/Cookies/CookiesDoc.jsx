@@ -11,11 +11,10 @@ export default function TermsDoc() {
         experience.
       </p>
       <p>
-        Our{" "}
-        <a href="https://resources.chrt.com/Legal/privacy">Privacy Statement</a>{" "}
-        explains our principles when it comes to the collection, processing, and
-        storage of your information. This policy specifically explains our use
-        of cookies as well as the options you have to control them.
+        Our <a href="https://chrt.com/privacy">Privacy Statement</a> explains
+        our principles when it comes to the collection, processing, and storage
+        of your information. This policy specifically explains our use of
+        cookies as well as the options you have to control them.
       </p>
       <hr />
       <h2 id="what-are-cookies-">What are cookies?</h2>

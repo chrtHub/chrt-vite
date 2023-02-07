@@ -595,8 +595,8 @@ export default function TermsDoc() {
           <p>
             “Product Specific Terms” means the additional product terms that
             apply to Products available under this Agreement. The Product
-            Specific Terms are provided at resources.chrt.com in the
-            &quot;Legal&quot; section.
+            Specific Terms are provided at
+            [chrt.com/product_specific_terms](https://chrt.com/product_specific_terms).
           </p>
         </li>
         <li>
@@ -613,9 +613,9 @@ export default function TermsDoc() {
         </li>
         <li>
           <p>
-            “SLA” means CHRT Online Services SLA, available at
-            resources.chrt.com, which specifies the minimum service level for
-            the Online Services.
+            “SLA” means CHRT Online Services SLA, available (if applicable) at
+            [chrt.com/info](https://chrt.com/info), which specifies the minimum
+            service level for the Online Services.
           </p>
         </li>
         <li>

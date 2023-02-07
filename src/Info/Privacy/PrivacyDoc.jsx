@@ -17,10 +17,8 @@ export default function PrivacyDoc() {
       </p>
       <p>
         All capitalized terms have their definition in{" "}
-        <a href="https://resources.chrt.com/legal/terms">
-          CHRT&#39;s Terms of Service
-        </a>
-        , unless otherwise noted here.
+        <a href="https://chrt.com/terms">CHRT&#39;s Terms of Service</a>, unless
+        otherwise noted here.
       </p>
       <hr />
       <h2 id="the-short-version">The short version</h2>
@@ -244,18 +242,17 @@ export default function PrivacyDoc() {
       </p>
       <p>
         Please note that if you would like to compile CHRT data, you must comply
-        with our{" "}
-        <a href="https://resources.chrt.com/legal/terms">Terms of Service</a>{" "}
-        regarding information usage and privacy, and you may only use any
-        public-facing information you gather for the purpose for which our user
-        authorized it. For example, where a CHRT user has made personal
-        information public-facing for the purpose of identification and
-        attribution, do not use that information for the purposes of unsolicited
-        contact or selling personal information, such as to recruiters,
-        headhunters, and job boards, or for commercial advertising. We expect
-        you to reasonably secure information you have gathered from CHRT, and to
-        respond promptly to complaints, removal requests, and &quot;do not
-        contact&quot; requests from CHRT or CHRT users.
+        with our <a href="https://chrt.com/terms">Terms of Service</a> regarding
+        information usage and privacy, and you may only use any public-facing
+        information you gather for the purpose for which our user authorized it.
+        For example, where a CHRT user has made personal information
+        public-facing for the purpose of identification and attribution, do not
+        use that information for the purposes of unsolicited contact or selling
+        personal information, such as to recruiters, headhunters, and job
+        boards, or for commercial advertising. We expect you to reasonably
+        secure information you have gathered from CHRT, and to respond promptly
+        to complaints, removal requests, and &quot;do not contact&quot; requests
+        from CHRT or CHRT users.
       </p>
       <h3 id="third-party-applications">Third-party applications</h3>
       <p>
@@ -465,7 +462,7 @@ export default function PrivacyDoc() {
       </p>
       <p>
         You may read more about our use of cookies in our{" "}
-        <a href="https://resources.chrt.com/legal/cookies">Cookies Policy</a>.
+        <a href="https://chrt.com/cookies">Cookies Policy</a>.
       </p>
       <hr />
       <h2 id="retention-of-personal-data">Retention of personal data</h2>
