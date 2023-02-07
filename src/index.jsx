@@ -32,8 +32,8 @@ import SystemRequirements from "./Info/SystemRequirements/SystemRequirements";
 import Terms from "./Info/Terms/Terms";
 
 //-- JSX Components: Navigation --//
-import Callback from "./UI/Callback";
-import NotFoundPage from "./UI/NotFoundPage";
+import Callback from "./Navigation/Callback";
+import NotFoundPage from "./Navigation/NotFoundPage";
 
 //-- CSS --//
 import "./index.css";

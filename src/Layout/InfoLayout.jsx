@@ -35,25 +35,25 @@ function classNames(...classes) {
 
 //-- Data Objects --//
 const navigation = [
-  { name: "Info", to: "/info", icon: InformationCircleIcon },
-  { name: "FAQ", to: "/faq", icon: QuestionMarkCircleIcon },
+  // { name: "Info", to: "/info", icon: InformationCircleIcon },
+  { name: "Terms of Service", to: "/terms", icon: DocumentTextIcon },
   {
     name: "Privacy Statement",
     to: "/privacy",
     icon: DocumentTextIcon,
   },
-  { name: "Terms of Service", to: "/terms", icon: DocumentTextIcon },
-  {
-    name: "Product Specific Terms",
-    to: "/product_specific_terms",
-    icon: DocumentTextIcon,
-  },
+  { name: "FAQ", to: "/faq", icon: QuestionMarkCircleIcon },
   {
     name: "System Requirements",
     to: "/system_requirements",
     icon: ComputerDesktopIcon,
   },
   { name: "Cookies Policy", to: "/cookies", icon: ShieldCheckIcon },
+  {
+    name: "Product Specific Terms",
+    to: "/product_specific_terms",
+    icon: DocumentTextIcon,
+  },
   {
     name: "OAuth 2 - Google Accounts",
     to: "/oauth2_google",
@@ -68,6 +68,7 @@ export default function InfoLayout() {
     window.location.pathname
   );
 
+  //-- Theme --//
   let theme = localStorage.getItem("theme");
   const [currentMode, setCurrentMode] = useState(theme);
 
