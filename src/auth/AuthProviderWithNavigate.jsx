@@ -15,7 +15,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 //-- Data Objects --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function Auth0ProviderWithNavigate() {
+export default function AuthProviderWithNavigate() {
   const navigate = useNavigate();
 
   //-- If user requested Guarded Route but was sent to login, the Guarded Route path is returned as appState.returnTo --//
