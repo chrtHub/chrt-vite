@@ -62,7 +62,7 @@ export default function AppLayout() {
   let theme = localStorage.getItem("theme");
   const [currentMode, setCurrentMode] = useState(theme);
 
-  const { logout } = useAuth0();
+  const { logout, user } = useAuth0();
 
   const useManualDarkMode = () => {
     //-- Set theme to dark in localStorage --//
@@ -295,12 +295,15 @@ export default function AppLayout() {
                   <div>
                     <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 dark:bg-zinc-500 dark:focus:ring-zinc-500">
                       <span className="sr-only">Open user menu</span>
-                      <UserCircleIcon className="h-8 w-8 rounded-full" />
-                      {/* <img
-                        className="h-8 w-8 rounded-full"
-                        src=""
-                        alt="profile image"
-                      /> */}
+                      {user.picture ? (
+                        <img
+                          className="h-8 w-8 rounded-full"
+                          src={user.picture}
+                          alt="profile image"
+                        />
+                      ) : (
+                        <UserCircleIcon className="h-8 w-8 rounded-full" />
+                      )}
                     </Menu.Button>
                   </div>
                   <Transition
