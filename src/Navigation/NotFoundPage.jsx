@@ -1,17 +1,15 @@
 //-- react, react-router-dom, Auth0 --//
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
 //-- JSX Components --//
-
-import catImage from "../Assets/page_not_found/catImage.jpg";
-import dogImage from "../Assets/page_not_found/dogImage.jpg";
-import puppyImage from "../Assets/page_not_found/puppyImage.jpg";
 
 //-- NPM Components --//
 
 //-- Icons --//
 
 //-- NPM Functions --//
+import axios from "axios";
 
 //-- Utility Functions --//
 
@@ -20,17 +18,36 @@ import puppyImage from "../Assets/page_not_found/puppyImage.jpg";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 
 export default function NotFoundPage() {
+  const [imageSrc, setImageSrc] = useState();
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   //-- Randomly select an animal image to display --//
   const animals = [
-    { type: "cat", image: catImage },
-    { type: "dog", image: dogImage },
-    { type: "puppy", image: puppyImage },
+    { type: "cat", url: "https://s3.amazonaws.com/chrt.com/catImage.jpeg" },
+    { type: "dog", url: "https://s3.amazonaws.com/chrt.com/dogImage.jpeg" },
+    { type: "puppy", url: "https://s3.amazonaws.com/chrt.com/puppyImage.jpeg" },
   ];
   let randomNumber = Math.floor(Math.random() * animals.length);
   let randomAnimal = animals[randomNumber];
 
+  //-- Fetch image of randomAnimal from S3 bucket --//
+  useEffect(() => {
+    const fetchImage = async () => {
+      const response = await axios.get(randomAnimal.url, {
+        responseType: "blob",
+      });
+      const imageBlob = await response.data;
+      const imageURL = URL.createObjectURL(imageBlob);
+      setImageSrc(imageURL);
+      setImageLoaded(true);
+    };
+    fetchImage();
+  }, []);
+
+  console.log(imageLoaded);
+
   return (
-    <div className="min-h-full bg-white py-16 px-6 sm:py-24 md:grid md:place-items-center lg:px-8">
+    <div className="min-h-full bg-zinc-100 py-16 px-6 sm:py-24  lg:px-8">
       <div className="mx-auto max-w-max">
         <main className="sm:flex">
           <p className="text-4xl font-bold tracking-tight text-green-600 sm:text-5xl">
@@ -53,13 +70,17 @@ export default function NotFoundPage() {
                 Go back home
               </NavLink>
             </div>
-            <img
-              className="aspect-auto"
-              src={randomAnimal.image}
-              alt={randomAnimal.type}
-            />
           </div>
         </main>
+        {imageLoaded ? (
+          <img
+            className="my-10 aspect-auto" //-- 640x640 using current images --//
+            src={imageSrc}
+            alt={randomAnimal.type}
+          />
+        ) : (
+          <div className="my-10 h-[640px] w-[640px] animate-pulse bg-zinc-200"></div>
+        )}
       </div>
     </div>
   );
