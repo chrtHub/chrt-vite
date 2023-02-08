@@ -4,7 +4,7 @@ export default function TermsDoc() {
       <h1 id="terms-of-service">Terms of Service</h1>
       <p>Effective date: January 1, 2023</p>
 
-      <h1 id="chrt-customer-agreement">CHRT Customer Agreement</h1>
+      <h2 id="chrt-customer-agreement">Customer Agreement</h2>
       <p>
         This Agreement consists of the General Terms, the applicable Product
         Specific Terms, and any additional terms CHRT presents when an order is
@@ -88,31 +88,29 @@ export default function TermsDoc() {
         <li>
           <strong>Restrictions.</strong> Unless expressly permitted in this
           Agreement or by law, Customer may not:
-          <ol>
-            <li>
-              reverse engineer, decompile, or disassemble any Product, or try to
-              do so;
-            </li>
-            <li>
-              run, upgrade or downgrade, or transfer parts of a Product
-              separately at different times or on different devices;
-            </li>
-            <li>
-              install, use, or distribute other software or technology in any
-              way that makes CHRT&#39;s intellectual property or technology
-              subject to any other license terms;
-            </li>
-            <li>
-              work around technical limitations in a Product or restrictions in
-              Product documentation; or
-            </li>
-            <li>
-              sell, rent, lease, sublicense, distribute, or lend any Products
-              (including data provided as part of an Online Service) to others,
-              in whole or in part, or host Products (including data provided as
-              part of an Online Service) for use by others.
-            </li>
-          </ol>
+          <p>
+            reverse engineer, decompile, or disassemble any Product, or try to
+            do so;
+          </p>
+          <p>
+            run, upgrade or downgrade, or transfer parts of a Product separately
+            at different times or on different devices;
+          </p>
+          <p>
+            install, use, or distribute other software or technology in any way
+            that makes CHRT&#39;s intellectual property or technology subject to
+            any other license terms;
+          </p>
+          <p>
+            work around technical limitations in a Product or restrictions in
+            Product documentation; or
+          </p>
+          <p>
+            sell, rent, lease, sublicense, distribute, or lend any Products
+            (including data provided as part of an Online Service) to others, in
+            whole or in part, or host Products (including data provided as part
+            of an Online Service) for use by others.
+          </p>
         </li>
       </ol>
 
@@ -138,18 +136,16 @@ export default function TermsDoc() {
           includes, but is not limited to, Customer Content, the terms of this
           Agreement and Customer’s account authentication credentials.
           Confidential Information does not include information that which:
-          <ol>
-            <li>
-              becomes publicly available without a breach of a confidentiality
-              obligation;
-            </li>
-            <li>
-              was received lawfully from another source without a
-              confidentiality obligation;
-            </li>
-            <li>is independently developed; or</li>
-            <li>is Feedback.</li>
-          </ol>
+          <p>
+            becomes publicly available without a breach of a confidentiality
+            obligation;
+          </p>
+          <p>
+            was received lawfully from another source without a confidentiality
+            obligation;
+          </p>
+          <p>is independently developed; or</p>
+          <p>is Feedback.</p>
         </li>
         <li>
           <strong>Protection of Confidential Information.</strong> Each party
@@ -192,27 +188,25 @@ export default function TermsDoc() {
       <ol>
         <li>
           <strong>Limited warranties and remedies.</strong>
-          <ol>
-            <li>
-              <strong>Online Services.</strong> CHRT warrants that the Online
-              Services will perform in accordance with the applicable SLA during
-              Customer’s use. Customer’s remedies for breach of this warranty
-              are described in the SLA. If no SLA is provided, no warranty is
-              conferred.
-            </li>
-            <li>
-              <strong>Software.</strong> CHRT warrants that the Online Service
-              software will perform substantially as described in the applicable
-              Product documentation for the duration of a Customer&#39;s
-              Subscription License for that Online Service. If it does not and
-              Customer notifies CHRT within the warranty term, CHRT will at its
-              option (a) return the price Customer paid for the software
-              license, (b) return the pro-rated (at a daily interval and
-              beginning on the day of Customer&#39;s notice to CHRT) price
-              Customer paid for the remainder of the term of the software
-              license, or (c) repair or replace the software.
-            </li>
-          </ol>
+          <p>
+            <strong>Online Services.</strong> CHRT warrants that the Online
+            Services will perform in accordance with the applicable SLA during
+            Customer’s use. Customer’s remedies for breach of this warranty are
+            described in the SLA. If no SLA is provided, no warranty is
+            conferred.
+          </p>
+          <p>
+            <strong>Software.</strong> CHRT warrants that the Online Service
+            software will perform substantially as described in the applicable
+            Product documentation for the duration of a Customer&#39;s
+            Subscription License for that Online Service. If it does not and
+            Customer notifies CHRT within the warranty term, CHRT will at its
+            option (a) return the price Customer paid for the software license,
+            (b) return the pro-rated (at a daily interval and beginning on the
+            day of Customer&#39;s notice to CHRT) price Customer paid for the
+            remainder of the term of the software license, or (c) repair or
+            replace the software.
+          </p>
         </li>
         <li>
           <strong>Exclusions.</strong> The warranties in this Agreement do not
@@ -247,35 +241,32 @@ export default function TermsDoc() {
         <li>
           This section describes the parties’ sole remedies and entire liability
           for such claims.
-          <ol>
-            <li>
-              <strong>By CHRT.</strong> CHRT will defend Customer against any
-              third-party claim that a Product made available by CHRT for a fee
-              and used within the scope of this Agreement (unmodified as
-              provided by CHRT and not combined with anything else),
-              misappropriated a trade secret or directly infringes a patent,
-              copyright, trademark, or other proprietary right of a third party.
-              If CHRT is unable to resolve a claim of misappropriation or
-              infringement, it may, at its option, either (1) modify or replace
-              the Product with a functional equivalent or (2) terminate
-              Customer’s license and refund any license fees (either in full or
-              pro-rated at a daily interval and beginning on the day of
-              Customer&#39;s notice to CHRT), including amounts paid in advance
-              for any usage period after the termination date. CHRT will not be
-              liable for any claims or damages due to Customer’s continued use
-              of a Product after being notified to stop due to a third-party
-              claim.
-            </li>
-            <li>
-              <strong>By Customer.</strong> To the extent permitted by
-              applicable law, Customer will defend CHRT and its Affiliates
-              against any third-party claim that: (1) any Customer Content
-              misappropriated a trade secret or directly infringes a patent,
-              copyright, trademark, or other proprietary right of a third party;
-              or (2) Customer’s use of any Product, alone or in combination with
-              anything else, violates the law or harms a third party.
-            </li>
-          </ol>
+          <p>
+            <strong>By CHRT.</strong> CHRT will defend Customer against any
+            third-party claim that a Product made available by CHRT for a fee
+            and used within the scope of this Agreement (unmodified as provided
+            by CHRT and not combined with anything else), misappropriated a
+            trade secret or directly infringes a patent, copyright, trademark,
+            or other proprietary right of a third party. If CHRT is unable to
+            resolve a claim of misappropriation or infringement, it may, at its
+            option, either (1) modify or replace the Product with a functional
+            equivalent or (2) terminate Customer’s license and refund any
+            license fees (either in full or pro-rated at a daily interval and
+            beginning on the day of Customer&#39;s notice to CHRT), including
+            amounts paid in advance for any usage period after the termination
+            date. CHRT will not be liable for any claims or damages due to
+            Customer’s continued use of a Product after being notified to stop
+            due to a third-party claim.
+          </p>
+          <p>
+            <strong>By Customer.</strong> To the extent permitted by applicable
+            law, Customer will defend CHRT and its Affiliates against any
+            third-party claim that: (1) any Customer Content misappropriated a
+            trade secret or directly infringes a patent, copyright, trademark,
+            or other proprietary right of a third party; or (2) Customer’s use
+            of any Product, alone or in combination with anything else, violates
+            the law or harms a third party.
+          </p>
         </li>
       </ol>
 
@@ -285,34 +276,31 @@ export default function TermsDoc() {
           Each party’s maximum, aggregate liability to the other under this
           Agreement is limited to direct damages finally awarded in an amount
           not to exceed the following:
-          <ol>
-            <li>
-              <strong>Products.</strong> For Products ordered on a subscription
-              basis, CHRT&#39;s maximum liability to Customer for any incident
-              giving rise to a claim will not exceed the amount Customer paid
-              for the Product during the 12 months before the incident.
-            </li>
-            <li>
-              <strong>Previews.</strong> For Previews, CHRT&#39;s maximum
-              liability is limited to US $500 or the amount paid by Customer to
-              CHRT during the 12 months before the incident, whichever is lower.
-            </li>
-            <li>
-              <strong>Exclusions.</strong> In no event will either party be
-              liable for indirect, incidental, special, punitive, or
-              consequential damages, or loss of use, loss of profits, or
-              interruption of business; however caused or on any theory of
-              liability.
-            </li>
-            <li>
-              <strong>Exceptions.</strong> No limitation or exclusions will
-              apply to liability arising out of either party’s (1)
-              confidentiality obligations (except for liability related to
-              Customer Content, which is subject to the above limitation for
-              Products); (2) defense obligations above; or (3) violation of the
-              other party’s intellectual property rights.
-            </li>
-          </ol>
+          <p>
+            <strong>Products.</strong> For Products ordered on a subscription
+            basis, CHRT&#39;s maximum liability to Customer for any incident
+            giving rise to a claim will not exceed the amount Customer paid for
+            the Product during the 12 months before the incident.
+          </p>
+          <p>
+            <strong>Previews.</strong> For Previews, CHRT&#39;s maximum
+            liability is limited to US $500 or the amount paid by Customer to
+            CHRT during the 12 months before the incident, whichever is lower.
+          </p>
+          <p>
+            <strong>Exclusions.</strong> In no event will either party be liable
+            for indirect, incidental, special, punitive, or consequential
+            damages, or loss of use, loss of profits, or interruption of
+            business; however caused or on any theory of liability.
+          </p>
+          <p>
+            <strong>Exceptions.</strong> No limitation or exclusions will apply
+            to liability arising out of either party’s (1) confidentiality
+            obligations (except for liability related to Customer Content, which
+            is subject to the above limitation for Products); (2) defense
+            obligations above; or (3) violation of the other party’s
+            intellectual property rights.
+          </p>
         </li>
       </ol>
 
@@ -365,20 +353,18 @@ export default function TermsDoc() {
           remedies, either party may terminate this Agreement for material
           breach immediately if the other party fails to cure a curable breach
           within a 30-day notice period. Upon such termination:
-          <ol>
-            <li>
-              All licenses granted under this Agreement will terminate
-              immediately.
-            </li>
-            <li>
-              All amounts due under any unpaid invoices will become due and
-              payable immediately.
-            </li>
-            <li>
-              If CHRT is in breach, Customer will be reimbursed for any prepaid
-              unused fees.
-            </li>
-          </ol>
+          <p>
+            All licenses granted under this Agreement will terminate
+            immediately.
+          </p>
+          <p>
+            All amounts due under any unpaid invoices will become due and
+            payable immediately.
+          </p>
+          <p>
+            If CHRT is in breach, Customer will be reimbursed for any prepaid
+            unused fees.
+          </p>
         </li>
         <li>
           <strong>Termination for regulatory reasons.</strong> CHRT may modify,
@@ -473,7 +459,6 @@ export default function TermsDoc() {
             service notice on CHRT, it must be made through CHRT&#39;s
             registered agent:
           </p>
-
           <p>
             CHRT, Inc.
             <br />
@@ -481,7 +466,6 @@ export default function TermsDoc() {
             <br />
             address forthcoming
           </p>
-
           <p>
             Notices must be in writing and will be treated as delivered on the
             date received at the address, date shown on the return receipt,
@@ -532,109 +516,75 @@ export default function TermsDoc() {
       <h3 id="j-definitions">J. Definitions</h3>
       <ul>
         <li>
-          <p>
-            “Affiliate” means any legal entity that controls, is controlled by,
-            or is under common control with a party. In this context control
-            means ownership of more than a 50% interest in an entity.
-          </p>
+          “Affiliate” means any legal entity that controls, is controlled by, or
+          is under common control with a party. In this context control means
+          ownership of more than a 50% interest in an entity.
         </li>
         <li>
-          <p>
-            &quot;Agreement&quot; means the CHRT Customer Agreement as described
-            in this Terms of Service document.
-          </p>
+          &quot;Agreement&quot; means the CHRT Customer Agreement as described
+          in this Terms of Service document.
         </li>
         <li>
-          <p>
-            “Content” means text, data, software, images, and any other
-            materials that are displayed or otherwise made available through the
-            Online Service.
-          </p>
+          “Content” means text, data, software, images, and any other materials
+          that are displayed or otherwise made available through the Online
+          Service.
         </li>
         <li>
-          <p>
-            “Customer” means the entity that has entered into this Agreement.
-          </p>
+          “Customer” means the entity that has entered into this Agreement.
         </li>
         <li>
-          <p>
-            “Customer Content” means Content that Customer creates, owns, or to
-            which Customer holds the rights.
-          </p>
+          “Customer Content” means Content that Customer creates, owns, or to
+          which Customer holds the rights.
         </li>
         <li>
-          <p>
-            “End User” means any person or machine account that Customer permits
-            to use a Product or access Customer Content.
-          </p>
+          “End User” means any person or machine account that Customer permits
+          to use a Product or access Customer Content.
         </li>
         <li>
-          <p>
-            “Feedback” means a comment or suggestion volunteered by a party
-            about the other party’s business, products, or services.
-          </p>
+          “Feedback” means a comment or suggestion volunteered by a party about
+          the other party’s business, products, or services.
+        </li>
+        <li>“CHRT” means CHRT, Inc.</li>
+        <li>
+          “Online Service” means the CHRT-hosted service to which Customer may
+          subscribe under this Agreement.
         </li>
         <li>
-          <p>“CHRT” means CHRT, Inc.</p>
+          “Previews” means Products provided for preview, evaluation,
+          demonstration or trial purposes, or pre-release versions of the
+          Products.
         </li>
         <li>
-          <p>
-            “Online Service” means the CHRT-hosted service to which Customer may
-            subscribe under this Agreement.
-          </p>
+          “Product” means all software, Online Services, and Additional Products
+          and features that CHRT offers, including Previews, updates, patches,
+          bug fixes, data (such as market data and trading data), and support
+          provided by CHRT.
         </li>
         <li>
-          <p>
-            “Previews” means Products provided for preview, evaluation,
-            demonstration or trial purposes, or pre-release versions of the
-            Products.
-          </p>
+          “Product Specific Terms” means the additional product terms that apply
+          to Products available under this Agreement. The Product Specific Terms
+          are provided at
+          [chrt.com/product_specific_terms](https://chrt.com/product_specific_terms).
         </li>
         <li>
-          <p>
-            “Product” means all software, Online Services, and Additional
-            Products and features that CHRT offers, including Previews, updates,
-            patches, bug fixes, data (such as market data and trading data), and
-            support provided by CHRT.
-          </p>
+          “Representatives” means a party’s employees, Affiliates, contractors,
+          advisors and consultants.
         </li>
         <li>
-          <p>
-            “Product Specific Terms” means the additional product terms that
-            apply to Products available under this Agreement. The Product
-            Specific Terms are provided at
-            [chrt.com/product_specific_terms](https://chrt.com/product_specific_terms).
-          </p>
+          &quot;Service&quot; means any applications, software, products, and
+          services provided by CHRT, including any Previews.
         </li>
         <li>
-          <p>
-            “Representatives” means a party’s employees, Affiliates,
-            contractors, advisors and consultants.
-          </p>
+          “SLA” means CHRT Online Services SLA, available (if applicable) at{" "}
+          <a href="https://chrt.com/info">chrt.com/info</a>, which specifies the
+          minimum service level for the Online Services.
         </li>
         <li>
-          <p>
-            &quot;Service&quot; means any applications, software, products, and
-            services provided by CHRT, including any Previews.
-          </p>
+          “Subscription License” means the license assigned to an End User.
         </li>
         <li>
-          <p>
-            “SLA” means CHRT Online Services SLA, available (if applicable) at
-            [chrt.com/info](https://chrt.com/info), which specifies the minimum
-            service level for the Online Services.
-          </p>
-        </li>
-        <li>
-          <p>
-            “Subscription License” means the license assigned to an End User.
-          </p>
-        </li>
-        <li>
-          <p>
-            “Subscription Term” means the license period agreed between the
-            parties when the Products are ordered.
-          </p>
+          “Subscription Term” means the license period agreed between the
+          parties when the Products are ordered.
         </li>
       </ul>
 
@@ -642,11 +592,8 @@ export default function TermsDoc() {
       <ol>
         <li>
           <strong>License.</strong> This Terms document is licensed under the
-          Creative Commons Zero license found at{" "}
-          <a href="https://creativecommons.org/publicdomain/zero/1.0/">
-            https://creativecommons.org/publicdomain/zero/1.0/
-          </a>
-          .
+          Creative Commons Zero license found{" "}
+          <a href="https://creativecommons.org/publicdomain/zero/1.0/">here</a>.
         </li>
       </ol>
     </>
