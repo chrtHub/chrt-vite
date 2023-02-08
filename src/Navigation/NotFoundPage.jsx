@@ -79,7 +79,7 @@ export default function NotFoundPage() {
             alt={randomAnimal.type}
           />
         ) : (
-          <div className="my-10 h-[640px] w-[640px] animate-pulse bg-zinc-200"></div>
+          <div className="my-10 h-[454px] w-[454px] animate-pulse bg-zinc-900 md:h-[640px] md:w-[640px]"></div>
         )}
       </div>
     </div>
