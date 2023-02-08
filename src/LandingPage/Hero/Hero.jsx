@@ -7,6 +7,8 @@ import { useState } from "react";
 import BackgroundGradientTop from "./BackgroundGradientTop";
 import BackgroundGradientBottom from "./BackgroundGradientBottom";
 
+import echartsBarchartExampleLight from "../../Assets/echarts/echarts-barchart-example-light.png";
+
 //-- npm Package Functions --//
 import { useAuth0 } from "@auth0/auth0-react";
 import { Dialog } from "@headlessui/react";
@@ -200,7 +202,7 @@ export default function Hero() {
             <div className="mt-16 flow-root sm:mt-24">
               <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
                 <img
-                  src="https://tailwindui.com/img/component-images/project-app-screenshot.png"
+                  src={echartsBarchartExampleLight}
                   alt="App screenshot"
                   width={2432}
                   height={1442}
