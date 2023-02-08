@@ -28,7 +28,7 @@ export default function AuthProviderWithNavigate() {
       domain="chrt-prod.us.auth0.com" //-- Tenant: 'chrt-prod' --//
       clientId="8bDLHYeEUfPHH81VRDBsCTN5TYklAMCu" //-- Application: 'chrt-prod-app' --//
       authorizationParams={{
-        redirect_uri: `${window.location.origin}/callback`, //-- redirect_uri NOTE - localhost not allowed by Auth0 for prod tenant (which is 'chrt-prod') --//
+        redirect_uri: `${window.location.origin}`, //-- redirect_uri NOTE - localhost not allowed by Auth0 for prod tenant (which is 'chrt-prod') --//
         audience: "https://chrt.com", //-- API: 'chrt' (also /userinfo by default) --//
         scope: "openid profile email read:journal write:journal read:data",
         //-- Scope guide:

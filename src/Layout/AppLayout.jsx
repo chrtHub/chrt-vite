@@ -253,7 +253,7 @@ export default function AppLayout() {
             {/* Hamburger button */}
             <button
               type="button"
-              className="border-r border-zinc-300 px-4 text-zinc-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-500 dark:border-zinc-600 md:hidden"
+              className="border-r border-zinc-300 px-4 text-zinc-500 hover:outline-none hover:ring-2 hover:ring-inset hover:ring-zinc-500 dark:border-zinc-600 md:hidden"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
