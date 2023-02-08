@@ -170,6 +170,7 @@ export default function InfoLayout() {
                           to={item.to}
                           onClick={() => {
                             setCurrentNavItem(item.to);
+                            setSidebarOpen(false);
                           }}
                           className={classNames(
                             item.to === currentNavItem
