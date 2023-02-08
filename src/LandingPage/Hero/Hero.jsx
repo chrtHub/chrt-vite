@@ -8,6 +8,7 @@ import BackgroundGradientTop from "./BackgroundGradientTop";
 import BackgroundGradientBottom from "./BackgroundGradientBottom";
 
 import echartsBarchartExampleLight from "../../Assets/echarts/echarts-barchart-example-light.png";
+// import echartsBarchartExampleDark from "../../Assets/echarts/echarts-barchart-example-dark.png";
 
 //-- npm Package Functions --//
 import { useAuth0 } from "@auth0/auth0-react";

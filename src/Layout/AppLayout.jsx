@@ -289,7 +289,7 @@ export default function AppLayout() {
               <div className="ml-4 flex items-center md:ml-6">
                 {/* <button
                   type="button"
-                  className="rounded-full bg-white p-1 text-zinc-400 hover:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2"
+                  className="rounded-full bg-white p-1 text-zinc-400 hover:text-zinc-500 hover:outline-none hover:ring-2 hover:ring-zinc-500 hover:ring-offset-2"
                 >
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -298,7 +298,7 @@ export default function AppLayout() {
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 dark:bg-zinc-500 dark:focus:ring-zinc-500">
+                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm hover:outline-none hover:ring-2 hover:ring-zinc-900 hover:ring-offset-2 dark:bg-zinc-500 dark:hover:ring-zinc-500">
                       <span className="sr-only">Open user menu</span>
                       {user.picture ? (
                         <img
