@@ -170,6 +170,7 @@ export default function InfoLayout() {
                           to={item.to}
                           onClick={() => {
                             setCurrentNavItem(item.to);
+                            setSidebarOpen(false);
                           }}
                           className={classNames(
                             item.to === currentNavItem
@@ -253,7 +254,7 @@ export default function InfoLayout() {
           <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow dark:bg-zinc-800">
             <button
               type="button"
-              className="border-r border-zinc-300 px-4 text-zinc-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-500 dark:border-zinc-600 md:hidden"
+              className="border-r border-zinc-300 px-4 text-zinc-500 hover:outline-none hover:ring-2 hover:ring-inset hover:ring-zinc-500 dark:border-zinc-600 md:hidden"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>

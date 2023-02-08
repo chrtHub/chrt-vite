@@ -7,6 +7,9 @@ import { useState } from "react";
 import BackgroundGradientTop from "./BackgroundGradientTop";
 import BackgroundGradientBottom from "./BackgroundGradientBottom";
 
+import echartsBarchartExampleLight from "../../Assets/echarts/echarts-barchart-example-light.png";
+// import echartsBarchartExampleDark from "../../Assets/echarts/echarts-barchart-example-dark.png";
+
 //-- npm Package Functions --//
 import { useAuth0 } from "@auth0/auth0-react";
 import { Dialog } from "@headlessui/react";
@@ -14,19 +17,18 @@ import { Dialog } from "@headlessui/react";
 //-- npm Package Components --//
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-const VITE_HOMEPAGE_URL = import.meta.env.VITE_HOMEPAGE_URL;
+// const VITE_HOMEPAGE_URL = import.meta.env.VITE_HOMEPAGE_URL;
 
-const navigation = [
-  {
-    name: "Trading Journal",
-    href: VITE_HOMEPAGE_URL + "/journal",
-  },
-  {
-    name: "Market Data",
-    href: VITE_HOMEPAGE_URL + "/data/AAPL",
-  },
-  { name: "About", href: "https://resources.chrt.com" },
-];
+// const navigation = [
+//   {
+//     name: "Trading Journal",
+//     href: `${window.location.origin}/journal`,
+//   },
+//   {
+//     name: "Market Data",
+//     href: `${window.location.origin}/data`,
+//   },
+// ];
 
 export default function Hero() {
   const { loginWithRedirect } = useAuth0();
@@ -52,14 +54,15 @@ export default function Hero() {
       <div className="px-6 pt-6 lg:px-8">
         <nav className="flex items-center justify-between" aria-label="Global">
           <div className="flex lg:flex-1">
-            <a href={`${VITE_HOMEPAGE_URL}`} className="-m-1.5 p-1.5">
+            <a href={`${window.location.origin}`} className="-m-1.5 p-1.5">
               <span className="sr-only">CHRT</span>
               {/* LOGO */}
-              <img
-                className="h-8"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                alt=""
-              />
+              <a
+                href={window.location.origin}
+                className="h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500"
+              >
+                chrt
+              </a>
             </a>
           </div>
 
@@ -77,7 +80,7 @@ export default function Hero() {
 
           {/* NAVIGATION ITEMS */}
           <div className="hidden lg:flex lg:gap-x-12">
-            {navigation.map((item) => (
+            {/* {navigation.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
@@ -85,7 +88,7 @@ export default function Hero() {
               >
                 {item.name}
               </a>
-            ))}
+            ))} */}
           </div>
 
           {/* SIGN IN BUTTON */}
@@ -113,13 +116,14 @@ export default function Hero() {
           >
             <div className="flex items-center justify-between">
               {/* LOGO */}
-              <a href={`${VITE_HOMEPAGE_URL}`} className="-m-1.5 p-1.5">
+              <a href={`${window.location.origin}`} className="-m-1.5 p-1.5">
                 <span className="sr-only">CHRT</span>
-                <img
-                  className="h-8"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                  alt=""
-                />
+                <a
+                  href={window.location.origin}
+                  className="h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500"
+                >
+                  chrt
+                </a>
               </a>
               {/* CLOSE MENU BUTTON */}
               <button
@@ -135,7 +139,7 @@ export default function Hero() {
             <div className="mt-6 flow-root">
               <div className="-my-6 divide-y divide-gray-500/10">
                 <div className="space-y-2 py-6">
-                  {navigation.map((item) => (
+                  {/* {navigation.map((item) => (
                     <a
                       key={item.name}
                       href={item.href}
@@ -143,12 +147,12 @@ export default function Hero() {
                     >
                       {item.name}
                     </a>
-                  ))}
+                  ))} */}
                 </div>
                 {/* SIGN IN BUTTON */}
                 <div className="py-6">
                   <a
-                    className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10 cursor-pointer"
+                    className="-mx-3 block cursor-pointer rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
                     onClick={() => {
                       loginWithRedirect({
                         appState: {
@@ -199,7 +203,7 @@ export default function Hero() {
             <div className="mt-16 flow-root sm:mt-24">
               <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
                 <img
-                  src="https://tailwindui.com/img/component-images/project-app-screenshot.png"
+                  src={echartsBarchartExampleLight}
                   alt="App screenshot"
                   width={2432}
                   height={1442}

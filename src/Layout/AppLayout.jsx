@@ -167,6 +167,7 @@ export default function AppLayout() {
                           to={item.to}
                           onClick={() => {
                             setCurrentNavItem(item.to);
+                            setSidebarOpen(false);
                           }}
                           className={classNames(
                             item.to === currentNavItem
@@ -245,20 +246,23 @@ export default function AppLayout() {
             </div>
           </div>
         </div>
+
+        {/* Main App Bar */}
         <div className="flex flex-col  md:pl-64">
-          {/* Hamburger button */}
           <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow dark:bg-zinc-800">
+            {/* Hamburger button */}
             <button
               type="button"
-              className="border-r border-zinc-300 px-4 text-zinc-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-500 dark:border-zinc-600 md:hidden"
+              className="border-r border-zinc-300 px-4 text-zinc-500 hover:outline-none hover:ring-2 hover:ring-inset hover:ring-zinc-500 dark:border-zinc-600 md:hidden"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
               <Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
             </button>
+            {/*----*/}
             <div className="flex flex-1 justify-between px-4">
+              {/* Search bar */}
               <div className="flex flex-1">
-                {/*  */}
                 <form className="flex w-full md:ml-0" action="#" method="GET">
                   <label htmlFor="search-field" className="sr-only">
                     Search
@@ -280,11 +284,12 @@ export default function AppLayout() {
                   </div>
                 </form>
               </div>
-              {/*  */}
+              {/*----*/}
+              {/* Main App Bar, RHS items  */}
               <div className="ml-4 flex items-center md:ml-6">
                 {/* <button
                   type="button"
-                  className="rounded-full bg-white p-1 text-zinc-400 hover:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2"
+                  className="rounded-full bg-white p-1 text-zinc-400 hover:text-zinc-500 hover:outline-none hover:ring-2 hover:ring-zinc-500 hover:ring-offset-2"
                 >
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -293,7 +298,7 @@ export default function AppLayout() {
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 dark:bg-zinc-500 dark:focus:ring-zinc-500">
+                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm hover:outline-none hover:ring-2 hover:ring-zinc-900 hover:ring-offset-2 dark:bg-zinc-500 dark:hover:ring-zinc-500">
                       <span className="sr-only">Open user menu</span>
                       {user.picture ? (
                         <img
@@ -436,10 +441,10 @@ export default function AppLayout() {
                   </Transition>
                 </Menu>
               </div>
+              {/*----*/}
             </div>
           </div>
-          {/* While auth is loading, show <Loading />, then show <Outlet /> content */}
-
+          {/* Main section */}
           <main className="flex-1">
             <Outlet />
           </main>

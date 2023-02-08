@@ -32,7 +32,6 @@ import SystemRequirements from "./Info/SystemRequirements/SystemRequirements";
 import Terms from "./Info/Terms/Terms";
 
 //-- JSX Components: Navigation --//
-import Callback from "./Navigation/Callback";
 import NotFoundPage from "./Navigation/NotFoundPage";
 
 //-- CSS --//
@@ -63,7 +62,6 @@ const router = createBrowserRouter(
       </Route>
 
       {/* Navigation */}
-      <Route path="/callback" element={<Callback />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
