@@ -3,6 +3,10 @@ import { NavLink } from "react-router-dom";
 
 //-- JSX Components --//
 
+import catImage from "../Assets/page_not_found/catImage.jpg";
+import dogImage from "../Assets/page_not_found/dogImage.jpg";
+import puppyImage from "../Assets/page_not_found/puppyImage.jpg";
+
 //-- NPM Components --//
 
 //-- Icons --//
@@ -16,6 +20,15 @@ import { NavLink } from "react-router-dom";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 
 export default function NotFoundPage() {
+  //-- Randomly select an animal image to display --//
+  const animals = [
+    { type: "cat", image: catImage },
+    { type: "dog", image: dogImage },
+    { type: "puppy", image: puppyImage },
+  ];
+  let randomNumber = Math.floor(Math.random() * animals.length);
+  let randomAnimal = animals[randomNumber];
+
   return (
     <div className="min-h-full bg-white py-16 px-6 sm:py-24 md:grid md:place-items-center lg:px-8">
       <div className="mx-auto max-w-max">
@@ -40,6 +53,11 @@ export default function NotFoundPage() {
                 Go back home
               </NavLink>
             </div>
+            <img
+              className="aspect-auto"
+              src={randomAnimal.image}
+              alt={randomAnimal.type}
+            />
           </div>
         </main>
       </div>
