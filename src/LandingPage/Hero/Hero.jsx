@@ -59,7 +59,7 @@ export default function Hero() {
               {/* LOGO */}
               <a
                 href={window.location.origin}
-                className="h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500"
+                className="h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:hover:text-green-500"
               >
                 chrt
               </a>
@@ -120,7 +120,7 @@ export default function Hero() {
                 <span className="sr-only">CHRT</span>
                 <a
                   href={window.location.origin}
-                  className="h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500"
+                  className="h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:hover:text-green-500"
                 >
                   chrt
                 </a>
