@@ -12,7 +12,7 @@ import echartsBarchartExampleLight from "../../Assets/echarts/echarts-barchart-e
 
 //-- npm Package Functions --//
 import { useAuth0 } from "@auth0/auth0-react";
-import { Dialog } from "@headlessui/react";
+// import { Dialog } from "@headlessui/react";
 
 //-- npm Package Components --//
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -47,9 +47,8 @@ export default function Hero() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="isolate bg-white">
+    <div className="isolate bg-zinc-100">
       <BackgroundGradientTop />
-
       {/* APP BAR */}
       <div className="px-6 pt-6 lg:px-8">
         <nav className="flex items-center justify-between" aria-label="Global">
@@ -59,7 +58,7 @@ export default function Hero() {
               {/* LOGO */}
               <a
                 href={window.location.origin}
-                className="h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:hover:text-green-500"
+                className="text- h-8 w-auto font-sans text-3xl font-semibold hover:text-green-500 dark:hover:text-green-500"
               >
                 chrt
               </a>
@@ -70,7 +69,7 @@ export default function Hero() {
           {/* <div className="flex lg:hidden">
             <button
               type="button"
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-zinc-700"
               onClick={() => setMobileMenuOpen(true)}
             >
               <span className="sr-only">Open main menu</span>
@@ -84,7 +83,7 @@ export default function Hero() {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-sm font-semibold leading-6 text-gray-900"
+                className="text-sm font-semibold leading-6 text-zinc-900"
               >
                 {item.name}
               </a>
@@ -94,7 +93,7 @@ export default function Hero() {
           {/* SIGN IN BUTTON */}
           <div className="lg:flex lg:flex-1 lg:justify-end">
             <button
-              className="text-sm font-semibold leading-6 text-gray-900"
+              className="text-sm font-semibold leading-6 text-black"
               onClick={() => {
                 loginWithRedirect({
                   appState: {
@@ -120,7 +119,7 @@ export default function Hero() {
                 <span className="sr-only">CHRT</span>
                 <a
                   href={window.location.origin}
-                  className="h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:hover:text-green-500"
+                  className="h-8 w-auto font-sans text-3xl font-semibold text-zinc-900 hover:text-green-500 dark:hover:text-green-500"
                 >
                   chrt
                 </a>
@@ -128,7 +127,7 @@ export default function Hero() {
         {/* CLOSE MENU BUTTON */}
         {/* <button
                 type="button"
-                className="-m-2.5 rounded-md p-2.5 text-gray-700"
+                className="-m-2.5 rounded-md p-2.5 text-zinc-700"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <span className="sr-only">Close menu</span>
@@ -137,13 +136,13 @@ export default function Hero() {
             </div> */}
         {/* NAVIGATION ITEMS */}
         {/* <div className="mt-6 flow-root">
-              <div className="-my-6 divide-y divide-gray-500/10">
+              <div className="-my-6 divide-y divide-zinc-500/10">
                 <div className="space-y-2 py-6">
                   {navigation.map((item) => (
                     <a
                       key={item.name}
                       href={item.href}
-                      className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
+                      className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-zinc-900 hover:bg-zinc-400/10"
                     >
                       {item.name}
                     </a>
@@ -152,7 +151,7 @@ export default function Hero() {
         {/* SIGN IN BUTTON */}
         {/* <div className="py-6">
                   <a
-                    className="-mx-3 block cursor-pointer rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
+                    className="-mx-3 block cursor-pointer rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-zinc-900 hover:bg-zinc-400/10"
                     onClick={() => {
                       loginWithRedirect({
                         appState: {
@@ -169,17 +168,16 @@ export default function Hero() {
           </Dialog.Panel>
         </Dialog> */}
       </div>
-
       {/* MAIN */}
       <main>
         <div className="relative py-24 sm:py-32 lg:pb-40">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             {/* TITLE & SUBTITLE */}
             <div className="mx-auto max-w-2xl text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+              <h1 className="text-4xl font-bold tracking-tight text-zinc-900 sm:text-6xl">
                 Journal Your Day Trades
               </h1>
-              <p className="mt-6 text-lg leading-8 text-gray-600">
+              <p className="mt-6 text-lg leading-8 text-zinc-600">
                 Upload your brokerage files and see analysis of your trading
                 peformance
               </p>
@@ -187,13 +185,13 @@ export default function Hero() {
               <div className="mt-10 flex items-center justify-center gap-x-6">
                 <a
                   href="#"
-                  className="rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="rounded-md bg-green-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                 >
                   Do a Demo
                 </a>
                 <button
                   onClick={handleSignUp}
-                  className="rounded-md bg-gray-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+                  className="rounded-md bg-zinc-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-zinc-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
                 >
                   Sign Up
                 </button>
@@ -201,13 +199,13 @@ export default function Hero() {
             </div>
             {/* SCREENSHOT */}
             <div className="mt-16 flow-root sm:mt-24">
-              <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+              <div className="-m-2 rounded-xl bg-zinc-900/5 p-2 ring-1 ring-inset ring-zinc-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
                 <img
                   src={echartsBarchartExampleLight}
                   alt="App screenshot"
                   width={2432}
                   height={1442}
-                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
+                  className="rounded-md shadow-2xl ring-1 ring-zinc-900/10"
                 />
               </div>
             </div>
