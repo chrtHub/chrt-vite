@@ -67,7 +67,7 @@ export default function Hero() {
           </div>
 
           {/* MOBILE MENU */}
-          <div className="flex lg:hidden">
+          {/* <div className="flex lg:hidden">
             <button
               type="button"
               className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
@@ -76,7 +76,7 @@ export default function Hero() {
               <span className="sr-only">Open main menu</span>
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
-          </div>
+          </div> */}
 
           {/* NAVIGATION ITEMS */}
           <div className="hidden lg:flex lg:gap-x-12">
@@ -92,7 +92,7 @@ export default function Hero() {
           </div>
 
           {/* SIGN IN BUTTON */}
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+          <div className="lg:flex lg:flex-1 lg:justify-end">
             <button
               className="text-sm font-semibold leading-6 text-gray-900"
               onClick={() => {
@@ -109,14 +109,14 @@ export default function Hero() {
         </nav>
 
         {/* DIALOG */}
-        <Dialog as="div" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
+        {/* <Dialog as="div" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
           <Dialog.Panel
             focus="true"
             className="fixed inset-0 z-10 overflow-y-auto bg-white px-6 py-6 lg:hidden"
           >
-            <div className="flex items-center justify-between">
-              {/* LOGO */}
-              <a href={`${window.location.origin}`} className="-m-1.5 p-1.5">
+            <div className="flex items-center justify-between"> */}
+        {/* LOGO */}
+        {/* <a href={`${window.location.origin}`} className="-m-1.5 p-1.5">
                 <span className="sr-only">CHRT</span>
                 <a
                   href={window.location.origin}
@@ -124,9 +124,9 @@ export default function Hero() {
                 >
                   chrt
                 </a>
-              </a>
-              {/* CLOSE MENU BUTTON */}
-              <button
+              </a> */}
+        {/* CLOSE MENU BUTTON */}
+        {/* <button
                 type="button"
                 className="-m-2.5 rounded-md p-2.5 text-gray-700"
                 onClick={() => setMobileMenuOpen(false)}
@@ -134,12 +134,12 @@ export default function Hero() {
                 <span className="sr-only">Close menu</span>
                 <XMarkIcon className="h-6 w-6" aria-hidden="true" />
               </button>
-            </div>
-            {/* NAVIGATION ITEMS */}
-            <div className="mt-6 flow-root">
+            </div> */}
+        {/* NAVIGATION ITEMS */}
+        {/* <div className="mt-6 flow-root">
               <div className="-my-6 divide-y divide-gray-500/10">
                 <div className="space-y-2 py-6">
-                  {/* {navigation.map((item) => (
+                  {navigation.map((item) => (
                     <a
                       key={item.name}
                       href={item.href}
@@ -147,10 +147,10 @@ export default function Hero() {
                     >
                       {item.name}
                     </a>
-                  ))} */}
-                </div>
-                {/* SIGN IN BUTTON */}
-                <div className="py-6">
+                  ))}
+                </div> */}
+        {/* SIGN IN BUTTON */}
+        {/* <div className="py-6">
                   <a
                     className="-mx-3 block cursor-pointer rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
                     onClick={() => {
@@ -167,7 +167,7 @@ export default function Hero() {
               </div>
             </div>
           </Dialog.Panel>
-        </Dialog>
+        </Dialog> */}
       </div>
 
       {/* MAIN */}
