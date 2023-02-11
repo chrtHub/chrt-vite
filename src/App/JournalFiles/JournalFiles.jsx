@@ -24,7 +24,6 @@ function classNames(...classes) {
 }
 
 //-- Data Objects --//
-
 const brokerages = [
   { id: 1, name: "TD_Ameritrade" },
   { id: 2, name: "TradeZero" },
@@ -365,7 +364,7 @@ export default function JournalFiles() {
       <div className="mx-3 mt-3 flex justify-between gap-x-7 xl:mx-6">
         {/* START OF DOWNLOAD BUTTON */}
         <button
-          disabled={false} // TODO - base on logic
+          disabled={true} // TODO - base on logic
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100"
         >
@@ -375,7 +374,7 @@ export default function JournalFiles() {
 
         {/* START OF DELETE BUTTON */}
         <button
-          disabled={false} // TODO - base on logic
+          disabled={true} // TODO - base on logic
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100"
         >
