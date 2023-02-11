@@ -12,8 +12,9 @@ import {
   CheckIcon,
   ChevronDownIcon,
   ChevronUpDownIcon,
+  ArrowUpTrayIcon,
 } from "@heroicons/react/20/solid";
-import { TableCellsIcon } from "@heroicons/react/24/outline";
+import { TableCellsIcon, FolderIcon } from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
 
@@ -65,21 +66,18 @@ const files = [
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function JournalFiles() {
-  const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]); // TODO - fetch from localStorage
+  const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]); // TODO - fetch last-used value from localStorage
   const [selectedFile, setSelectedFile] = useState();
 
   return (
-    // TODO - evaluate the outer div classNames
-    // TODO - describe the grid and flexbox layout of the page
-
-    <form className="space-y-8 divide-y divide-zinc-200">
-      <div className="space-y-8 divide-y divide-zinc-200">
+    <>
+      {/* START OF FILE UPLOAD AREA */}
+      <form className="space-y-8 divide-y divide-zinc-200">
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          {/* START OF FILE UPLOAD AREA */}
           <div className="mx-3 sm:col-span-6">
             <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6">
               <div className="space-y-1 text-center">
-                <TableCellsIcon className="mx-auto h-12 w-12 text-zinc-400" />
+                <FolderIcon className="mx-auto h-10 w-10 text-zinc-400" />
                 <div className="flex text-sm text-zinc-600">
                   <label
                     htmlFor="file-upload"
@@ -101,266 +99,274 @@ export default function JournalFiles() {
               </div>
             </div>
           </div>
-          {/* END OF FILE UPLOAD AREA */}
+        </div>
+      </form>
+      {/* END OF FILE UPLOAD AREA */}
 
-          {/* START OF BROKERAGE SELECTOR */}
-          <div className="">
-            <Listbox value={selectedBrokerage} onChange={setSelectedBrokerage}>
-              {({ open }) => (
-                <>
-                  <Listbox.Label className="block text-sm font-medium text-zinc-700">
-                    Brokerage
-                  </Listbox.Label>
-                  <div className="relative mt-1">
-                    <Listbox.Button className="relative w-full cursor-default rounded-md border border-zinc-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:text-sm">
-                      <span className="block truncate">
-                        {selectedBrokerage.name}
-                      </span>
-                      <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                        <ChevronUpDownIcon
-                          className="h-5 w-5 text-zinc-400"
-                          aria-hidden="true"
-                        />
-                      </span>
-                    </Listbox.Button>
+      {/* START OF BROKERAGE, FILENAME, UPLOAD AREA */}
+      <div className="mx-3 my-3 grid grid-cols-6 gap-x-3 gap-y-1">
+        {/* START OF BROKERAGE SELECTOR */}
+        <div className="col-span-6 lg:col-span-1">
+          <Listbox value={selectedBrokerage} onChange={setSelectedBrokerage}>
+            {({ open }) => (
+              <>
+                <Listbox.Label className="block text-sm font-medium text-zinc-700">
+                  Brokerage
+                </Listbox.Label>
+                <div className="relative mt-1">
+                  <Listbox.Button className="relative w-full cursor-default rounded-md border border-zinc-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:text-sm">
+                    <span className="block truncate">
+                      {selectedBrokerage.name}
+                    </span>
+                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                      <ChevronUpDownIcon
+                        className="h-5 w-5 text-zinc-400"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </Listbox.Button>
 
-                    <Transition
-                      show={open}
-                      as={Fragment}
-                      leave="transition ease-in duration-100"
-                      leaveFrom="opacity-100"
-                      leaveTo="opacity-0"
-                    >
-                      <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                        {brokerages.map((brokerage) => (
-                          <Listbox.Option
-                            key={brokerage.id}
-                            className={({ active }) =>
-                              classNames(
-                                active
-                                  ? "bg-green-600 text-white"
-                                  : "text-zinc-900",
-                                "relative cursor-default select-none py-2 pl-3 pr-9"
-                              )
-                            }
-                            value={brokerage}
-                          >
-                            {({ selectedBrokerage, active }) => (
-                              <>
+                  <Transition
+                    show={open}
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                      {brokerages.map((brokerage) => (
+                        <Listbox.Option
+                          key={brokerage.id}
+                          className={({ active }) =>
+                            classNames(
+                              active
+                                ? "bg-green-600 text-white"
+                                : "text-zinc-900",
+                              "relative cursor-default select-none py-2 pl-3 pr-9"
+                            )
+                          }
+                          value={brokerage}
+                        >
+                          {({ selectedBrokerage, active }) => (
+                            <>
+                              <span
+                                className={classNames(
+                                  selectedBrokerage
+                                    ? "font-semibold"
+                                    : "font-normal",
+                                  "block truncate"
+                                )}
+                              >
+                                {brokerage.name}
+                              </span>
+
+                              {selectedBrokerage ? (
                                 <span
                                   className={classNames(
-                                    selectedBrokerage
-                                      ? "font-semibold"
-                                      : "font-normal",
-                                    "block truncate"
+                                    active ? "text-white" : "text-green-600",
+                                    "absolute inset-y-0 right-0 flex items-center pr-4"
                                   )}
                                 >
-                                  {brokerage.name}
+                                  <CheckIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
                                 </span>
+                              ) : null}
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </>
+            )}
+          </Listbox>
+        </div>
+        {/* END OF BROKERAGE SELECTOR */}
 
-                                {selectedBrokerage ? (
-                                  <span
-                                    className={classNames(
-                                      active ? "text-white" : "text-green-600",
-                                      "absolute inset-y-0 right-0 flex items-center pr-4"
-                                    )}
-                                  >
-                                    <CheckIcon
-                                      className="h-5 w-5"
-                                      aria-hidden="true"
-                                    />
-                                  </span>
-                                ) : null}
-                              </>
-                            )}
-                          </Listbox.Option>
-                        ))}
-                      </Listbox.Options>
-                    </Transition>
-                  </div>
-                </>
-              )}
-            </Listbox>
-          </div>
-          {/* END OF BROKERAGE SELECTOR */}
-
-          {/* START OF TEXT INPUT FOR FILENAME */}
-          <div>
-            <label
-              htmlFor="company-website"
-              className="block text-sm font-medium text-zinc-700"
-            >
-              Filename
-            </label>
-            <div className="mt-1 flex rounded-md shadow-sm">
-              <span className="inline-flex items-center rounded-l-md border border-r-0 border-zinc-300 bg-zinc-50 px-3 text-zinc-500 sm:text-sm">
+        {/* START OF TEXT INPUT FOR FILENAME */}
+        <div className="col-span-6 lg:col-span-5">
+          <label
+            htmlFor="company-website"
+            className="block text-sm font-medium text-zinc-700"
+          >
+            Filename
+          </label>
+          <div className="mt-1 flex rounded-l-md shadow-sm">
+            <div className="relative flex flex-grow items-stretch focus-within:z-10">
+              <span className="inline-flex items-center rounded-l-md border border-r-0 border-zinc-300 bg-zinc-100 px-3 text-zinc-500 sm:text-sm">
                 {selectedBrokerage.name} /
               </span>
               <input
                 type="text"
                 name="company-website"
                 id="company-website"
-                className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-zinc-300 px-3 py-2 focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                className="block w-full min-w-0 flex-1 rounded-none border-zinc-300 px-3 py-2 focus:border-green-500 focus:ring-green-500 sm:text-sm"
                 placeholder="Jan_20-trading-history.csv"
               />
             </div>
-            <p className="mt-2 text-sm text-zinc-500" id="email-description">
-              Optional: override the filename before upload
-            </p>
-          </div>
-          {/* END OF TEXT INPUT FOR FILENAME */}
 
-          {/* START OF UPLOAD BUTTON */}
-          <button
-            type="button"
-            className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-          >
-            UPLOAD
-          </button>
-          {/* END OF UPLOAD BUTTON */}
+            <button
+              disabled={true} // TODO - base on logic of whetehr file is ready for upload
+              type="button"
+              className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-green-600 bg-green-600 px-4 py-2 text-sm font-medium text-white hover:border-green-700 hover:bg-green-700 focus:outline-none focus:ring-0 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100"
+              onClick={() => {
+                console.log("Upload button clicked");
+              }}
+            >
+              <span>Upload</span>
+            </button>
+          </div>
         </div>
+        {/* END OF TEXT INPUT FOR FILENAME */}
+      </div>
+      {/* END OF BROKERAGE, FILENAME, UPLOAD AREA */}
 
-        {/* START OF DATA TABLE - BROKERAGE FILES */}
-        <div className="px-4 sm:px-6 lg:px-8">
-          <div className="sm:flex sm:items-center">
-            <div className="sm:flex-auto">
-              <h1 className="text-xl font-semibold text-zinc-900">Files</h1>
-              <p className="mt-2 text-sm text-zinc-700">List of files</p>
-            </div>
+      {/* START OF DATA TABLE - BROKERAGE FILES */}
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="sm:flex sm:items-center">
+          <div className="sm:flex-auto">
+            <h1 className="text-xl font-semibold text-zinc-900">Files</h1>
+            <p className="mt-2 text-sm text-zinc-700">List of files</p>
           </div>
-          <div className="mt-8 flex flex-col">
-            <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                  <table className="min-w-full divide-y divide-zinc-300">
-                    {/* Table Headers */}
-                    <thead className="bg-zinc-50">
-                      <tr>
-                        {/* Checkbox Column */}
-                        <th
-                          scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900"
-                        />
+        </div>
+        <div className="mt-8 flex flex-col">
+          <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                <table className="min-w-full divide-y divide-zinc-300">
+                  {/* Table Headers */}
+                  <thead className="bg-zinc-100">
+                    <tr>
+                      {/* Checkbox Column */}
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900"
+                      />
 
-                        {/* Name Column */}
-                        <th
-                          scope="col"
-                          className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-zinc-900 sm:pl-6"
-                        >
-                          <a href="#" className="group inline-flex">
-                            Name
-                            <span className="invisible ml-2 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible">
-                              <ChevronDownIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
-                            </span>
-                          </a>
-                        </th>
-
-                        {/* Brokerage Column */}
-                        <th
-                          scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900"
-                        >
-                          <a href="#" className="group inline-flex">
-                            Brokerage
-                            <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300">
-                              <ChevronDownIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
-                            </span>
-                          </a>
-                        </th>
-
-                        {/* Upload Date Column */}
-                        <th
-                          scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900"
-                        >
-                          <a href="#" className="group inline-flex">
-                            Upload Date
-                            <span className="invisible ml-2 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible">
-                              <ChevronDownIcon
-                                className="invisible ml-2 h-5 w-5 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible"
-                                aria-hidden="true"
-                              />
-                            </span>
-                          </a>
-                        </th>
-
-                        {/* Size Column */}
-                        <th
-                          scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900"
-                        >
-                          <a href="#" className="group inline-flex">
-                            Size (MB)
-                            <span className="invisible ml-2 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible">
-                              <ChevronDownIcon
-                                className="invisible ml-2 h-5 w-5 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible"
-                                aria-hidden="true"
-                              />
-                            </span>
-                          </a>
-                        </th>
-                      </tr>
-                    </thead>
-
-                    {/* Table Body */}
-                    <tbody className="divide-y divide-zinc-200 bg-white">
-                      {files.map((file, fileIdx) => (
-                        <tr
-                          key={file.email}
-                          className={classNames(
-                            fileIdx % 2 === 0 ? undefined : "bg-zinc-100", //-- Striped Rows --//
-                            selectedFile === file.name
-                              ? "bg-green-100"
-                              : undefined //-- Selected Row --> Green --//
-                          )}
-                        >
-                          {/*  */}
-                          <td className="relative w-12 px-6 sm:w-16 sm:px-8">
-                            {selectedFile === file.name && (
-                              <div className="absolute inset-y-0 left-0 w-1.5 bg-green-600" />
-                            )}
-                            <input
-                              type="checkbox"
-                              className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-500 sm:left-6"
-                              value={file.email}
-                              checked={selectedFile === file.name}
-                              onChange={(e) =>
-                                e.target.checked //-- e.target.checked is the status after the onChange event --//
-                                  ? setSelectedFile(file.name)
-                                  : setSelectedFile(null)
-                              }
+                      {/* Name Column */}
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-zinc-900 sm:pl-6"
+                      >
+                        <a href="#" className="group inline-flex">
+                          Name
+                          <span className="invisible ml-2 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible">
+                            <ChevronDownIcon
+                              className="h-5 w-5"
+                              aria-hidden="true"
                             />
-                          </td>
-                          {/*  */}
-                          <td className="whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-zinc-900 sm:pl-6">
-                            {file.name}
-                          </td>
-                          <td className="whitespace-nowrap px-2 py-2 text-sm text-zinc-500">
-                            {file.brokerage}
-                          </td>
-                          <td className="whitespace-nowrap px-2 py-2 text-sm text-zinc-500">
-                            {file.upload_date}
-                          </td>
-                          <td className="relative whitespace-nowrap py-2 pl-3 pr-4 text-sm font-medium sm:pr-6">
-                            {file.size_mb}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                          </span>
+                        </a>
+                      </th>
+
+                      {/* Brokerage Column */}
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900"
+                      >
+                        <a href="#" className="group inline-flex">
+                          Brokerage
+                          <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300">
+                            <ChevronDownIcon
+                              className="h-5 w-5"
+                              aria-hidden="true"
+                            />
+                          </span>
+                        </a>
+                      </th>
+
+                      {/* Upload Date Column */}
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900"
+                      >
+                        <a href="#" className="group inline-flex">
+                          Upload Date
+                          <span className="invisible ml-2 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible">
+                            <ChevronDownIcon
+                              className="invisible ml-2 h-5 w-5 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible"
+                              aria-hidden="true"
+                            />
+                          </span>
+                        </a>
+                      </th>
+
+                      {/* Size Column */}
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900"
+                      >
+                        <a href="#" className="group inline-flex">
+                          Size (MB)
+                          <span className="invisible ml-2 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible">
+                            <ChevronDownIcon
+                              className="invisible ml-2 h-5 w-5 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible"
+                              aria-hidden="true"
+                            />
+                          </span>
+                        </a>
+                      </th>
+                    </tr>
+                  </thead>
+
+                  {/* Table Body */}
+                  <tbody className="divide-y divide-zinc-200 bg-white">
+                    {files.map((file, fileIdx) => (
+                      <tr
+                        key={file.email}
+                        className={classNames(
+                          fileIdx % 2 === 0 ? undefined : "bg-zinc-100", //-- Striped Rows --//
+                          selectedFile === file.name
+                            ? "bg-green-100"
+                            : undefined //-- Selected Row --> Green --//
+                        )}
+                      >
+                        {/*  */}
+                        <td className="relative w-12 px-6 sm:w-16 sm:px-8">
+                          {selectedFile === file.name && (
+                            <div className="absolute inset-y-0 left-0 w-1.5 bg-green-600" />
+                          )}
+                          <input
+                            type="checkbox"
+                            className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-500 sm:left-6"
+                            value={file.email}
+                            checked={selectedFile === file.name}
+                            onChange={(e) =>
+                              e.target.checked //-- e.target.checked is the status after the onChange event --//
+                                ? setSelectedFile(file.name)
+                                : setSelectedFile(null)
+                            }
+                          />
+                        </td>
+                        {/*  */}
+                        <td className="whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-zinc-900 sm:pl-6">
+                          {file.name}
+                        </td>
+                        <td className="whitespace-nowrap px-2 py-2 text-sm text-zinc-500">
+                          {file.brokerage}
+                        </td>
+                        <td className="whitespace-nowrap px-2 py-2 text-sm text-zinc-500">
+                          {file.upload_date}
+                        </td>
+                        <td className="relative whitespace-nowrap py-2 pl-3 pr-4 text-sm font-medium sm:pr-6">
+                          {file.size_mb}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
-        {/* END OF DATA TABLE - BROKERAGE FILES */}
+      </div>
+      {/* END OF DATA TABLE - BROKERAGE FILES */}
 
+      {/* START OF DOWNLOAD AND DELETE BUTTONS SECTION */}
+      <div className="">
         {/* START OF DOWNLOAD BUTTON */}
         <button
           type="button"
@@ -379,6 +385,7 @@ export default function JournalFiles() {
         </button>
         {/* END OF DELETE BUTTON */}
       </div>
-    </form>
+      {/* END OF DOWNLOAD AND DELETE BUTTONS SECTION */}
+    </>
   );
 }

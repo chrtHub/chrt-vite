@@ -100,7 +100,7 @@ export default function InfoLayout() {
 
   return (
     <>
-      <div className="h-full overflow-auto bg-zinc-100 dark:bg-zinc-700">
+      <div className="h-full overflow-auto bg-zinc-50 dark:bg-zinc-700">
         {/* Mobile Sidebar */}
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
