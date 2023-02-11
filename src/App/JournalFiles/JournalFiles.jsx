@@ -70,10 +70,12 @@ export default function JournalFiles() {
 
   return (
     // TODO - evaluate the outer div classNames
+    // TODO - describe the grid and flexbox layout of the page
+
     <form className="space-y-8 divide-y divide-zinc-200">
       <div className="space-y-8 divide-y divide-zinc-200">
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          {/* UPLOAD FILE */}
+          {/* START OF FILE UPLOAD AREA */}
           <div className="mx-3 sm:col-span-6">
             <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6">
               <div className="space-y-1 text-center">
@@ -99,9 +101,9 @@ export default function JournalFiles() {
               </div>
             </div>
           </div>
-          {/* END OF UPLOAD FILE */}
+          {/* END OF FILE UPLOAD AREA */}
 
-          {/* SELECT BROKERAGE */}
+          {/* START OF BROKERAGE SELECTOR */}
           <div className="">
             <Listbox value={selectedBrokerage} onChange={setSelectedBrokerage}>
               {({ open }) => (
@@ -180,7 +182,7 @@ export default function JournalFiles() {
               )}
             </Listbox>
           </div>
-          {/* END OF SELECT BROKERAGE */}
+          {/* END OF BROKERAGE SELECTOR */}
 
           {/* START OF TEXT INPUT FOR FILENAME */}
           <div>
@@ -222,7 +224,7 @@ export default function JournalFiles() {
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="sm:flex sm:items-center">
             <div className="sm:flex-auto">
-              <h1 className="text-xl font-semibold text-zinc-900">Users</h1>
+              <h1 className="text-xl font-semibold text-zinc-900">Files</h1>
               <p className="mt-2 text-sm text-zinc-700">List of files</p>
             </div>
           </div>
