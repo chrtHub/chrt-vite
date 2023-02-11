@@ -72,7 +72,7 @@ export default function JournalFiles() {
   return (
     <>
       {/* START OF FILE UPLOAD AREA */}
-      <form className="m-3 mt-6 xl:m-6">
+      <form className="mx-3 mt-6 xl:mx-6">
         <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-6">
             <div className="flex justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6">
@@ -104,7 +104,7 @@ export default function JournalFiles() {
       {/* END OF FILE UPLOAD AREA */}
 
       {/* START OF BROKERAGE, FILENAME, UPLOAD AREA */}
-      <div className="m-3 grid grid-cols-6 gap-x-3 gap-y-1 xl:m-6">
+      <div className="mx-3 mt-6 grid grid-cols-6 gap-x-3 gap-y-1 xl:mx-6">
         {/* START OF BROKERAGE SELECTOR */}
         <div className="col-span-6 lg:col-span-1">
           <Listbox value={selectedBrokerage} onChange={setSelectedBrokerage}>
@@ -225,8 +225,8 @@ export default function JournalFiles() {
       {/* END OF BROKERAGE, FILENAME, UPLOAD AREA */}
 
       {/* START OF DATA TABLE - BROKERAGE FILES */}
-      <div className="px-3 xl:px-6">
-        <div className="my-3 flex flex-col">
+      <div className="mx-3 mt-6 xl:mx-6">
+        <div className="flex flex-col">
           <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
@@ -362,7 +362,7 @@ export default function JournalFiles() {
       {/* <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6"> */}
 
       {/* START OF DOWNLOAD AND DELETE BUTTONS SECTION */}
-      <div className="m-3 flex justify-between gap-x-7 xl:m-6">
+      <div className="mx-3 mt-3 flex justify-between gap-x-7 xl:mx-6">
         {/* START OF DOWNLOAD BUTTON */}
         <button
           disabled={false} // TODO - base on logic
