@@ -59,10 +59,9 @@ export default function AppLayout() {
     window.location.pathname
   );
 
+  //-- Theming - Light Mode, Dark Mode, Match OS Mode --//
   let theme = localStorage.getItem("theme");
   const [currentMode, setCurrentMode] = useState(theme);
-
-  const { logout, user } = useAuth0();
 
   const useManualDarkMode = () => {
     //-- Set theme to dark in localStorage --//
@@ -95,9 +94,11 @@ export default function AppLayout() {
     setCurrentMode("light");
   };
 
+  const { logout, user } = useAuth0();
+
   return (
     <>
-      <div className="h-full overflow-auto bg-zinc-100 dark:bg-zinc-700">
+      <div className="h-full overflow-auto bg-zinc-50 dark:bg-zinc-700">
         {/* Mobile Sidebar */}
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
@@ -446,7 +447,9 @@ export default function AppLayout() {
           </div>
           {/* Main section */}
           <main className="flex-1">
-            <Outlet />
+            <div className="max-w-screen-2xl">
+              <Outlet />
+            </div>
           </main>
         </div>
       </div>
