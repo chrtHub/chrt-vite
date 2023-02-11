@@ -17,9 +17,13 @@ import Hero from "./Hero/Hero";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function () {
   return (
-    <div className="bg-zinc-900/5">
-      <Hero />
-      <Footer />
+    <div className="flex h-full flex-col bg-zinc-900/5">
+      <div className="">
+        <Hero />
+      </div>
+      <div className="mt-auto">
+        <Footer />
+      </div>
     </div>
   );
 }

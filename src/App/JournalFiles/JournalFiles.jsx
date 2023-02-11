@@ -224,10 +224,10 @@ export default function JournalFiles() {
       {/* END OF BROKERAGE, FILENAME, UPLOAD AREA */}
 
       {/* START OF DATA TABLE - BROKERAGE FILES */}
-      <div className="mx-3 mt-6 xl:mx-6">
+      <div className="mx-3 mt-6 xl:mx-6 xl:mt-6">
         <div className="flex flex-col">
-          <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+          <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full px-1 py-1 align-middle md:px-6 lg:px-8">
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                 <table className="min-w-full divide-y divide-zinc-300">
                   {/* Table Headers */}
@@ -357,8 +357,6 @@ export default function JournalFiles() {
         </div>
       </div>
       {/* END OF DATA TABLE - BROKERAGE FILES */}
-
-      {/* <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6"> */}
 
       {/* START OF DOWNLOAD AND DELETE BUTTONS SECTION */}
       <div className="mx-3 mt-3 flex justify-between gap-x-7 xl:mx-6">
