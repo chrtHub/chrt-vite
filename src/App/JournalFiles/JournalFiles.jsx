@@ -72,10 +72,10 @@ export default function JournalFiles() {
   return (
     <>
       {/* START OF FILE UPLOAD AREA */}
-      <form className="space-y-8 divide-y divide-zinc-200">
-        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          <div className="mx-3 sm:col-span-6">
-            <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6">
+      <form className="m-3 mt-6 xl:m-6">
+        <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+          <div className="sm:col-span-6">
+            <div className="flex justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6">
               <div className="space-y-1 text-center">
                 <FolderIcon className="mx-auto h-10 w-10 text-zinc-400" />
                 <div className="flex text-sm text-zinc-600">
@@ -104,7 +104,7 @@ export default function JournalFiles() {
       {/* END OF FILE UPLOAD AREA */}
 
       {/* START OF BROKERAGE, FILENAME, UPLOAD AREA */}
-      <div className="mx-3 my-3 grid grid-cols-6 gap-x-3 gap-y-1">
+      <div className="m-3 grid grid-cols-6 gap-x-3 gap-y-1 xl:m-6">
         {/* START OF BROKERAGE SELECTOR */}
         <div className="col-span-6 lg:col-span-1">
           <Listbox value={selectedBrokerage} onChange={setSelectedBrokerage}>
@@ -225,14 +225,8 @@ export default function JournalFiles() {
       {/* END OF BROKERAGE, FILENAME, UPLOAD AREA */}
 
       {/* START OF DATA TABLE - BROKERAGE FILES */}
-      <div className="px-4 sm:px-6 lg:px-8">
-        <div className="sm:flex sm:items-center">
-          <div className="sm:flex-auto">
-            <h1 className="text-xl font-semibold text-zinc-900">Files</h1>
-            <p className="mt-2 text-sm text-zinc-700">List of files</p>
-          </div>
-        </div>
-        <div className="mt-8 flex flex-col">
+      <div className="px-3 xl:px-6">
+        <div className="my-3 flex flex-col">
           <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
@@ -252,7 +246,7 @@ export default function JournalFiles() {
                         className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-zinc-900 sm:pl-6"
                       >
                         <a href="#" className="group inline-flex">
-                          Name
+                          Filename
                           <span className="invisible ml-2 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible">
                             <ChevronDownIcon
                               className="h-5 w-5"
@@ -365,12 +359,15 @@ export default function JournalFiles() {
       </div>
       {/* END OF DATA TABLE - BROKERAGE FILES */}
 
+      {/* <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6"> */}
+
       {/* START OF DOWNLOAD AND DELETE BUTTONS SECTION */}
-      <div className="">
+      <div className="m-3 flex justify-between gap-x-7 xl:m-6">
         {/* START OF DOWNLOAD BUTTON */}
         <button
+          disabled={false} // TODO - base on logic
           type="button"
-          className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100"
         >
           Download
         </button>
@@ -378,8 +375,9 @@ export default function JournalFiles() {
 
         {/* START OF DELETE BUTTON */}
         <button
+          disabled={false} // TODO - base on logic
           type="button"
-          className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+          className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100"
         >
           Delete
         </button>
