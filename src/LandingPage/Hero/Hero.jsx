@@ -44,18 +44,18 @@ export default function Hero() {
     });
   };
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="isolate bg-zinc-100">
+    <>
       <BackgroundGradientTop />
-      {/* APP BAR */}
+      {/* START OF APP BAR */}
       <div className="px-6 pt-6 lg:px-8">
         <nav className="flex items-center justify-between" aria-label="Global">
           <div className="flex lg:flex-1">
+            {/* START OF LOGO */}
             <a href={`${window.location.origin}`} className="-m-1.5 p-1.5">
               <span className="sr-only">CHRT</span>
-              {/* LOGO */}
               <a
                 href={window.location.origin}
                 className="text- h-8 w-auto font-sans text-3xl font-semibold hover:text-green-500 dark:hover:text-green-500"
@@ -63,6 +63,7 @@ export default function Hero() {
                 chrt
               </a>
             </a>
+            {/* END OF LOGO */}
           </div>
 
           {/* MOBILE MENU */}
@@ -168,11 +169,13 @@ export default function Hero() {
           </Dialog.Panel>
         </Dialog> */}
       </div>
-      {/* MAIN */}
+      {/* END OF APP BAR */}
+
+      {/* START OF MAIN */}
       <main>
         <div className="relative py-24 sm:py-32 lg:pb-40">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            {/* TITLE & SUBTITLE */}
+            {/* START OF TITLE & SUBTITLE */}
             <div className="mx-auto max-w-2xl text-center">
               <h1 className="text-4xl font-bold tracking-tight text-zinc-900 sm:text-6xl">
                 Journal Your Day Trades
@@ -181,7 +184,7 @@ export default function Hero() {
                 Upload your brokerage files and see analysis of your trading
                 peformance
               </p>
-              {/* BUTTONS */}
+              {/* START OF BUTTONS */}
               <div className="mt-10 flex items-center justify-center gap-x-6">
                 <a
                   href="#"
@@ -196,8 +199,11 @@ export default function Hero() {
                   Sign Up
                 </button>
               </div>
+              {/* END OF BUTTONS */}
             </div>
-            {/* SCREENSHOT */}
+            {/* END OF TITLE & SUBTITLE */}
+
+            {/* START OF SCREENSHOT */}
             <div className="mt-16 flow-root sm:mt-24">
               <div className="-m-2 rounded-xl bg-zinc-900/5 p-2 ring-1 ring-inset ring-zinc-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
                 <img
@@ -209,11 +215,12 @@ export default function Hero() {
                 />
               </div>
             </div>
+            {/* END OF SCREENSHOT */}
           </div>
-
           <BackgroundGradientBottom />
         </div>
       </main>
-    </div>
+      {/* END OF MAIN */}
+    </>
   );
 }
