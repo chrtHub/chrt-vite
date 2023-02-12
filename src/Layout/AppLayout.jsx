@@ -204,9 +204,7 @@ export default function AppLayout() {
       <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex min-h-0 flex-1 flex-col bg-zinc-200 dark:bg-zinc-800">
-          <div
-            className={`flex h-16 flex-shrink-0 items-center bg-zinc-300 px-4 dark:bg-zinc-900`}
-          >
+          <div className="flex h-16 flex-shrink-0 items-center bg-zinc-300 px-4 dark:bg-zinc-900">
             <a
               href={window.location.origin}
               className="h-8 w-auto font-sans text-3xl font-semibold text-zinc-900 hover:text-green-500 dark:text-white dark:hover:text-green-500"
@@ -249,10 +247,10 @@ export default function AppLayout() {
       </div>
       {/* END OF STATIC SIDEBAR */}
 
-      {/*  START OF MAIN APP BAR */}
+      {/*  START OF RHS */}
       <div className="flex flex-col md:pl-64">
         <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow dark:bg-zinc-800">
-          {/* Hamburger button */}
+          {/* START OF HAMBURGER BUTTON */}
           <button
             type="button"
             className="border-r border-zinc-300 px-4 text-zinc-500 hover:outline-none hover:ring-2 hover:ring-inset hover:ring-zinc-500 dark:border-zinc-600 md:hidden"
@@ -261,9 +259,11 @@ export default function AppLayout() {
             <span className="sr-only">Open sidebar</span>
             <Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
           </button>
-          {/*----*/}
+          {/* END OF HAMBURGER BUTTON */}
+
+          {/* START OF SEARCH BAR + PROFILE PHOTO W/ DROPDOWN MENU */}
           <div className="flex flex-1 justify-between px-4">
-            {/* Search bar */}
+            {/* START OF SEARCH BAR */}
             <div className="flex flex-1">
               <form className="flex w-full md:ml-0" action="#" method="GET">
                 <label htmlFor="search-field" className="sr-only">
@@ -286,18 +286,10 @@ export default function AppLayout() {
                 </div>
               </form>
             </div>
-            {/*----*/}
-            {/* Main App Bar, RHS items  */}
-            <div className="ml-4 flex items-center md:ml-6">
-              {/* <button
-                  type="button"
-                  className="rounded-full bg-white p-1 text-zinc-400 hover:text-zinc-500 hover:outline-none hover:ring-2 hover:ring-zinc-500 hover:ring-offset-2"
-                >
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button> */}
+            {/* END OF SEARCH BAR */}
 
-              {/* Profile dropdown */}
+            {/* START OF PROFILE IMAGE AND DROPDOWN MENU */}
+            <div className="ml-4 flex items-center md:ml-6">
               <Menu as="div" className="relative ml-3">
                 <div>
                   <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm hover:outline-none hover:ring-2 hover:ring-zinc-900 hover:ring-offset-2 dark:bg-zinc-500 dark:hover:ring-zinc-500">
@@ -440,19 +432,16 @@ export default function AppLayout() {
                 </Transition>
               </Menu>
             </div>
-            {/*----*/}
+            {/* END OF PROFILE IMAGE AND DROPDOWN MENU */}
           </div>
+          {/* END OF SEARCH BAR + PROFILE PHOTO W/ DROPDOWN MENU */}
         </div>
-      </div>
-      {/*  END OF MAIN APP BAR */}
 
-      {/* START OF MAIN SECTION */}
-
-      <main className="flex-1 md:pl-64">
+        {/* START OF MAIN SECTION */}
         <Outlet />
-      </main>
-
-      {/* END OF MAIN SECTION */}
+        {/* END OF MAIN SECTION */}
+      </div>
+      {/*  END OF RHS */}
     </div>
   );
 }
