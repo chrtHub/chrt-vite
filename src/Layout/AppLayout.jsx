@@ -21,11 +21,15 @@ import {
   CalendarDaysIcon,
   ComputerDesktopIcon,
   ChartBarIcon,
+  DocumentTextIcon,
   FolderIcon,
   HomeIcon,
   InboxIcon,
+  LockClosedIcon,
   PresentationChartLineIcon,
   PresentationChartBarIcon,
+  QuestionMarkCircleIcon,
+  ShieldCheckIcon,
   SunIcon,
   UsersIcon,
   XMarkIcon,
@@ -39,25 +43,10 @@ function classNames(...classes) {
 }
 
 //-- Data Objects --//
-const navigation = [
-  { name: "Home", to: "/", icon: HomeIcon },
-  { name: "Journal", to: "/journal", icon: CalendarDaysIcon },
-  { name: "Journal Files", to: "/files", icon: FolderIcon },
-  { name: "Market Data", to: "/data", icon: PresentationChartLineIcon },
-];
-
-const userNavigation = [
-  { name: "Profile", to: "/profile" },
-  { name: "Settings", to: "/settings" },
-  //-- Items using 'onClick' method, not NavLink with 'to' prop
-  //-- Light/Dark Mode buttons --//
-  //-- Terms, Privacy, & More --//
-  //-- Sign out button - also uses onClick --//
-];
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function AppLayout(props) {
-  let { skeletonMode } = props;
+  let { skeletonMode, infoMode } = props;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentNavItem, setCurrentNavItem] = useState(
     window.location.pathname
@@ -65,6 +54,60 @@ export default function AppLayout(props) {
 
   //-- Auth0 --//
   const { logout, user } = useAuth0();
+
+  //--- Navigation array depend on infoMode --//
+  let navigation;
+  {
+    infoMode
+      ? (navigation = [
+          // { name: "Info", to: "/info", icon: InformationCircleIcon },
+          { name: "Terms of Service", to: "/terms", icon: DocumentTextIcon },
+          {
+            name: "Privacy Statement",
+            to: "/privacy",
+            icon: DocumentTextIcon,
+          },
+          { name: "FAQ", to: "/faq", icon: QuestionMarkCircleIcon },
+          {
+            name: "System Requirements",
+            to: "/system_requirements",
+            icon: ComputerDesktopIcon,
+          },
+          { name: "Cookies Policy", to: "/cookies", icon: ShieldCheckIcon },
+          {
+            name: "OAuth 2 - Google Accounts",
+            to: "/oauth2_google",
+            icon: LockClosedIcon,
+          },
+        ])
+      : (navigation = [
+          { name: "Home", to: "/", icon: HomeIcon },
+          { name: "Journal", to: "/journal", icon: CalendarDaysIcon },
+          { name: "Journal Files", to: "/files", icon: FolderIcon },
+          { name: "Market Data", to: "/data", icon: PresentationChartLineIcon },
+        ]);
+  }
+  //-- userNavigation array depend on infoMode --//
+  let userNavigation = [
+    { name: "Profile", to: "/profile" },
+    { name: "Settings", to: "/settings" },
+    //-- Items using 'onClick' method, not NavLink with 'to' prop
+    //-- Light/Dark Mode buttons --//
+    //-- Terms, Privacy, & More --//
+    //-- Sign out button - also uses onClick --//
+  ];
+  // {
+  //   infoMode
+  //     ? (userNavigation = null)
+  //     : (userNavigation = [
+  //         { name: "Profile", to: "/profile" },
+  //         { name: "Settings", to: "/settings" },
+  //         //-- Items using 'onClick' method, not NavLink with 'to' prop
+  //         //-- Light/Dark Mode buttons --//
+  //         //-- Terms, Privacy, & More --//
+  //         //-- Sign out button - also uses onClick --//
+  //       ]);
+  // }
 
   //-- Theming - Light Mode, Dark Mode, Match OS Mode --//
   let theme = localStorage.getItem("theme");
@@ -102,7 +145,7 @@ export default function AppLayout(props) {
   };
 
   return (
-    <div className="h-full bg-zinc-50 dark:bg-zinc-800">
+    <div className="h-full overflow-auto bg-zinc-50 dark:bg-zinc-800">
       {/* START OF MOBILE SIDEBAR */}
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog
@@ -390,22 +433,23 @@ export default function AppLayout(props) {
                       </Menu.Item>
 
                       {/* Buttons mapped from user navigation array */}
-                      {userNavigation.map((item) => (
-                        <Menu.Item key={item.name}>
-                          {({ active }) => (
-                            <NavLink
-                              to={item.to}
-                              onClick={() => setCurrentNavItem(item.to)}
-                              className={classNames(
-                                active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                                "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
-                              )}
-                            >
-                              {item.name}
-                            </NavLink>
-                          )}
-                        </Menu.Item>
-                      ))}
+                      {userNavigation &&
+                        userNavigation.map((item) => (
+                          <Menu.Item key={item.name}>
+                            {({ active }) => (
+                              <NavLink
+                                to={item.to}
+                                onClick={() => setCurrentNavItem(item.to)}
+                                className={classNames(
+                                  active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                                  "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                                )}
+                              >
+                                {item.name}
+                              </NavLink>
+                            )}
+                          </Menu.Item>
+                        ))}
 
                       {/* Terms, Privacy, & More */}
                       <Menu.Item key={"sign-out-button"}>
