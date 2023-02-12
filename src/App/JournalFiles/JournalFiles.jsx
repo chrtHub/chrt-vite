@@ -69,7 +69,7 @@ export default function JournalFiles() {
   const [selectedFile, setSelectedFile] = useState();
 
   return (
-    <>
+    <div className="flex max-w-screen-2xl flex-col justify-center">
       {/* START OF FILE UPLOAD AREA */}
       <form className="mx-3 mt-6 xl:mx-6">
         <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
@@ -381,6 +381,6 @@ export default function JournalFiles() {
         {/* END OF DELETE BUTTON */}
       </div>
       {/* END OF DOWNLOAD AND DELETE BUTTONS SECTION */}
-    </>
+    </div>
   );
 }
