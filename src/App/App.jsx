@@ -3,10 +3,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 //-- JSX Components --//
 import AppLayout from "../Layout/AppLayout";
-import OldLayout from "../Layout/OldLayout";
 import InfoLayout from "../Layout/InfoLayout";
 import LandingPage from "../LandingPage/LandingPage";
-import AppLayoutSkeleton from "../Layout/AppLayoutSkeleton";
 
 //-- NPM Components --//
 
@@ -39,16 +37,16 @@ export default function App() {
 
   //-- After SPA loads, Auth0 SDK always initializes isLoading to 'true', but if no user cookie is found, isLoading can become 'false' before first paint, avoiding UI flicker --//
   if (isLoading) {
-    return <AppLayoutSkeleton hideOutlet={true} />;
+    return <AppLayout skeletonMode={true} />;
   }
   if (isAuthenticated) {
-    return <AppLayout />;
+    return <AppLayout skeletonMode={false} />;
   }
   if (!isLoading && !isAuthenticated) {
     if (window.location.pathname === "/") {
       return <LandingPage />;
     } else {
-      return <AppLayoutSkeleton hideOutlet={false} />;
+      return <AppLayout skeletonMode={true} />;
     }
   }
 }

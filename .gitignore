@@ -8,6 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 y_*
+Archive/**/*
 
 node_modules
 package-lock.json

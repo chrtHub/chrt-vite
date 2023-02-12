@@ -56,7 +56,8 @@ const userNavigation = [
 ];
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function Example() {
+export default function AppLayout(props) {
+  let { skeletonMode } = props;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentNavItem, setCurrentNavItem] = useState(
     window.location.pathname
@@ -284,6 +285,7 @@ export default function Example() {
                     </div>
                     <input
                       id="search-field"
+                      disabled={skeletonMode}
                       className="block  h-full w-full border-transparent border-b-zinc-300 bg-zinc-50 py-2 pl-8 pr-3 text-zinc-900 placeholder-zinc-500 focus:border-transparent focus:border-b-zinc-400 focus:placeholder-zinc-400 focus:outline-none focus:ring-0 dark:border-b-zinc-500 dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-400 dark:focus:border-b-zinc-400 dark:focus:placeholder-zinc-500 sm:text-sm"
                       placeholder="Search"
                       type="search"
@@ -302,7 +304,7 @@ export default function Example() {
                     {/* START OF PROFILE PICTURE */}
                     <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm hover:outline-none hover:ring-2 hover:ring-green-500 hover:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
-                      {user.picture ? (
+                      {user?.picture ? (
                         <img
                           className="h-8 w-8 rounded-full"
                           src={user.picture}
@@ -455,7 +457,7 @@ export default function Example() {
           <main className="flex-1">
             {/* <div className="py-6"> */}
             {/* <div className="px-4 sm:px-6 md:px-0"> */}
-            <Outlet />
+            {!skeletonMode && <Outlet />}
             {/* </div> */}
             {/* </div> */}
           </main>
