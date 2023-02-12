@@ -82,15 +82,19 @@ export default function AppLayout(props) {
         ]);
   }
   //-- userNavigation array depend on infoMode --//
-  let userNavigation = [
-    { name: "Profile", to: "/profile" },
-    { name: "Settings", to: "/settings" },
-    //-- Items using 'onClick' method, not NavLink with 'to' prop
-    //-- Light/Dark Mode buttons --//
-    //-- Terms, Privacy, & More --//
-    //-- Sign out button - also uses onClick --//
-  ];
-
+  let userNavigation;
+  {
+    infoMode
+      ? (userNavigation = [])
+      : (userNavigation = [
+          { name: "Profile", to: "/profile" },
+          { name: "Settings", to: "/settings" },
+          //-- Items using 'onClick' method, not NavLink with 'to' prop
+          //-- Light/Dark Mode buttons --//
+          //-- Terms, Privacy, & More --//
+          //-- Sign out button - also uses onClick --//
+        ]);
+  }
   //-- Theming - Light Mode, Dark Mode, Match OS Mode --//
   let theme = localStorage.getItem("theme");
   const [currentMode, setCurrentMode] = useState(theme);
@@ -435,19 +439,21 @@ export default function AppLayout(props) {
                         ))}
 
                       {/* Terms, Privacy, & More */}
-                      <Menu.Item key={"sign-out-button"}>
-                        {({ active }) => (
-                          <a
-                            href={`${window.location.origin}/terms`}
-                            className={classNames(
-                              active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                              "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
-                            )}
-                          >
-                            Terms, Privacy, FAQ, etc.
-                          </a>
-                        )}
-                      </Menu.Item>
+                      {!infoMode && (
+                        <Menu.Item key={"sign-out-button"}>
+                          {({ active }) => (
+                            <a
+                              href={`${window.location.origin}/terms`}
+                              className={classNames(
+                                active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                                "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                              )}
+                            >
+                              Terms, Privacy, FAQ, etc.
+                            </a>
+                          )}
+                        </Menu.Item>
+                      )}
 
                       {/* Sign Out Button  */}
                       <Menu.Item key={"sign-out-button"}>
@@ -465,7 +471,7 @@ export default function AppLayout(props) {
                               "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
                             )}
                           >
-                            Sign Out
+                            {user ? <p>Sign Out</p> : <p>Homepage</p>}
                           </a>
                         )}
                       </Menu.Item>
