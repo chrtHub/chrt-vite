@@ -327,11 +327,12 @@ export default function AppLayout(props) {
                 <Menu as="div" className="relative ml-3">
                   <div>
                     {/* START OF PROFILE PICTURE */}
-                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm hover:outline-none hover:ring-2 hover:ring-green-500 hover:ring-offset-2">
+
+                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm [-webkit-tap-highlight-color:transparent] hover:outline-none hover:ring-2 hover:ring-green-500 hover:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
                       {user?.picture ? (
                         <img
-                          className="h-8 w-8 rounded-full"
+                          className="h-8 w-8 rounded-full focus:bg-red-500 active:bg-red-500"
                           src={user.picture}
                           alt="profile image"
                         />
