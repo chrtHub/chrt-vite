@@ -1,63 +1,107 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
+//-- react, react-router-dom, Auth0 --//
 import { Fragment, useState } from "react";
+import { NavLink, Outlet } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
+
+//-- JSX Components --//
+
+//-- NPM Components --//
 import { Dialog, Menu, Transition } from "@headlessui/react";
+
+//-- Icons --//
+import {
+  MagnifyingGlassIcon,
+  UserCircleIcon,
+  MoonIcon,
+} from "@heroicons/react/20/solid";
 import {
   Bars3BottomLeftIcon,
   BellIcon,
   CalendarIcon,
+  CalendarDaysIcon,
+  ComputerDesktopIcon,
   ChartBarIcon,
   FolderIcon,
   HomeIcon,
   InboxIcon,
+  PresentationChartLineIcon,
+  PresentationChartBarIcon,
+  SunIcon,
   UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
-const navigation = [
-  { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
-  { name: "Team", href: "#", icon: UsersIcon, current: false },
-  { name: "Projects", href: "#", icon: FolderIcon, current: false },
-  { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
-  { name: "Documents", href: "#", icon: InboxIcon, current: false },
-  { name: "Reports", href: "#", icon: ChartBarIcon, current: false },
-];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
+//-- NPM Functions --//
 
+//-- Utility Functions --//
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+//-- Data Objects --//
+const navigation = [
+  { name: "Home", to: "/", icon: HomeIcon },
+  { name: "Journal", to: "/journal", icon: CalendarDaysIcon },
+  { name: "Journal Files", to: "/files", icon: FolderIcon },
+  { name: "Market Data", to: "/data", icon: PresentationChartLineIcon },
+];
+
+const userNavigation = [
+  { name: "Profile", to: "/profile" },
+  { name: "Settings", to: "/settings" },
+  //-- Items using 'onClick' method, not NavLink with 'to' prop
+  //-- Light/Dark Mode buttons --//
+  //-- Terms, Privacy, & More --//
+  //-- Sign out button - also uses onClick --//
+];
+
+//-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Example() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [currentNavItem, setCurrentNavItem] = useState(
+    window.location.pathname
+  );
+
+  //-- Auth0 --//
+  const { logout, user } = useAuth0();
+
+  //-- Theming - Light Mode, Dark Mode, Match OS Mode --//
+  let theme = localStorage.getItem("theme");
+  const [currentMode, setCurrentMode] = useState(theme);
+
+  const useManualDarkMode = () => {
+    //-- Set theme to dark in localStorage --//
+    localStorage.setItem("theme", "dark");
+    //-- Update theme to dark mode --//
+    document.documentElement.classList.add("dark");
+    //-- Update currentMode --//
+    setCurrentMode("dark");
+  };
+
+  const useOSTheme = () => {
+    //-- Remove theme from localStorage --//
+    localStorage.removeItem("theme");
+    //-- Update theme to match current OS theme --//
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    //-- Update currentMode --//
+    setCurrentMode(null);
+  };
+
+  const useManualLightMode = () => {
+    //-- Set theme to light in localStorage --//
+    localStorage.setItem("theme", "light");
+    //-- Update theme to light mode --//
+    document.documentElement.classList.remove("dark");
+    //-- Update currentMode --//
+    setCurrentMode("light");
+  };
 
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full">
-        <body class="h-full">
-        ```
-      */}
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
@@ -123,7 +167,7 @@ export default function Example() {
                       {navigation.map((item) => (
                         <a
                           key={item.name}
-                          href={item.href}
+                          href={item.to}
                           className={classNames(
                             item.current
                               ? "bg-gray-100 text-gray-900"
@@ -264,7 +308,7 @@ export default function Example() {
                           <Menu.Item key={item.name}>
                             {({ active }) => (
                               <a
-                                href={item.href}
+                                href={item.to}
                                 className={classNames(
                                   active ? "bg-gray-100" : "",
                                   "block py-2 px-4 text-sm text-gray-700"
