@@ -46,8 +46,8 @@ export default function Journal() {
 
   return (
     <>
-      <div className="m-2 divide-y divide-zinc-200 overflow-hidden rounded-lg bg-white text-black shadow dark:divide-zinc-600 dark:bg-zinc-800 dark:text-white">
-        <div className="px-4 py-5 sm:p-6">
+      <div className="mt-2 divide-y divide-zinc-200 overflow-hidden rounded-lg bg-white text-black shadow dark:divide-zinc-600 dark:bg-zinc-800 dark:text-white">
+        <div className="py-5 sm:p-6">
           {journalData ? (
             <pre className="text-zinc-900 dark:text-white">
               {JSON.stringify(journalData, null, 2)}

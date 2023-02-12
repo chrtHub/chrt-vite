@@ -101,7 +101,7 @@ export default function Example() {
   };
 
   return (
-    <div>
+    <div className="h-full bg-zinc-50 dark:bg-zinc-800">
       {/* START OF MOBILE SIDEBAR */}
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog
@@ -118,7 +118,7 @@ export default function Example() {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-gray-600 bg-opacity-75" />
+            <div className="fixed inset-0 bg-zinc-600 bg-opacity-75 dark:bg-zinc-600" />
           </Transition.Child>
 
           <div className="fixed inset-0 z-40 flex">
@@ -131,7 +131,7 @@ export default function Example() {
               leaveFrom="translate-x-0"
               leaveTo="-translate-x-full"
             >
-              <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-white pt-5 pb-4">
+              <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-zinc-50 pt-5 pb-4 dark:bg-zinc-800">
                 <Transition.Child
                   as={Fragment}
                   enter="ease-in-out duration-300"
@@ -144,12 +144,12 @@ export default function Example() {
                   <div className="absolute top-0 right-0 -mr-12 pt-2">
                     <button
                       type="button"
-                      className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                      className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black dark:focus:ring-white"
                       onClick={() => setSidebarOpen(false)}
                     >
                       <span className="sr-only">Close sidebar</span>
                       <XMarkIcon
-                        className="h-6 w-6 text-white"
+                        className="h-6 w-6 text-black dark:text-white"
                         aria-hidden="true"
                       />
                     </button>
@@ -158,7 +158,7 @@ export default function Example() {
                 <div className="flex flex-shrink-0 items-center px-4">
                   <a
                     href={window.location.origin}
-                    className="h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500"
+                    className="h-8 w-auto px-2 font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500"
                   >
                     chrt
                   </a>
@@ -204,10 +204,9 @@ export default function Example() {
       {/* END OF MOBILE SIDEBAR */}
 
       {/* START OF STATIC SIDEBAR */}
-      <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
-        {/* Sidebar component, swap this element with another sidebar if you like */}
-        <div className="flex flex-grow flex-col overflow-y-auto border-r border-gray-200 bg-white pt-5">
-          <div className="flex flex-shrink-0 items-center px-4">
+      <div className="hidden md:fixed md:inset-y-0 md:flex md:w-48 md:flex-col">
+        <div className="flex flex-grow flex-col overflow-y-auto  bg-zinc-50 pt-5 dark:bg-zinc-800">
+          <div className="flex flex-shrink-0 items-center px-6">
             <a
               href={window.location.origin}
               className="h-8 w-auto font-sans text-3xl font-semibold text-zinc-900 hover:text-green-500 dark:text-white dark:hover:text-green-500"
@@ -215,8 +214,9 @@ export default function Example() {
               chrt
             </a>
           </div>
+          {/* START OF NAVIGATION ITEMS */}
           <div className="mt-5 flex flex-grow flex-col">
-            <nav className="flex-1 space-y-1 px-2 pb-4">
+            <nav className="flex-1 space-y-1 pl-4 pb-4">
               {navigation.map((item) => (
                 <NavLink
                   key={item.name}
@@ -245,20 +245,21 @@ export default function Example() {
               ))}
             </nav>
           </div>
+          {/* END OF NAVIGATION ITEMS */}
         </div>
       </div>
       {/* END OF STATIC SIDEBAR */}
 
       {/* START OF RHS */}
-      <div className="md:pl-64">
+      <div className="overflow-x-hidden md:pl-48">
         {/* <div className="mx-auto flex max-w-4xl flex-col md:px-8 xl:px-0"> */}
-        <div className="mx-auto flex max-w-screen-2xl flex-col md:px-8 xl:px-0">
+        <div className="mx-auto flex max-w-screen-2xl flex-col px-4 xl:px-6">
           {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
-          <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 border-b border-gray-200 bg-white">
+          <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-zinc-50 dark:bg-zinc-800">
             {/* START OF HAMBURGER BUTTON */}
             <button
               type="button"
-              className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+              className="px-4 text-zinc-500 hover:outline-none hover:ring-2 hover:ring-inset hover:ring-green-500 md:hidden"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
@@ -267,15 +268,15 @@ export default function Example() {
             {/* END OF HAMBURGER BUTTON */}
 
             {/* START OF SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
-            <div className="flex flex-1 justify-between px-4 md:px-0">
+            <div className="flex flex-1 justify-between">
               {/* START OF SEARCH BAR */}
               <div className="flex flex-1">
                 <form className="flex w-full md:ml-0" action="#" method="GET">
                   <label htmlFor="search-field" className="sr-only">
                     Search
                   </label>
-                  <div className="relative w-full text-gray-400 focus-within:text-gray-600">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
+                  <div className="relative w-full text-zinc-600 focus-within:text-zinc-800 dark:text-zinc-400  dark:focus-within:text-white">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 ml-2 flex items-center md:ml-0">
                       <MagnifyingGlassIcon
                         className="h-5 w-5"
                         aria-hidden="true"
@@ -283,7 +284,7 @@ export default function Example() {
                     </div>
                     <input
                       id="search-field"
-                      className="block h-full w-full border-transparent py-2 pl-8 pr-3 text-gray-900 placeholder-gray-500 focus:border-transparent focus:placeholder-gray-400 focus:outline-none focus:ring-0 sm:text-sm"
+                      className="block  h-full w-full border-transparent border-b-zinc-300 bg-zinc-50 py-2 pl-8 pr-3 text-zinc-900 placeholder-zinc-500 focus:border-transparent focus:border-b-zinc-400 focus:placeholder-zinc-400 focus:outline-none focus:ring-0 dark:border-b-zinc-500 dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-400 dark:focus:border-b-zinc-400 dark:focus:placeholder-zinc-500 sm:text-sm"
                       placeholder="Search"
                       type="search"
                       name="search"
@@ -299,7 +300,7 @@ export default function Example() {
                 <Menu as="div" className="relative ml-3">
                   <div>
                     {/* START OF PROFILE PICTURE */}
-                    <Menu.Button className="flex max-w-xs items-center rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm hover:outline-none hover:ring-2 hover:ring-green-500 hover:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
                       {user.picture ? (
                         <img
@@ -322,7 +323,7 @@ export default function Example() {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-900 dark:ring-zinc-500">
                       {/* Light/Dark Mode Button - uses onClick isntead of href */}
                       <Menu.Item key={"light-dark-mode-button"}>
                         {({ active }) => (
