@@ -3,7 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 //-- JSX Components --//
 import AppLayout from "../Layout/AppLayout";
-import NewLayout from "../Layout/NewLayout";
+import OldLayout from "../Layout/OldLayout";
 import InfoLayout from "../Layout/InfoLayout";
 import LandingPage from "../LandingPage/LandingPage";
 import AppLayoutSkeleton from "../Layout/AppLayoutSkeleton";
