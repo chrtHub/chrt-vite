@@ -3,7 +3,6 @@
 //-- JSX Components --//
 
 //-- NPM Components --//
-import { LockClosedIcon } from "@heroicons/react/24/outline";
 
 //-- Icons --//
 

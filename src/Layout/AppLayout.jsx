@@ -328,7 +328,7 @@ export default function AppLayout(props) {
                   <div>
                     {/* START OF PROFILE PICTURE */}
 
-                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm [-webkit-tap-highlight-color:transparent] hover:outline-none hover:ring-2 hover:ring-green-500 hover:ring-offset-2">
+                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm hover:outline-none hover:ring-2 hover:ring-green-500 hover:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
                       {user?.picture ? (
                         <img
@@ -367,9 +367,9 @@ export default function AppLayout(props) {
                                 onClick={useManualLightMode}
                                 className={classNames(
                                   currentMode === "light"
-                                    ? "bg-zinc-700 text-white"
+                                    ? "bg-zinc-400 text-white"
                                     : "bg-white text-zinc-700",
-                                  "relative inline-flex items-center rounded-l-md border border-zinc-300 px-4 py-2 text-sm font-medium  hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                                  "relative inline-flex items-center rounded-l-md border border-zinc-400 px-4 py-2 text-sm font-medium hover:bg-zinc-300 focus:z-10 focus:outline-none dark:border-zinc-700 "
                                 )}
                               >
                                 <span className="sr-only">Light Mode</span>
@@ -383,9 +383,9 @@ export default function AppLayout(props) {
                                 onClick={useOSTheme}
                                 className={classNames(
                                   !currentMode
-                                    ? "bg-zinc-700 text-white"
+                                    ? "bg-zinc-400 text-white"
                                     : "bg-white text-zinc-700",
-                                  "relative -ml-px inline-flex items-center border border-zinc-300 px-4 py-2 text-sm font-medium  hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                                  "relative -ml-px inline-flex items-center border border-zinc-400 px-4 py-2 text-sm font-medium hover:bg-zinc-300 focus:z-10 focus:outline-none  dark:border-zinc-700 "
                                 )}
                               >
                                 <span className="sr-only">Match OS Mode</span>
@@ -401,7 +401,7 @@ export default function AppLayout(props) {
                                   currentMode === "dark"
                                     ? "bg-zinc-700 text-white"
                                     : "bg-white text-zinc-700",
-                                  "relative -ml-px inline-flex items-center rounded-r-md border border-zinc-300 px-4 py-2 text-sm font-medium  hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                                  "relative -ml-px inline-flex items-center rounded-r-md border border-zinc-400 px-4 py-2 text-sm font-medium hover:bg-zinc-300 focus:z-10 focus:outline-none  dark:border-zinc-700 "
                                 )}
                               >
                                 <span className="sr-only">Dark Mode</span>
