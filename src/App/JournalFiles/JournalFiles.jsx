@@ -109,7 +109,7 @@ export default function JournalFiles() {
           <Listbox value={selectedBrokerage} onChange={setSelectedBrokerage}>
             {({ open }) => (
               <>
-                <Listbox.Label className="block text-sm font-medium text-zinc-700">
+                <Listbox.Label className="block text-sm font-medium text-zinc-700 dark:text-zinc-100">
                   Brokerage
                 </Listbox.Label>
                 <div className="relative mt-1">
@@ -189,7 +189,7 @@ export default function JournalFiles() {
         <div className="col-span-6 lg:col-span-5">
           <label
             htmlFor="company-website"
-            className="block text-sm font-medium text-zinc-700"
+            className="block text-sm font-medium text-zinc-700 dark:text-zinc-100"
           >
             Filename
           </label>
@@ -231,22 +231,22 @@ export default function JournalFiles() {
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                 <table className="min-w-full divide-y divide-zinc-300">
                   {/* Table Headers */}
-                  <thead className="bg-zinc-100">
+                  <thead className="bg-zinc-100 dark:bg-zinc-900">
                     <tr>
                       {/* Checkbox Column */}
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
                       />
 
                       {/* Name Column */}
                       <th
                         scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-zinc-900 sm:pl-6"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100 sm:pl-6"
                       >
                         <a href="#" className="group inline-flex">
                           Filename
-                          <span className="invisible ml-2 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible">
+                          <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
                             <ChevronDownIcon
                               className="h-5 w-5"
                               aria-hidden="true"
@@ -258,11 +258,11 @@ export default function JournalFiles() {
                       {/* Brokerage Column */}
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
                       >
                         <a href="#" className="group inline-flex">
                           Brokerage
-                          <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300">
+                          <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
                             <ChevronDownIcon
                               className="h-5 w-5"
                               aria-hidden="true"
@@ -274,13 +274,13 @@ export default function JournalFiles() {
                       {/* Upload Date Column */}
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
                       >
                         <a href="#" className="group inline-flex">
                           Upload Date
-                          <span className="invisible ml-2 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible">
+                          <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
                             <ChevronDownIcon
-                              className="invisible ml-2 h-5 w-5 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible"
+                              className="h-5 w-5"
                               aria-hidden="true"
                             />
                           </span>
@@ -290,13 +290,13 @@ export default function JournalFiles() {
                       {/* Size Column */}
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
                       >
                         <a href="#" className="group inline-flex">
                           Size (MB)
-                          <span className="invisible ml-2 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible">
+                          <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
                             <ChevronDownIcon
-                              className="invisible ml-2 h-5 w-5 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible"
+                              className="h-5 w-5"
                               aria-hidden="true"
                             />
                           </span>
@@ -306,14 +306,16 @@ export default function JournalFiles() {
                   </thead>
 
                   {/* Table Body */}
-                  <tbody className="divide-y divide-zinc-200 bg-white">
+                  <tbody className="divide-y divide-zinc-200 bg-white dark:divide-zinc-800 dark:bg-zinc-800">
                     {files.map((file, fileIdx) => (
                       <tr
                         key={file.email}
                         className={classNames(
-                          fileIdx % 2 === 0 ? undefined : "bg-zinc-100", //-- Striped Rows --//
+                          fileIdx % 2 === 0
+                            ? "bg-white dark:bg-zinc-700"
+                            : "bg-zinc-100 dark:bg-zinc-800", //-- Striped Rows --//
                           selectedFile === file.name
-                            ? "bg-green-100"
+                            ? "bg-green-100 dark:bg-green-900"
                             : undefined //-- Selected Row --> Green --//
                         )}
                       >
@@ -335,16 +337,16 @@ export default function JournalFiles() {
                           />
                         </td>
                         {/*  */}
-                        <td className="whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-zinc-900 sm:pl-6">
+                        <td className="whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-zinc-900 dark:text-white sm:pl-6">
                           {file.name}
                         </td>
-                        <td className="whitespace-nowrap px-2 py-2 text-sm text-zinc-500">
+                        <td className="whitespace-nowrap px-2 py-2 text-sm text-zinc-700 dark:text-zinc-100">
                           {file.brokerage}
                         </td>
-                        <td className="whitespace-nowrap px-2 py-2 text-sm text-zinc-500">
+                        <td className="whitespace-nowrap px-2 py-2 text-sm text-zinc-700 dark:text-zinc-100">
                           {file.upload_date}
                         </td>
-                        <td className="relative whitespace-nowrap py-2 pl-3 pr-4 text-sm font-medium sm:pr-6">
+                        <td className="relative whitespace-nowrap py-2 pl-3 pr-4 text-sm font-medium text-zinc-700 dark:text-zinc-100 sm:pr-6">
                           {file.size_mb}
                         </td>
                       </tr>
@@ -364,7 +366,7 @@ export default function JournalFiles() {
         <button
           disabled={true} // TODO - base on logic
           type="button"
-          className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100"
+          className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
         >
           Download
         </button>
@@ -374,7 +376,7 @@ export default function JournalFiles() {
         <button
           disabled={true} // TODO - base on logic
           type="button"
-          className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100"
+          className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
         >
           Delete
         </button>
