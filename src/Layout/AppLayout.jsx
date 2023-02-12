@@ -1,5 +1,5 @@
 //-- react, react-router-dom, Auth0 --//
-import { useState, Fragment, useEffect } from "react";
+import { Fragment, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -16,14 +16,15 @@ import {
 } from "@heroicons/react/20/solid";
 import {
   Bars3BottomLeftIcon,
-  BellIcon,
-  ChartBarIcon,
   CalendarDaysIcon,
   ComputerDesktopIcon,
-  PresentationChartLineIcon,
-  PresentationChartBarIcon,
+  DocumentTextIcon,
   FolderIcon,
   HomeIcon,
+  LockClosedIcon,
+  PresentationChartLineIcon,
+  QuestionMarkCircleIcon,
+  ShieldCheckIcon,
   SunIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -32,32 +33,63 @@ import {
 
 //-- Utility Functions --//
 function classNames(...classes) {
-  return classes.filter(Boolean).join(" "); //-- Tailwind helper --//
+  return classes.filter(Boolean).join(" ");
 }
 
 //-- Data Objects --//
-const navigation = [
-  { name: "Home", to: "/", icon: HomeIcon },
-  { name: "Journal", to: "/journal", icon: CalendarDaysIcon },
-  { name: "Journal Files", to: "/files", icon: FolderIcon },
-  { name: "Market Data", to: "/data", icon: PresentationChartLineIcon },
-];
-
-const userNavigation = [
-  { name: "Profile", to: "/profile" },
-  { name: "Settings", to: "/settings" },
-  //-- Items using 'onClick' method, not NavLink with 'to' prop
-  //-- Light/Dark Mode buttons --//
-  //-- Terms, Privacy, & More --//
-  //-- Sign out button - also uses onClick --//
-];
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function AppLayout() {
+export default function AppLayout(props) {
+  let { skeletonMode, infoMode } = props;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentNavItem, setCurrentNavItem] = useState(
     window.location.pathname
   );
+
+  //-- Auth0 --//
+  const { logout, user } = useAuth0();
+
+  //--- Navigation array depend on infoMode --//
+  let navigation;
+  {
+    infoMode
+      ? (navigation = [
+          // { name: "Info", to: "/info", icon: InformationCircleIcon },
+          { name: "Terms of Service", to: "/terms", icon: DocumentTextIcon },
+          {
+            name: "Privacy Statement",
+            to: "/privacy",
+            icon: DocumentTextIcon,
+          },
+          { name: "FAQ", to: "/faq", icon: QuestionMarkCircleIcon },
+          {
+            name: "System Requirements",
+            to: "/system_requirements",
+            icon: ComputerDesktopIcon,
+          },
+          { name: "Cookies Policy", to: "/cookies", icon: ShieldCheckIcon },
+          {
+            name: "OAuth 2 - Google Accounts",
+            to: "/oauth2_google",
+            icon: LockClosedIcon,
+          },
+        ])
+      : (navigation = [
+          { name: "Home", to: "/", icon: HomeIcon },
+          { name: "Journal", to: "/journal", icon: CalendarDaysIcon },
+          { name: "Journal Files", to: "/files", icon: FolderIcon },
+          { name: "Market Data", to: "/data", icon: PresentationChartLineIcon },
+        ]);
+  }
+  //-- userNavigation array depend on infoMode --//
+  let userNavigation = [
+    { name: "Profile", to: "/profile" },
+    { name: "Settings", to: "/settings" },
+    //-- Items using 'onClick' method, not NavLink with 'to' prop
+    //-- Light/Dark Mode buttons --//
+    //-- Terms, Privacy, & More --//
+    //-- Sign out button - also uses onClick --//
+  ];
 
   //-- Theming - Light Mode, Dark Mode, Match OS Mode --//
   let theme = localStorage.getItem("theme");
@@ -94,182 +126,183 @@ export default function AppLayout() {
     setCurrentMode("light");
   };
 
-  const { logout, user } = useAuth0();
-
   return (
-    <>
-      <div className="h-full overflow-auto bg-zinc-50 dark:bg-zinc-700">
-        {/* Mobile Sidebar */}
-        <Transition.Root show={sidebarOpen} as={Fragment}>
-          <Dialog
-            as="div"
-            className="relative z-40 md:hidden"
-            onClose={setSidebarOpen}
+    <div className="h-full overflow-auto bg-zinc-50 dark:bg-zinc-800">
+      {/* START OF MOBILE SIDEBAR */}
+      <Transition.Root show={sidebarOpen} as={Fragment}>
+        <Dialog
+          as="div"
+          className="relative z-40 md:hidden"
+          onClose={setSidebarOpen}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="transition-opacity ease-linear duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity ease-linear duration-300"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
           >
+            <div className="fixed inset-0 bg-zinc-600 bg-opacity-75 dark:bg-zinc-600" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 z-40 flex">
             <Transition.Child
               as={Fragment}
-              enter="transition-opacity ease-linear duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="transition-opacity ease-linear duration-300"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
+              enter="transition ease-in-out duration-300 transform"
+              enterFrom="-translate-x-full"
+              enterTo="translate-x-0"
+              leave="transition ease-in-out duration-300 transform"
+              leaveFrom="translate-x-0"
+              leaveTo="-translate-x-full"
             >
-              <div className="fixed inset-0 bg-zinc-500 bg-opacity-75 dark:bg-zinc-600" />
-            </Transition.Child>
-
-            <div className="fixed inset-0 z-40 flex">
-              <Transition.Child
-                as={Fragment}
-                enter="transition ease-in-out duration-300 transform"
-                enterFrom="-translate-x-full"
-                enterTo="translate-x-0"
-                leave="transition ease-in-out duration-300 transform"
-                leaveFrom="translate-x-0"
-                leaveTo="-translate-x-full"
-              >
-                <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-zinc-200 pt-5 pb-4 dark:bg-zinc-800">
-                  <Transition.Child
-                    as={Fragment}
-                    enter="ease-in-out duration-300"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="ease-in-out duration-300"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <div className="absolute top-0 right-0 -mr-12 pt-2">
-                      <button
-                        type="button"
-                        className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black dark:focus:ring-white"
-                        onClick={() => setSidebarOpen(false)}
-                      >
-                        <span className="sr-only">Close sidebar</span>
-                        <XMarkIcon
-                          className="h-6 w-6 text-black dark:text-white"
-                          aria-hidden="true"
-                        />
-                      </button>
-                    </div>
-                  </Transition.Child>
-                  <div className="flex flex-shrink-0 items-center px-4">
-                    <a
-                      href={window.location.origin}
-                      className="h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500"
+              <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-zinc-50 pt-5 pb-4 dark:bg-zinc-800">
+                <Transition.Child
+                  as={Fragment}
+                  enter="ease-in-out duration-300"
+                  enterFrom="opacity-0"
+                  enterTo="opacity-100"
+                  leave="ease-in-out duration-300"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+                >
+                  <div className="absolute top-0 right-0 -mr-12 pt-2">
+                    <button
+                      type="button"
+                      className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black dark:focus:ring-white"
+                      onClick={() => setSidebarOpen(false)}
                     >
-                      chrt
-                    </a>
+                      <span className="sr-only">Close sidebar</span>
+                      <XMarkIcon
+                        className="h-6 w-6 text-black dark:text-white"
+                        aria-hidden="true"
+                      />
+                    </button>
                   </div>
-                  <div className="mt-5 h-0 flex-1 overflow-y-auto">
-                    <nav className="space-y-1 px-2">
-                      {navigation.map((item) => (
-                        <NavLink
-                          key={item.name}
-                          to={item.to}
-                          onClick={() => {
-                            setCurrentNavItem(item.to);
-                            setSidebarOpen(false);
-                          }}
+                </Transition.Child>
+                <div className="flex flex-shrink-0 items-center px-4">
+                  <a
+                    href={window.location.origin}
+                    className="h-8 w-auto px-2 font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500"
+                  >
+                    chrt
+                  </a>
+                </div>
+                <div className="mt-5 h-0 flex-1 overflow-y-auto">
+                  <nav className="space-y-1 px-2">
+                    {navigation.map((item) => (
+                      <NavLink
+                        key={item.name}
+                        to={item.to}
+                        onClick={() => {
+                          setCurrentNavItem(item.to);
+                          setSidebarOpen(false);
+                        }}
+                        className={classNames(
+                          item.to === currentNavItem
+                            ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:text-white"
+                            : "hover:text-zinc:800 text-zinc-700 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white",
+                          "group flex items-center rounded-md px-2 py-2 text-base font-medium"
+                        )}
+                      >
+                        <item.icon
                           className={classNames(
                             item.to === currentNavItem
-                              ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:text-white"
-                              : "hover:text-zinc:800 text-zinc-700 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white",
-                            "group flex items-center rounded-md px-2 py-2 text-base font-medium"
+                              ? "text-zinc-800 dark:text-zinc-300"
+                              : "text-zinc-900 group-hover:text-zinc-600  dark:text-zinc-400 dark:group-hover:text-zinc-300",
+                            "mr-4 h-6 w-6 flex-shrink-0"
                           )}
-                        >
-                          <item.icon
-                            className={classNames(
-                              item.to === currentNavItem
-                                ? "text-zinc-800 dark:text-zinc-300"
-                                : "text-zinc-900 group-hover:text-zinc-600  dark:text-zinc-400 dark:group-hover:text-zinc-300",
-                              "mr-4 h-6 w-6 flex-shrink-0"
-                            )}
-                            aria-hidden="true"
-                          />
-                          {item.name}
-                        </NavLink>
-                      ))}
-                    </nav>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-              <div className="w-14 flex-shrink-0" aria-hidden="true">
-                {/* Dummy element to force sidebar to shrink to fit close icon */}
-              </div>
-            </div>
-          </Dialog>
-        </Transition.Root>
+                          aria-hidden="true"
+                        />
+                        {item.name}
+                      </NavLink>
+                    ))}
+                  </nav>
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
+            {/* SPACER FOR 'CLOSE' ICON */}
+            <div className="w-14 flex-shrink-0" />
+          </div>
+        </Dialog>
+      </Transition.Root>
+      {/* END OF MOBILE SIDEBAR */}
 
-        {/* Static sidebar for desktop */}
-        <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
-          {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex min-h-0 flex-1 flex-col bg-zinc-200 dark:bg-zinc-800">
-            <div
-              className={`flex h-16 flex-shrink-0 items-center bg-zinc-300 px-4 dark:bg-zinc-900`}
+      {/* START OF STATIC SIDEBAR */}
+      <div className="hidden md:fixed md:inset-y-0 md:flex md:w-48 md:flex-col">
+        <div className="flex flex-grow flex-col overflow-y-auto  bg-zinc-50 pt-5 dark:bg-zinc-800">
+          <div className="flex flex-shrink-0 items-center px-6">
+            <a
+              href={window.location.origin}
+              className="h-8 w-auto font-sans text-3xl font-semibold text-zinc-900 hover:text-green-500 dark:text-white dark:hover:text-green-500"
             >
-              <a
-                href={window.location.origin}
-                className="h-8 w-auto font-sans text-3xl font-semibold text-zinc-900 hover:text-green-500 dark:text-white dark:hover:text-green-500"
-              >
-                chrt
-              </a>
-            </div>
-            {/* Nav items below */}
-            <div className="flex flex-1 flex-col overflow-y-auto">
-              <nav className="flex-1 space-y-1 px-2 py-4">
-                {navigation.map((item) => (
-                  <NavLink
-                    key={item.name}
-                    to={item.to}
-                    onClick={() => {
-                      setCurrentNavItem(item.to);
-                    }}
+              chrt
+            </a>
+          </div>
+          {/* START OF NAVIGATION ITEMS */}
+          <div className="mt-5 flex flex-grow flex-col">
+            <nav className="flex-1 space-y-1 pl-4 pb-4">
+              {navigation.map((item) => (
+                <NavLink
+                  key={item.name}
+                  to={item.to}
+                  onClick={() => {
+                    setCurrentNavItem(item.to);
+                  }}
+                  className={classNames(
+                    item.to === currentNavItem
+                      ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:text-white"
+                      : "text-zinc-700 hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white",
+                    "group flex items-center rounded-md px-2 py-2 text-sm font-medium"
+                  )}
+                >
+                  <item.icon
                     className={classNames(
                       item.to === currentNavItem
-                        ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:text-white"
-                        : "text-zinc-700 hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white",
-                      "group flex items-center rounded-md px-2 py-2 text-sm font-medium"
+                        ? "text-zinc-900 dark:text-white"
+                        : "text-zinc-700 group-hover:text-zinc-800 dark:text-zinc-400 dark:group-hover:text-zinc-300",
+                      "mr-3 h-6 w-6 flex-shrink-0"
                     )}
-                  >
-                    <item.icon
-                      className={classNames(
-                        item.to === currentNavItem
-                          ? "text-zinc-900 dark:text-white"
-                          : "text-zinc-700 group-hover:text-zinc-800 dark:text-zinc-400 dark:group-hover:text-zinc-300",
-                        "mr-3 h-6 w-6 flex-shrink-0"
-                      )}
-                      aria-hidden="true"
-                    />
-                    {item.name}
-                  </NavLink>
-                ))}
-              </nav>
-            </div>
+                    aria-hidden="true"
+                  />
+                  {item.name}
+                </NavLink>
+              ))}
+            </nav>
           </div>
+          {/* END OF NAVIGATION ITEMS */}
         </div>
+      </div>
+      {/* END OF STATIC SIDEBAR */}
 
-        {/* Main App Bar */}
-        <div className="flex flex-col  md:pl-64">
-          <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow dark:bg-zinc-800">
-            {/* Hamburger button */}
+      {/* START OF RHS */}
+      <div className="h-full overflow-x-hidden md:pl-48">
+        {/* <div className="mx-auto flex max-w-4xl flex-col md:px-8 xl:px-0"> */}
+        <div className="mx-auto flex max-w-screen-2xl flex-col px-4 xl:px-6">
+          {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
+          <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-zinc-50 dark:bg-zinc-800">
+            {/* START OF HAMBURGER BUTTON */}
             <button
               type="button"
-              className="border-r border-zinc-300 px-4 text-zinc-500 hover:outline-none hover:ring-2 hover:ring-inset hover:ring-zinc-500 dark:border-zinc-600 md:hidden"
+              className="px-4 text-zinc-500 hover:outline-none hover:ring-2 hover:ring-inset hover:ring-green-500 md:hidden"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
               <Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
             </button>
-            {/*----*/}
-            <div className="flex flex-1 justify-between px-4">
-              {/* Search bar */}
+            {/* END OF HAMBURGER BUTTON */}
+
+            {/* START OF SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
+            <div className="flex flex-1 justify-between">
+              {/* START OF SEARCH BAR */}
               <div className="flex flex-1">
                 <form className="flex w-full md:ml-0" action="#" method="GET">
                   <label htmlFor="search-field" className="sr-only">
                     Search
                   </label>
                   <div className="relative w-full text-zinc-600 focus-within:text-zinc-800 dark:text-zinc-400  dark:focus-within:text-white">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 ml-2 flex items-center md:ml-0">
                       <MagnifyingGlassIcon
                         className="h-5 w-5"
                         aria-hidden="true"
@@ -277,7 +310,8 @@ export default function AppLayout() {
                     </div>
                     <input
                       id="search-field"
-                      className="block h-full w-full border-transparent py-2 pl-8 pr-3 text-zinc-900 placeholder-zinc-500 focus:border-transparent focus:placeholder-zinc-400 focus:outline-none focus:ring-0 dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-400 dark:focus:placeholder-zinc-500 sm:text-sm"
+                      disabled={skeletonMode}
+                      className="block  h-full w-full border-transparent border-b-zinc-300 bg-zinc-50 py-2 pl-8 pr-3 text-zinc-900 placeholder-zinc-500 focus:border-transparent focus:border-b-zinc-400 focus:placeholder-zinc-400 focus:outline-none focus:ring-0 dark:border-b-zinc-500 dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-400 dark:focus:border-b-zinc-400 dark:focus:placeholder-zinc-500 sm:text-sm"
                       placeholder="Search"
                       type="search"
                       name="search"
@@ -285,23 +319,17 @@ export default function AppLayout() {
                   </div>
                 </form>
               </div>
-              {/*----*/}
-              {/* Main App Bar, RHS items  */}
-              <div className="ml-4 flex items-center md:ml-6">
-                {/* <button
-                  type="button"
-                  className="rounded-full bg-white p-1 text-zinc-400 hover:text-zinc-500 hover:outline-none hover:ring-2 hover:ring-zinc-500 hover:ring-offset-2"
-                >
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button> */}
+              {/*END OF SEARCH BAR  */}
 
-                {/* Profile dropdown */}
+              {/* START OF DROPDOWN MENU + PROFILE PICTURE*/}
+              <div className="ml-4 flex items-center md:ml-6">
+                {/* START OF DROPDOWN MENU */}
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm hover:outline-none hover:ring-2 hover:ring-zinc-900 hover:ring-offset-2 dark:bg-zinc-500 dark:hover:ring-zinc-500">
+                    {/* START OF PROFILE PICTURE */}
+                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm hover:outline-none hover:ring-2 hover:ring-green-500 hover:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
-                      {user.picture ? (
+                      {user?.picture ? (
                         <img
                           className="h-8 w-8 rounded-full"
                           src={user.picture}
@@ -311,6 +339,7 @@ export default function AppLayout() {
                         <UserCircleIcon className="h-8 w-8 rounded-full" />
                       )}
                     </Menu.Button>
+                    {/* END OF PROFILE PICTURE */}
                   </div>
                   <Transition
                     as={Fragment}
@@ -386,22 +415,23 @@ export default function AppLayout() {
                       </Menu.Item>
 
                       {/* Buttons mapped from user navigation array */}
-                      {userNavigation.map((item) => (
-                        <Menu.Item key={item.name}>
-                          {({ active }) => (
-                            <NavLink
-                              to={item.to}
-                              onClick={() => setCurrentNavItem(item.to)}
-                              className={classNames(
-                                active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                                "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
-                              )}
-                            >
-                              {item.name}
-                            </NavLink>
-                          )}
-                        </Menu.Item>
-                      ))}
+                      {userNavigation &&
+                        userNavigation.map((item) => (
+                          <Menu.Item key={item.name}>
+                            {({ active }) => (
+                              <NavLink
+                                to={item.to}
+                                onClick={() => setCurrentNavItem(item.to)}
+                                className={classNames(
+                                  active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                                  "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                                )}
+                              >
+                                {item.name}
+                              </NavLink>
+                            )}
+                          </Menu.Item>
+                        ))}
 
                       {/* Terms, Privacy, & More */}
                       <Menu.Item key={"sign-out-button"}>
@@ -441,18 +471,22 @@ export default function AppLayout() {
                     </Menu.Items>
                   </Transition>
                 </Menu>
+                {/* END OF DROPDOWN MENU */}
               </div>
-              {/*----*/}
+              {/* END OF DROPDOWN MENU + PROFILE PICTURE*/}
             </div>
+            {/* END OF SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
           </div>
-          {/* Main section */}
+          {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
+
+          {/* START OF MAIN */}
           <main className="flex-1">
-            <div className="max-w-screen-2xl">
-              <Outlet />
-            </div>
+            <Outlet />
           </main>
+          {/* END OF MAIN */}
         </div>
       </div>
-    </>
+      {/* END OF RHS */}
+    </div>
   );
 }

@@ -69,9 +69,9 @@ export default function JournalFiles() {
   const [selectedFile, setSelectedFile] = useState();
 
   return (
-    <>
+    <div className="flex flex-col justify-center">
       {/* START OF FILE UPLOAD AREA */}
-      <form className="mx-3 mt-6 xl:mx-6">
+      <form className="mt-6">
         <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-6">
             <div className="flex justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6">
@@ -103,7 +103,7 @@ export default function JournalFiles() {
       {/* END OF FILE UPLOAD AREA */}
 
       {/* START OF BROKERAGE, FILENAME, UPLOAD AREA */}
-      <div className="mx-3 mt-6 grid grid-cols-6 gap-x-3 gap-y-1 xl:mx-6">
+      <div className="mt-6 grid grid-cols-6 gap-x-3 gap-y-1">
         {/* START OF BROKERAGE SELECTOR */}
         <div className="col-span-6 lg:col-span-1">
           <Listbox value={selectedBrokerage} onChange={setSelectedBrokerage}>
@@ -224,7 +224,7 @@ export default function JournalFiles() {
       {/* END OF BROKERAGE, FILENAME, UPLOAD AREA */}
 
       {/* START OF DATA TABLE - BROKERAGE FILES */}
-      <div className="mx-3 mt-6 xl:mx-6 xl:mt-6">
+      <div className="mt-6">
         <div className="flex flex-col">
           <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full px-1 py-1 align-middle md:px-6 lg:px-8">
@@ -359,7 +359,7 @@ export default function JournalFiles() {
       {/* END OF DATA TABLE - BROKERAGE FILES */}
 
       {/* START OF DOWNLOAD AND DELETE BUTTONS SECTION */}
-      <div className="mx-3 mt-3 flex justify-between gap-x-7 xl:mx-6">
+      <div className="mt-3 flex justify-between gap-x-7">
         {/* START OF DOWNLOAD BUTTON */}
         <button
           disabled={true} // TODO - base on logic
@@ -381,6 +381,6 @@ export default function JournalFiles() {
         {/* END OF DELETE BUTTON */}
       </div>
       {/* END OF DOWNLOAD AND DELETE BUTTONS SECTION */}
-    </>
+    </div>
   );
 }

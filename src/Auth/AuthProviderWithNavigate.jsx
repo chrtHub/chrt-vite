@@ -18,7 +18,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 export default function AuthProviderWithNavigate() {
   const navigate = useNavigate();
 
-  //-- If user requested Guarded Route but was sent to login, the Guarded Route path is returned as appState.returnTo --//
+  //-- If user requested a Guarded Route, but was sent to login, then upon redirect to this SPA, the Guarded Route's path that the user tried to access is returned by the server as the value appState.returnTo --//
   const onRedirectCallback = (appState) => {
     navigate(appState?.returnTo || window.location.pathname);
   };
