@@ -2,5 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Non-tailwind colors */
-/* auth page smoky black #090C02 */
+/* TODO - Any size issue caused by this?  */
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* DEV - testing this out, supposed to help with hard-to-touch at bottom of screen issue on mobile */
+@layer utilities {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

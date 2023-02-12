@@ -285,7 +285,7 @@ export default function AppLayout(props) {
             {/* START OF HAMBURGER BUTTON */}
             <button
               type="button"
-              className="px-4 text-zinc-500 hover:outline-none hover:ring-2 hover:ring-inset hover:ring-green-500 md:hidden"
+              className="pr-4 text-zinc-500 hover:text-green-600 hover:outline-none hover:ring-2 hover:ring-inset hover:ring-transparent md:hidden"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
@@ -311,7 +311,7 @@ export default function AppLayout(props) {
                     <input
                       id="search-field"
                       disabled={skeletonMode}
-                      className="block  h-full w-full border-transparent border-b-zinc-300 bg-zinc-50 py-2 pl-8 pr-3 text-zinc-900 placeholder-zinc-500 focus:border-transparent focus:border-b-zinc-400 focus:placeholder-zinc-400 focus:outline-none focus:ring-0 dark:border-b-zinc-500 dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-400 dark:focus:border-b-zinc-400 dark:focus:placeholder-zinc-500 sm:text-sm"
+                      className="block h-full w-full border-transparent border-b-zinc-300 bg-zinc-50 py-2 pl-10 pr-3 text-zinc-900 placeholder-zinc-500 focus:border-transparent focus:border-b-zinc-400 focus:placeholder-zinc-400 focus:outline-none focus:ring-0 dark:border-b-zinc-500 dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-400 dark:focus:border-b-zinc-400 dark:focus:placeholder-zinc-500 md:pl-8"
                       placeholder="Search"
                       type="search"
                       name="search"
@@ -327,11 +327,12 @@ export default function AppLayout(props) {
                 <Menu as="div" className="relative ml-3">
                   <div>
                     {/* START OF PROFILE PICTURE */}
+
                     <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm hover:outline-none hover:ring-2 hover:ring-green-500 hover:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
                       {user?.picture ? (
                         <img
-                          className="h-8 w-8 rounded-full"
+                          className="h-8 w-8 rounded-full focus:bg-red-500 active:bg-red-500"
                           src={user.picture}
                           alt="profile image"
                         />
@@ -366,9 +367,9 @@ export default function AppLayout(props) {
                                 onClick={useManualLightMode}
                                 className={classNames(
                                   currentMode === "light"
-                                    ? "bg-zinc-700 text-white"
+                                    ? "bg-zinc-400 text-white"
                                     : "bg-white text-zinc-700",
-                                  "relative inline-flex items-center rounded-l-md border border-zinc-300 px-4 py-2 text-sm font-medium  hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                                  "relative inline-flex items-center rounded-l-md border border-zinc-400 px-4 py-2 text-sm font-medium hover:bg-zinc-300 focus:z-10 focus:outline-none dark:border-zinc-700 "
                                 )}
                               >
                                 <span className="sr-only">Light Mode</span>
@@ -382,9 +383,9 @@ export default function AppLayout(props) {
                                 onClick={useOSTheme}
                                 className={classNames(
                                   !currentMode
-                                    ? "bg-zinc-700 text-white"
+                                    ? "bg-zinc-400 text-white"
                                     : "bg-white text-zinc-700",
-                                  "relative -ml-px inline-flex items-center border border-zinc-300 px-4 py-2 text-sm font-medium  hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                                  "relative -ml-px inline-flex items-center border border-zinc-400 px-4 py-2 text-sm font-medium hover:bg-zinc-300 focus:z-10 focus:outline-none  dark:border-zinc-700 "
                                 )}
                               >
                                 <span className="sr-only">Match OS Mode</span>
@@ -400,7 +401,7 @@ export default function AppLayout(props) {
                                   currentMode === "dark"
                                     ? "bg-zinc-700 text-white"
                                     : "bg-white text-zinc-700",
-                                  "relative -ml-px inline-flex items-center rounded-r-md border border-zinc-300 px-4 py-2 text-sm font-medium  hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                                  "relative -ml-px inline-flex items-center rounded-r-md border border-zinc-400 px-4 py-2 text-sm font-medium hover:bg-zinc-300 focus:z-10 focus:outline-none  dark:border-zinc-700 "
                                 )}
                               >
                                 <span className="sr-only">Dark Mode</span>
