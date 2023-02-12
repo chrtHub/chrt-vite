@@ -251,7 +251,8 @@ export default function Example() {
 
       {/* START OF RHS */}
       <div className="md:pl-64">
-        <div className="mx-auto flex max-w-4xl flex-col md:px-8 xl:px-0">
+        {/* <div className="mx-auto flex max-w-4xl flex-col md:px-8 xl:px-0"> */}
+        <div className="mx-auto flex max-w-screen-2xl flex-col md:px-8 xl:px-0">
           {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
           <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 border-b border-gray-200 bg-white">
             {/* START OF HAMBURGER BUTTON */}
