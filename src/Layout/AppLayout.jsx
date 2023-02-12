@@ -16,22 +16,16 @@ import {
 } from "@heroicons/react/20/solid";
 import {
   Bars3BottomLeftIcon,
-  BellIcon,
-  CalendarIcon,
   CalendarDaysIcon,
   ComputerDesktopIcon,
-  ChartBarIcon,
   DocumentTextIcon,
   FolderIcon,
   HomeIcon,
-  InboxIcon,
   LockClosedIcon,
   PresentationChartLineIcon,
-  PresentationChartBarIcon,
   QuestionMarkCircleIcon,
   ShieldCheckIcon,
   SunIcon,
-  UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 
@@ -96,18 +90,6 @@ export default function AppLayout(props) {
     //-- Terms, Privacy, & More --//
     //-- Sign out button - also uses onClick --//
   ];
-  // {
-  //   infoMode
-  //     ? (userNavigation = null)
-  //     : (userNavigation = [
-  //         { name: "Profile", to: "/profile" },
-  //         { name: "Settings", to: "/settings" },
-  //         //-- Items using 'onClick' method, not NavLink with 'to' prop
-  //         //-- Light/Dark Mode buttons --//
-  //         //-- Terms, Privacy, & More --//
-  //         //-- Sign out button - also uses onClick --//
-  //       ]);
-  // }
 
   //-- Theming - Light Mode, Dark Mode, Match OS Mode --//
   let theme = localStorage.getItem("theme");
@@ -499,11 +481,7 @@ export default function AppLayout(props) {
 
           {/* START OF MAIN */}
           <main className="flex-1">
-            {/* <div className="py-6"> */}
-            {/* <div className="px-4 sm:px-6 md:px-0"> */}
-            {!skeletonMode && <Outlet />}
-            {/* </div> */}
-            {/* </div> */}
+            <Outlet />
           </main>
           {/* END OF MAIN */}
         </div>
