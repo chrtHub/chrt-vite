@@ -249,9 +249,12 @@ export default function Example() {
       </div>
       {/* END OF STATIC SIDEBAR */}
 
+      {/* START OF RHS */}
       <div className="md:pl-64">
         <div className="mx-auto flex max-w-4xl flex-col md:px-8 xl:px-0">
+          {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
           <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 border-b border-gray-200 bg-white">
+            {/* START OF HAMBURGER BUTTON */}
             <button
               type="button"
               className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
@@ -260,7 +263,11 @@ export default function Example() {
               <span className="sr-only">Open sidebar</span>
               <Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
             </button>
+            {/* END OF HAMBURGER BUTTON */}
+
+            {/* START OF SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
             <div className="flex flex-1 justify-between px-4 md:px-0">
+              {/* START OF SEARCH BAR */}
               <div className="flex flex-1">
                 <form className="flex w-full md:ml-0" action="#" method="GET">
                   <label htmlFor="search-field" className="sr-only">
@@ -283,26 +290,27 @@ export default function Example() {
                   </div>
                 </form>
               </div>
-              <div className="ml-4 flex items-center md:ml-6">
-                <button
-                  type="button"
-                  className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
+              {/*END OF SEARCH BAR  */}
 
-                {/* Profile dropdown */}
+              {/* START OF DROPDOWN MENU + PROFILE PICTURE*/}
+              <div className="ml-4 flex items-center md:ml-6">
+                {/* START OF DROPDOWN MENU */}
                 <Menu as="div" className="relative ml-3">
                   <div>
+                    {/* START OF PROFILE PICTURE */}
                     <Menu.Button className="flex max-w-xs items-center rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      />
+                      {user.picture ? (
+                        <img
+                          className="h-8 w-8 rounded-full"
+                          src={user.picture}
+                          alt="profile image"
+                        />
+                      ) : (
+                        <UserCircleIcon className="h-8 w-8 rounded-full" />
+                      )}
                     </Menu.Button>
+                    {/* END OF PROFILE PICTURE */}
                   </div>
                   <Transition
                     as={Fragment}
@@ -314,27 +322,132 @@ export default function Example() {
                     leaveTo="transform opacity-0 scale-95"
                   >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      {/* Light/Dark Mode Button - uses onClick isntead of href */}
+                      <Menu.Item key={"light-dark-mode-button"}>
+                        {({ active }) => (
+                          <a
+                            className={classNames(
+                              active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                              "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                            )}
+                          >
+                            <span className="isolate inline-flex rounded-md shadow-sm">
+                              <button
+                                type="button"
+                                onClick={useManualLightMode}
+                                className={classNames(
+                                  currentMode === "light"
+                                    ? "bg-zinc-700 text-white"
+                                    : "bg-white text-zinc-700",
+                                  "relative inline-flex items-center rounded-l-md border border-zinc-300 px-4 py-2 text-sm font-medium  hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                                )}
+                              >
+                                <span className="sr-only">Light Mode</span>
+                                <SunIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={useOSTheme}
+                                className={classNames(
+                                  !currentMode
+                                    ? "bg-zinc-700 text-white"
+                                    : "bg-white text-zinc-700",
+                                  "relative -ml-px inline-flex items-center border border-zinc-300 px-4 py-2 text-sm font-medium  hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                                )}
+                              >
+                                <span className="sr-only">Match OS Mode</span>
+                                <ComputerDesktopIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={useManualDarkMode}
+                                className={classNames(
+                                  currentMode === "dark"
+                                    ? "bg-zinc-700 text-white"
+                                    : "bg-white text-zinc-700",
+                                  "relative -ml-px inline-flex items-center rounded-r-md border border-zinc-300 px-4 py-2 text-sm font-medium  hover:bg-zinc-300 focus:z-10  focus:outline-none "
+                                )}
+                              >
+                                <span className="sr-only">Dark Mode</span>
+                                <MoonIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </button>
+                            </span>
+                          </a>
+                        )}
+                      </Menu.Item>
+
+                      {/* Buttons mapped from user navigation array */}
                       {userNavigation.map((item) => (
                         <Menu.Item key={item.name}>
                           {({ active }) => (
-                            <a
-                              href={item.to}
+                            <NavLink
+                              to={item.to}
+                              onClick={() => setCurrentNavItem(item.to)}
                               className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block py-2 px-4 text-sm text-gray-700"
+                                active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                                "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
                               )}
                             >
                               {item.name}
-                            </a>
+                            </NavLink>
                           )}
                         </Menu.Item>
                       ))}
+
+                      {/* Terms, Privacy, & More */}
+                      <Menu.Item key={"sign-out-button"}>
+                        {({ active }) => (
+                          <a
+                            href={`${window.location.origin}/terms`}
+                            className={classNames(
+                              active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                              "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                            )}
+                          >
+                            Terms, Privacy, FAQ, etc.
+                          </a>
+                        )}
+                      </Menu.Item>
+
+                      {/* Sign Out Button  */}
+                      <Menu.Item key={"sign-out-button"}>
+                        {({ active }) => (
+                          <a
+                            onClick={() => {
+                              logout({
+                                logoutParams: {
+                                  returnTo: window.location.origin,
+                                },
+                              });
+                            }}
+                            className={classNames(
+                              active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                              "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                            )}
+                          >
+                            Sign Out
+                          </a>
+                        )}
+                      </Menu.Item>
                     </Menu.Items>
                   </Transition>
                 </Menu>
+                {/* END OF DROPDOWN MENU */}
               </div>
+              {/* END OF DROPDOWN MENU + PROFILE PICTURE*/}
             </div>
+            {/* END OF SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
           </div>
+          {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
 
           <main className="flex-1">
             <div className="py-6">
@@ -354,6 +467,7 @@ export default function Example() {
           </main>
         </div>
       </div>
+      {/* END OF RHS */}
     </div>
   );
 }
