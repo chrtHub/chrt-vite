@@ -27,22 +27,19 @@ const infoRoutes = [
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function App() {
-  const { isLoading, isAuthenticated } = useAuth0();
-
-  //-- For Info routes, use the InfoLayout --//
+  //-- Without checking for user --> For Info routes, load AppLayout in infoMode --//
   if (infoRoutes.includes(window.location.pathname)) {
     return <AppLayout skeletonMode={false} infoMode={true} />;
   }
 
-  //-- NOTE - Returning the skeleton while loading causes UI flash for unauthenticated users hitting '/' --//
-  // if (isLoading) {
-  //   return <AppLayout skeletonMode={true} infoMode={false} />;
-  // }
+  //-- Check for authenticated user --//
+  const { isLoading, isAuthenticated } = useAuth0();
 
-  //-- For authenticated users, show the app --//
+  //-- Loading is complete, user is authenticated --> show the app --//
   if (isAuthenticated) {
     return <AppLayout skeletonMode={false} infoMode={false} />;
   }
+
   //-- Loading is complete and no authenticated user was found --//
   if (!isLoading && !isAuthenticated) {
     //-- For the '/' route, show the landing page --//
