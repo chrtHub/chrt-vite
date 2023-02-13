@@ -461,6 +461,7 @@ export default function AppLayout(props) {
                         {({ active }) => (
                           <a
                             onClick={() => {
+                              localStorage.removeItem("theme");
                               logout({
                                 logoutParams: {
                                   returnTo: window.location.origin,
