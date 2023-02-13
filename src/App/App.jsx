@@ -27,17 +27,16 @@ const infoRoutes = [
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function App() {
-  const { isLoading, isAuthenticated, user } = useAuth0();
+  const { isLoading, isAuthenticated } = useAuth0();
 
   //-- For Info routes, use the InfoLayout --//
   if (infoRoutes.includes(window.location.pathname)) {
     return <AppLayout skeletonMode={false} infoMode={true} />;
   }
 
-  //-- After SPA loads, Auth0 SDK always initializes isLoading to 'true', but if no user cookie is found, isLoading can become 'false' before first paint, avoiding UI flicker --//
-  if (isLoading) {
-    return <AppLayout skeletonMode={true} infoMode={false} />;
-  }
+  // if (isLoading) {
+  //   return <AppLayout skeletonMode={true} infoMode={false} />;
+  // }
   if (isAuthenticated) {
     return <AppLayout skeletonMode={false} infoMode={false} />;
   }
