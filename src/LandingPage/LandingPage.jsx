@@ -17,7 +17,7 @@ import Hero from "./Hero/Hero";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function () {
   return (
-    <div className="flex h-full flex-col bg-zinc-900/5">
+    <div className="flex h-full flex-col">
       <div className="">
         <Hero />
       </div>

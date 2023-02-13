@@ -8,7 +8,7 @@ import BackgroundGradientTop from "./BackgroundGradientTop";
 import BackgroundGradientBottom from "./BackgroundGradientBottom";
 
 import echartsBarchartExampleLight from "../../Assets/echarts/echarts-barchart-example-light.png";
-// import echartsBarchartExampleDark from "../../Assets/echarts/echarts-barchart-example-dark.png";
+import echartsBarchartExampleDark from "../../Assets/echarts/echarts-barchart-example-dark.png";
 
 //-- npm Package Functions --//
 import { useAuth0 } from "@auth0/auth0-react";
@@ -31,8 +31,33 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 // ];
 
 export default function Hero() {
-  const { loginWithRedirect } = useAuth0();
+  //-- Detect theme value (a) set in localStorage, or (b) from OS theme --//
+  let dark = false;
+  if (
+    localStorage.theme === "dark" ||
+    (!("theme" in localStorage) &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches)
+  ) {
+    dark = true;
+  }
+  const [darkMode, setDarkMode] = useState(dark);
 
+  //-- Listed for OS theme changes --//
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", ({ matches }) => {
+      //-- Only react to OS theme changes if no 'theme' value is set in localStorage --//
+      if (!("theme" in localStorage)) {
+        if (matches) {
+          setDarkMode(true);
+        } else {
+          setDarkMode(false);
+        }
+      }
+    });
+
+  //-- Send user to the "Sign Up" version of the universal login page instead of the "Sign In" version --//
+  const { loginWithRedirect } = useAuth0();
   const handleSignUp = async () => {
     await loginWithRedirect({
       appState: {
@@ -48,7 +73,7 @@ export default function Hero() {
 
   return (
     <>
-      <BackgroundGradientTop />
+      {/* <BackgroundGradientTop /> */}
       {/* START OF APP BAR */}
       <div className="px-6 pt-6 lg:px-8">
         <nav className="flex items-center justify-between" aria-label="Global">
@@ -58,7 +83,7 @@ export default function Hero() {
               <span className="sr-only">CHRT</span>
               <a
                 href={window.location.origin}
-                className="text- h-8 w-auto font-sans text-3xl font-semibold hover:text-green-500 dark:hover:text-green-500"
+                className="z-10 h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500"
               >
                 chrt
               </a>
@@ -94,7 +119,7 @@ export default function Hero() {
           {/* SIGN IN BUTTON */}
           <div className="lg:flex lg:flex-1 lg:justify-end">
             <button
-              className="text-sm font-semibold leading-6 text-black"
+              className="font-semibold leading-6 text-black dark:text-white"
               onClick={() => {
                 loginWithRedirect({
                   appState: {
@@ -177,10 +202,10 @@ export default function Hero() {
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             {/* START OF TITLE & SUBTITLE */}
             <div className="mx-auto max-w-2xl text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-zinc-900 sm:text-6xl">
+              <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-6xl">
                 Journal Your Day Trades
               </h1>
-              <p className="mt-6 text-lg leading-8 text-zinc-600">
+              <p className="mt-6 text-lg leading-8 text-zinc-600 dark:text-white">
                 Upload your brokerage files and see analysis of your trading
                 peformance
               </p>
@@ -205,9 +230,13 @@ export default function Hero() {
 
             {/* START OF SCREENSHOT */}
             <div className="mt-16 flow-root sm:mt-24">
-              <div className="-m-2 rounded-xl bg-zinc-900/5 p-2 ring-1 ring-inset ring-zinc-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+              <div className="-m-2 rounded-xl bg-zinc-900/5 p-2 ring-1 ring-inset ring-zinc-900/10 dark:bg-zinc-200/20 dark:ring-zinc-200/10 lg:-m-4 lg:rounded-2xl lg:p-4">
                 <img
-                  src={echartsBarchartExampleLight}
+                  src={
+                    darkMode
+                      ? echartsBarchartExampleDark
+                      : echartsBarchartExampleLight
+                  }
                   alt="App screenshot"
                   width={2432}
                   height={1442}
@@ -217,7 +246,7 @@ export default function Hero() {
             </div>
             {/* END OF SCREENSHOT */}
           </div>
-          <BackgroundGradientBottom />
+          {/* <BackgroundGradientBottom /> */}
         </div>
       </main>
       {/* END OF MAIN */}
