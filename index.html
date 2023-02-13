@@ -21,10 +21,11 @@
         document.documentElement.classList.remove("dark");
       }
 
-      //-- Change theme when OS theme changes (if no 'theme' value set in localStorage) --//
+      //-- Listed for OS theme changes --//
       window
         .matchMedia("(prefers-color-scheme: dark)")
         .addEventListener("change", ({ matches }) => {
+          //-- Only react to OS theme changes if no 'theme' value is set in localStorage --//
           if (!("theme" in localStorage)) {
             if (matches) {
               document.documentElement.classList.add("dark");
@@ -36,7 +37,7 @@
     </script>
   </head>
   <body class="h-full overflow-auto">
-    <div id="root" class="h-full"></div>
+    <div id="root" class="h-full bg-zinc-50 dark:bg-zinc-800"></div>
     <script type="module" src="./src/index.jsx"></script>
   </body>
 </html>
