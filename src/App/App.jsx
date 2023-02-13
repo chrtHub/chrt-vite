@@ -27,7 +27,7 @@ const infoRoutes = [
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function App() {
-  const { isLoading, isAuthenticated } = useAuth0();
+  const { isLoading, isAuthenticated, user } = useAuth0();
 
   //-- For Info routes, use the InfoLayout --//
   if (infoRoutes.includes(window.location.pathname)) {
