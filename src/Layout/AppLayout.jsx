@@ -336,9 +336,10 @@ export default function AppLayout(props) {
                       <span className="sr-only">Open user menu</span>
                       {user?.picture ? (
                         <img
-                          className="h-8 w-8 rounded-full focus:bg-red-500 active:bg-red-500"
+                          className="h-8 w-8 rounded-full focus:bg-white active:bg-white"
                           src={user.picture}
                           alt="profile image"
+                          referrerpolicy="no-referrer" //-- Prevents intermittent 403 error, https://community.auth0.com/t/google-account-picture-request-forbidden/42031/11 --//
                         />
                       ) : (
                         <UserCircleIcon className="h-8 w-8 rounded-full" />

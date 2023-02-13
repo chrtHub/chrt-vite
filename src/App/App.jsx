@@ -34,17 +34,22 @@ export default function App() {
     return <AppLayout skeletonMode={false} infoMode={true} />;
   }
 
-  //-- After SPA loads, Auth0 SDK always initializes isLoading to 'true', but if no user cookie is found, isLoading can become 'false' before first paint, avoiding UI flicker --//
-  if (isLoading) {
-    return <AppLayout skeletonMode={true} infoMode={false} />;
-  }
+  //-- NOTE - Returning the skeleton while loading causes UI flash for unauthenticated users hitting '/' --//
+  // if (isLoading) {
+  //   return <AppLayout skeletonMode={true} infoMode={false} />;
+  // }
+
+  //-- For authenticated users, show the app --//
   if (isAuthenticated) {
     return <AppLayout skeletonMode={false} infoMode={false} />;
   }
+  //-- Loading is complete and no authenticated user was found --//
   if (!isLoading && !isAuthenticated) {
+    //-- For the '/' route, show the landing page --//
     if (window.location.pathname === "/") {
       return <LandingPage />;
     } else {
+      //-- For all other routes, show the AppLayout in skeleton mode. The AuthGuard will redirect user to sign in. --//
       return <AppLayout skeletonMode={true} infoMode={false} />;
     }
   }

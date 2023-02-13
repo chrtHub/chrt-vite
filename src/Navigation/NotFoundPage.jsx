@@ -44,8 +44,6 @@ export default function NotFoundPage() {
     fetchImage();
   }, []);
 
-  console.log(imageLoaded);
-
   return (
     <div className="min-h-full bg-zinc-100 py-16 px-6 sm:py-24  lg:px-8">
       <div className="mx-auto max-w-max">
@@ -79,7 +77,9 @@ export default function NotFoundPage() {
             alt={randomAnimal.type}
           />
         ) : (
-          <div className="my-10 h-[454px] w-[454px] animate-pulse bg-zinc-200 md:h-[640px] md:w-[640px]"></div>
+          <div
+            className={`my-10 h-[300px] w-[300px] animate-pulse bg-zinc-200 md:h-[640px] md:w-[640px]`}
+          ></div>
         )}
       </div>
     </div>
