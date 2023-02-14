@@ -40,13 +40,14 @@ export default function JournalFiles() {
   const [files, setFiles] = useState([
     {
       id: 0,
-      filename: "---",
+      filename: "- - - - - - - - - - - -",
       brokerage: "---",
       last_modified: "yyyy-MM-dd @ hh:mm:ss aaa",
       size_mb: "0",
     },
   ]);
   const [selectedFile, setSelectedFile] = useState();
+  const [listFilesLoading, setListFilesLoading] = useState();
 
   //-- Auth0 --//
   const { getAccessTokenSilently } = useAuth0();
@@ -66,6 +67,7 @@ export default function JournalFiles() {
       //-- Get access token from memory or request new token --//
       let accessToken = await getAccessTokenSilently();
 
+      setListFilesLoading(true);
       //-- Make GET request --//
       let res = await axios.get(
         `${VITE_ALB_BASE_URL}/journal_files/list_files`,
@@ -76,6 +78,7 @@ export default function JournalFiles() {
         }
       );
       setFiles(res.data);
+      setListFilesLoading(false);
       console.log(res); // DEV
       //----//
     } catch (err) {
@@ -208,7 +211,7 @@ export default function JournalFiles() {
       </form>
       {/* END OF FILE UPLOAD AREA */}
 
-      {/* START OF BROKERAGE, FILENAME, UPLOAD AREA */}
+      {/* START OF BROKERAGE, FILENAME, UPLOAD BUTTON AREA */}
       <div className="mt-6 grid grid-cols-6 gap-x-3 gap-y-1">
         {/* START OF BROKERAGE SELECTOR */}
         <div className="col-span-6 lg:col-span-1">
@@ -329,7 +332,7 @@ export default function JournalFiles() {
         </div>
         {/* END OF TEXT INPUT FOR FILENAME */}
       </div>
-      {/* END OF BROKERAGE, FILENAME, UPLOAD AREA */}
+      {/* END OF BROKERAGE, FILENAME, UPLOAD BUTTON AREA */}
 
       {/* START OF DATA TABLE - BROKERAGE FILES */}
       <div className="mt-6">
@@ -339,7 +342,13 @@ export default function JournalFiles() {
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                 <table className="min-w-full divide-y divide-zinc-300">
                   {/* Table Headers */}
-                  <thead className="bg-zinc-100 dark:bg-zinc-900">
+                  <thead
+                    className={classNames(
+                      listFilesLoading &&
+                        "animate-pulse bg-green-100 dark:bg-green-900",
+                      "bg-zinc-100 dark:bg-zinc-900"
+                    )}
+                  >
                     <tr>
                       {/* Checkbox Column */}
                       <th
@@ -415,12 +424,6 @@ export default function JournalFiles() {
 
                   {/* Table Body */}
                   <tbody className="divide-y divide-zinc-200 bg-white dark:divide-zinc-800 dark:bg-zinc-800">
-                    {/* id
-            filename
-            brokerage
-            last_modified
-            size_mb */}
-
                     {files.map((file, fileIdx) => (
                       <tr
                         key={file.id}
