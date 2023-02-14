@@ -24,7 +24,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-//-- Data Objects --//
+//-- env variables, Data Objects --//
+let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
+
 const brokerages = [
   { id: 1, name: "TD_Ameritrade" },
   { id: 2, name: "TradeZero" },
@@ -48,7 +50,7 @@ export default function JournalFiles() {
   //-- Auth0 --//
   const { getAccessTokenSilently } = useAuth0();
 
-  //-- File requests --//
+  //-- File requests: List, GET, PUT, DELETE --//
   const listFiles = async () => {
     console.log("listFiles");
 
@@ -64,11 +66,14 @@ export default function JournalFiles() {
       let accessToken = await getAccessTokenSilently();
 
       //-- Make GET request --//
-      let res = await axios.get(`https://chrts3.chrt.com/${some_variable}`, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      });
+      let res = await axios.get(
+        `${VITE_ALB_BASE_URL}/journal_files/list_files`,
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       console.log(res); // DEV
       //----//
     } catch (err) {

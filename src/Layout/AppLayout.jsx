@@ -339,7 +339,7 @@ export default function AppLayout(props) {
                           className="h-8 w-8 rounded-full focus:bg-white active:bg-white"
                           src={user.picture}
                           alt="profile image"
-                          referrerpolicy="no-referrer" //-- Prevents intermittent 403 error, https://community.auth0.com/t/google-account-picture-request-forbidden/42031/11 --//
+                          referrerPolicy="no-referrer" //-- Prevents intermittent 403 error, https://community.auth0.com/t/google-account-picture-request-forbidden/42031/11 --//
                         />
                       ) : (
                         <UserCircleIcon className="h-8 w-8 rounded-full" />
