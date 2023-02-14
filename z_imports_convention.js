@@ -10,7 +10,7 @@
 
 //-- Utility Functions --//
 
-//-- Data Objects --//
+//-- env variables, Data Objects --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ComponentName() {

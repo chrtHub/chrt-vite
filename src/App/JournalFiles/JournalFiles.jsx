@@ -1,10 +1,10 @@
 //-- react, react-router-dom, Auth0 --//
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 
 //-- JSX Components --//
 
 //-- NPM Components --//
-
 import { Listbox, Transition } from "@headlessui/react";
 
 //-- Icons --//
@@ -17,56 +17,165 @@ import {
 import { TableCellsIcon, FolderIcon } from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
+import axios from "axios";
 
 //-- Utility Functions --//
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-//-- Data Objects --//
+//-- env variables, Data Objects --//
+let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
+
 const brokerages = [
   { id: 1, name: "TD_Ameritrade" },
   { id: 2, name: "TradeZero" },
   { id: 3, name: "Webull" },
 ];
 
-const files = [
-  {
-    name: "Jan_20-trading-history.csv",
-    brokerage: "TD_Ameritrade",
-    upload_date: "Jan 20, 2023",
-    size_mb: "0.250",
-  },
-  {
-    name: "Jan_21-trading-history.csv",
-    brokerage: "TD_Ameritrade",
-    upload_date: "Jan 21, 2023",
-    size_mb: "0.250",
-  },
-  {
-    name: "Jan_22-trading-history.csv",
-    brokerage: "TD_Ameritrade",
-    upload_date: "Jan 22, 2023",
-    size_mb: "0.250",
-  },
-  {
-    name: "Jan_23-trading-history.csv",
-    brokerage: "TD_Ameritrade",
-    upload_date: "Jan 23, 2023",
-    size_mb: "0.250",
-  },
-  {
-    name: "Jan_24-trading-history.csv",
-    brokerage: "TD_Ameritrade",
-    upload_date: "Jan 24, 2023",
-    size_mb: "0.250",
-  },
-];
-
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function JournalFiles() {
-  const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]); // TODO - fetch last-used value from localStorage
+  // TODO - fetch last-used value from localStorage (store it there, too)
+  const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]);
+  const [files, setFiles] = useState([
+    {
+      id: 0,
+      filename: "- - - - - - - - - - - -",
+      brokerage: "---",
+      last_modified: "yyyy-MM-dd @ hh:mm:ss aaa",
+      size_mb: "0",
+    },
+  ]);
   const [selectedFile, setSelectedFile] = useState();
+  const [listFilesLoading, setListFilesLoading] = useState();
+
+  //-- Auth0 --//
+  const { getAccessTokenSilently } = useAuth0();
+
+  //-- File requests: List, GET, PUT, DELETE --//
+  const listFiles = async () => {
+    console.log("listFiles");
+
+    // TODO
+    // fetch files list by making request to S3 API (add method for listing files for a user)
+    // // while request in progress, show loading state
+    // // any IAM persmissions needed for that API method?
+    // format files list to be displayed in the data table
+    // setFiles([ array of properly formatted files ])
+
+    try {
+      //-- Get access token from memory or request new token --//
+      let accessToken = await getAccessTokenSilently();
+
+      setListFilesLoading(true);
+      //-- Make GET request --//
+      let res = await axios.get(
+        `${VITE_ALB_BASE_URL}/journal_files/list_files`,
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setFiles(res.data);
+      setListFilesLoading(false);
+      console.log(res); // DEV
+      //----//
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getFileHandler = async () => {
+    console.log("getFileHandler");
+
+    // TODO
+    // use selectedFile value to make a request to the S3 API
+    // // while request in progress, show loading state
+
+    try {
+      //-- Get access token from memory or request new token --//
+      let accessToken = await getAccessTokenSilently();
+
+      //-- Make GET request --//
+      let res = await axios.get(`https://chrts3.chrt.com/${some_variable}`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(res); // DEV
+      //----//
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const putFileHandler = async () => {
+    console.log("putFileHandler: " + selectedFile);
+
+    // TODO
+    // How to get the file from the upload component?
+    // Allow user to override the filename
+    // make a request to the S3 API with brokerage name + filename
+    // // while request in progress, show loading state
+
+    try {
+      //-- Get access token from memory or request new token --//
+      let accessToken = await getAccessTokenSilently();
+
+      //-- Make POST request --//
+      let res = await axios.post(
+        `https://chrts3.chrt.com/${some_variable}`,
+        //-- Body Content --//
+        {
+          key1: "value1",
+          key2: "value2",
+        },
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log(res); // DEV
+      //----//
+    } catch (err) {
+      console.log(err);
+    }
+
+    listFiles(); //-- Refresh files list --//
+  };
+
+  const deleteFileHandler = async () => {
+    console.log("deleteFileHandler");
+
+    // TODO
+    // use selectedFile value to make a request to the S3 API
+    // // while request in progress, show loading state
+
+    try {
+      //-- Get access token from memory or request new token --//
+      let accessToken = await getAccessTokenSilently();
+
+      //-- Make GET request --//
+      let res = await axios.delete(`https://chrts3.chrt.com/${some_variable}`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(res); // DEV
+      //----//
+    } catch (err) {
+      console.log(err);
+    }
+
+    listFiles(); //-- Refresh files list --//
+  };
+
+  //-- At first render, List Files --//
+  useEffect(() => {
+    listFiles();
+  }, []);
 
   return (
     <div className="flex flex-col justify-center">
@@ -102,7 +211,7 @@ export default function JournalFiles() {
       </form>
       {/* END OF FILE UPLOAD AREA */}
 
-      {/* START OF BROKERAGE, FILENAME, UPLOAD AREA */}
+      {/* START OF BROKERAGE, FILENAME, UPLOAD BUTTON AREA */}
       <div className="mt-6 grid grid-cols-6 gap-x-3 gap-y-1">
         {/* START OF BROKERAGE SELECTOR */}
         <div className="col-span-6 lg:col-span-1">
@@ -223,7 +332,7 @@ export default function JournalFiles() {
         </div>
         {/* END OF TEXT INPUT FOR FILENAME */}
       </div>
-      {/* END OF BROKERAGE, FILENAME, UPLOAD AREA */}
+      {/* END OF BROKERAGE, FILENAME, UPLOAD BUTTON AREA */}
 
       {/* START OF DATA TABLE - BROKERAGE FILES */}
       <div className="mt-6">
@@ -233,7 +342,13 @@ export default function JournalFiles() {
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                 <table className="min-w-full divide-y divide-zinc-300">
                   {/* Table Headers */}
-                  <thead className="bg-zinc-100 dark:bg-zinc-900">
+                  <thead
+                    className={classNames(
+                      listFilesLoading &&
+                        "animate-pulse bg-green-100 dark:bg-green-900",
+                      "bg-zinc-100 dark:bg-zinc-900"
+                    )}
+                  >
                     <tr>
                       {/* Checkbox Column */}
                       <th
@@ -279,7 +394,7 @@ export default function JournalFiles() {
                         className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
                       >
                         <a href="#" className="group inline-flex">
-                          Upload Date
+                          Uploaded / Last Modified
                           <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
                             <ChevronDownIcon
                               className="h-5 w-5"
@@ -311,42 +426,42 @@ export default function JournalFiles() {
                   <tbody className="divide-y divide-zinc-200 bg-white dark:divide-zinc-800 dark:bg-zinc-800">
                     {files.map((file, fileIdx) => (
                       <tr
-                        key={file.email}
+                        key={file.id}
                         className={classNames(
                           fileIdx % 2 === 0
                             ? "bg-white dark:bg-zinc-700"
                             : "bg-zinc-100 dark:bg-zinc-800", //-- Striped Rows --//
-                          selectedFile === file.name
+                          selectedFile === file.filename
                             ? "bg-green-100 dark:bg-green-900"
                             : undefined //-- Selected Row --> Green --//
                         )}
                       >
                         {/*  */}
                         <td className="relative w-12 px-6 sm:w-16 sm:px-8">
-                          {selectedFile === file.name && (
+                          {selectedFile === file.filename && (
                             <div className="absolute inset-y-0 left-0 w-1.5 bg-green-600" />
                           )}
                           <input
                             type="checkbox"
                             className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-500 dark:border-zinc-600 dark:bg-zinc-300 sm:left-6"
-                            value={file.email}
-                            checked={selectedFile === file.name}
+                            // value={file.email}
+                            checked={selectedFile === file.filename}
                             onChange={(e) =>
                               e.target.checked //-- e.target.checked is the status after the onChange event --//
-                                ? setSelectedFile(file.name)
+                                ? setSelectedFile(file.filename)
                                 : setSelectedFile(null)
                             }
                           />
                         </td>
                         {/*  */}
                         <td className="whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-zinc-900 dark:text-white sm:pl-6">
-                          {file.name}
+                          {file.filename}
                         </td>
                         <td className="whitespace-nowrap px-2 py-2 text-sm text-zinc-700 dark:text-zinc-100">
                           {file.brokerage}
                         </td>
                         <td className="whitespace-nowrap px-2 py-2 text-sm text-zinc-700 dark:text-zinc-100">
-                          {file.upload_date}
+                          {file.last_modified}
                         </td>
                         <td className="relative whitespace-nowrap py-2 pl-3 pr-4 text-sm font-medium text-zinc-700 dark:text-zinc-100 sm:pr-6">
                           {file.size_mb}
@@ -366,9 +481,10 @@ export default function JournalFiles() {
       <div className="mt-3 flex justify-between gap-x-7">
         {/* START OF DOWNLOAD BUTTON */}
         <button
-          disabled={true} // TODO - base on logic
+          disabled={!selectedFile || files[0].filename === "---"}
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
+          onClick={getFileHandler}
         >
           Download
         </button>
@@ -376,9 +492,10 @@ export default function JournalFiles() {
 
         {/* START OF DELETE BUTTON */}
         <button
-          disabled={true} // TODO - base on logic
+          disabled={!selectedFile || files[0].filename === "---"}
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
+          onClick={deleteFileHandler}
         >
           Delete
         </button>

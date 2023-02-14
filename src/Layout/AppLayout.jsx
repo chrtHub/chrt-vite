@@ -239,7 +239,7 @@ export default function AppLayout(props) {
           <div className="flex flex-shrink-0 items-center px-6">
             <a
               href={window.location.origin}
-              className="h-8 w-auto font-sans text-3xl font-semibold text-zinc-900 hover:text-green-500 dark:text-white dark:hover:text-green-500"
+              className="h-8 w-auto pl-2 font-sans text-3xl font-semibold text-zinc-900 hover:text-green-500 dark:text-white dark:hover:text-green-500"
             >
               chrt
             </a>
@@ -339,7 +339,7 @@ export default function AppLayout(props) {
                           className="h-8 w-8 rounded-full focus:bg-white active:bg-white"
                           src={user.picture}
                           alt="profile image"
-                          referrerpolicy="no-referrer" //-- Prevents intermittent 403 error, https://community.auth0.com/t/google-account-picture-request-forbidden/42031/11 --//
+                          referrerPolicy="no-referrer" //-- Prevents intermittent 403 error, https://community.auth0.com/t/google-account-picture-request-forbidden/42031/11 --//
                         />
                       ) : (
                         <UserCircleIcon className="h-8 w-8 rounded-full" />
