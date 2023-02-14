@@ -1,10 +1,10 @@
 //-- react, react-router-dom, Auth0 --//
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 
 //-- JSX Components --//
 
 //-- NPM Components --//
-
 import { Listbox, Transition } from "@headlessui/react";
 
 //-- Icons --//
@@ -17,6 +17,7 @@ import {
 import { TableCellsIcon, FolderIcon } from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
+import axios from "axios";
 
 //-- Utility Functions --//
 function classNames(...classes) {
@@ -30,43 +31,141 @@ const brokerages = [
   { id: 3, name: "Webull" },
 ];
 
-const files = [
-  {
-    name: "Jan_20-trading-history.csv",
-    brokerage: "TD_Ameritrade",
-    upload_date: "Jan 20, 2023",
-    size_mb: "0.250",
-  },
-  {
-    name: "Jan_21-trading-history.csv",
-    brokerage: "TD_Ameritrade",
-    upload_date: "Jan 21, 2023",
-    size_mb: "0.250",
-  },
-  {
-    name: "Jan_22-trading-history.csv",
-    brokerage: "TD_Ameritrade",
-    upload_date: "Jan 22, 2023",
-    size_mb: "0.250",
-  },
-  {
-    name: "Jan_23-trading-history.csv",
-    brokerage: "TD_Ameritrade",
-    upload_date: "Jan 23, 2023",
-    size_mb: "0.250",
-  },
-  {
-    name: "Jan_24-trading-history.csv",
-    brokerage: "TD_Ameritrade",
-    upload_date: "Jan 24, 2023",
-    size_mb: "0.250",
-  },
-];
-
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function JournalFiles() {
-  const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]); // TODO - fetch last-used value from localStorage
+  // TODO - fetch last-used value from localStorage (store it there, too)
+  const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]);
+  const [files, setFiles] = useState([
+    {
+      name: "---",
+      brokerage: "---",
+      upload_date: "2023 / 01 / 01",
+      size_mb: "0.000",
+    },
+  ]);
   const [selectedFile, setSelectedFile] = useState();
+
+  //-- Auth0 --//
+  const { getAccessTokenSilently } = useAuth0();
+
+  //-- File requests --//
+  const listFiles = async () => {
+    console.log("listFiles");
+
+    // TODO
+    // fetch files list by making request to S3 API (add method for listing files for a user)
+    // // while request in progress, show loading state
+    // // any IAM persmissions needed for that API method?
+    // format files list to be displayed in the data table
+    // setFiles([ array of properly formatted files ])
+
+    try {
+      //-- Get access token from memory or request new token --//
+      let accessToken = await getAccessTokenSilently();
+
+      //-- Make GET request --//
+      let res = await axios.get(`https://chrts3.chrt.com/${some_variable}`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(res); // DEV
+      //----//
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getFileHandler = async () => {
+    console.log("getFileHandler");
+
+    // TODO
+    // use selectedFile value to make a request to the S3 API
+    // // while request in progress, show loading state
+
+    try {
+      //-- Get access token from memory or request new token --//
+      let accessToken = await getAccessTokenSilently();
+
+      //-- Make GET request --//
+      let res = await axios.get(`https://chrts3.chrt.com/${some_variable}`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(res); // DEV
+      //----//
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const putFileHandler = async () => {
+    console.log("putFileHandler: " + selectedFile);
+
+    // TODO
+    // How to get the file from the upload component?
+    // Allow user to override the filename
+    // make a request to the S3 API with brokerage name + filename
+    // // while request in progress, show loading state
+
+    try {
+      //-- Get access token from memory or request new token --//
+      let accessToken = await getAccessTokenSilently();
+
+      //-- Make POST request --//
+      let res = await axios.post(
+        `https://chrts3.chrt.com/${some_variable}`,
+        //-- Body Content --//
+        {
+          key1: "value1",
+          key2: "value2",
+        },
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log(res); // DEV
+      //----//
+    } catch (err) {
+      console.log(err);
+    }
+
+    listFiles(); //-- Refresh files list --//
+  };
+
+  const deleteFileHandler = async () => {
+    console.log("deleteFileHandler");
+
+    // TODO
+    // use selectedFile value to make a request to the S3 API
+    // // while request in progress, show loading state
+
+    try {
+      //-- Get access token from memory or request new token --//
+      let accessToken = await getAccessTokenSilently();
+
+      //-- Make GET request --//
+      let res = await axios.delete(`https://chrts3.chrt.com/${some_variable}`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(res); // DEV
+      //----//
+    } catch (err) {
+      console.log(err);
+    }
+
+    listFiles(); //-- Refresh files list --//
+  };
+
+  //-- At first render, List Files --//
+  useEffect(() => {
+    listFiles();
+  });
 
   return (
     <div className="flex flex-col justify-center">
@@ -366,9 +465,10 @@ export default function JournalFiles() {
       <div className="mt-3 flex justify-between gap-x-7">
         {/* START OF DOWNLOAD BUTTON */}
         <button
-          disabled={true} // TODO - base on logic
+          disabled={!selectedFile || files[0].name === "---"}
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
+          onClick={getFileHandler}
         >
           Download
         </button>
@@ -376,9 +476,10 @@ export default function JournalFiles() {
 
         {/* START OF DELETE BUTTON */}
         <button
-          disabled={true} // TODO - base on logic
+          disabled={!selectedFile || files[0].name === "---"}
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
+          onClick={deleteFileHandler}
         >
           Delete
         </button>
