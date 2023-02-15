@@ -90,19 +90,22 @@ export default function JournalFiles() {
     let accessToken = await getAccessTokenSilently();
     let user_db_id = getUserDbId(accessToken);
 
-    let bucket = "chrt-user-trading-data-files";
-    let object = `${user_db_id}%2F${selectedBrokerage}%2F${selectedFilename}`;
-
-    console.log("object:" + object);
-
     try {
       //-- Make GET request --//
       setGetFileLoading(true);
-      let res = await axios.get(`https://chrts3.chrt.com/${bucket}/${object}`, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
+      let res = await axios.post(
+        `https://chrts3.chrt.com/journal_files/get_file/${user_db_id}`,
+        //-- Body Content --//
+        {
+          bucket: "chrt-user-trading-data-files",
+          object: `${user_db_id}%2F${selectedBrokerage}%2F${selectedFilename}`,
         },
-      });
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       //-- Handle reponse by downloading file --//
       // DEV - does this add headers to the csv file??
       let blob = new Blob([res.data], { type: "text/plain;charset=utf-8" });
