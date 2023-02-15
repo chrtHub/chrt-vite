@@ -18,6 +18,7 @@ import { TableCellsIcon, FolderIcon } from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
 import axios from "axios";
+import useSWR from "swr";
 
 //-- Utility Functions --//
 function classNames(...classes) {
@@ -26,6 +27,7 @@ function classNames(...classes) {
 
 //-- env variables, Data Objects --//
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
+console.log(VITE_ALB_BASE_URL); // DEV
 
 const brokerages = [
   { id: 1, name: "TD_Ameritrade" },
@@ -40,8 +42,8 @@ export default function JournalFiles() {
   const [files, setFiles] = useState([
     {
       id: 0,
-      filename: "- - - - - - - - - - - -",
-      brokerage: "---",
+      filename: "example_file_name.csv",
+      brokerage: "brokerage name",
       last_modified: "yyyy-MM-dd @ hh:mm:ss aaa",
       size_mb: "0",
     },
@@ -67,8 +69,8 @@ export default function JournalFiles() {
       //-- Get access token from memory or request new token --//
       let accessToken = await getAccessTokenSilently();
 
-      setListFilesLoading(true);
       //-- Make GET request --//
+      setListFilesLoading(true);
       let res = await axios.get(
         `${VITE_ALB_BASE_URL}/journal_files/list_files`,
         {
@@ -79,12 +81,15 @@ export default function JournalFiles() {
       );
       setFiles(res.data);
       setListFilesLoading(false);
-      console.log(res); // DEV
       //----//
     } catch (err) {
       console.log(err);
     }
   };
+  //-- At first render, List Files --//
+  useEffect(() => {
+    listFiles();
+  }, []);
 
   const getFileHandler = async () => {
     console.log("getFileHandler");
@@ -171,11 +176,6 @@ export default function JournalFiles() {
 
     listFiles(); //-- Refresh files list --//
   };
-
-  //-- At first render, List Files --//
-  useEffect(() => {
-    listFiles();
-  }, []);
 
   return (
     <div className="flex flex-col justify-center">
@@ -359,7 +359,7 @@ export default function JournalFiles() {
                       {/* Name Column */}
                       <th
                         scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100 sm:pl-6"
+                        className="py-3.5 px-3 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100 sm:pl-6"
                       >
                         <a href="#" className="group inline-flex">
                           Filename

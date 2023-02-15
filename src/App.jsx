@@ -2,8 +2,8 @@
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- JSX Components --//
-import AppLayout from "../Layout/AppLayout";
-import LandingPage from "../LandingPage/LandingPage";
+import AppLayout from "./Layout/AppLayout";
+import LandingPage from "./LandingPage/LandingPage";
 
 //-- NPM Components --//
 

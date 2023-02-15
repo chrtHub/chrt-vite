@@ -8,7 +8,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import App from "./App/App";
+import App from "./App";
 
 //-- JSX Components: Home --//
 import Home from "./App/Home/Home";
