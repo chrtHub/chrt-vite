@@ -1,5 +1,6 @@
 //-- react, react-router-dom, Auth0 --//
 import { Fragment, useState, useEffect } from "react";
+import { atom, useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- JSX Components --//
@@ -37,19 +38,25 @@ const brokerages = [
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function JournalFiles() {
-  // TODO - fetch last-used value from localStorage (store it there, too)
-  const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]);
-  const [files, setFiles] = useState([
-    {
-      id: 0,
-      filename: "example_file_name.csv",
-      brokerage: "brokerage name",
-      last_modified: "yyyy-MM-dd @ hh:mm:ss aaa",
-      size_mb: "0",
-    },
-  ]);
+  //-- React State --//
+  const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]); // TODO - fetch last-used value from localStorage (store it there, too)
   const [selectedFile, setSelectedFile] = useState();
   const [listFilesLoading, setListFilesLoading] = useState();
+
+  //-- Recoil State --//
+  const filesListState = atom({
+    key: "filesListState",
+    default: [
+      {
+        id: 0,
+        filename: "example_file_name.csv",
+        brokerage: "brokerage name",
+        last_modified: "yyyy-MM-dd @ hh:mm:ss aaa",
+        size_mb: "0",
+      },
+    ],
+  });
+  const [filesList, setFilesList] = useRecoilState(filesListState);
 
   //-- Auth0 --//
   const { getAccessTokenSilently } = useAuth0();
@@ -79,7 +86,7 @@ export default function JournalFiles() {
           },
         }
       );
-      setFiles(res.data);
+      setFilesList(res.data);
       setListFilesLoading(false);
       //----//
     } catch (err) {
@@ -424,7 +431,7 @@ export default function JournalFiles() {
 
                   {/* Table Body */}
                   <tbody className="divide-y divide-zinc-200 bg-white dark:divide-zinc-800 dark:bg-zinc-800">
-                    {files.map((file, fileIdx) => (
+                    {filesList.map((file, fileIdx) => (
                       <tr
                         key={file.id}
                         className={classNames(
@@ -481,7 +488,7 @@ export default function JournalFiles() {
       <div className="mt-3 flex justify-between gap-x-7">
         {/* START OF DOWNLOAD BUTTON */}
         <button
-          disabled={!selectedFile || files[0].filename === "---"}
+          disabled={!selectedFile || filesList[0].filename === "---"}
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
           onClick={getFileHandler}
@@ -492,7 +499,7 @@ export default function JournalFiles() {
 
         {/* START OF DELETE BUTTON */}
         <button
-          disabled={!selectedFile || files[0].filename === "---"}
+          disabled={!selectedFile || filesList[0].filename === "---"}
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
           onClick={deleteFileHandler}

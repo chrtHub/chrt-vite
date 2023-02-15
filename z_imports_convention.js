@@ -1,4 +1,4 @@
-//-- react, react-router-dom, Auth0 --//
+//-- react, react-router-dom, Auth0, recoil --//
 
 //-- JSX Components --//
 
