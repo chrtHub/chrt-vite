@@ -1,6 +1,6 @@
 //-- react, react-router-dom, Auth0 --//
 import { Fragment, useState, useEffect } from "react";
-import { atom, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- JSX Components --//
@@ -13,22 +13,21 @@ import {
   CheckIcon,
   ChevronDownIcon,
   ChevronUpDownIcon,
-  ArrowUpTrayIcon,
 } from "@heroicons/react/20/solid";
-import { TableCellsIcon, FolderIcon } from "@heroicons/react/24/outline";
+import { FolderIcon } from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
 import axios from "axios";
-import useSWR from "swr";
 
 //-- Utility Functions --//
+import getUserDbId from "../Util/getUserDbId";
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-//-- env variables, Data Objects --//
-let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
-console.log(VITE_ALB_BASE_URL); // DEV
+//-- Data Objects, Environment Variables --//
+import { filesListState } from "./atoms";
 
 const brokerages = [
   { id: 1, name: "TD_Ameritrade" },
@@ -36,46 +35,33 @@ const brokerages = [
   { id: 3, name: "Webull" },
 ];
 
+let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
+
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function JournalFiles() {
   //-- React State --//
-  const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]); // TODO - fetch last-used value from localStorage (store it there, too)
-  const [selectedFile, setSelectedFile] = useState();
+
+  // TODO - fetch last-used value from localStorage (store it there, too)
+  const [selectedBrokerage, setSelectedBrokerage] = useState(
+    brokerages[0].name
+  );
+  const [selectedFilename, setSelectedFilename] = useState();
+
   const [listFilesLoading, setListFilesLoading] = useState();
+  const [getFileLoading, setGetFileLoading] = useState();
 
   //-- Recoil State --//
-  const filesListState = atom({
-    key: "filesListState",
-    default: [
-      {
-        id: 0,
-        filename: "example_file_name.csv",
-        brokerage: "brokerage name",
-        last_modified: "yyyy-MM-dd @ hh:mm:ss aaa",
-        size_mb: "0",
-      },
-    ],
-  });
   const [filesList, setFilesList] = useRecoilState(filesListState);
 
   //-- Auth0 --//
   const { getAccessTokenSilently } = useAuth0();
 
-  //-- File requests: List, GET, PUT, DELETE --//
+  //-- List Files --//
   const listFiles = async () => {
-    console.log("listFiles");
-
-    // TODO
-    // fetch files list by making request to S3 API (add method for listing files for a user)
-    // // while request in progress, show loading state
-    // // any IAM persmissions needed for that API method?
-    // format files list to be displayed in the data table
-    // setFiles([ array of properly formatted files ])
+    //-- Get access token from memory or request new token --//
+    let accessToken = await getAccessTokenSilently();
 
     try {
-      //-- Get access token from memory or request new token --//
-      let accessToken = await getAccessTokenSilently();
-
       //-- Make GET request --//
       setListFilesLoading(true);
       let res = await axios.get(
@@ -98,32 +84,40 @@ export default function JournalFiles() {
     listFiles();
   }, []);
 
+  //-- GET file --//
   const getFileHandler = async () => {
-    console.log("getFileHandler");
+    //-- Get access token from memory or request new token --//
+    let accessToken = await getAccessTokenSilently();
+    let user_db_id = getUserDbId(accessToken);
 
-    // TODO
-    // use selectedFile value to make a request to the S3 API
-    // // while request in progress, show loading state
+    let bucket = "chrt-user-trading-data-files";
+    let object = `${user_db_id}%2F${selectedBrokerage}%2F${selectedFilename}`;
+
+    console.log("object:" + object);
 
     try {
-      //-- Get access token from memory or request new token --//
-      let accessToken = await getAccessTokenSilently();
-
       //-- Make GET request --//
-      let res = await axios.get(`https://chrts3.chrt.com/${some_variable}`, {
+      setGetFileLoading(true);
+      let res = await axios.get(`https://chrts3.chrt.com/${bucket}/${object}`, {
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(res); // DEV
+      //-- Handle reponse by downloading file --//
+      // DEV - does this add headers to the csv file??
+      let blob = new Blob([res.data], { type: "text/plain;charset=utf-8" });
+      saveAs(blob, selectedFilename);
+      setGetFileLoading(false);
       //----//
     } catch (err) {
       console.log(err);
     }
   };
 
+  //-- PUT file --//
   const putFileHandler = async () => {
-    console.log("putFileHandler: " + selectedFile);
+    //-- Get access token from memory or request new token --//
+    let accessToken = await getAccessTokenSilently();
 
     // TODO
     // How to get the file from the upload component?
@@ -132,9 +126,6 @@ export default function JournalFiles() {
     // // while request in progress, show loading state
 
     try {
-      //-- Get access token from memory or request new token --//
-      let accessToken = await getAccessTokenSilently();
-
       //-- Make POST request --//
       let res = await axios.post(
         `https://chrts3.chrt.com/${some_variable}`,
@@ -158,11 +149,12 @@ export default function JournalFiles() {
     listFiles(); //-- Refresh files list --//
   };
 
+  //-- DELETE file --//
   const deleteFileHandler = async () => {
     console.log("deleteFileHandler");
 
     // TODO
-    // use selectedFile value to make a request to the S3 API
+    // use selectedFilename value to make a request to the S3 API
     // // while request in progress, show loading state
 
     try {
@@ -182,6 +174,12 @@ export default function JournalFiles() {
     }
 
     listFiles(); //-- Refresh files list --//
+  };
+
+  //-- Click Handlers --//
+  const setSelectedBrokerageHandler = (event) => {
+    console.log(event);
+    // setSelectedBrokerage(event.)
   };
 
   return (
@@ -222,7 +220,12 @@ export default function JournalFiles() {
       <div className="mt-6 grid grid-cols-6 gap-x-3 gap-y-1">
         {/* START OF BROKERAGE SELECTOR */}
         <div className="col-span-6 lg:col-span-1">
-          <Listbox value={selectedBrokerage} onChange={setSelectedBrokerage}>
+          <Listbox
+            value={selectedBrokerage}
+            onChange={() => {
+              setSelectedBrokerageHandler;
+            }}
+          >
             {({ open }) => (
               <>
                 <Listbox.Label className="block text-sm font-medium text-zinc-700 dark:text-zinc-100">
@@ -232,7 +235,7 @@ export default function JournalFiles() {
                 <div className="relative mt-1">
                   <Listbox.Button className="relative w-full cursor-default rounded-md border border-zinc-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-zinc-500 dark:bg-zinc-700 sm:text-sm">
                     <span className="block truncate text-black dark:text-zinc-100">
-                      {selectedBrokerage.name}
+                      {selectedBrokerage}
                     </span>
                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                       <ChevronUpDownIcon
@@ -314,7 +317,7 @@ export default function JournalFiles() {
           <div className="mt-1 flex rounded-l-md shadow-sm">
             <div className="relative flex flex-grow items-stretch focus-within:z-10">
               <span className="inline-flex items-center rounded-l-md border border-r-0 border-zinc-300 bg-zinc-100 px-3 text-zinc-500 dark:border-zinc-500 dark:bg-zinc-800 dark:text-zinc-100 sm:text-sm">
-                {selectedBrokerage.name} /
+                {selectedBrokerage} /
               </span>
               <input
                 type="text"
@@ -438,25 +441,25 @@ export default function JournalFiles() {
                           fileIdx % 2 === 0
                             ? "bg-white dark:bg-zinc-700"
                             : "bg-zinc-100 dark:bg-zinc-800", //-- Striped Rows --//
-                          selectedFile === file.filename
+                          selectedFilename === file.filename
                             ? "bg-green-100 dark:bg-green-900"
                             : undefined //-- Selected Row --> Green --//
                         )}
                       >
                         {/*  */}
                         <td className="relative w-12 px-6 sm:w-16 sm:px-8">
-                          {selectedFile === file.filename && (
+                          {selectedFilename === file.filename && (
                             <div className="absolute inset-y-0 left-0 w-1.5 bg-green-600" />
                           )}
                           <input
                             type="checkbox"
                             className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-500 dark:border-zinc-600 dark:bg-zinc-300 sm:left-6"
                             // value={file.email}
-                            checked={selectedFile === file.filename}
+                            checked={selectedFilename === file.filename}
                             onChange={(e) =>
                               e.target.checked //-- e.target.checked is the status after the onChange event --//
-                                ? setSelectedFile(file.filename)
-                                : setSelectedFile(null)
+                                ? setSelectedFilename(file.filename)
+                                : setSelectedFilename(null)
                             }
                           />
                         </td>
@@ -488,7 +491,7 @@ export default function JournalFiles() {
       <div className="mt-3 flex justify-between gap-x-7">
         {/* START OF DOWNLOAD BUTTON */}
         <button
-          disabled={!selectedFile || filesList[0].filename === "---"}
+          disabled={!selectedFilename || filesList[0].filename === "---"}
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
           onClick={getFileHandler}
@@ -499,7 +502,7 @@ export default function JournalFiles() {
 
         {/* START OF DELETE BUTTON */}
         <button
-          disabled={!selectedFile || filesList[0].filename === "---"}
+          disabled={!selectedFilename || filesList[0].filename === "---"}
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
           onClick={deleteFileHandler}
