@@ -1,6 +1,7 @@
-//-- react, react-router-dom, Auth0, recoil --//
+//-- react, react-router-dom, recoil, Auth0 --//
 import { useState } from "react";
 import { useRecoilState } from "recoil";
+import barState from "./atoms";
 
 //-- JSX Components --//
 
@@ -22,6 +23,17 @@ export default function ComponentName() {
   //-- Recoil State --//
   const [bar, setBar] = useRecoilState(barState);
 
+  //-- Auth --//
+
+  //-- Data Fetching --//
+
+  //-- Other --//
+
+  //-- Click Handlers --//
+
+  //-- Side Effects --//
+
+  //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div>
       <p>content</p>

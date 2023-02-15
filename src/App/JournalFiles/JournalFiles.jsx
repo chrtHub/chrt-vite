@@ -1,6 +1,7 @@
-//-- react, react-router-dom, Auth0 --//
+//-- react, react-router-dom, recoil, Auth0 --//
 import { Fragment, useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
+import { filesListState } from "./atoms";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- JSX Components --//
@@ -27,7 +28,6 @@ function classNames(...classes) {
 }
 
 //-- Data Objects, Environment Variables --//
-import { filesListState } from "./atoms";
 
 const brokerages = [
   { id: 1, name: "TD_Ameritrade" },
@@ -40,11 +40,10 @@ let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function JournalFiles() {
   //-- React State --//
-
-  // TODO - fetch last-used value from localStorage (store it there, too)
   const [selectedBrokerage, setSelectedBrokerage] = useState(
     brokerages[0].name
   );
+  // TODO - fetch last-used value from localStorage (store it there, too)
   const [selectedFilename, setSelectedFilename] = useState();
 
   const [listFilesLoading, setListFilesLoading] = useState();
@@ -53,10 +52,10 @@ export default function JournalFiles() {
   //-- Recoil State --//
   const [filesList, setFilesList] = useRecoilState(filesListState);
 
-  //-- Auth0 --//
+  //-- Auth --//
   const { getAccessTokenSilently } = useAuth0();
 
-  //-- List Files --//
+  //-- Data Fetching --//
   const listFiles = async () => {
     //-- Get access token from memory or request new token --//
     let accessToken = await getAccessTokenSilently();
@@ -79,12 +78,7 @@ export default function JournalFiles() {
       console.log(err);
     }
   };
-  //-- At first render, List Files --//
-  useEffect(() => {
-    listFiles();
-  }, []);
 
-  //-- GET file --//
   const getFileHandler = async () => {
     //-- Get access token from memory or request new token --//
     let accessToken = await getAccessTokenSilently();
@@ -117,7 +111,6 @@ export default function JournalFiles() {
     }
   };
 
-  //-- PUT file --//
   const putFileHandler = async () => {
     //-- Get access token from memory or request new token --//
     let accessToken = await getAccessTokenSilently();
@@ -152,7 +145,6 @@ export default function JournalFiles() {
     listFiles(); //-- Refresh files list --//
   };
 
-  //-- DELETE file --//
   const deleteFileHandler = async () => {
     console.log("deleteFileHandler");
 
@@ -179,12 +171,20 @@ export default function JournalFiles() {
     listFiles(); //-- Refresh files list --//
   };
 
+  //-- Other --//
+
   //-- Click Handlers --//
   const setSelectedBrokerageHandler = (event) => {
     console.log(event);
     // setSelectedBrokerage(event.)
   };
 
+  //-- Side Effects --//
+  useEffect(() => {
+    listFiles();
+  }, []);
+
+  //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div className="flex flex-col justify-center">
       {/* START OF FILE UPLOAD AREA */}
