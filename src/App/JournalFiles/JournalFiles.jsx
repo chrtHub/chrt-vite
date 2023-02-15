@@ -1,5 +1,6 @@
 //-- react, react-router-dom, Auth0 --//
 import { Fragment, useState, useEffect } from "react";
+import { atom, useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- JSX Components --//
@@ -18,6 +19,7 @@ import { TableCellsIcon, FolderIcon } from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
 import axios from "axios";
+import useSWR from "swr";
 
 //-- Utility Functions --//
 function classNames(...classes) {
@@ -26,6 +28,7 @@ function classNames(...classes) {
 
 //-- env variables, Data Objects --//
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
+console.log(VITE_ALB_BASE_URL); // DEV
 
 const brokerages = [
   { id: 1, name: "TD_Ameritrade" },
@@ -35,19 +38,25 @@ const brokerages = [
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function JournalFiles() {
-  // TODO - fetch last-used value from localStorage (store it there, too)
-  const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]);
-  const [files, setFiles] = useState([
-    {
-      id: 0,
-      filename: "- - - - - - - - - - - -",
-      brokerage: "---",
-      last_modified: "yyyy-MM-dd @ hh:mm:ss aaa",
-      size_mb: "0",
-    },
-  ]);
+  //-- React State --//
+  const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]); // TODO - fetch last-used value from localStorage (store it there, too)
   const [selectedFile, setSelectedFile] = useState();
   const [listFilesLoading, setListFilesLoading] = useState();
+
+  //-- Recoil State --//
+  const filesListState = atom({
+    key: "filesListState",
+    default: [
+      {
+        id: 0,
+        filename: "example_file_name.csv",
+        brokerage: "brokerage name",
+        last_modified: "yyyy-MM-dd @ hh:mm:ss aaa",
+        size_mb: "0",
+      },
+    ],
+  });
+  const [filesList, setFilesList] = useRecoilState(filesListState);
 
   //-- Auth0 --//
   const { getAccessTokenSilently } = useAuth0();
@@ -67,8 +76,8 @@ export default function JournalFiles() {
       //-- Get access token from memory or request new token --//
       let accessToken = await getAccessTokenSilently();
 
-      setListFilesLoading(true);
       //-- Make GET request --//
+      setListFilesLoading(true);
       let res = await axios.get(
         `${VITE_ALB_BASE_URL}/journal_files/list_files`,
         {
@@ -77,14 +86,17 @@ export default function JournalFiles() {
           },
         }
       );
-      setFiles(res.data);
+      setFilesList(res.data);
       setListFilesLoading(false);
-      console.log(res); // DEV
       //----//
     } catch (err) {
       console.log(err);
     }
   };
+  //-- At first render, List Files --//
+  useEffect(() => {
+    listFiles();
+  }, []);
 
   const getFileHandler = async () => {
     console.log("getFileHandler");
@@ -171,11 +183,6 @@ export default function JournalFiles() {
 
     listFiles(); //-- Refresh files list --//
   };
-
-  //-- At first render, List Files --//
-  useEffect(() => {
-    listFiles();
-  }, []);
 
   return (
     <div className="flex flex-col justify-center">
@@ -359,7 +366,7 @@ export default function JournalFiles() {
                       {/* Name Column */}
                       <th
                         scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100 sm:pl-6"
+                        className="py-3.5 px-3 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100 sm:pl-6"
                       >
                         <a href="#" className="group inline-flex">
                           Filename
@@ -424,7 +431,7 @@ export default function JournalFiles() {
 
                   {/* Table Body */}
                   <tbody className="divide-y divide-zinc-200 bg-white dark:divide-zinc-800 dark:bg-zinc-800">
-                    {files.map((file, fileIdx) => (
+                    {filesList.map((file, fileIdx) => (
                       <tr
                         key={file.id}
                         className={classNames(
@@ -481,7 +488,7 @@ export default function JournalFiles() {
       <div className="mt-3 flex justify-between gap-x-7">
         {/* START OF DOWNLOAD BUTTON */}
         <button
-          disabled={!selectedFile || files[0].filename === "---"}
+          disabled={!selectedFile || filesList[0].filename === "---"}
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
           onClick={getFileHandler}
@@ -492,7 +499,7 @@ export default function JournalFiles() {
 
         {/* START OF DELETE BUTTON */}
         <button
-          disabled={!selectedFile || files[0].filename === "---"}
+          disabled={!selectedFile || filesList[0].filename === "---"}
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
           onClick={deleteFileHandler}
