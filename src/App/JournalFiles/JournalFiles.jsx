@@ -23,6 +23,7 @@ import { saveAs } from "file-saver";
 import { useDropzone } from "react-dropzone";
 
 //-- Utility Functions --//
+import orderBy from "lodash/orderBy";
 import getUserDbId from "../Util/getUserDbId";
 
 function classNames(...classes) {
@@ -51,6 +52,7 @@ export default function JournalFiles() {
   const [deleteFileLoading, setDeleteFileLoading] = useState();
 
   const [tableSelectionFilename, setTableSelectionFilename] = useState();
+  const [currentSort, setCurrentSort] = useState();
 
   //-- Recoil State --//
   const [filesList, setFilesList] = useRecoilState(filesListState);
@@ -105,7 +107,6 @@ export default function JournalFiles() {
       console.log(err);
     }
     setGetFileLoading(false);
-    setTableSelectionFilename(null);
   };
 
   const putFile = async () => {
@@ -176,14 +177,41 @@ export default function JournalFiles() {
     setPutFileData(acceptedFiles[0]);
     setPutFilename(acceptedFiles[0].name);
   });
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: "text/csv",
-    maxFiles: 1,
-    maxSize: 10485760, //-- 10 MB --//
-    onDrop: onDrop,
-  });
+  const { getRootProps, getInputProps, isDragAccept, isDragReject } =
+    useDropzone({
+      accept: {
+        "text/csv": [".csv"],
+      },
+      maxFiles: 1,
+      maxSize: 10485760, //-- 10 MB --//
+      onDrop: onDrop,
+    });
+  const fileUploadHandler = (event) => {
+    let file = event?.target?.files[0];
+    //-- Check file size --//
+    if (file?.size < 10 * 1024 * 1024) {
+      alert("File size limit is 10 MB");
+    } else {
+      setPutFileData(file);
+      setPutFilename(file?.name);
+    }
+  };
 
   //-- Click Handlers --//
+  const sortByHandler = (columnName) => {
+    //-- Sort ('_.orderBy') ascending. But if already sorted ascending, sort descending. --//
+    const sortedFilesList = orderBy(
+      filesList, //-- array --//
+      [columnName], //-- column to order by --//
+      [currentSort === `${columnName}_asc` ? "desc" : "asc"] //-- asc or desc --//
+    );
+    setFilesList(sortedFilesList);
+    setCurrentSort(
+      currentSort === `${columnName}_asc`
+        ? `${columnName}_desc`
+        : `${columnName}_asc`
+    );
+  };
 
   //-- Side Effects --//
   useEffect(() => {
@@ -200,8 +228,9 @@ export default function JournalFiles() {
             <div
               {...getRootProps()}
               className={classNames(
-                isDragActive ? "bg-green-100" : "",
-                "flex justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6"
+                isDragAccept ? "bg-green-200" : "",
+                isDragReject ? "bg-orange-200" : "",
+                "flex cursor-pointer justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6 hover:bg-green-100 dark:hover:bg-green-900"
               )}
             >
               <input {...getInputProps()} />
@@ -210,7 +239,7 @@ export default function JournalFiles() {
                 <div className="flex text-sm text-zinc-600">
                   <label
                     htmlFor="file-upload"
-                    className="hover-within:outline-none hover-within:ring-2 hover-within:ring-green-500 hover-within:ring-offset-2 relative cursor-pointer rounded-md bg-green-100 px-1 font-medium text-green-600 hover:text-green-500 dark:bg-green-800 dark:text-green-200 dark:hover:text-white"
+                    className="hover-within:outline-none hover-within:ring-2 hover-within:ring-green-500 hover-within:ring-offset-2 relative cursor-pointer rounded-md bg-green-100 px-1 font-medium text-green-600 dark:bg-green-900 dark:text-white"
                   >
                     <span>Select a file</span>
                     <input
@@ -219,13 +248,7 @@ export default function JournalFiles() {
                       type="file"
                       className="sr-only"
                       accept=".csv"
-                      onChange={(event) => {
-                        //-- Verify that file size is < 10 MB --//
-                        if (event?.target?.files[0]?.size < 10 * 1024 * 1024) {
-                          setPutFileData(event?.target?.files[0]);
-                          setPutFilename(event?.target?.files[0]?.name);
-                        }
-                      }}
+                      onChange={fileUploadHandler}
                     />
                   </label>
                   <p className="pl-1 dark:text-zinc-100">or drag and drop</p>
@@ -345,7 +368,9 @@ export default function JournalFiles() {
                 value={putFilename ? putFilename : ""}
                 onChange={(event) => setPutFilename(event.target.value)}
                 className={classNames(
-                  putFileLoading ? "bg-green-100" : "",
+                  putFileLoading
+                    ? "animate-pulse bg-green-400 opacity-30 dark:bg-green-900"
+                    : "",
                   "block w-full min-w-0 flex-1 rounded-none border-zinc-300 px-3 py-2 focus:border-green-500 focus:ring-green-500 dark:border-zinc-500 dark:bg-zinc-700 dark:text-zinc-100 sm:text-sm"
                 )}
                 placeholder="some_file_name.csv"
@@ -393,7 +418,7 @@ export default function JournalFiles() {
                         className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
                       />
 
-                      {/* Name Column */}
+                      {/* Filename Column */}
                       <th
                         scope="col"
                         className="py-3.5 px-3 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100 sm:pl-6"
@@ -404,6 +429,9 @@ export default function JournalFiles() {
                             <ChevronDownIcon
                               className="h-5 w-5"
                               aria-hidden="true"
+                              onClick={() => {
+                                sortByHandler("filename");
+                              }}
                             />
                           </span>
                         </a>
@@ -420,12 +448,15 @@ export default function JournalFiles() {
                             <ChevronDownIcon
                               className="h-5 w-5"
                               aria-hidden="true"
+                              onClick={() => {
+                                sortByHandler("brokerage");
+                              }}
                             />
                           </span>
                         </a>
                       </th>
 
-                      {/* Upload Date Column */}
+                      {/* Uploaded / Last Modified Column */}
                       <th
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
@@ -436,12 +467,15 @@ export default function JournalFiles() {
                             <ChevronDownIcon
                               className="h-5 w-5"
                               aria-hidden="true"
+                              onClick={() => {
+                                sortByHandler("last_modified");
+                              }}
                             />
                           </span>
                         </a>
                       </th>
 
-                      {/* Size Column */}
+                      {/* Size (MB) Column */}
                       <th
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
@@ -452,6 +486,9 @@ export default function JournalFiles() {
                             <ChevronDownIcon
                               className="h-5 w-5"
                               aria-hidden="true"
+                              onClick={() => {
+                                sortByHandler("size_mb");
+                              }}
                             />
                           </span>
                         </a>
@@ -473,7 +510,7 @@ export default function JournalFiles() {
                             : undefined //-- Selected Row --> Green --//
                         )}
                       >
-                        {/*  */}
+                        {/* Checkbox */}
                         <td className="relative w-12 px-6 sm:w-16 sm:px-8">
                           {tableSelectionFilename === file.filename && (
                             <div className="absolute inset-y-0 left-0 w-1.5 bg-green-600" />
@@ -490,22 +527,30 @@ export default function JournalFiles() {
                             }
                           />
                         </td>
-                        {/*  */}
+
+                        {/* Filename */}
                         <td className="whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-zinc-900 dark:text-white sm:pl-6">
                           {file.filename}
                         </td>
+
+                        {/* Brokerage */}
                         <td className="whitespace-nowrap px-2 py-2 text-sm text-zinc-700 dark:text-zinc-100">
                           {file.brokerage}
                         </td>
+
+                        {/* Uploaded / Last Modified */}
                         <td className="whitespace-nowrap px-2 py-2 text-sm text-zinc-700 dark:text-zinc-100">
                           {file.last_modified}
                         </td>
+
+                        {/* Size (MB) */}
                         <td className="relative whitespace-nowrap py-2 pl-3 pr-4 text-sm font-medium text-zinc-700 dark:text-zinc-100 sm:pr-6">
                           {file.size_mb}
                         </td>
                       </tr>
                     ))}
                   </tbody>
+                  {/*----*/}
                 </table>
               </div>
             </div>
@@ -518,7 +563,10 @@ export default function JournalFiles() {
       <div className="mt-3 flex justify-between gap-x-7">
         {/* START OF DOWNLOAD BUTTON */}
         <button
-          disabled={!tableSelectionFilename || filesList[0].filename === "---"}
+          disabled={
+            !tableSelectionFilename ||
+            filesList[0].filename === "example_file_name.csv"
+          }
           type="button"
           className={classNames(
             getFileLoading ? "animate-pulse cursor-not-allowed opacity-30" : "",
@@ -532,7 +580,10 @@ export default function JournalFiles() {
 
         {/* START OF DELETE BUTTON */}
         <button
-          disabled={!tableSelectionFilename || filesList[0].filename === "---"}
+          disabled={
+            !tableSelectionFilename ||
+            filesList[0].filename === "example_file_name.csv"
+          }
           type="button"
           className={classNames(
             deleteFileLoading
