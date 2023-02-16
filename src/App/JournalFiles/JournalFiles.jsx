@@ -185,54 +185,18 @@ export default function JournalFiles() {
   });
 
   //-- Click Handlers --//
-  const sortByFilenameHandler = () => {
-    //-- Sort ascending. But if already sorted ascending, sort descending. --//
+  const sortByHandler = (columnName) => {
+    //-- Sort ('_.orderBy') ascending. But if already sorted ascending, sort descending. --//
     const sortedFilesList = orderBy(
-      filesList,
-      ["filename"],
-      [currentSort === "filename_asc" ? "desc" : "asc"]
+      filesList, //-- array --//
+      [columnName], //-- column to order by --//
+      [currentSort === `${columnName}_asc` ? "desc" : "asc"] //-- asc or desc --//
     );
     setFilesList(sortedFilesList);
     setCurrentSort(
-      currentSort === "filename_asc" ? "filename_desc" : "filename_asc"
-    );
-  };
-  const sortByBrokerageHandler = () => {
-    //-- Sort ascending. But if already sorted ascending, sort descending. --//
-    const sortedFilesList = orderBy(
-      filesList,
-      ["brokerage"],
-      [currentSort === "brokerage_asc" ? "desc" : "asc"]
-    );
-    setFilesList(sortedFilesList);
-    setCurrentSort(
-      currentSort === "brokerage_asc" ? "brokerage_desc" : "brokerage_asc"
-    );
-  };
-  const sortByUploadedHandler = () => {
-    //-- Sort ascending. But if already sorted ascending, sort descending. --//
-    const sortedFilesList = orderBy(
-      filesList,
-      ["last_modified"],
-      [currentSort === "last_modified_asc" ? "desc" : "asc"]
-    );
-    setFilesList(sortedFilesList);
-    setCurrentSort(
-      currentSort === "last_modified_asc"
-        ? "last_modified_desc"
-        : "last_modified_asc"
-    );
-  };
-  const sortBySizeHandler = () => {
-    //-- Sort ascending. But if already sorted ascending, sort descending. --//
-    const sortedFilesList = orderBy(
-      filesList,
-      ["size_mb"],
-      [currentSort === "size_mb_asc" ? "desc" : "asc"]
-    );
-    setFilesList(sortedFilesList);
-    setCurrentSort(
-      currentSort === "size_mb_asc" ? "size_mb_desc" : "size_mb_asc"
+      currentSort === `${columnName}_asc`
+        ? `${columnName}_desc`
+        : `${columnName}_asc`
     );
   };
 
@@ -457,7 +421,9 @@ export default function JournalFiles() {
                             <ChevronDownIcon
                               className="h-5 w-5"
                               aria-hidden="true"
-                              onClick={sortByFilenameHandler}
+                              onClick={() => {
+                                sortByHandler("filename");
+                              }}
                             />
                           </span>
                         </a>
@@ -474,7 +440,9 @@ export default function JournalFiles() {
                             <ChevronDownIcon
                               className="h-5 w-5"
                               aria-hidden="true"
-                              onClick={sortByBrokerageHandler}
+                              onClick={() => {
+                                sortByHandler("brokerage");
+                              }}
                             />
                           </span>
                         </a>
@@ -491,7 +459,9 @@ export default function JournalFiles() {
                             <ChevronDownIcon
                               className="h-5 w-5"
                               aria-hidden="true"
-                              onClick={sortByUploadedHandler}
+                              onClick={() => {
+                                sortByHandler("last_modified");
+                              }}
                             />
                           </span>
                         </a>
@@ -508,7 +478,9 @@ export default function JournalFiles() {
                             <ChevronDownIcon
                               className="h-5 w-5"
                               aria-hidden="true"
-                              onClick={sortBySizeHandler}
+                              onClick={() => {
+                                sortByHandler("size_mb");
+                              }}
                             />
                           </span>
                         </a>
