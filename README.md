@@ -6,8 +6,8 @@ Hi, this is the readme!
 
 - **[Front-end repo](https://github.com/chrtHub/chrt-vite/)** _(current page)_
 - **[Back-end repo](https://github.com/chrtHub/postgres-tradingdata)**
-- Lambda function(s):
-  - **[S3 --> Postgres repo](https://github.com/chrtHub/lambda-chrtUserTradingData-S3-to-RDS-PostgreSQL)**
+- Lambda function(s) repo(s):
+  - **[S3 .csv parse to Postgres](https://github.com/chrtHub/lambda-chrtUserTradingData-S3-to-RDS-PostgreSQL)**
 
 ### CI/CD Stack
 
