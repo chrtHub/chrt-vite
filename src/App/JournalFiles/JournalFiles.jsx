@@ -177,12 +177,25 @@ export default function JournalFiles() {
     setPutFileData(acceptedFiles[0]);
     setPutFilename(acceptedFiles[0].name);
   });
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: "text/csv",
-    maxFiles: 1,
-    maxSize: 10485760, //-- 10 MB --//
-    onDrop: onDrop,
-  });
+  const { getRootProps, getInputProps, isDragAccept, isDragReject } =
+    useDropzone({
+      accept: {
+        "text/csv": [".csv"],
+      },
+      maxFiles: 1,
+      maxSize: 10485760, //-- 10 MB --//
+      onDrop: onDrop,
+    });
+  const fileUploadHandler = (event) => {
+    let file = event?.target?.files[0];
+    //-- Check file size --//
+    if (file?.size < 10 * 1024 * 1024) {
+      alert("File size limit is 10 MB");
+    } else {
+      setPutFileData(file);
+      setPutFilename(file?.name);
+    }
+  };
 
   //-- Click Handlers --//
   const sortByHandler = (columnName) => {
@@ -215,7 +228,8 @@ export default function JournalFiles() {
             <div
               {...getRootProps()}
               className={classNames(
-                isDragActive ? "bg-green-100" : "",
+                isDragAccept ? "bg-green-200" : "",
+                isDragReject ? "bg-orange-200" : "",
                 "flex cursor-pointer justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6 hover:bg-green-100 dark:hover:bg-green-900"
               )}
             >
@@ -234,13 +248,7 @@ export default function JournalFiles() {
                       type="file"
                       className="sr-only"
                       accept=".csv"
-                      onChange={(event) => {
-                        //-- Verify that file size is < 10 MB --//
-                        if (event?.target?.files[0]?.size < 10 * 1024 * 1024) {
-                          setPutFileData(event?.target?.files[0]);
-                          setPutFilename(event?.target?.files[0]?.name);
-                        }
-                      }}
+                      onChange={fileUploadHandler}
                     />
                   </label>
                   <p className="pl-1 dark:text-zinc-100">or drag and drop</p>
