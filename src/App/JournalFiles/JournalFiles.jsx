@@ -43,6 +43,7 @@ export default function JournalFiles() {
   const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]);
   // TODO - fetch last-used value from localStorage (store it there, too)
   const [selectedFilename, setSelectedFilename] = useState();
+  const [putFilename, setPutFilename] = useState();
 
   const [listFilesLoading, setListFilesLoading] = useState();
   const [getFileLoading, setGetFileLoading] = useState();
@@ -109,21 +110,14 @@ export default function JournalFiles() {
     //-- Get access token from memory or request new token --//
     let accessToken = await getAccessTokenSilently();
 
-    // TODO
-    // How to get the file from the upload component?
-    // Allow user to override the filename
-    // make a request to the S3 API with brokerage name + filename
-    // // while request in progress, show loading state
-
     setPutFileLoading(true);
     try {
       //-- Make POST request --//
-      let res = await axios.post(
-        `https://chrts3.chrt.com/${some_variable}`,
+      let res = await axios.put(
+        `${VITE_ALB_BASE_URL}/journal_files/put_file/${selectedBrokerage.name}/${putFilename}`,
         //-- Body Content --//
         {
-          key1: "value1",
-          key2: "value2",
+          file: "TODO",
         },
         {
           headers: {
@@ -311,6 +305,8 @@ export default function JournalFiles() {
                 type="text"
                 name="company-website"
                 id="company-website"
+                value={putFilename}
+                onChange={(event) => setPutFilename(event.target.value)}
                 className="block w-full min-w-0 flex-1 rounded-none border-zinc-300 px-3 py-2 focus:border-green-500 focus:ring-green-500 dark:border-zinc-500 dark:bg-zinc-700 dark:text-zinc-100 sm:text-sm"
                 placeholder="some_file_name.csv"
               />
@@ -320,9 +316,7 @@ export default function JournalFiles() {
               disabled={true} // TODO - base on logic of whether file is ready for upload
               type="button"
               className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-green-600 bg-green-600 px-4 py-2 text-sm font-medium text-white hover:border-green-700 hover:bg-green-700 focus:outline-none focus:ring-0 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:border-green-700 dark:bg-green-700 dark:hover:border-green-600 dark:hover:bg-green-600 dark:disabled:border-zinc-500 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
-              onClick={() => {
-                console.log("Upload button clicked");
-              }}
+              onClick={putFile}
             >
               <span>Upload</span>
             </button>
