@@ -1,5 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, useCallback } from "react";
 import { useRecoilState } from "recoil";
 import { filesListState } from "./atoms";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -35,7 +35,6 @@ const brokerages = [
   { id: 1, nickname: "TradeZero", name: "tradezero" },
   { id: 2, nickname: "Webull", name: "webull" },
 ];
-
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
@@ -59,7 +58,6 @@ export default function JournalFiles() {
   const { getAccessTokenSilently } = useAuth0();
 
   //-- Data Fetching --//
-
   const listFiles = async () => {
     //-- Get access token from memory or request new token --//
     let accessToken = await getAccessTokenSilently();
@@ -171,6 +169,16 @@ export default function JournalFiles() {
   };
 
   //-- Other --//
+  const onDrop = useCallback((acceptedFiles) => {
+    setPutFileData(acceptedFiles[0]);
+    setPutFilename(acceptedFiles[0].name);
+  });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: "text/csv",
+    maxFiles: 1,
+    maxSize: 10485760, //-- 10 MB --//
+    onDrop: onDrop,
+  });
 
   //-- Click Handlers --//
 
@@ -186,7 +194,14 @@ export default function JournalFiles() {
       <form className="mt-6">
         <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-6">
-            <div className="flex justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6">
+            <div
+              {...getRootProps()}
+              className={classNames(
+                isDragActive ? "bg-green-100" : "",
+                "flex justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6"
+              )}
+            >
+              <input {...getInputProps()} />
               <div className="space-y-1 text-center">
                 <FolderIcon className="mx-auto h-10 w-10 text-zinc-400" />
                 <div className="flex text-sm text-zinc-600">
