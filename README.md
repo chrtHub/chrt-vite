@@ -2,7 +2,7 @@
 
 Hi, this is the readme!
 
-- [Front-end repo](https://github.com/chrtHub/chrt-vite/) (this page)
+- [Front-end repo](https://github.com/chrtHub/chrt-vite/) _(you are here)_
 - [Back-end repo](https://github.com/chrtHub/postgres-tradingdata)
 - Lambda function(s)
   - [S3 --> Postgres repo](https://github.com/chrtHub/lambda-chrtUserTradingData-S3-to-RDS-PostgreSQL)
