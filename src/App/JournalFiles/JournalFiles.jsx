@@ -46,6 +46,7 @@ export default function JournalFiles() {
 
   const [listFilesLoading, setListFilesLoading] = useState();
   const [getFileLoading, setGetFileLoading] = useState();
+  const [putFileLoading, setPutFileLoading] = useState();
   const [deleteFileLoading, setDeleteFileLoading] = useState();
 
   //-- Recoil State --//
@@ -60,9 +61,9 @@ export default function JournalFiles() {
     //-- Get access token from memory or request new token --//
     let accessToken = await getAccessTokenSilently();
 
+    setListFilesLoading(true);
     try {
       //-- Make GET request --//
-      setListFilesLoading(true);
       let res = await axios.get(
         `${VITE_ALB_BASE_URL}/journal_files/list_files`,
         {
@@ -72,20 +73,20 @@ export default function JournalFiles() {
         }
       );
       setFilesList(res.data);
-      setListFilesLoading(false);
       //----//
     } catch (err) {
       console.log(err);
     }
+    setListFilesLoading(false);
   };
 
   const getFile = async () => {
     //-- Get access token from memory or request new token --//
     let accessToken = await getAccessTokenSilently();
 
+    setGetFileLoading(true);
     try {
       //-- Make GET request --//
-      setGetFileLoading(true);
       let res = await axios.get(
         `${VITE_ALB_BASE_URL}/journal_files/get_file/${selectedBrokerage.name}/${selectedFilename}`,
         {
@@ -97,11 +98,11 @@ export default function JournalFiles() {
       //-- Handle reponse by downloading file --//
       let blob = new Blob([res.data], { type: "text/plain;charset=utf-8" });
       saveAs(blob, selectedFilename);
-      setGetFileLoading(false);
       //----//
     } catch (err) {
       console.log(err);
     }
+    setGetFileLoading(false);
   };
 
   const putFile = async () => {
@@ -114,6 +115,7 @@ export default function JournalFiles() {
     // make a request to the S3 API with brokerage name + filename
     // // while request in progress, show loading state
 
+    setPutFileLoading(true);
     try {
       //-- Make POST request --//
       let res = await axios.post(
@@ -134,6 +136,7 @@ export default function JournalFiles() {
     } catch (err) {
       console.log(err);
     }
+    setPutFileLoading(false);
 
     listFiles(); //-- Refresh files list --//
   };
@@ -141,12 +144,12 @@ export default function JournalFiles() {
   const deleteFile = async () => {
     console.log("deleteFile");
 
+    setGetFileLoading(true);
     try {
       //-- Get access token from memory or request new token --//
       let accessToken = await getAccessTokenSilently();
 
       //-- Make DELETE request --//
-      setGetFileLoading(true);
       let res = await axios.delete(
         `${VITE_ALB_BASE_URL}/journal_files/delete_file/${selectedBrokerage.name}/${selectedFilename}`,
         {
@@ -156,11 +159,11 @@ export default function JournalFiles() {
         }
       );
       console.log(res); // DEV
-      setGetFileLoading(false);
       //----//
     } catch (err) {
       console.log(err);
     }
+    setGetFileLoading(false);
 
     listFiles(); //-- Refresh files list --//
   };
