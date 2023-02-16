@@ -25,6 +25,7 @@ Hi, this is the readme!
 
 ### Back-end Stack
 
+- [Amazon Linux 2](https://aws.amazon.com/amazon-linux-2/)
 - [Docker](https://www.docker.com/)
 - [Node.js](https://nodejs.org/en/)
 - [Express](https://expressjs.com/)
