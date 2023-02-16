@@ -142,9 +142,7 @@ export default function JournalFiles() {
   };
 
   const deleteFile = async () => {
-    console.log("deleteFile");
-
-    setGetFileLoading(true);
+    setDeleteFileLoading(true);
     try {
       //-- Get access token from memory or request new token --//
       let accessToken = await getAccessTokenSilently();
@@ -158,12 +156,11 @@ export default function JournalFiles() {
           },
         }
       );
-      console.log(res); // DEV
       //----//
     } catch (err) {
       console.log(err);
     }
-    setGetFileLoading(false);
+    setDeleteFileLoading(false);
 
     listFiles(); //-- Refresh files list --//
   };
