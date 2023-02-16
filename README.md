@@ -2,18 +2,12 @@
 
 Hi, this is the readme!
 
-### Contact
-
-Need support? support@chrt.com<br />
-<br />
-Want to chat? aaron@chrt.com
-
 ### Repos
 
-- [Front-end repo](https://github.com/chrtHub/chrt-vite/) _(current page)_
-- [Back-end repo](https://github.com/chrtHub/postgres-tradingdata)
-- Lambda function(s)
-  - [S3 --> Postgres repo](https://github.com/chrtHub/lambda-chrtUserTradingData-S3-to-RDS-PostgreSQL)
+- **[Front-end repo](https://github.com/chrtHub/chrt-vite/)** _(current page)_
+- **[Back-end repo](https://github.com/chrtHub/postgres-tradingdata)**
+- Lambda function(s):
+  - **[S3 --> Postgres repo](https://github.com/chrtHub/lambda-chrtUserTradingData-S3-to-RDS-PostgreSQL)**
 
 ### CI/CD Stack
 
@@ -52,3 +46,9 @@ Want to chat? aaron@chrt.com
 - [AWS Lambda](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html) - serverless functions
 - [S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) - for storing user-uploaded files
 - [DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html) - NoSQL database
+
+### Contact
+
+Need support? support@chrt.com<br />
+<br />
+Want to chat? aaron@chrt.com
