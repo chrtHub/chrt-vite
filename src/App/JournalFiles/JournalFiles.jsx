@@ -20,6 +20,7 @@ import { FolderIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 //-- NPM Functions --//
 import axios from "axios";
 import { saveAs } from "file-saver";
+import { useDropzone } from "react-dropzone";
 
 //-- Utility Functions --//
 import getUserDbId from "../Util/getUserDbId";
@@ -41,9 +42,10 @@ let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 export default function JournalFiles() {
   //-- React State --//
   const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]);
-  // TODO - fetch last-used value from localStorage (store it there, too)
-  const [selectedFilename, setSelectedFilename] = useState();
+  const [tableSelectionFilename, setTableSelectionFilename] = useState();
+
   const [putFilename, setPutFilename] = useState();
+  const [putFileData, setPutFileData] = useState();
 
   const [listFilesLoading, setListFilesLoading] = useState();
   const [getFileLoading, setGetFileLoading] = useState();
@@ -89,7 +91,7 @@ export default function JournalFiles() {
     try {
       //-- Make GET request --//
       let res = await axios.get(
-        `${VITE_ALB_BASE_URL}/journal_files/get_file/${selectedBrokerage.name}/${selectedFilename}`,
+        `${VITE_ALB_BASE_URL}/journal_files/get_file/${selectedBrokerage.name}/${tableSelectionFilename}`,
         {
           headers: {
             authorization: `Bearer ${accessToken}`,
@@ -98,7 +100,7 @@ export default function JournalFiles() {
       );
       //-- Handle reponse by downloading file --//
       let blob = new Blob([res.data], { type: "text/plain;charset=utf-8" });
-      saveAs(blob, selectedFilename);
+      saveAs(blob, tableSelectionFilename);
       //----//
     } catch (err) {
       console.log(err);
@@ -110,22 +112,25 @@ export default function JournalFiles() {
     //-- Get access token from memory or request new token --//
     let accessToken = await getAccessTokenSilently();
 
+    let formData = new FormData();
+    formData.append("file", putFileData);
+
     setPutFileLoading(true);
     try {
       //-- Make POST request --//
       let res = await axios.put(
         `${VITE_ALB_BASE_URL}/journal_files/put_file/${selectedBrokerage.name}/${putFilename}`,
         //-- Body Content --//
-        {
-          file: "TODO",
-        },
+        formData,
+        //-- Headers --//
         {
           headers: {
             authorization: `Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-      console.log(res); // DEV
+
       //----//
     } catch (err) {
       console.log(err);
@@ -143,7 +148,7 @@ export default function JournalFiles() {
 
       //-- Make DELETE request --//
       let res = await axios.delete(
-        `${VITE_ALB_BASE_URL}/journal_files/delete_file/${selectedBrokerage.name}/${selectedFilename}`,
+        `${VITE_ALB_BASE_URL}/journal_files/delete_file/${selectedBrokerage.name}/${tableSelectionFilename}`,
         {
           headers: {
             authorization: `Bearer ${accessToken}`,
@@ -175,13 +180,18 @@ export default function JournalFiles() {
       <form className="mt-6">
         <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-6">
-            <div className="flex justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6">
+            <div
+              className={classNames(
+                putFileLoading ? "bg-green-100" : "",
+                "flex justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6"
+              )}
+            >
               <div className="space-y-1 text-center">
                 <FolderIcon className="mx-auto h-10 w-10 text-zinc-400" />
                 <div className="flex text-sm text-zinc-600">
                   <label
                     htmlFor="file-upload"
-                    className="relative cursor-pointer rounded-md bg-green-100 px-1 font-medium text-green-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-green-500 focus-within:ring-offset-2 hover:text-green-500 dark:bg-green-800 dark:text-green-200 dark:hover:text-white"
+                    className="hover-within:outline-none hover-within:ring-2 hover-within:ring-green-500 hover-within:ring-offset-2 relative cursor-pointer rounded-md bg-green-100 px-1 font-medium text-green-600 hover:text-green-500 dark:bg-green-800 dark:text-green-200 dark:hover:text-white"
                   >
                     <span>Select a file</span>
                     <input
@@ -189,6 +199,10 @@ export default function JournalFiles() {
                       name="file-upload"
                       type="file"
                       className="sr-only"
+                      onChange={(event) => {
+                        setPutFileData(event?.target?.files[0]);
+                        setPutFilename(event?.target?.files[0]?.name);
+                      }}
                     />
                   </label>
                   <p className="pl-1 dark:text-zinc-100">or drag and drop</p>
@@ -313,7 +327,7 @@ export default function JournalFiles() {
             </div>
 
             <button
-              disabled={true} // TODO - base on logic of whether file is ready for upload
+              disabled={!putFilename}
               type="button"
               className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-green-600 bg-green-600 px-4 py-2 text-sm font-medium text-white hover:border-green-700 hover:bg-green-700 focus:outline-none focus:ring-0 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:border-green-700 dark:bg-green-700 dark:hover:border-green-600 dark:hover:bg-green-600 dark:disabled:border-zinc-500 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
               onClick={putFile}
@@ -423,25 +437,25 @@ export default function JournalFiles() {
                           fileIdx % 2 === 0
                             ? "bg-white dark:bg-zinc-700"
                             : "bg-zinc-100 dark:bg-zinc-800", //-- Striped Rows --//
-                          selectedFilename === file.filename
+                          tableSelectionFilename === file.filename
                             ? "bg-green-100 dark:bg-green-900"
                             : undefined //-- Selected Row --> Green --//
                         )}
                       >
                         {/*  */}
                         <td className="relative w-12 px-6 sm:w-16 sm:px-8">
-                          {selectedFilename === file.filename && (
+                          {tableSelectionFilename === file.filename && (
                             <div className="absolute inset-y-0 left-0 w-1.5 bg-green-600" />
                           )}
                           <input
                             type="checkbox"
                             className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-500 dark:border-zinc-600 dark:bg-zinc-300 sm:left-6"
                             // value={file.email}
-                            checked={selectedFilename === file.filename}
+                            checked={tableSelectionFilename === file.filename}
                             onChange={(e) =>
                               e.target.checked //-- e.target.checked is the status after the onChange event --//
-                                ? setSelectedFilename(file.filename)
-                                : setSelectedFilename(null)
+                                ? setTableSelectionFilename(file.filename)
+                                : setTableSelectionFilename(null)
                             }
                           />
                         </td>
@@ -473,7 +487,7 @@ export default function JournalFiles() {
       <div className="mt-3 flex justify-between gap-x-7">
         {/* START OF DOWNLOAD BUTTON */}
         <button
-          disabled={!selectedFilename || filesList[0].filename === "---"}
+          disabled={!tableSelectionFilename || filesList[0].filename === "---"}
           type="button"
           className={classNames(
             getFileLoading ? "cursor-not-allowed opacity-30" : "",
@@ -487,7 +501,7 @@ export default function JournalFiles() {
 
         {/* START OF DELETE BUTTON */}
         <button
-          disabled={!selectedFilename || filesList[0].filename === "---"}
+          disabled={!tableSelectionFilename || filesList[0].filename === "---"}
           type="button"
           className={classNames(
             deleteFileLoading ? "cursor-not-allowed opacity-30" : "",

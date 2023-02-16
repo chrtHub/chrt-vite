@@ -78,7 +78,7 @@ export default function AppLayout(props) {
           { name: "Home", to: "/", icon: HomeIcon },
           { name: "Journal", to: "/journal", icon: CalendarDaysIcon },
           { name: "Journal Files", to: "/files", icon: FolderIcon },
-          { name: "Market Data", to: "/data", icon: PresentationChartLineIcon },
+          // { name: "Market Data", to: "/data", icon: PresentationChartLineIcon },
         ]);
   }
   //-- userNavigation array depend on infoMode --//
