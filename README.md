@@ -51,7 +51,6 @@ Hi, this is the readme!
 
 ## Contact
 
-<br />
 Need support? support@chrt.com<br />
 <br />
 Want to chat? aaron@chrt.com
