@@ -18,7 +18,7 @@ Hi, this is the readme!
 
 ### Front-end Stack
 
-- [Vite](https://vitejs.dev/)
+- [Vite](https://vitejs.dev/) - build tooling
 - [React 18](https://reactjs.org/)
 - [React Router 6](https://reactrouter.com/en/main)
 - [Tailwind](https://tailwindcss.com/)
