@@ -17,20 +17,28 @@ Hi, this is the readme!
 - [Tailwind](https://tailwindcss.com/)
 - [Headless UI](https://headlessui.com/)
 - [Recoil](https://recoiljs.org/) - same shape as useState, but for global objects
-- [S3 Static Hosting](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) + [CloudFront CDN](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
+- [S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) - for static hosting of SPA
+- [CloudFront CDN](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
 
 ### Auth
 
 - [Auth0](https://auth0.com/)
 
-### Back-end Stack
+### Back-end Serverful Stack
 
-- [Amazon Linux 2](https://aws.amazon.com/amazon-linux-2/)
-- [Docker](https://www.docker.com/)
-- [Node.js](https://nodejs.org/en/)
-- [Express](https://expressjs.com/)
 - [AWS Application Load Balancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html)
 - [AWS Elastic Container Service](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html) - similar to Kubernetes
+- [Express](https://expressjs.com/)
+- [Node.js](https://nodejs.org/en/)
+- [Docker](https://www.docker.com/)
+- [Amazon Linux 2](https://aws.amazon.com/amazon-linux-2/)
+- [Postgres](https://www.postgresql.org/) on [AWS RDS (Relational Database Service)](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html)
+
+### Back-end Serverless Stack
+
+- [AWS Lambda](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html) - serverless functions
+- [S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) - for storing user-uploaded files
+- [DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html) - NoSQL database
 
 <br />
 Need support? support@chrt.com<br />
