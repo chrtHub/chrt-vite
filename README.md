@@ -34,7 +34,7 @@ Hi, this is the readme!
 ### Back-end Serverful Stack
 
 - [AWS Application Load Balancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html)
-- [AWS Elastic Container Service](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html) - similar to Kubernetes
+- [AWS ECS (Elastic Container Service)](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html) - similar to Kubernetes
 - [Express](https://expressjs.com/)
 - [Node.js](https://nodejs.org/en/)
 - [Docker](https://www.docker.com/)
