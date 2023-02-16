@@ -106,6 +106,7 @@ export default function JournalFiles() {
       console.log(err);
     }
     setGetFileLoading(false);
+    setTableSelectionFilename(null);
   };
 
   const putFile = async () => {
@@ -137,6 +138,10 @@ export default function JournalFiles() {
     }
     setPutFileLoading(false);
 
+    //-- Reset file upload data and name --//
+    setPutFileData(null);
+    setPutFilename(null);
+
     listFiles(); //-- Refresh files list --//
   };
 
@@ -160,6 +165,7 @@ export default function JournalFiles() {
       console.log(err);
     }
     setDeleteFileLoading(false);
+    setTableSelectionFilename(null);
 
     listFiles(); //-- Refresh files list --//
   };
@@ -180,12 +186,7 @@ export default function JournalFiles() {
       <form className="mt-6">
         <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-6">
-            <div
-              className={classNames(
-                putFileLoading ? "bg-green-100" : "",
-                "flex justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6"
-              )}
-            >
+            <div className="flex justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6">
               <div className="space-y-1 text-center">
                 <FolderIcon className="mx-auto h-10 w-10 text-zinc-400" />
                 <div className="flex text-sm text-zinc-600">
@@ -301,7 +302,7 @@ export default function JournalFiles() {
         </div>
         {/* END OF BROKERAGE SELECTOR */}
 
-        {/* START OF TEXT INPUT FOR FILENAME */}
+        {/* START OF TEXT INPUT FOR FILENAME + UPLOAD BUTTON*/}
         <div className="col-span-6 lg:col-span-5">
           <label
             htmlFor="company-website"
@@ -319,7 +320,7 @@ export default function JournalFiles() {
                 type="text"
                 name="company-website"
                 id="company-website"
-                value={putFilename}
+                value={putFilename ? putFilename : ""}
                 onChange={(event) => setPutFilename(event.target.value)}
                 className="block w-full min-w-0 flex-1 rounded-none border-zinc-300 px-3 py-2 focus:border-green-500 focus:ring-green-500 dark:border-zinc-500 dark:bg-zinc-700 dark:text-zinc-100 sm:text-sm"
                 placeholder="some_file_name.csv"
@@ -327,16 +328,21 @@ export default function JournalFiles() {
             </div>
 
             <button
-              disabled={!putFilename}
+              disabled={!putFileData}
               type="button"
-              className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-green-600 bg-green-600 px-4 py-2 text-sm font-medium text-white hover:border-green-700 hover:bg-green-700 focus:outline-none focus:ring-0 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:border-green-700 dark:bg-green-700 dark:hover:border-green-600 dark:hover:bg-green-600 dark:disabled:border-zinc-500 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
+              className={classNames(
+                putFileLoading
+                  ? "animate-pulse cursor-not-allowed opacity-30"
+                  : "",
+                "relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-green-600 bg-green-600 px-4 py-2 text-sm font-medium text-white hover:border-green-700 hover:bg-green-700 focus:outline-none focus:ring-0 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:border-green-700 dark:bg-green-700 dark:hover:border-green-600 dark:hover:bg-green-600 dark:disabled:border-zinc-500 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
+              )}
               onClick={putFile}
             >
               <span>Upload</span>
             </button>
           </div>
         </div>
-        {/* END OF TEXT INPUT FOR FILENAME */}
+        {/* END OF TEXT INPUT FOR FILENAME + UPLOAD BUTTON */}
       </div>
       {/* END OF BROKERAGE, FILENAME, UPLOAD BUTTON AREA */}
 
@@ -490,7 +496,7 @@ export default function JournalFiles() {
           disabled={!tableSelectionFilename || filesList[0].filename === "---"}
           type="button"
           className={classNames(
-            getFileLoading ? "cursor-not-allowed opacity-30" : "",
+            getFileLoading ? "animate-pulse cursor-not-allowed opacity-30" : "",
             "inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none  disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
           )}
           onClick={getFile}
@@ -504,7 +510,9 @@ export default function JournalFiles() {
           disabled={!tableSelectionFilename || filesList[0].filename === "---"}
           type="button"
           className={classNames(
-            deleteFileLoading ? "cursor-not-allowed opacity-30" : "",
+            deleteFileLoading
+              ? "animate-pulse cursor-not-allowed opacity-30"
+              : "",
             "inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
           )}
           onClick={deleteFile}
