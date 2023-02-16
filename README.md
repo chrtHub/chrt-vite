@@ -25,6 +25,7 @@ Hi, this is the readme!
 
 ### Back-end Stack
 
+- [Docker](https://www.docker.com/)
 - [Node.js](https://nodejs.org/en/)
 - [Express](https://expressjs.com/)
 - [AWS Application Load Balancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html)
