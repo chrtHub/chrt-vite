@@ -15,10 +15,11 @@ import {
   ChevronDownIcon,
   ChevronUpDownIcon,
 } from "@heroicons/react/20/solid";
-import { FolderIcon } from "@heroicons/react/24/outline";
+import { FolderIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
 import axios from "axios";
+import { saveAs } from "file-saver";
 
 //-- Utility Functions --//
 import getUserDbId from "../Util/getUserDbId";
@@ -28,11 +29,10 @@ function classNames(...classes) {
 }
 
 //-- Data Objects, Environment Variables --//
-
 const brokerages = [
-  { id: 1, name: "TD_Ameritrade" },
-  { id: 2, name: "TradeZero" },
-  { id: 3, name: "Webull" },
+  { id: 0, nickname: "TD Ameritrade", name: "td_ameritrade" },
+  { id: 1, nickname: "TradeZero", name: "tradezero" },
+  { id: 2, nickname: "Webull", name: "webull" },
 ];
 
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
@@ -40,14 +40,13 @@ let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function JournalFiles() {
   //-- React State --//
-  const [selectedBrokerage, setSelectedBrokerage] = useState(
-    brokerages[0].name
-  );
+  const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]);
   // TODO - fetch last-used value from localStorage (store it there, too)
   const [selectedFilename, setSelectedFilename] = useState();
 
   const [listFilesLoading, setListFilesLoading] = useState();
   const [getFileLoading, setGetFileLoading] = useState();
+  const [deleteFileLoading, setDeleteFileLoading] = useState();
 
   //-- Recoil State --//
   const [filesList, setFilesList] = useRecoilState(filesListState);
@@ -56,6 +55,7 @@ export default function JournalFiles() {
   const { getAccessTokenSilently } = useAuth0();
 
   //-- Data Fetching --//
+
   const listFiles = async () => {
     //-- Get access token from memory or request new token --//
     let accessToken = await getAccessTokenSilently();
@@ -79,21 +79,15 @@ export default function JournalFiles() {
     }
   };
 
-  const getFileHandler = async () => {
+  const getFile = async () => {
     //-- Get access token from memory or request new token --//
     let accessToken = await getAccessTokenSilently();
-    let user_db_id = getUserDbId(accessToken);
 
     try {
       //-- Make GET request --//
       setGetFileLoading(true);
-      let res = await axios.post(
-        `https://chrts3.chrt.com/journal_files/get_file/${user_db_id}`,
-        //-- Body Content --//
-        {
-          bucket: "chrt-user-trading-data-files",
-          object: `${user_db_id}%2F${selectedBrokerage}%2F${selectedFilename}`,
-        },
+      let res = await axios.get(
+        `${VITE_ALB_BASE_URL}/journal_files/get_file/${selectedBrokerage.name}/${selectedFilename}`,
         {
           headers: {
             authorization: `Bearer ${accessToken}`,
@@ -101,7 +95,6 @@ export default function JournalFiles() {
         }
       );
       //-- Handle reponse by downloading file --//
-      // DEV - does this add headers to the csv file??
       let blob = new Blob([res.data], { type: "text/plain;charset=utf-8" });
       saveAs(blob, selectedFilename);
       setGetFileLoading(false);
@@ -111,7 +104,7 @@ export default function JournalFiles() {
     }
   };
 
-  const putFileHandler = async () => {
+  const putFile = async () => {
     //-- Get access token from memory or request new token --//
     let accessToken = await getAccessTokenSilently();
 
@@ -145,24 +138,25 @@ export default function JournalFiles() {
     listFiles(); //-- Refresh files list --//
   };
 
-  const deleteFileHandler = async () => {
-    console.log("deleteFileHandler");
-
-    // TODO
-    // use selectedFilename value to make a request to the S3 API
-    // // while request in progress, show loading state
+  const deleteFile = async () => {
+    console.log("deleteFile");
 
     try {
       //-- Get access token from memory or request new token --//
       let accessToken = await getAccessTokenSilently();
 
-      //-- Make GET request --//
-      let res = await axios.delete(`https://chrts3.chrt.com/${some_variable}`, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      });
+      //-- Make DELETE request --//
+      setGetFileLoading(true);
+      let res = await axios.delete(
+        `${VITE_ALB_BASE_URL}/journal_files/delete_file/${selectedBrokerage.name}/${selectedFilename}`,
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       console.log(res); // DEV
+      setGetFileLoading(false);
       //----//
     } catch (err) {
       console.log(err);
@@ -174,10 +168,6 @@ export default function JournalFiles() {
   //-- Other --//
 
   //-- Click Handlers --//
-  const setSelectedBrokerageHandler = (event) => {
-    console.log(event);
-    // setSelectedBrokerage(event.)
-  };
 
   //-- Side Effects --//
   useEffect(() => {
@@ -223,12 +213,7 @@ export default function JournalFiles() {
       <div className="mt-6 grid grid-cols-6 gap-x-3 gap-y-1">
         {/* START OF BROKERAGE SELECTOR */}
         <div className="col-span-6 lg:col-span-1">
-          <Listbox
-            value={selectedBrokerage}
-            onChange={() => {
-              setSelectedBrokerageHandler;
-            }}
-          >
+          <Listbox value={selectedBrokerage} onChange={setSelectedBrokerage}>
             {({ open }) => (
               <>
                 <Listbox.Label className="block text-sm font-medium text-zinc-700 dark:text-zinc-100">
@@ -238,7 +223,7 @@ export default function JournalFiles() {
                 <div className="relative mt-1">
                   <Listbox.Button className="relative w-full cursor-default rounded-md border border-zinc-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-zinc-500 dark:bg-zinc-700 sm:text-sm">
                     <span className="block truncate text-black dark:text-zinc-100">
-                      {selectedBrokerage}
+                      {selectedBrokerage.nickname}
                     </span>
                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                       <ChevronUpDownIcon
@@ -279,7 +264,7 @@ export default function JournalFiles() {
                                   "block truncate"
                                 )}
                               >
-                                {brokerage.name}
+                                {brokerage.nickname}
                               </span>
 
                               {selectedBrokerage ? (
@@ -320,7 +305,7 @@ export default function JournalFiles() {
           <div className="mt-1 flex rounded-l-md shadow-sm">
             <div className="relative flex flex-grow items-stretch focus-within:z-10">
               <span className="inline-flex items-center rounded-l-md border border-r-0 border-zinc-300 bg-zinc-100 px-3 text-zinc-500 dark:border-zinc-500 dark:bg-zinc-800 dark:text-zinc-100 sm:text-sm">
-                {selectedBrokerage} /
+                {selectedBrokerage.name} /
               </span>
               <input
                 type="text"
@@ -496,8 +481,11 @@ export default function JournalFiles() {
         <button
           disabled={!selectedFilename || filesList[0].filename === "---"}
           type="button"
-          className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
-          onClick={getFileHandler}
+          className={classNames(
+            getFileLoading ? "cursor-not-allowed opacity-30" : "",
+            "inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none  disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
+          )}
+          onClick={getFile}
         >
           Download
         </button>
@@ -507,8 +495,11 @@ export default function JournalFiles() {
         <button
           disabled={!selectedFilename || filesList[0].filename === "---"}
           type="button"
-          className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
-          onClick={deleteFileHandler}
+          className={classNames(
+            deleteFileLoading ? "cursor-not-allowed opacity-30" : "",
+            "inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
+          )}
+          onClick={deleteFile}
         >
           Delete
         </button>
