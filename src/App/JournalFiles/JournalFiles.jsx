@@ -41,7 +41,6 @@ let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 export default function JournalFiles() {
   //-- React State --//
   const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]);
-  const [tableSelectionFilename, setTableSelectionFilename] = useState();
 
   const [putFilename, setPutFilename] = useState();
   const [putFileData, setPutFileData] = useState();
@@ -50,6 +49,8 @@ export default function JournalFiles() {
   const [getFileLoading, setGetFileLoading] = useState();
   const [putFileLoading, setPutFileLoading] = useState();
   const [deleteFileLoading, setDeleteFileLoading] = useState();
+
+  const [tableSelectionFilename, setTableSelectionFilename] = useState();
 
   //-- Recoil State --//
   const [filesList, setFilesList] = useRecoilState(filesListState);
@@ -117,7 +118,7 @@ export default function JournalFiles() {
     setPutFileLoading(true);
     try {
       //-- Make POST request --//
-      let res = await axios.put(
+      await axios.put(
         `${VITE_ALB_BASE_URL}/journal_files/put_file/${selectedBrokerage.name}/${putFilename}`,
         //-- Body Content --//
         formData,
@@ -129,10 +130,12 @@ export default function JournalFiles() {
           },
         }
       );
-
       //----//
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
+      if ((err.response.status = 415)) {
+        alert("File type not supported. Please upload a CSV file."); // DEV
+      }
     }
     setPutFileLoading(false);
 
@@ -215,9 +218,13 @@ export default function JournalFiles() {
                       name="file-upload"
                       type="file"
                       className="sr-only"
+                      accept=".csv"
                       onChange={(event) => {
-                        setPutFileData(event?.target?.files[0]);
-                        setPutFilename(event?.target?.files[0]?.name);
+                        //-- Verify that file size is < 10 MB --//
+                        if (event?.target?.files[0]?.size < 10 * 1024 * 1024) {
+                          setPutFileData(event?.target?.files[0]);
+                          setPutFilename(event?.target?.files[0]?.name);
+                        }
                       }}
                     />
                   </label>
@@ -337,7 +344,10 @@ export default function JournalFiles() {
                 id="company-website"
                 value={putFilename ? putFilename : ""}
                 onChange={(event) => setPutFilename(event.target.value)}
-                className="block w-full min-w-0 flex-1 rounded-none border-zinc-300 px-3 py-2 focus:border-green-500 focus:ring-green-500 dark:border-zinc-500 dark:bg-zinc-700 dark:text-zinc-100 sm:text-sm"
+                className={classNames(
+                  putFileLoading ? "bg-green-100" : "",
+                  "block w-full min-w-0 flex-1 rounded-none border-zinc-300 px-3 py-2 focus:border-green-500 focus:ring-green-500 dark:border-zinc-500 dark:bg-zinc-700 dark:text-zinc-100 sm:text-sm"
+                )}
                 placeholder="some_file_name.csv"
               />
             </div>
