@@ -1,0 +1,30 @@
+{
+  "message": "Request failed with status code 415",
+  "name": "AxiosError",
+  "stack": "AxiosError: Request failed with status code 415\n    at settle (http://localhost:5173/node_modules/.vite/deps/axios.js?v=3c6339cc:1180:12)\n    at XMLHttpRequest.onloadend (http://localhost:5173/node_modules/.vite/deps/axios.js?v=3c6339cc:1404:7)",
+  "config": {
+    "transitional": {
+      "silentJSONParsing": true,
+      "forcedJSONParsing": true,
+      "clarifyTimeoutError": false
+    },
+    "adapter": ["xhr", "http"],
+    "transformRequest": [null],
+    "transformResponse": [null],
+    "timeout": 0,
+    "xsrfCookieName": "XSRF-TOKEN",
+    "xsrfHeaderName": "X-XSRF-TOKEN",
+    "maxContentLength": -1,
+    "maxBodyLength": -1,
+    "env": {},
+    "headers": {
+      "Accept": "application/json, text/plain, */*",
+      "authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Imp6V2V3WGkyaV81WnpVSHpFZWwzRSJ9.eyJpc3MiOiJodHRwczovL2NocnQtcHJvZC51cy5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTM3MjU1Mjg4MDMwNzIyOTY5NDIiLCJhdWQiOlsiaHR0cHM6Ly9jaHJ0LmNvbSIsImh0dHBzOi8vY2hydC1wcm9kLnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2NzY1MjczMzYsImV4cCI6MTY3NjYxMzczNiwiYXpwIjoiOGJETEhZZUVVZlBISDgxVlJEQnNDVE41VFlrbEFNQ3UiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIHJlYWQ6am91cm5hbCB3cml0ZTpqb3VybmFsIHJlYWQ6ZGF0YSIsInBlcm1pc3Npb25zIjpbInJlYWQ6ZGF0YSIsInJlYWQ6am91cm5hbCIsIndyaXRlOmpvdXJuYWwiXX0.lKFkXP5AMJaNOvG4tGuPT6nymTYLMn1RQIAItTUAUiC6RVtThhG_WHNUtgQn5f37ggKQoNe2m79ZabU6d-gyFEaVLAVZP8MoPK2VJinqRUNCE6fdiXBVZkq9ORsRXKOoTOdfje0K0OgYISo5TBDLk22ZUzFGl6Ggw7eY4eE3qOavVZ-egj3F76pm4b-oL2hQj92e59Aj181m0VRYUZKlz-GpQ2MEhzlvHo-UvQX5xXRfWymcY2m2xkvs8VKdwGA-l6gZRkXQxnkLaD8Qdkof6Za2I6krdpBpMR4KcZCgBTjDLoApP-r1-H2_9ATR5QZM5u9kXDiFOTGsknTmuZHQAA"
+    },
+    "method": "put",
+    "url": "http://localhost:8080/journal_files/put_file/td_ameritrade/Screenshot 2023-02-15 at 7.57.26 PM.png",
+    "data": {}
+  },
+  "code": "ERR_BAD_REQUEST",
+  "status": 415
+}

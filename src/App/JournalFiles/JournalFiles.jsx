@@ -1,5 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, useCallback } from "react";
 import { useRecoilState } from "recoil";
 import { filesListState } from "./atoms";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -20,6 +20,7 @@ import { FolderIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 //-- NPM Functions --//
 import axios from "axios";
 import { saveAs } from "file-saver";
+import { useDropzone } from "react-dropzone";
 
 //-- Utility Functions --//
 import getUserDbId from "../Util/getUserDbId";
@@ -34,19 +35,22 @@ const brokerages = [
   { id: 1, nickname: "TradeZero", name: "tradezero" },
   { id: 2, nickname: "Webull", name: "webull" },
 ];
-
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function JournalFiles() {
   //-- React State --//
   const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]);
-  // TODO - fetch last-used value from localStorage (store it there, too)
-  const [selectedFilename, setSelectedFilename] = useState();
+
+  const [putFilename, setPutFilename] = useState();
+  const [putFileData, setPutFileData] = useState();
 
   const [listFilesLoading, setListFilesLoading] = useState();
   const [getFileLoading, setGetFileLoading] = useState();
+  const [putFileLoading, setPutFileLoading] = useState();
   const [deleteFileLoading, setDeleteFileLoading] = useState();
+
+  const [tableSelectionFilename, setTableSelectionFilename] = useState();
 
   //-- Recoil State --//
   const [filesList, setFilesList] = useRecoilState(filesListState);
@@ -55,14 +59,13 @@ export default function JournalFiles() {
   const { getAccessTokenSilently } = useAuth0();
 
   //-- Data Fetching --//
-
   const listFiles = async () => {
     //-- Get access token from memory or request new token --//
     let accessToken = await getAccessTokenSilently();
 
+    setListFilesLoading(true);
     try {
       //-- Make GET request --//
-      setListFilesLoading(true);
       let res = await axios.get(
         `${VITE_ALB_BASE_URL}/journal_files/list_files`,
         {
@@ -72,22 +75,22 @@ export default function JournalFiles() {
         }
       );
       setFilesList(res.data);
-      setListFilesLoading(false);
       //----//
     } catch (err) {
       console.log(err);
     }
+    setListFilesLoading(false);
   };
 
   const getFile = async () => {
     //-- Get access token from memory or request new token --//
     let accessToken = await getAccessTokenSilently();
 
+    setGetFileLoading(true);
     try {
       //-- Make GET request --//
-      setGetFileLoading(true);
       let res = await axios.get(
-        `${VITE_ALB_BASE_URL}/journal_files/get_file/${selectedBrokerage.name}/${selectedFilename}`,
+        `${VITE_ALB_BASE_URL}/journal_files/get_file/${selectedBrokerage.name}/${tableSelectionFilename}`,
         {
           headers: {
             authorization: `Bearer ${accessToken}`,
@@ -96,76 +99,89 @@ export default function JournalFiles() {
       );
       //-- Handle reponse by downloading file --//
       let blob = new Blob([res.data], { type: "text/plain;charset=utf-8" });
-      saveAs(blob, selectedFilename);
-      setGetFileLoading(false);
+      saveAs(blob, tableSelectionFilename);
       //----//
     } catch (err) {
       console.log(err);
     }
+    setGetFileLoading(false);
+    setTableSelectionFilename(null);
   };
 
   const putFile = async () => {
     //-- Get access token from memory or request new token --//
     let accessToken = await getAccessTokenSilently();
 
-    // TODO
-    // How to get the file from the upload component?
-    // Allow user to override the filename
-    // make a request to the S3 API with brokerage name + filename
-    // // while request in progress, show loading state
+    let formData = new FormData();
+    formData.append("file", putFileData);
 
+    setPutFileLoading(true);
     try {
       //-- Make POST request --//
-      let res = await axios.post(
-        `https://chrts3.chrt.com/${some_variable}`,
+      await axios.put(
+        `${VITE_ALB_BASE_URL}/journal_files/put_file/${selectedBrokerage.name}/${putFilename}`,
         //-- Body Content --//
-        {
-          key1: "value1",
-          key2: "value2",
-        },
+        formData,
+        //-- Headers --//
         {
           headers: {
             authorization: `Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-      console.log(res); // DEV
       //----//
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
+      if ((err.response.status = 415)) {
+        alert("File type not supported. Please upload a CSV file."); // DEV
+      }
     }
+    setPutFileLoading(false);
+
+    //-- Reset file upload data and name --//
+    setPutFileData(null);
+    setPutFilename(null);
 
     listFiles(); //-- Refresh files list --//
   };
 
   const deleteFile = async () => {
-    console.log("deleteFile");
-
+    setDeleteFileLoading(true);
     try {
       //-- Get access token from memory or request new token --//
       let accessToken = await getAccessTokenSilently();
 
       //-- Make DELETE request --//
-      setGetFileLoading(true);
       let res = await axios.delete(
-        `${VITE_ALB_BASE_URL}/journal_files/delete_file/${selectedBrokerage.name}/${selectedFilename}`,
+        `${VITE_ALB_BASE_URL}/journal_files/delete_file/${selectedBrokerage.name}/${tableSelectionFilename}`,
         {
           headers: {
             authorization: `Bearer ${accessToken}`,
           },
         }
       );
-      console.log(res); // DEV
-      setGetFileLoading(false);
       //----//
     } catch (err) {
       console.log(err);
     }
+    setDeleteFileLoading(false);
+    setTableSelectionFilename(null);
 
     listFiles(); //-- Refresh files list --//
   };
 
   //-- Other --//
+  const onDrop = useCallback((acceptedFiles) => {
+    setPutFileData(acceptedFiles[0]);
+    setPutFilename(acceptedFiles[0].name);
+  });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: "text/csv",
+    maxFiles: 1,
+    maxSize: 10485760, //-- 10 MB --//
+    onDrop: onDrop,
+  });
 
   //-- Click Handlers --//
 
@@ -181,13 +197,20 @@ export default function JournalFiles() {
       <form className="mt-6">
         <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-6">
-            <div className="flex justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6">
+            <div
+              {...getRootProps()}
+              className={classNames(
+                isDragActive ? "bg-green-100" : "",
+                "flex justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6"
+              )}
+            >
+              <input {...getInputProps()} />
               <div className="space-y-1 text-center">
                 <FolderIcon className="mx-auto h-10 w-10 text-zinc-400" />
                 <div className="flex text-sm text-zinc-600">
                   <label
                     htmlFor="file-upload"
-                    className="relative cursor-pointer rounded-md bg-green-100 px-1 font-medium text-green-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-green-500 focus-within:ring-offset-2 hover:text-green-500 dark:bg-green-800 dark:text-green-200 dark:hover:text-white"
+                    className="hover-within:outline-none hover-within:ring-2 hover-within:ring-green-500 hover-within:ring-offset-2 relative cursor-pointer rounded-md bg-green-100 px-1 font-medium text-green-600 hover:text-green-500 dark:bg-green-800 dark:text-green-200 dark:hover:text-white"
                   >
                     <span>Select a file</span>
                     <input
@@ -195,6 +218,14 @@ export default function JournalFiles() {
                       name="file-upload"
                       type="file"
                       className="sr-only"
+                      accept=".csv"
+                      onChange={(event) => {
+                        //-- Verify that file size is < 10 MB --//
+                        if (event?.target?.files[0]?.size < 10 * 1024 * 1024) {
+                          setPutFileData(event?.target?.files[0]);
+                          setPutFilename(event?.target?.files[0]?.name);
+                        }
+                      }}
                     />
                   </label>
                   <p className="pl-1 dark:text-zinc-100">or drag and drop</p>
@@ -293,7 +324,7 @@ export default function JournalFiles() {
         </div>
         {/* END OF BROKERAGE SELECTOR */}
 
-        {/* START OF TEXT INPUT FOR FILENAME */}
+        {/* START OF TEXT INPUT FOR FILENAME + UPLOAD BUTTON*/}
         <div className="col-span-6 lg:col-span-5">
           <label
             htmlFor="company-website"
@@ -311,24 +342,32 @@ export default function JournalFiles() {
                 type="text"
                 name="company-website"
                 id="company-website"
-                className="block w-full min-w-0 flex-1 rounded-none border-zinc-300 px-3 py-2 focus:border-green-500 focus:ring-green-500 dark:border-zinc-500 dark:bg-zinc-700 dark:text-zinc-100 sm:text-sm"
+                value={putFilename ? putFilename : ""}
+                onChange={(event) => setPutFilename(event.target.value)}
+                className={classNames(
+                  putFileLoading ? "bg-green-100" : "",
+                  "block w-full min-w-0 flex-1 rounded-none border-zinc-300 px-3 py-2 focus:border-green-500 focus:ring-green-500 dark:border-zinc-500 dark:bg-zinc-700 dark:text-zinc-100 sm:text-sm"
+                )}
                 placeholder="some_file_name.csv"
               />
             </div>
 
             <button
-              disabled={true} // TODO - base on logic of whether file is ready for upload
+              disabled={!putFileData}
               type="button"
-              className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-green-600 bg-green-600 px-4 py-2 text-sm font-medium text-white hover:border-green-700 hover:bg-green-700 focus:outline-none focus:ring-0 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:border-green-700 dark:bg-green-700 dark:hover:border-green-600 dark:hover:bg-green-600 dark:disabled:border-zinc-500 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
-              onClick={() => {
-                console.log("Upload button clicked");
-              }}
+              className={classNames(
+                putFileLoading
+                  ? "animate-pulse cursor-not-allowed opacity-30"
+                  : "",
+                "relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-green-600 bg-green-600 px-4 py-2 text-sm font-medium text-white hover:border-green-700 hover:bg-green-700 focus:outline-none focus:ring-0 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:border-green-700 dark:bg-green-700 dark:hover:border-green-600 dark:hover:bg-green-600 dark:disabled:border-zinc-500 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
+              )}
+              onClick={putFile}
             >
               <span>Upload</span>
             </button>
           </div>
         </div>
-        {/* END OF TEXT INPUT FOR FILENAME */}
+        {/* END OF TEXT INPUT FOR FILENAME + UPLOAD BUTTON */}
       </div>
       {/* END OF BROKERAGE, FILENAME, UPLOAD BUTTON AREA */}
 
@@ -429,25 +468,25 @@ export default function JournalFiles() {
                           fileIdx % 2 === 0
                             ? "bg-white dark:bg-zinc-700"
                             : "bg-zinc-100 dark:bg-zinc-800", //-- Striped Rows --//
-                          selectedFilename === file.filename
+                          tableSelectionFilename === file.filename
                             ? "bg-green-100 dark:bg-green-900"
                             : undefined //-- Selected Row --> Green --//
                         )}
                       >
                         {/*  */}
                         <td className="relative w-12 px-6 sm:w-16 sm:px-8">
-                          {selectedFilename === file.filename && (
+                          {tableSelectionFilename === file.filename && (
                             <div className="absolute inset-y-0 left-0 w-1.5 bg-green-600" />
                           )}
                           <input
                             type="checkbox"
                             className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-500 dark:border-zinc-600 dark:bg-zinc-300 sm:left-6"
                             // value={file.email}
-                            checked={selectedFilename === file.filename}
+                            checked={tableSelectionFilename === file.filename}
                             onChange={(e) =>
                               e.target.checked //-- e.target.checked is the status after the onChange event --//
-                                ? setSelectedFilename(file.filename)
-                                : setSelectedFilename(null)
+                                ? setTableSelectionFilename(file.filename)
+                                : setTableSelectionFilename(null)
                             }
                           />
                         </td>
@@ -479,10 +518,10 @@ export default function JournalFiles() {
       <div className="mt-3 flex justify-between gap-x-7">
         {/* START OF DOWNLOAD BUTTON */}
         <button
-          disabled={!selectedFilename || filesList[0].filename === "---"}
+          disabled={!tableSelectionFilename || filesList[0].filename === "---"}
           type="button"
           className={classNames(
-            getFileLoading ? "cursor-not-allowed opacity-30" : "",
+            getFileLoading ? "animate-pulse cursor-not-allowed opacity-30" : "",
             "inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none  disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
           )}
           onClick={getFile}
@@ -493,10 +532,12 @@ export default function JournalFiles() {
 
         {/* START OF DELETE BUTTON */}
         <button
-          disabled={!selectedFilename || filesList[0].filename === "---"}
+          disabled={!tableSelectionFilename || filesList[0].filename === "---"}
           type="button"
           className={classNames(
-            deleteFileLoading ? "cursor-not-allowed opacity-30" : "",
+            deleteFileLoading
+              ? "animate-pulse cursor-not-allowed opacity-30"
+              : "",
             "inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
           )}
           onClick={deleteFile}
