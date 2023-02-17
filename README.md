@@ -1,6 +1,8 @@
-## CHRT.com
+## Hi, this is the readme!
 
-Hi, this is the readme!
+- This repo is for a React SPA (Single-Page Application) available at [chrt.com](https://chrt.com)
+
+## CHRT.com - repos and stack info
 
 ### Repos
 
