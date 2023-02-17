@@ -1,4 +1,4 @@
-# React SPA repo
+# :open_file_folder: React SPA repo
 
 - This repo is for a React SPA (Single-Page Application) available at [chrt.com](https://chrt.com)
 
@@ -12,7 +12,7 @@
 - Need support? support@chrt.com
 - Want to chat? aaron@chrt.com
 
-# :bar_chart: [chrt.com](https://chrt.com) Repos & Stack
+# :bar_chart: [chrt.com](https://chrt.com) repos & stack
 
 ### Repos
 
