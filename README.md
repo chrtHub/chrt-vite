@@ -1,4 +1,4 @@
-# :open_file_folder: React SPA repo
+# :card_index_dividers: React SPA repo
 
 - This repo is for a React SPA (Single-Page Application) available at [chrt.com](https://chrt.com)
 
