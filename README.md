@@ -4,7 +4,7 @@
 
 ### Dev Links
 
-- [Repo](https://github.com/chrtHub/chrt-vite/)
+- [GitHub Repo](https://github.com/chrtHub/chrt-vite/) - _(current page)_
 - [CodePipeline](https://us-east-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/chrt-vite/view?region=us-east-1)
 
 ---
@@ -13,7 +13,7 @@
 
 ### Repos
 
-- **[Front-end repo](https://github.com/chrtHub/chrt-vite/)** _(current page)_
+- **[Front-end repo](https://github.com/chrtHub/chrt-vite/)** - _(current page)_
 - **[Back-end repo](https://github.com/chrtHub/postgres-tradingdata)**
 - Lambda function(s) repo(s):
   - **[S3 .csv parse to Postgres](https://github.com/chrtHub/lambda-chrtUserTradingData-S3-to-RDS-PostgreSQL)**
