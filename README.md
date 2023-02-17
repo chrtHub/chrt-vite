@@ -2,6 +2,12 @@
 
 - This repo is for a React SPA (Single-Page Application) available at [chrt.com](https://chrt.com)
 
+### Dev Links
+
+-[CodePipeline](https://us-east-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/chrt-vite/view?region=us-east-1)
+
+---
+
 ## CHRT.com - repos and stack info
 
 ### Repos
