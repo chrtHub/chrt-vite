@@ -38,6 +38,19 @@ const brokerages = [
   // { id: 1, nickname: "TradeZero", name: "tradezero" },
   // { id: 2, nickname: "Webull", name: "webull" },
 ];
+
+const tableColumns = [
+  { id: 0, name: "", classes: "" }, //-- Checkbox column --//
+  {
+    id: 1,
+    name: "filename",
+    nickname: "Filename",
+    classes: "sm:pl-6",
+  },
+  { id: 2, name: "brokerage", nickname: "Brokerage", classes: "" },
+  { id: 3, name: "last_modified_iso8601", nickname: "Uploaded", classes: "" },
+  { id: 4, name: "size_mb", nickname: "Size (MB)", classes: "" },
+];
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
@@ -204,50 +217,21 @@ export default function JournalFiles() {
     return nickname?.nickname || null;
   };
 
-  // TODO - clean up sort icon logic :)
-  let filenameSortIcon = <ChevronUpDownIcon className="h-5 w-5 bg-gray-200" />;
-  if (currentSort === "filename_desc") {
-    filenameSortIcon = (
-      <ChevronDownIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
-    );
-  } else if (currentSort === "filename_asc") {
-    filenameSortIcon = (
-      <ChevronUpIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
-    );
-  }
-  let brokerageSortIcon = <ChevronUpDownIcon className="h-5 w-5 bg-gray-200" />;
-  if (currentSort === "brokerage_desc") {
-    brokerageSortIcon = (
-      <ChevronDownIcon className="h-5 w-5  bg-green-200" aria-hidden="true" />
-    );
-  } else if (currentSort === "brokerage_asc") {
-    brokerageSortIcon = (
-      <ChevronUpIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
-    );
-  }
-  let lastModifiedSortIcon = (
-    <ChevronUpDownIcon className="h-5 w-5 bg-gray-200" />
-  );
-  if (currentSort === "last_modified_iso8601_desc") {
-    lastModifiedSortIcon = (
-      <ChevronDownIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
-    );
-  } else if (currentSort === "last_modified_iso8601_asc") {
-    lastModifiedSortIcon = (
-      <ChevronUpIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
-    );
-  }
-  let sizeSortIcon = <ChevronUpDownIcon className="h-5 w-5 bg-gray-200" />;
-  if (currentSort === "size_mb_desc") {
-    sizeSortIcon = (
-      <ChevronDownIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
-    );
-  } else if (currentSort === "size_mb_asc") {
-    sizeSortIcon = (
-      <ChevronUpIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
-    );
-  }
-  //----//
+  const getSortIcon = (tableColumn) => {
+    if (tableColumn.name === "") {
+      return null; //-- Checkbox column - no sort icon --//
+    } else if (currentSort === `${tableColumn.name}_desc`) {
+      return (
+        <ChevronDownIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
+      );
+    } else if (currentSort === `${tableColumn.name}_asc`) {
+      return (
+        <ChevronUpIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
+      );
+    } else {
+      return <ChevronUpDownIcon className="h-5 w-5 bg-gray-200" />;
+    }
+  };
 
   //-- Click Handlers --//
   const sortByHandler = (columnName) => {
@@ -264,8 +248,6 @@ export default function JournalFiles() {
         : `${columnName}_desc`
     );
   };
-
-  console.log(currentSort); // DEV
 
   //-- Side Effects --//
   useEffect(() => {
@@ -461,87 +443,29 @@ export default function JournalFiles() {
                     )}
                   >
                     <tr>
-                      {/* Checkbox Column */}
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
-                      />
-
-                      {/* Filename Column */}
-                      <th
-                        scope="col"
-                        className="py-3.5 px-3 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100 sm:pl-6"
-                      >
-                        <a
-                          onClick={() => {
-                            sortByHandler("filename");
-                          }}
-                          className="group inline-flex cursor-pointer"
-                        >
-                          Filename
-                          <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
-                            {/* Sort Icon */}
-                            {filenameSortIcon}
-                          </span>
-                        </a>
-                      </th>
-
-                      {/* Brokerage Column */}
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
-                      >
-                        <a
-                          onClick={() => {
-                            sortByHandler("brokerage");
-                          }}
-                          className="group inline-flex cursor-pointer"
-                        >
-                          Brokerage
-                          <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
-                            {/* Sort Icon */}
-                            {brokerageSortIcon}
-                          </span>
-                        </a>
-                      </th>
-
-                      {/* Uploaded / Last Modified Column */}
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
-                      >
-                        <a
-                          onClick={() => {
-                            sortByHandler("last_modified_iso8601");
-                          }}
-                          className="group inline-flex cursor-pointer"
-                        >
-                          Uploaded / Last Modified
-                          <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
-                            {/* Sort Icon */}
-                            {lastModifiedSortIcon}
-                          </span>
-                        </a>
-                      </th>
-
-                      {/* Size (MB) Column */}
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
-                      >
-                        <a
-                          onClick={() => {
-                            sortByHandler("size_mb");
-                          }}
-                          className="group inline-flex cursor-pointer"
-                        >
-                          Size (MB)
-                          <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
-                            {/* Sort Icon */}
-                            {sizeSortIcon}
-                          </span>
-                        </a>
-                      </th>
+                      {tableColumns.map((tableColumn) => {
+                        return (
+                          <th
+                            scope="col"
+                            className={classNames(
+                              tableColumn.classes,
+                              "px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
+                            )}
+                          >
+                            <a
+                              onClick={() => {
+                                sortByHandler(tableColumn.name);
+                              }}
+                              className="group inline-flex cursor-pointer"
+                            >
+                              {tableColumn.nickname}
+                              <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
+                                {getSortIcon(tableColumn)}
+                              </span>
+                            </a>
+                          </th>
+                        );
+                      })}
                     </tr>
                   </thead>
 
