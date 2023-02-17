@@ -22,6 +22,7 @@ import { FolderIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { saveAs } from "file-saver";
 import { useDropzone } from "react-dropzone";
+import { format, parseISO } from "date-fns";
 
 //-- Utility Functions --//
 import orderBy from "lodash/orderBy";
@@ -48,7 +49,7 @@ const tableColumns = [
     classes: "sm:pl-6",
   },
   { id: 2, name: "brokerage", nickname: "Brokerage", classes: "" },
-  { id: 3, name: "last_modified_iso8601", nickname: "Uploaded", classes: "" },
+  { id: 3, name: "last_modified", nickname: "Uploaded", classes: "" },
   { id: 4, name: "size_mb", nickname: "Size (MB)", classes: "" },
 ];
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
@@ -67,7 +68,7 @@ export default function JournalFiles() {
   const [deleteFileLoading, setDeleteFileLoading] = useState();
 
   const [tableSelectionFilename, setTableSelectionFilename] = useState();
-  const [currentSort, setCurrentSort] = useState("last_modified_iso8601_desc");
+  const [currentSort, setCurrentSort] = useState("last_modified_desc");
 
   //-- Recoil State --//
   const [filesList, setFilesList] = useRecoilState(filesListState);
@@ -239,6 +240,12 @@ export default function JournalFiles() {
         <ChevronUpDownIcon className="h-5 w-5 bg-zinc-200 dark:bg-zinc-700" />
       );
     }
+  };
+
+  const getLocalTime = (last_modified) => {
+    let date = parseISO(last_modified);
+    let localTime = format(date, "MMM dd, yyyy @ hh:mm:ss aaa");
+    return localTime;
   };
 
   //-- Click Handlers --//
@@ -526,7 +533,7 @@ export default function JournalFiles() {
 
                         {/* Uploaded / Last Modified */}
                         <td className="whitespace-nowrap px-2 py-2 text-sm text-zinc-700 dark:text-zinc-100">
-                          {file.last_modified_readable}
+                          {getLocalTime(file.last_modified)}
                         </td>
 
                         {/* Size (MB) */}
