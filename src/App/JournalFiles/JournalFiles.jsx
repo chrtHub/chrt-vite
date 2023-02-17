@@ -204,7 +204,7 @@ export default function JournalFiles() {
     return nickname?.nickname || null;
   };
 
-  // TODO - clean up sort icon - they work nice, but are not yet nice to read :)
+  // TODO - clean up sort icon logic :)
   let filenameSortIcon = <ChevronUpDownIcon className="h-5 w-5 bg-gray-200" />;
   if (currentSort === "filename_desc") {
     filenameSortIcon = (
@@ -218,7 +218,7 @@ export default function JournalFiles() {
   let brokerageSortIcon = <ChevronUpDownIcon className="h-5 w-5 bg-gray-200" />;
   if (currentSort === "brokerage_desc") {
     brokerageSortIcon = (
-      <ChevronDownIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
+      <ChevronDownIcon className="h-5 w-5  bg-green-200" aria-hidden="true" />
     );
   } else if (currentSort === "brokerage_asc") {
     brokerageSortIcon = (
@@ -495,7 +495,7 @@ export default function JournalFiles() {
                           onClick={() => {
                             sortByHandler("brokerage");
                           }}
-                          className="group inline-flex"
+                          className="group inline-flex cursor-pointer"
                         >
                           Brokerage
                           <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
@@ -514,7 +514,7 @@ export default function JournalFiles() {
                           onClick={() => {
                             sortByHandler("last_modified_iso8601");
                           }}
-                          className="group inline-flex"
+                          className="group inline-flex cursor-pointer"
                         >
                           Uploaded / Last Modified
                           <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
@@ -533,7 +533,7 @@ export default function JournalFiles() {
                           onClick={() => {
                             sortByHandler("size_mb");
                           }}
-                          className="group inline-flex"
+                          className="group inline-flex cursor-pointer"
                         >
                           Size (MB)
                           <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
