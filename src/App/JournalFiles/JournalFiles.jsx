@@ -222,14 +222,22 @@ export default function JournalFiles() {
       return null; //-- Checkbox column - no sort icon --//
     } else if (currentSort === `${tableColumn.name}_desc`) {
       return (
-        <ChevronDownIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
+        <ChevronDownIcon
+          className="h-5 w-5 bg-green-200 dark:bg-green-800"
+          aria-hidden="true"
+        />
       );
     } else if (currentSort === `${tableColumn.name}_asc`) {
       return (
-        <ChevronUpIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
+        <ChevronUpIcon
+          className="h-5 w-5 bg-green-200 dark:bg-green-800"
+          aria-hidden="true"
+        />
       );
     } else {
-      return <ChevronUpDownIcon className="h-5 w-5 bg-gray-200" />;
+      return (
+        <ChevronUpDownIcon className="h-5 w-5 bg-zinc-200 dark:bg-zinc-700" />
+      );
     }
   };
 
@@ -442,6 +450,7 @@ export default function JournalFiles() {
                       "bg-zinc-100 dark:bg-zinc-900"
                     )}
                   >
+                    {/* Map tableColumns array into table headers */}
                     <tr>
                       {tableColumns.map((tableColumn) => {
                         return (
@@ -452,6 +461,7 @@ export default function JournalFiles() {
                               "px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
                             )}
                           >
+                            {/* Column Name */}
                             <a
                               onClick={() => {
                                 sortByHandler(tableColumn.name);
@@ -459,9 +469,12 @@ export default function JournalFiles() {
                               className="group inline-flex cursor-pointer"
                             >
                               {tableColumn.nickname}
+
+                              {/* Sort Descending / Ascending Icon */}
                               <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
                                 {getSortIcon(tableColumn)}
                               </span>
+                              {/*----*/}
                             </a>
                           </th>
                         );
@@ -490,7 +503,7 @@ export default function JournalFiles() {
                           )}
                           <input
                             type="checkbox"
-                            className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-500 dark:border-zinc-600 dark:bg-zinc-300 sm:left-6"
+                            className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-500 dark:border-zinc-600 sm:left-6"
                             // value={file.email}
                             checked={tableSelectionFilename === file.filename}
                             onChange={(e) =>
