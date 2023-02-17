@@ -1,4 +1,4 @@
-## Hi, this is the readme! :book: :grinning:
+## Hi, this is the readme! :grinning: :book:
 
 - This repo is for a React SPA (Single-Page Application) available at [chrt.com](https://chrt.com)
 
