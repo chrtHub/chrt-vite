@@ -14,6 +14,7 @@ import {
   CheckIcon,
   ChevronDownIcon,
   ChevronUpDownIcon,
+  ChevronUpIcon,
 } from "@heroicons/react/20/solid";
 import { FolderIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 
@@ -32,9 +33,10 @@ function classNames(...classes) {
 
 //-- Data Objects, Environment Variables --//
 const brokerages = [
+  //-- Server only ever sees 'name', not 'nickname' --//
   { id: 0, nickname: "TD Ameritrade", name: "td_ameritrade" },
-  { id: 1, nickname: "TradeZero", name: "tradezero" },
-  { id: 2, nickname: "Webull", name: "webull" },
+  // { id: 1, nickname: "TradeZero", name: "tradezero" },
+  // { id: 2, nickname: "Webull", name: "webull" },
 ];
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
@@ -52,7 +54,7 @@ export default function JournalFiles() {
   const [deleteFileLoading, setDeleteFileLoading] = useState();
 
   const [tableSelectionFilename, setTableSelectionFilename] = useState();
-  const [currentSort, setCurrentSort] = useState();
+  const [currentSort, setCurrentSort] = useState("last_modified_iso8601_desc");
 
   //-- Recoil State --//
   const [filesList, setFilesList] = useRecoilState(filesListState);
@@ -197,21 +199,73 @@ export default function JournalFiles() {
     }
   };
 
+  const getBrokerageNickname = (brokerageName) => {
+    const nickname = brokerages.find((x) => x.name === brokerageName);
+    return nickname?.nickname || null;
+  };
+
+  // TODO - clean up sort icon logic :)
+  let filenameSortIcon = <ChevronUpDownIcon className="h-5 w-5 bg-gray-200" />;
+  if (currentSort === "filename_desc") {
+    filenameSortIcon = (
+      <ChevronDownIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
+    );
+  } else if (currentSort === "filename_asc") {
+    filenameSortIcon = (
+      <ChevronUpIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
+    );
+  }
+  let brokerageSortIcon = <ChevronUpDownIcon className="h-5 w-5 bg-gray-200" />;
+  if (currentSort === "brokerage_desc") {
+    brokerageSortIcon = (
+      <ChevronDownIcon className="h-5 w-5  bg-green-200" aria-hidden="true" />
+    );
+  } else if (currentSort === "brokerage_asc") {
+    brokerageSortIcon = (
+      <ChevronUpIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
+    );
+  }
+  let lastModifiedSortIcon = (
+    <ChevronUpDownIcon className="h-5 w-5 bg-gray-200" />
+  );
+  if (currentSort === "last_modified_iso8601_desc") {
+    lastModifiedSortIcon = (
+      <ChevronDownIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
+    );
+  } else if (currentSort === "last_modified_iso8601_asc") {
+    lastModifiedSortIcon = (
+      <ChevronUpIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
+    );
+  }
+  let sizeSortIcon = <ChevronUpDownIcon className="h-5 w-5 bg-gray-200" />;
+  if (currentSort === "size_mb_desc") {
+    sizeSortIcon = (
+      <ChevronDownIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
+    );
+  } else if (currentSort === "size_mb_asc") {
+    sizeSortIcon = (
+      <ChevronUpIcon className="h-5 w-5 bg-green-200" aria-hidden="true" />
+    );
+  }
+  //----//
+
   //-- Click Handlers --//
   const sortByHandler = (columnName) => {
-    //-- Sort ('_.orderBy') ascending. But if already sorted ascending, sort descending. --//
+    //-- Sort ('_.orderBy') descending. But if already sorted descending, sort ascending. --//
     const sortedFilesList = orderBy(
       filesList, //-- array --//
       [columnName], //-- column to order by --//
-      [currentSort === `${columnName}_asc` ? "desc" : "asc"] //-- asc or desc --//
+      [currentSort === `${columnName}_desc` ? "asc" : "desc"] //-- asc or desc --//
     );
     setFilesList(sortedFilesList);
     setCurrentSort(
-      currentSort === `${columnName}_asc`
-        ? `${columnName}_desc`
-        : `${columnName}_asc`
+      currentSort === `${columnName}_desc`
+        ? `${columnName}_asc`
+        : `${columnName}_desc`
     );
   };
+
+  console.log(currentSort); // DEV
 
   //-- Side Effects --//
   useEffect(() => {
@@ -263,7 +317,6 @@ export default function JournalFiles() {
       </form>
       {/* END OF FILE UPLOAD AREA */}
 
-      {/* START OF BROKERAGE, FILENAME, UPLOAD BUTTON AREA */}
       <div className="mt-6 grid grid-cols-6 gap-x-3 gap-y-1">
         {/* START OF BROKERAGE SELECTOR */}
         <div className="col-span-6 lg:col-span-1">
@@ -350,28 +403,25 @@ export default function JournalFiles() {
         {/* START OF TEXT INPUT FOR FILENAME + UPLOAD BUTTON*/}
         <div className="col-span-6 lg:col-span-5">
           <label
-            htmlFor="company-website"
+            htmlFor="filename-input"
             className="block text-sm font-medium text-zinc-700 dark:text-zinc-100"
           >
             Filename
           </label>
 
-          <div className="mt-1 flex rounded-l-md shadow-sm">
+          <div className="shadow-l-md mt-1 flex">
             <div className="relative flex flex-grow items-stretch focus-within:z-10">
-              <span className="inline-flex items-center rounded-l-md border border-r-0 border-zinc-300 bg-zinc-100 px-3 text-zinc-500 dark:border-zinc-500 dark:bg-zinc-800 dark:text-zinc-100 sm:text-sm">
-                {selectedBrokerage.name} /
-              </span>
               <input
                 type="text"
-                name="company-website"
-                id="company-website"
+                name="filename-input"
+                id="filename-input"
                 value={putFilename ? putFilename : ""}
                 onChange={(event) => setPutFilename(event.target.value)}
                 className={classNames(
                   putFileLoading
                     ? "animate-pulse bg-green-400 opacity-30 dark:bg-green-900"
                     : "",
-                  "block w-full min-w-0 flex-1 rounded-none border-zinc-300 px-3 py-2 focus:border-green-500 focus:ring-green-500 dark:border-zinc-500 dark:bg-zinc-700 dark:text-zinc-100 sm:text-sm"
+                  "block w-full min-w-0 flex-1 rounded-l-md border-zinc-300 px-3 py-2 focus:border-green-500 focus:ring-green-500 dark:border-zinc-500 dark:bg-zinc-700 dark:text-zinc-100 sm:text-sm"
                 )}
                 placeholder="some_file_name.csv"
               />
@@ -394,7 +444,6 @@ export default function JournalFiles() {
         </div>
         {/* END OF TEXT INPUT FOR FILENAME + UPLOAD BUTTON */}
       </div>
-      {/* END OF BROKERAGE, FILENAME, UPLOAD BUTTON AREA */}
 
       {/* START OF DATA TABLE - BROKERAGE FILES */}
       <div className="mt-6">
@@ -423,16 +472,16 @@ export default function JournalFiles() {
                         scope="col"
                         className="py-3.5 px-3 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100 sm:pl-6"
                       >
-                        <a href="#" className="group inline-flex">
+                        <a
+                          onClick={() => {
+                            sortByHandler("filename");
+                          }}
+                          className="group inline-flex cursor-pointer"
+                        >
                           Filename
                           <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
-                            <ChevronDownIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                              onClick={() => {
-                                sortByHandler("filename");
-                              }}
-                            />
+                            {/* Sort Icon */}
+                            {filenameSortIcon}
                           </span>
                         </a>
                       </th>
@@ -442,16 +491,16 @@ export default function JournalFiles() {
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
                       >
-                        <a href="#" className="group inline-flex">
+                        <a
+                          onClick={() => {
+                            sortByHandler("brokerage");
+                          }}
+                          className="group inline-flex cursor-pointer"
+                        >
                           Brokerage
                           <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
-                            <ChevronDownIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                              onClick={() => {
-                                sortByHandler("brokerage");
-                              }}
-                            />
+                            {/* Sort Icon */}
+                            {brokerageSortIcon}
                           </span>
                         </a>
                       </th>
@@ -461,16 +510,16 @@ export default function JournalFiles() {
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
                       >
-                        <a href="#" className="group inline-flex">
+                        <a
+                          onClick={() => {
+                            sortByHandler("last_modified_iso8601");
+                          }}
+                          className="group inline-flex cursor-pointer"
+                        >
                           Uploaded / Last Modified
                           <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
-                            <ChevronDownIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                              onClick={() => {
-                                sortByHandler("last_modified");
-                              }}
-                            />
+                            {/* Sort Icon */}
+                            {lastModifiedSortIcon}
                           </span>
                         </a>
                       </th>
@@ -480,16 +529,16 @@ export default function JournalFiles() {
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100"
                       >
-                        <a href="#" className="group inline-flex">
+                        <a
+                          onClick={() => {
+                            sortByHandler("size_mb");
+                          }}
+                          className="group inline-flex cursor-pointer"
+                        >
                           Size (MB)
                           <span className="ml-2 flex-none rounded bg-zinc-200 text-zinc-900 group-hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-100 dark:group-hover:bg-zinc-500">
-                            <ChevronDownIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                              onClick={() => {
-                                sortByHandler("size_mb");
-                              }}
-                            />
+                            {/* Sort Icon */}
+                            {sizeSortIcon}
                           </span>
                         </a>
                       </th>
@@ -535,12 +584,12 @@ export default function JournalFiles() {
 
                         {/* Brokerage */}
                         <td className="whitespace-nowrap px-2 py-2 text-sm text-zinc-700 dark:text-zinc-100">
-                          {file.brokerage}
+                          {getBrokerageNickname(file.brokerage)}
                         </td>
 
                         {/* Uploaded / Last Modified */}
                         <td className="whitespace-nowrap px-2 py-2 text-sm text-zinc-700 dark:text-zinc-100">
-                          {file.last_modified}
+                          {file.last_modified_readable}
                         </td>
 
                         {/* Size (MB) */}
