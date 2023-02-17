@@ -1,22 +1,27 @@
-## Hi, this is the readme! :grinning: :book:
+# :file_folder: React SPA repo
 
 - This repo is for a React SPA (Single-Page Application) available at [chrt.com](https://chrt.com)
 
 ### Dev Links
 
-- [Repo](https://github.com/chrtHub/chrt-vite/)
+- [GitHub Repo](https://github.com/chrtHub/chrt-vite/) - _(current page)_
 - [CodePipeline](https://us-east-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/chrt-vite/view?region=us-east-1)
 
----
+### Contact
 
-## CHRT.com - repos and stack info
+- Need support? support@chrt.com
+- Want to chat? aaron@chrt.com
+
+# :bar_chart: [chrt.com](https://chrt.com) repos & stack
 
 ### Repos
 
-- **[Front-end repo](https://github.com/chrtHub/chrt-vite/)** _(current page)_
-- **[Back-end repo](https://github.com/chrtHub/postgres-tradingdata)**
-- Lambda function(s) repo(s):
-  - **[S3 .csv parse to Postgres](https://github.com/chrtHub/lambda-chrtUserTradingData-S3-to-RDS-PostgreSQL)**
+- Front-end
+  - **[React SPA](https://github.com/chrtHub/chrt-vite/)** - _(current page)_
+- Back-end
+  - **[Express Server](https://github.com/chrtHub/postgres-tradingdata)**
+- Lambda functions
+  - **[Lambda for S3 to Postgres parsing](https://github.com/chrtHub/lambda-chrtUserTradingData-S3-to-RDS-PostgreSQL)**
 
 ### CI/CD Stack
 
@@ -55,9 +60,3 @@
 - [AWS Lambda](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html) - serverless functions
 - [S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) - for storing user-uploaded files
 - [DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html) - NoSQL database
-
-### Contact
-
-Need support? support@chrt.com<br />
-<br />
-Want to chat? aaron@chrt.com
