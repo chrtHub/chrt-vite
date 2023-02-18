@@ -513,7 +513,7 @@ export default function JournalFiles() {
                             className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-500 dark:border-zinc-600 sm:left-6"
                             // value={file.email}
                             checked={
-                              tableSelectionFil.filename === file.filename
+                              tableSelectionFile?.filename === file.filename
                             }
                             onChange={(e) =>
                               e.target.checked //-- e.target.checked is the status after the onChange event --//
@@ -559,7 +559,7 @@ export default function JournalFiles() {
         {/* START OF DOWNLOAD BUTTON */}
         <button
           disabled={
-            !tableSelectionFilename ||
+            !tableSelectionFile?.filename ||
             filesList[0].filename === "example_file_name.csv"
           }
           type="button"
@@ -576,7 +576,7 @@ export default function JournalFiles() {
         {/* START OF DELETE BUTTON */}
         <button
           disabled={
-            !tableSelectionFilename ||
+            !tableSelectionFile?.filename ||
             filesList[0].filename === "example_file_name.csv"
           }
           type="button"
