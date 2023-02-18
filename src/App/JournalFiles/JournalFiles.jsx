@@ -183,7 +183,7 @@ export default function JournalFiles() {
       console.log(err);
     }
     setDeleteFileLoading(false);
-    setTableSelectionFilename(null);
+    setTableSelectionFile(null);
 
     listFiles(); //-- Refresh files list --//
   };
@@ -415,6 +415,7 @@ export default function JournalFiles() {
                 value={putFilename ? putFilename : ""}
                 onChange={(event) => setPutFilename(event.target.value)}
                 className={classNames(
+                  putFilename && "bg-green-100 dark:bg-green-900",
                   putFileLoading
                     ? "animate-pulse bg-green-400 opacity-30 dark:bg-green-900"
                     : "",
@@ -462,6 +463,7 @@ export default function JournalFiles() {
                       {tableColumns.map((tableColumn) => {
                         return (
                           <th
+                            key={tableColumn.id}
                             scope="col"
                             className={classNames(
                               tableColumn.classes,
