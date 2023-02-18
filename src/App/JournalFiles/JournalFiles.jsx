@@ -67,7 +67,7 @@ export default function JournalFiles() {
   const [putFileLoading, setPutFileLoading] = useState();
   const [deleteFileLoading, setDeleteFileLoading] = useState();
 
-  const [tableSelectionFilename, setTableSelectionFilename] = useState();
+  const [tableSelectionFile, setTableSelectionFile] = useState();
   const [currentSort, setCurrentSort] = useState("last_modified_desc");
 
   //-- Recoil State --//
@@ -108,7 +108,7 @@ export default function JournalFiles() {
     try {
       //-- Make GET request --//
       let res = await axios.get(
-        `${VITE_ALB_BASE_URL}/journal_files/get_file/${selectedBrokerage.name}/${tableSelectionFilename}`,
+        `${VITE_ALB_BASE_URL}/journal_files/get_file/${selectedBrokerage.name}/${tableSelectionFile.file_uuid}_${tableSelectionFile.filename}`,
         {
           headers: {
             authorization: `Bearer ${accessToken}`,
@@ -171,7 +171,7 @@ export default function JournalFiles() {
 
       //-- Make DELETE request --//
       let res = await axios.delete(
-        `${VITE_ALB_BASE_URL}/journal_files/delete_file/${selectedBrokerage.name}/${tableSelectionFilename}`,
+        `${VITE_ALB_BASE_URL}/journal_files/delete_file/${selectedBrokerage.name}/${tableSelectionFile.file_uuid}_${tableSelectionFile.filename}`,
         {
           headers: {
             authorization: `Bearer ${accessToken}`,
@@ -183,7 +183,7 @@ export default function JournalFiles() {
       console.log(err);
     }
     setDeleteFileLoading(false);
-    setTableSelectionFilename(null);
+    setTableSelectionFile(null);
 
     listFiles(); //-- Refresh files list --//
   };
@@ -415,6 +415,7 @@ export default function JournalFiles() {
                 value={putFilename ? putFilename : ""}
                 onChange={(event) => setPutFilename(event.target.value)}
                 className={classNames(
+                  putFilename && "bg-green-100 dark:bg-green-900",
                   putFileLoading
                     ? "animate-pulse bg-green-400 opacity-30 dark:bg-green-900"
                     : "",
@@ -462,6 +463,7 @@ export default function JournalFiles() {
                       {tableColumns.map((tableColumn) => {
                         return (
                           <th
+                            key={tableColumn.id}
                             scope="col"
                             className={classNames(
                               tableColumn.classes,
@@ -498,25 +500,27 @@ export default function JournalFiles() {
                           fileIdx % 2 === 0
                             ? "bg-white dark:bg-zinc-700"
                             : "bg-zinc-100 dark:bg-zinc-800", //-- Striped Rows --//
-                          tableSelectionFilename === file.filename
+                          tableSelectionFile?.filename === file.filename
                             ? "bg-green-100 dark:bg-green-900"
                             : undefined //-- Selected Row --> Green --//
                         )}
                       >
                         {/* Checkbox */}
                         <td className="relative w-12 px-6 sm:w-16 sm:px-8">
-                          {tableSelectionFilename === file.filename && (
+                          {tableSelectionFile?.filename === file.filename && (
                             <div className="absolute inset-y-0 left-0 w-1.5 bg-green-600" />
                           )}
                           <input
                             type="checkbox"
                             className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-500 dark:border-zinc-600 sm:left-6"
                             // value={file.email}
-                            checked={tableSelectionFilename === file.filename}
+                            checked={
+                              tableSelectionFile?.filename === file.filename
+                            }
                             onChange={(e) =>
                               e.target.checked //-- e.target.checked is the status after the onChange event --//
-                                ? setTableSelectionFilename(file.filename)
-                                : setTableSelectionFilename(null)
+                                ? setTableSelectionFile(file)
+                                : setTableSelectionFile(null)
                             }
                           />
                         </td>
@@ -557,7 +561,7 @@ export default function JournalFiles() {
         {/* START OF DOWNLOAD BUTTON */}
         <button
           disabled={
-            !tableSelectionFilename ||
+            !tableSelectionFile?.filename ||
             filesList[0].filename === "example_file_name.csv"
           }
           type="button"
@@ -574,7 +578,7 @@ export default function JournalFiles() {
         {/* START OF DELETE BUTTON */}
         <button
           disabled={
-            !tableSelectionFilename ||
+            !tableSelectionFile?.filename ||
             filesList[0].filename === "example_file_name.csv"
           }
           type="button"
