@@ -5,16 +5,24 @@ module.exports = {
   theme: {
     extend: {
       animation: {
-        text: "text 15s ease infinite",
+        text: "text 20s ease infinite",
       },
       keyframes: {
         text: {
           "0%, 100%": {
             "background-size": "200% 200%",
-            "background-position": "left center",
+            "background-position": "right center",
+          },
+          "25%": {
+            "background-size": "400% 500%",
+            "background-position": "right center",
           },
           "50%": {
-            "background-size": "200% 200%",
+            "background-size": "600% 600%",
+            "background-position": "left center",
+          },
+          "75%": {
+            "background-size": "500% 400%",
             "background-position": "right center",
           },
         },
