@@ -30,6 +30,10 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 //   },
 // ];
 
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
 export default function Hero() {
   //-- Detect theme value (a) set in localStorage, or (b) from OS theme --//
   let dark = false;
@@ -202,7 +206,15 @@ export default function Hero() {
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             {/* START OF TITLE & SUBTITLE */}
             <div className="mx-auto max-w-2xl text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-6xl">
+              <h1
+                className={classNames(
+                  "text-4xl font-bold tracking-tight  sm:text-6xl",
+                  // "text-zinc-900 dark:text-white"
+                  "animate-text bg-gradient-to-r bg-clip-text text-transparent",
+                  "from-green-500 via-zinc-500 to-green-500",
+                  "dark:from-green-400 dark:via-zinc-300 dark:to-green-400"
+                )}
+              >
                 Journal Your Day Trades
               </h1>
               <p className="mt-6 text-lg leading-8 text-zinc-600 dark:text-white">
