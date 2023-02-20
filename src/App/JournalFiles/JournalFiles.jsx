@@ -94,9 +94,7 @@ export default function JournalFiles() {
       );
       setFilesList(res.data);
       //----//
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (error) {}
     setListFilesLoading(false);
   };
 
@@ -117,11 +115,9 @@ export default function JournalFiles() {
       );
       //-- Handle reponse by downloading file --//
       let blob = new Blob([res.data], { type: "text/plain;charset=utf-8" });
-      saveAs(blob, tableSelectionFilename);
+      saveAs(blob, tableSelectionFile.filename);
       //----//
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (error) {}
     setGetFileLoading(false);
   };
 
@@ -148,9 +144,8 @@ export default function JournalFiles() {
         }
       );
       //----//
-    } catch (err) {
-      console.log(err.message);
-      if ((err.response.status = 415)) {
+    } catch (error) {
+      if (error?.response?.status === 415) {
         alert("File type not supported. Please upload a CSV file."); // DEV
       }
     }
@@ -179,9 +174,7 @@ export default function JournalFiles() {
         }
       );
       //----//
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (error) {}
     setDeleteFileLoading(false);
     setTableSelectionFile(null);
 

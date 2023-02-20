@@ -34,8 +34,17 @@ import Terms from "./Info/Terms/Terms";
 //-- JSX Components: Navigation --//
 import NotFoundPage from "./Navigation/NotFoundPage";
 
+//-- Other --//
+import { H } from "highlight.run";
+
 //-- CSS --//
 import "./index.css";
+
+//-- Initialize Highlight --//
+H.init("kevvxle3", {
+  environment: "production",
+  enableStrictPrivacy: false,
+});
 
 //-- Create router object --//
 const router = createBrowserRouter(
