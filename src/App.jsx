@@ -11,6 +11,7 @@ import LandingPage from "./LandingPage/LandingPage";
 //-- Icons --//
 
 //-- NPM Functions --//
+import { H } from "highlight.run";
 
 //-- Utility Functions --//
 

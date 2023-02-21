@@ -4,6 +4,7 @@ import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- JSX Components --//
+import EChart from "./EChart";
 
 //-- NPM Components --//
 
@@ -46,76 +47,136 @@ export default function Journal() {
   //-- Auth0 --//
   const { getAccessTokenSilently } = useAuth0();
 
-  //-- Side Effect for fetching journal data --//
-  useEffect(() => {
-    const getJournalData = async () => {
-      try {
-        //-- Get access token from memory or request new token --//
-        let accessToken = await getAccessTokenSilently();
+  //-- Data Fetching --//
+  const getJournalData = async () => {
+    try {
+      //-- Get access token from memory or request new token --//
+      let accessToken = await getAccessTokenSilently();
 
-        //-- / --//
-        let res1 = await axios.get(`${VITE_ALB_BASE_URL}/`, {
+      //-- '/' route --//
+      let res1 = await axios.get(`${VITE_ALB_BASE_URL}/`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      setJournalData(res1.data);
+
+      //-- pl_last_45_calendar_days --//
+      let res2 = await axios.get(
+        `${VITE_ALB_BASE_URL}/journal/dashboard/pl_last_45_calendar_days`,
+        {
           headers: {
             authorization: `Bearer ${accessToken}`,
           },
-        });
+        }
+      );
+      setJournalPL45Days(res2.data);
 
-        setJournalData(res1.data);
+      //-- /trade_uuids_by_date --//
+      let date = null; // TODO
+      let res3 = await axios.get(
+        `${VITE_ALB_BASE_URL}/journal/trade_uuids_by_date/${date}`,
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setJournalTradeUUIDsByDate(res3.data);
 
-        //-- pl_last_45_calendar_days --//
-        let res2 = await axios.get(
-          `${VITE_ALB_BASE_URL}/journal/dashboard/pl_last_45_calendar_days`,
-          {
-            headers: {
-              authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setJournalPL45Days(res2.data);
+      //-- /trade_summary_by_trade_uuid --//
+      let trade_uuid = null; // TODO
+      let res4 = await axios.get(
+        `${VITE_ALB_BASE_URL}/journal/trade_summary_by_trade_uuid/${trade_uuid}`,
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setTradeSummaryByTradeUUID(res4.data);
 
-        //-- /trade_uuids_by_date --//
-        let date = null; // TODO
-        let res3 = await axios.get(
-          `${VITE_ALB_BASE_URL}/journal/trade_uuids_by_date/${date}`,
-          {
-            headers: {
-              authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setJournalTradeUUIDsByDate(res3.data);
+      //-- /txns_by_trade_uuid  --//
+      let res5 = await axios.get(
+        `${VITE_ALB_BASE_URL}/journal/txns_by_trade_uuid/${trade_uuid}`,
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setTxnsByTradeUUID(res5.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-        //-- /trade_summary_by_trade_uuid --//
-        let trade_uuid = null; // TODO
-        let res4 = await axios.get(
-          `${VITE_ALB_BASE_URL}/journal/trade_summary_by_trade_uuid/${trade_uuid}`,
-          {
-            headers: {
-              authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setTradeSummaryByTradeUUID(res4.data);
+  //-- Other --//
+  let echart_option_1 = {
+    title: {
+      top: 30,
+      left: "center",
+      text: "P&L by day of week (dummy data)",
+    },
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "cross",
+        label: {
+          backgroundColor: "#6a7985",
+        },
+      },
+    },
+    xAxis: {
+      type: "category",
+      data: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+      // inverse: true,
+    },
+    yAxis: {
+      type: "value",
+    },
+    series: [
+      {
+        data: [120, 200, 150, 80, 70],
+        type: "bar",
+        showBackground: true,
+        backgroundStyle: {
+          color: "rgba(180, 180, 180, 0.2)",
+        },
+      },
+    ],
+    animation: false,
+  };
 
-        //-- /txns_by_trade_uuid  --//
-        let res5 = await axios.get(
-          `${VITE_ALB_BASE_URL}/journal/txns_by_trade_uuid/${trade_uuid}`,
-          {
-            headers: {
-              authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setTxnsByTradeUUID(res5.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
+  //-- Click Handlers --//
+
+  //-- Side Effects --//
+  useEffect(() => {
     getJournalData();
   }, [getAccessTokenSilently]);
 
   return (
     <>
+      {/* <div
+        className={classNames(
+          loadingProgressPercent === 0 || loadingProgressPercent === 100
+            ? ""
+            : "bg-zinc-200 dark:bg-zinc-700",
+          "h-1 w-full rounded-full"
+        )}
+      >
+        <div
+          className={classNames(
+            loadingProgressPercent === 0 || loadingProgressPercent === 100
+              ? ""
+              : "bg-green-400 dark:bg-green-800",
+            "h-1 rounded-full"
+          )}
+          style={{ width: `${loadingProgressPercent}%` }}
+        ></div>
+      </div> */}
+
       <div
         className={classNames(
           !journalData
@@ -126,9 +187,7 @@ export default function Journal() {
       >
         <div className="py-5 sm:p-6">
           {journalData ? (
-            <pre className="text-zinc-900 dark:text-white">
-              {JSON.stringify(journalData, null, 2)}
-            </pre>
+            <EChart option={echart_option_1} />
           ) : (
             "..." // TODO - use a loading skeleton here
           )}
