@@ -493,14 +493,14 @@ export default function JournalFiles() {
                           fileIdx % 2 === 0
                             ? "bg-white dark:bg-zinc-700"
                             : "bg-zinc-100 dark:bg-zinc-800", //-- Striped Rows --//
-                          tableSelectionFile?.filename === file.filename
+                          tableSelectionFile?.file_uuid === file.file_uuid
                             ? "bg-green-100 dark:bg-green-900"
                             : undefined //-- Selected Row --> Green --//
                         )}
                       >
                         {/* Checkbox */}
                         <td className="relative w-12 px-6 sm:w-16 sm:px-8">
-                          {tableSelectionFile?.filename === file.filename && (
+                          {tableSelectionFile?.file_uuid === file.file_uuid && (
                             <div className="absolute inset-y-0 left-0 w-1.5 bg-green-600" />
                           )}
                           <input
@@ -508,7 +508,7 @@ export default function JournalFiles() {
                             className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-500 dark:border-zinc-600 sm:left-6"
                             // value={file.email}
                             checked={
-                              tableSelectionFile?.filename === file.filename
+                              tableSelectionFile?.file_uuid === file.file_uuid
                             }
                             onChange={(e) =>
                               e.target.checked //-- e.target.checked is the status after the onChange event --//
