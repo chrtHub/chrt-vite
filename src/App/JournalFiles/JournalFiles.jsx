@@ -1,5 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { Fragment, useState, useEffect, useCallback } from "react";
+import { Fragment, useState, useEffect, useCallback, useRef } from "react";
 import { useRecoilState } from "recoil";
 import { filesListState } from "./atoms";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -7,7 +7,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 //-- JSX Components --//
 
 //-- NPM Components --//
-import { Listbox, Transition } from "@headlessui/react";
+import { Listbox, Dialog, Transition } from "@headlessui/react";
 
 //-- Icons --//
 import {
@@ -16,7 +16,11 @@ import {
   ChevronUpDownIcon,
   ChevronUpIcon,
 } from "@heroicons/react/20/solid";
-import { FolderIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
+import {
+  FolderIcon,
+  ArrowPathIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
 import axios from "axios";
@@ -69,6 +73,9 @@ export default function JournalFiles() {
 
   const [tableSelectionFile, setTableSelectionFile] = useState();
   const [currentSort, setCurrentSort] = useState("last_modified_desc");
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false); //-- <Transition show={} /> requies false, not null --//
+  const cancelButtonRef = useRef(null);
 
   //-- Recoil State --//
   const [filesList, setFilesList] = useRecoilState(filesListState);
@@ -177,6 +184,7 @@ export default function JournalFiles() {
     } catch (error) {}
     setDeleteFileLoading(false);
     setTableSelectionFile(null);
+    setDeleteModalOpen(false);
 
     listFiles(); //-- Refresh files list --//
   };
@@ -568,15 +576,6 @@ export default function JournalFiles() {
         </button>
         {/* END OF DOWNLOAD BUTTON */}
 
-        <div class="rounded-sm border-2 border-zinc-200 bg-zinc-50 px-4 py-1 text-center dark:border-zinc-900 dark:bg-zinc-800">
-          <p class="mb-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">
-            Your Journal's data matches your Journal Files
-          </p>
-          <p class="text-sm text-zinc-500 dark:text-zinc-400">
-            Deleting a file will remove its data from your Journal
-          </p>
-        </div>
-
         {/* START OF DELETE BUTTON */}
         <button
           disabled={
@@ -590,11 +589,90 @@ export default function JournalFiles() {
               : "",
             "inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
           )}
-          onClick={deleteFile}
+          onClick={() => setDeleteModalOpen(true)}
         >
           Delete
         </button>
         {/* END OF DELETE BUTTON */}
+
+        {/* START OF DELETE BUTTON MODAL */}
+        <Transition.Root show={deleteModalOpen} as={Fragment}>
+          <Dialog
+            as="div"
+            className="relative z-10"
+            initialFocus={cancelButtonRef}
+            onClose={setDeleteModalOpen}
+          >
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <div className="fixed inset-0 bg-zinc-500 bg-opacity-75 transition-opacity" />
+            </Transition.Child>
+
+            <div className="fixed inset-0 z-10 overflow-y-auto">
+              <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <Transition.Child
+                  as={Fragment}
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                  enterTo="opacity-100 translate-y-0 sm:scale-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                  leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                >
+                  <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                    <div className="sm:flex sm:items-start">
+                      <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                        <ExclamationTriangleIcon
+                          className="h-6 w-6 text-red-600"
+                          aria-hidden="true"
+                        />
+                      </div>
+                      <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        {/* <Dialog.Title
+                          as="h3"
+                          className="text-lg font-medium leading-6 text-zinc-900"
+                        >
+                          Delete File
+                        </Dialog.Title> */}
+                        <div className="mt-2">
+                          <p className="text-sm text-zinc-900">
+                            Deleting a file will remove its data from your
+                            Journal.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-5 sm:mt-4 sm:ml-10 sm:flex sm:pl-4">
+                      <button
+                        type="button"
+                        className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:w-auto sm:text-sm"
+                        onClick={deleteFile}
+                      >
+                        Delete
+                      </button>
+                      <button
+                        type="button"
+                        className="mt-3 inline-flex w-full justify-center rounded-md border border-zinc-300 bg-white px-4 py-2 text-base font-medium text-zinc-700 shadow-sm hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                        onClick={() => setDeleteModalOpen(false)}
+                        ref={cancelButtonRef}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </Dialog.Panel>
+                </Transition.Child>
+              </div>
+            </div>
+          </Dialog>
+        </Transition.Root>
+        {/* END OF DELETE BUTTON MODAL */}
       </div>
       {/* END OF DOWNLOAD AND DELETE BUTTONS SECTION */}
     </div>
