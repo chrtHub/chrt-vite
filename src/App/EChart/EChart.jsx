@@ -15,7 +15,7 @@ import * as echarts from "echarts";
 //-- Data Objects, Environment Variables --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function EChart({ option }) {
+export default function EChart({ option, height, width }) {
   //-- React State --//
 
   //-- Recoil State --//
@@ -40,5 +40,5 @@ export default function EChart({ option }) {
   }, [option]);
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
-  return <div ref={chartRef} style={{ width: "100%", height: "400px" }} />;
+  return <div ref={chartRef} style={{ width: width, height: height }} />;
 }

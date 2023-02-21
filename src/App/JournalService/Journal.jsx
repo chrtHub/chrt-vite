@@ -4,7 +4,7 @@ import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- JSX Components --//
-import EChart from "./EChart";
+import EChart from "../EChart/EChart";
 
 //-- NPM Components --//
 
@@ -219,7 +219,11 @@ export default function Journal() {
       >
         <div className="py-5 sm:p-6">
           {journalData ? (
-            <EChart option={option_pl_by_day_of_week} />
+            <EChart
+              option={option_pl_by_day_of_week}
+              height={"400px"}
+              width={"100%"}
+            />
           ) : (
             "..." // TODO - use a loading skeleton here
           )}
