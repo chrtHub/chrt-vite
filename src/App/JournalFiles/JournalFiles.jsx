@@ -568,6 +568,15 @@ export default function JournalFiles() {
         </button>
         {/* END OF DOWNLOAD BUTTON */}
 
+        <div class="rounded-sm border-2 border-zinc-200 bg-zinc-50 px-4 py-1 text-center dark:border-zinc-900 dark:bg-zinc-800">
+          <p class="mb-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">
+            Your Journal's data matches your Journal Files
+          </p>
+          <p class="text-sm text-zinc-500 dark:text-zinc-400">
+            Deleting a file will remove its data from your Journal
+          </p>
+        </div>
+
         {/* START OF DELETE BUTTON */}
         <button
           disabled={
