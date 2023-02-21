@@ -209,10 +209,10 @@ export default function Hero() {
               <h1
                 className={classNames(
                   "text-4xl font-bold tracking-tight  sm:text-6xl",
-                  // "text-zinc-900 dark:text-white"
-                  "animate-text bg-gradient-to-r bg-clip-text text-transparent",
-                  "from-green-500 via-zinc-500 to-green-500",
-                  "dark:from-green-400 dark:via-zinc-300 dark:to-green-400"
+                  "text-zinc-900 dark:text-white"
+                  // "animate-text bg-gradient-to-r bg-clip-text text-transparent",
+                  // "from-green-500 via-zinc-500 to-green-500",
+                  // "dark:from-green-400 dark:via-zinc-300 dark:to-green-400"
                 )}
               >
                 Journal Your Day Trades

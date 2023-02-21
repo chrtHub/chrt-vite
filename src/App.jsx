@@ -34,10 +34,16 @@ export default function App() {
   }
 
   //-- Check for authenticated user --//
-  const { isLoading, isAuthenticated } = useAuth0();
+  const { isLoading, isAuthenticated, user } = useAuth0();
 
   //-- Loading is complete, user is authenticated --> show the app --//
   if (isAuthenticated) {
+    //-- Identify user in Highlight --//
+    H.identify(user?.email, {
+      id: user?.sub,
+      phone: user?.phone,
+    });
+
     return (
       <RecoilRoot>
         <AppLayout skeletonMode={false} infoMode={false} />
