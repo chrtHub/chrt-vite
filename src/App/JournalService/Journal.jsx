@@ -113,7 +113,7 @@ export default function Journal() {
   };
 
   //-- Other --//
-  let echart_option_1 = {
+  let option_pl_by_day_of_week = {
     title: {
       top: 30,
       left: "center",
@@ -148,6 +148,38 @@ export default function Journal() {
     ],
     animation: false,
   };
+
+  // let option_pl_last_45_days = {
+  //   title: {
+  //     top: 30,
+  //     left: "center",
+  //     text: "Profit & Loss, Trading Days in Past 45 Calendar Days",
+  //   },
+  //   tooltip: {
+  //     trigger: "axis",
+  //     axisPointer: {
+  //       type: "cross",
+  //       label: {
+  //         backgroundColor: "#6a7985",
+  //       },
+  //     },
+  //   },
+  //   xAxis: {
+  //     data: tradeDates, // TODO
+  //     inverse: true,
+  //   },
+  //   yAxis: {
+  //     type: "value",
+  //   },
+  //   series: [
+  //     {
+  //       name: "Quantity",
+  //       type: "bar",
+  //       data: profit, // TODO
+  //     },
+  //   ],
+  //   animation: false,
+  // };
 
   //-- Click Handlers --//
 
@@ -187,7 +219,7 @@ export default function Journal() {
       >
         <div className="py-5 sm:p-6">
           {journalData ? (
-            <EChart option={echart_option_1} />
+            <EChart option={option_pl_by_day_of_week} />
           ) : (
             "..." // TODO - use a loading skeleton here
           )}
