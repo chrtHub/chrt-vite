@@ -2,7 +2,7 @@ export default function TermsDoc() {
   return (
     <>
       <h1 id="cookies-policy">Cookies Policy</h1>
-      <p>Effective date: January 1, 2023</p>
+      <p>Effective date: February 21, 2023</p>
 
       <h1 id="introduction">Introduction</h1>
       <p>
@@ -49,6 +49,10 @@ export default function TermsDoc() {
             <li>
               Cookie(s) related to Google&#39;s reCAPTCHA process used for
               verifying human users
+            </li>
+            <li>
+              Cookie(s) related to Highlight.io's service used for ensuring site
+              functionality and debugging errors
             </li>
           </ul>
         </li>
