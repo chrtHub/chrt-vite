@@ -223,12 +223,12 @@ export default function Hero() {
               </p>
               {/* START OF BUTTONS */}
               <div className="mt-10 flex items-center justify-center gap-x-6">
-                {/* <a
-                  href="#"
-                  className="rounded-md bg-green-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                <button
+                  onClick={() => {}}
+                  className="cursor-not-allowed rounded-md bg-green-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                 >
-                  Do a Demo
-                </a> */}
+                  Demo Coming Soon!
+                </button>
                 <button
                   onClick={handleSignUp}
                   className="rounded-md bg-zinc-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-zinc-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
