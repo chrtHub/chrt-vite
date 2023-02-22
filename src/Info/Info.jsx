@@ -1,19 +1,11 @@
 //-- react, react-router-dom, Auth0 --//
-import { NavLink } from "react-router-dom";
+
 //-- JSX Components --//
+import TypographyWrapper from "./TypographyWrapper";
 
 //-- NPM Components --//
 
 //-- Icons --//
-import {
-  QuestionMarkCircleIcon,
-  InformationCircleIcon,
-  ClipboardDocumentListIcon,
-  DocumentTextIcon,
-  LockClosedIcon,
-  ComputerDesktopIcon,
-  ShieldCheckIcon,
-} from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
 
@@ -23,5 +15,9 @@ import {
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Info() {
-  return <div>Choose a link from the navigation bar</div>;
+  return (
+    <TypographyWrapper>
+      <h3 id="choose-link">Choose a link from the navigation bar</h3>
+    </TypographyWrapper>
+  );
 }
