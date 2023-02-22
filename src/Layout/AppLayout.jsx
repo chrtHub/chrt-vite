@@ -1,7 +1,8 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useRecoilState } from "recoil";
 
 //-- JSX Components --//
 
@@ -36,7 +37,8 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-//-- Data Objects --//
+//-- Data Objects, Environment Variables --//
+import { echartsThemeState } from "./atoms";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function AppLayout(props) {
@@ -97,15 +99,26 @@ export default function AppLayout(props) {
   }
   //-- Theming - Light Mode, Dark Mode, Match OS Mode --//
   let theme = localStorage.getItem("theme");
-  const [currentMode, setCurrentMode] = useState(theme);
+  const [themeButtonSelection, setThemeButtonSelection] = useState(theme);
+  const [echartsTheme, setEchartsTheme] = useRecoilState(echartsThemeState);
+
+  //-- NOTES ABOUT THEMES: --//
+  //-- OS theme changes are listened for in index.html --//
+  //-- Manual theme overrides are listened for here --//
+  //-- In both cases, the documentElement's classList is modified --//
+  //-- The localStorage 'theme' value nullifies any OS theme change events --//
+  //-- (the event listener in index.html only works if there's no 'theme' value) --//
+
+  //-- The ECharts Theme <<TODO>>
 
   const useManualDarkMode = () => {
     //-- Set theme to dark in localStorage --//
     localStorage.setItem("theme", "dark");
     //-- Update theme to dark mode --//
     document.documentElement.classList.add("dark");
-    //-- Update currentMode --//
-    setCurrentMode("dark");
+    setEchartsTheme("dark");
+    //-- Update themeButtonSelection --//
+    setThemeButtonSelection("dark");
   };
 
   const useOSTheme = () => {
@@ -114,11 +127,13 @@ export default function AppLayout(props) {
     //-- Update theme to match current OS theme --//
     if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       document.documentElement.classList.add("dark");
+      setEchartsTheme("dark");
     } else {
       document.documentElement.classList.remove("dark");
+      setEchartsTheme("light");
     }
-    //-- Update currentMode --//
-    setCurrentMode(null);
+    //-- Update themeButtonSelection --//
+    setThemeButtonSelection(null);
   };
 
   const useManualLightMode = () => {
@@ -126,9 +141,32 @@ export default function AppLayout(props) {
     localStorage.setItem("theme", "light");
     //-- Update theme to light mode --//
     document.documentElement.classList.remove("dark");
-    //-- Update currentMode --//
-    setCurrentMode("light");
+    setEchartsTheme("light");
+    //-- Update themeButtonSelection --//
+    setThemeButtonSelection("light");
   };
+
+  useEffect(() => {
+    const handleThemeChange = ({ matches }) => {
+      //-- Only react to OS theme changes if no 'theme' value is set in localStorage --//
+      if (!("theme" in localStorage)) {
+        if (matches) {
+          setEchartsTheme("dark");
+        } else {
+          setEchartsTheme("light");
+        }
+      }
+    };
+
+    //-- Listen for OS theme changes --//
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", handleThemeChange);
+
+    return window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .removeEventListener("change", handleThemeChange);
+  }, []);
 
   return (
     <div className="h-full overflow-auto bg-zinc-50 dark:bg-zinc-800">
@@ -371,7 +409,7 @@ export default function AppLayout(props) {
                                 type="button"
                                 onClick={useManualLightMode}
                                 className={classNames(
-                                  currentMode === "light"
+                                  themeButtonSelection === "light"
                                     ? "bg-zinc-400 text-white"
                                     : "bg-white text-zinc-700",
                                   "relative inline-flex items-center rounded-l-md border border-zinc-400 px-4 py-2 text-sm font-medium hover:bg-zinc-300 focus:z-10 focus:outline-none dark:border-zinc-700 "
@@ -387,7 +425,7 @@ export default function AppLayout(props) {
                                 type="button"
                                 onClick={useOSTheme}
                                 className={classNames(
-                                  !currentMode
+                                  !themeButtonSelection
                                     ? "bg-zinc-400 text-white"
                                     : "bg-white text-zinc-700",
                                   "relative -ml-px inline-flex items-center border border-zinc-400 px-4 py-2 text-sm font-medium hover:bg-zinc-300 focus:z-10 focus:outline-none  dark:border-zinc-700 "
@@ -403,7 +441,7 @@ export default function AppLayout(props) {
                                 type="button"
                                 onClick={useManualDarkMode}
                                 className={classNames(
-                                  currentMode === "dark"
+                                  themeButtonSelection === "dark"
                                     ? "bg-zinc-700 text-white"
                                     : "bg-white text-zinc-700",
                                   "relative -ml-px inline-flex items-center rounded-r-md border border-zinc-400 px-4 py-2 text-sm font-medium hover:bg-zinc-300 focus:z-10 focus:outline-none  dark:border-zinc-700 "

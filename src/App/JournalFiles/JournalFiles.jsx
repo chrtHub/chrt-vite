@@ -1,7 +1,6 @@
 //-- react, react-router-dom, recoil, Auth0 --//
 import { Fragment, useState, useEffect, useCallback, useRef } from "react";
 import { useRecoilState } from "recoil";
-import { filesListState } from "./atoms";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- JSX Components --//
@@ -36,6 +35,7 @@ function classNames(...classes) {
 }
 
 //-- Data Objects, Environment Variables --//
+import { filesListState } from "./atoms";
 const brokerages = [
   //-- Server only ever sees 'name', not 'nickname' --//
   { id: 0, nickname: "TD Ameritrade", name: "td_ameritrade" },

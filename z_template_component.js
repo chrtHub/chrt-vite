@@ -1,7 +1,6 @@
 //-- react, react-router-dom, recoil, Auth0 --//
 import { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { barState } from "./atoms";
 
 //-- JSX Components --//
 
@@ -17,6 +16,7 @@ function classNames(...classes) {
 }
 
 //-- Data Objects, Environment Variables --//
+import { barState } from "./atoms";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
