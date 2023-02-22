@@ -11,10 +11,11 @@ import LandingPage from "./LandingPage/LandingPage";
 //-- Icons --//
 
 //-- NPM Functions --//
+import { H } from "highlight.run";
 
 //-- Utility Functions --//
 
-//-- Data Objects --//
+//-- Data Objects, Environment Variables --//
 const infoRoutes = [
   "/info",
   "/cookies",
@@ -25,6 +26,7 @@ const infoRoutes = [
   "/system_requirements",
   "/terms",
 ];
+let VITE_HIGHLIGHT_ENV = import.meta.env.VITE_HIGHLIGHT_ENV;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function App() {
@@ -38,11 +40,15 @@ export default function App() {
 
   //-- Loading is complete, user is authenticated --> show the app --//
   if (isAuthenticated) {
-    //-- Identify user in Highlight --//
-    H.identify(user?.email, {
-      id: user?.sub,
-      phone: user?.phone,
-    });
+    if (VITE_HIGHLIGHT_ENV === "production") {
+      //-- Identify user in Highlight --//
+      H.identify(user?.email, {
+        id: user?.sub,
+        phone: user?.phone,
+        avatar: user?.picture, // TODO - verify that this works
+        // TODO - add versioning
+      });
+    }
 
     return (
       <RecoilRoot>
