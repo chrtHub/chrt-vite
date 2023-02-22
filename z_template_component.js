@@ -22,7 +22,7 @@ let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ComponentName() {
   //-- React State --//
-  const [foo, setFoo] = useState(null);
+  const [fooLoading, setFooLoading] = useState(null);
 
   //-- Recoil State --//
   const [bar, setBar] = useRecoilState(barState);
@@ -30,37 +30,39 @@ export default function ComponentName() {
   //-- Auth --//
   const { getAccessTokenSilently } = useAuth0();
 
-  //-- Data Fetching --//
-  const fetchData = async () => {
-    try {
-      //-- Get access token from memory or request new token --//
-      let accessToken = await getAccessTokenSilently();
-
-      //-- fetch from '/' route
-      let res = await axios.get(`${VITE_ALB_BASE_URL}/`, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      });
-      setJournalData(res.data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   //-- Other [] --//
-
-  //-- Click Handlers --//
 
   //-- Side Effects --//
   useEffect(() => {
-    console.log("side effect");
+    const fetchData = async () => {
+      setFooLoading(true);
+      try {
+        //-- Get access token from memory or request new token --//
+        let accessToken = await getAccessTokenSilently();
+
+        //-- fetch from '/' route
+        let res = await axios.get(`${VITE_ALB_BASE_URL}/`, {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setBar(res.data);
+      } catch (e) {
+        console.log(e);
+      }
+      setFooLoading(false);
+    };
+    fetchData();
   }, []);
+
+  //-- Click Handlers --//
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div>
-      <p>content</p>
+      {fooLoading && <p>foo loading</p>}
+      <p>{bar}</p>
+      <p>baz</p>
     </div>
   );
 }

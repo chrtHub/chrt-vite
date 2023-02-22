@@ -26,16 +26,26 @@ export default function EChart({ option, height, width }) {
 
   //-- Other --//
   const chartRef = useRef(null);
+  let chart = null;
+  const handleResize = () => {
+    if (chart) {
+      chart.resize();
+    }
+  };
 
   //-- Click Handlers --//
 
   //-- Side Effects --//
   useEffect(() => {
-    const chart = echarts.init(chartRef.current);
+    //-- Initialize chart with provided 'option' object--//
+    chart = echarts.init(chartRef.current);
     chart.setOption(option);
+
+    window.addEventListener("resize", handleResize);
 
     return () => {
       chart.dispose();
+      window.removeEventListener("resize", handleResize);
     };
   }, [option]);
 

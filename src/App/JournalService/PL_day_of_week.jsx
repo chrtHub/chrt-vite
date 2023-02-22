@@ -12,10 +12,8 @@ import EChart from "../EChart/EChart";
 
 //-- NPM Functions --//
 import axios from "axios";
-import { format } from "date-fns";
 
 //-- Utility Functions --//
-import getTradingDatesAndProfitsArray from "./getTradingDatesAndProfitsArray";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -35,8 +33,6 @@ export default function PL_day_of_week() {
 
   //-- Auth --//
   const { getAccessTokenSilently } = useAuth0();
-
-  //-- Data Fetching --//
 
   //-- Other [ECharts options] --//
   let option_pl_last_45_days = {
@@ -85,26 +81,17 @@ export default function PL_day_of_week() {
             },
           }
         );
+        let data = res.data;
 
-        //-- Get array of trading dates from the past 45 calendar days --//
-        const datesArray = getTradingDatesAndProfitsArray(45);
-
-        //-- For valid trading days, use data returned from Postgres --//
-        res.data.forEach((item) => {
-          const date = format(new Date(item.trade_date), "yyyy-MM-dd");
-          const index = datesArray.findIndex((x) => x.date === date);
-          if (index !== -1) {
-            datesArray[index].profit = item.profit;
-          }
-        });
-
-        let dates = datesArray.map((x) => {
+        //-- Make separate arrays for dates and profits --//
+        let dates = data.map((x) => {
           return x.date;
         });
-        let profits = datesArray.map((x) => {
+        let profits = data.map((x) => {
           return x.profit;
         });
 
+        //-- Set Recoil state --//
         setJournalPL45Days({
           dates: dates,
           profits: profits,
@@ -120,14 +107,17 @@ export default function PL_day_of_week() {
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <div
-      className={classNames(
-        loading ? "" : "bg-white dark:bg-zinc-900",
-        "mt-2 divide-y divide-zinc-200 overflow-hidden rounded-lg text-black shadow dark:divide-zinc-600  dark:text-white"
-      )}
-    >
-      <p className="">Profit & Loss, Trading Days in Past 45 Calendar Days</p>
+    <>
+      <p className="text-center">
+        Profit & Loss, Trading Days in Past 45 Calendar Days
+      </p>
       <EChart option={option_pl_last_45_days} height={"400px"} width={"100%"} />
-    </div>
+    </>
   );
 }
+
+//   className={classNames(
+//     loading ? "" : "bg-white dark:bg-zinc-900",
+//     "mt-2 divide-y divide-zinc-200 overflow-hidden rounded-lg text-black shadow dark:divide-zinc-600  dark:text-white"
+//   )}
+// >
