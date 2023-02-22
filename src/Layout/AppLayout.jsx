@@ -109,7 +109,9 @@ export default function AppLayout(props) {
   //-- The localStorage 'theme' value nullifies any OS theme change events --//
   //-- (the event listener in index.html only works if there's no 'theme' value) --//
 
-  //-- The ECharts Theme <<TODO>>
+  //-- The ECharts Theme is set here to follow the application theme --//
+  //-- When no localStorage 'theme' value is set, OS theme is listened to --//
+  //-- When localStorage 'theme' value is set, that's used --//
 
   const useManualDarkMode = () => {
     //-- Set theme to dark in localStorage --//

@@ -222,7 +222,9 @@ export default function Hero() {
               <div className="mt-10 flex items-center justify-center gap-x-6">
                 <button
                   onClick={() => {}}
-                  className="cursor-not-allowed rounded-md bg-green-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                  disabled
+                  className="rounded-md bg-green-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+                  // className="rounded-md bg-green-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                 >
                   Demo Coming Soon!
                 </button>

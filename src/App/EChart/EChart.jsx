@@ -59,31 +59,3 @@ export default function EChart({ option, height, width }) {
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return <div ref={chartRef} style={{ width: width, height: height }} />;
 }
-
-// let initialTheme;
-// if (document.documentElement.classList.contains("dark")) {
-//   initialTheme = "dark";
-// } else {
-//   initialTheme = "light";
-// }
-// const [theme, setTheme] = useState(initialTheme);
-
-// const handleThemeChange = ({ matches }) => {
-//   //-- Only react to OS theme changes if no 'theme' value is set in localStorage --//
-//   if (!("theme" in localStorage)) {
-//     if (matches) {
-//       setTheme("dark");
-//     } else {
-//       setTheme("light");
-//     }
-//   }
-// };
-
-//    //-- Listen for OS theme changes --//
-// window
-//   .matchMedia("(prefers-color-scheme: dark)")
-//   .addEventListener("change", handleThemeChange);
-
-// window
-// .matchMedia("(prefers-color-scheme: dark)")
-// .removeEventListener("change", handleThemeChange);
