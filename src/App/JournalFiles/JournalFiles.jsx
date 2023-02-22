@@ -429,9 +429,7 @@ export default function JournalFiles() {
               disabled={!putFileData}
               type="button"
               className={classNames(
-                putFileLoading
-                  ? "animate-pulse cursor-not-allowed opacity-30"
-                  : "",
+                putFileLoading ? "animate-pulse cursor-wait opacity-30" : "",
                 "relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-green-600 bg-green-600 px-4 py-2 text-sm font-medium text-white hover:border-green-700 hover:bg-green-700 focus:outline-none focus:ring-0 disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:border-green-700 dark:bg-green-700 dark:hover:border-green-600 dark:hover:bg-green-600 dark:disabled:border-zinc-500 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
               )}
               onClick={putFile}
@@ -566,7 +564,7 @@ export default function JournalFiles() {
           }
           type="button"
           className={classNames(
-            getFileLoading ? "animate-pulse cursor-not-allowed opacity-30" : "",
+            getFileLoading ? "animate-pulse cursor-wait opacity-30" : "",
             "inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none  disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
           )}
           onClick={getFile}
@@ -583,9 +581,7 @@ export default function JournalFiles() {
           }
           type="button"
           className={classNames(
-            deleteFileLoading
-              ? "animate-pulse cursor-not-allowed opacity-30"
-              : "",
+            deleteFileLoading ? "animate-pulse cursor-wait opacity-30" : "",
             "inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-500 disabled:hover:bg-zinc-100 dark:disabled:border-zinc-300 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-100"
           )}
           onClick={() => setDeleteModalOpen(true)}
