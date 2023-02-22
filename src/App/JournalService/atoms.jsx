@@ -1,13 +1,16 @@
 import { atom } from "recoil";
 
-export const journalDataState = atom({
-  key: "journalDataState",
+export const journalPLDayOfWeekState = atom({
+  key: "journalPLDayOfWeekState",
   default: null,
 });
 
 export const journalPL45DaysState = atom({
   key: "journalPL45DaysState",
-  default: null,
+  default: {
+    dates: [],
+    profits: [],
+  },
 });
 
 export const journalTradeUUIDsByDateState = atom({

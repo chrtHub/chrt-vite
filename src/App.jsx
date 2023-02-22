@@ -1,5 +1,4 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { RecoilRoot } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- JSX Components --//
@@ -50,11 +49,7 @@ export default function App() {
       });
     }
 
-    return (
-      <RecoilRoot>
-        <AppLayout skeletonMode={false} infoMode={false} />
-      </RecoilRoot>
-    );
+    return <AppLayout skeletonMode={false} infoMode={false} />;
   }
 
   //-- Loading is complete and no authenticated user was found --//

@@ -12,7 +12,7 @@ import App from "./App";
 
 //-- JSX Components: Home --//
 import Home from "./App/Home/Home";
-import AuthProviderWithNavigate from "./Auth/AuthProviderWithNavigate";
+import AuthProviderWithNavigateAndRecoil from "./Auth/AuthProviderWithNavigateAndRecoil";
 import AuthGuard from "./Auth/AuthGuard";
 
 //-- JSX Components: App --//
@@ -59,7 +59,7 @@ if (VITE_HIGHLIGHT_ENV === "production") {
 //-- Create router object --//
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route element={<AuthProviderWithNavigate />}>
+    <Route element={<AuthProviderWithNavigateAndRecoil />}>
       {/* App */}
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />

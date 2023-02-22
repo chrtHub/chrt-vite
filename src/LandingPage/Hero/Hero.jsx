@@ -85,12 +85,9 @@ export default function Hero() {
             {/* START OF LOGO */}
             <a href={`${window.location.origin}`} className="-m-1.5 p-1.5">
               <span className="sr-only">CHRT</span>
-              <a
-                href={window.location.origin}
-                className="z-10 h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500"
-              >
+              <p className="z-10 h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500">
                 chrt
-              </a>
+              </p>
             </a>
             {/* END OF LOGO */}
           </div>
@@ -225,7 +222,9 @@ export default function Hero() {
               <div className="mt-10 flex items-center justify-center gap-x-6">
                 <button
                   onClick={() => {}}
-                  className="cursor-not-allowed rounded-md bg-green-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                  disabled
+                  className="rounded-md bg-green-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+                  // className="rounded-md bg-green-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                 >
                   Demo Coming Soon!
                 </button>
