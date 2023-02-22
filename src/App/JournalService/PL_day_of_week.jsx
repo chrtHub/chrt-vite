@@ -122,14 +122,11 @@ export default function PL_day_of_week() {
   return (
     <div
       className={classNames(
-        true ? "" : "bg-white dark:bg-zinc-900",
+        loading ? "" : "bg-white dark:bg-zinc-900",
         "mt-2 divide-y divide-zinc-200 overflow-hidden rounded-lg text-black shadow dark:divide-zinc-600  dark:text-white"
       )}
     >
-      <div className="font-semi px-4 py-4 sm:px-6">
-        Profit & Loss, Trading Days in Past 45 Calendar Days
-      </div>
-      {loading && <p>LOADING</p>}
+      <p className="">Profit & Loss, Trading Days in Past 45 Calendar Days</p>
       <EChart option={option_pl_last_45_days} height={"400px"} width={"100%"} />
     </div>
   );
