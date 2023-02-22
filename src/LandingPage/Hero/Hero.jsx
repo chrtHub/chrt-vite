@@ -85,12 +85,9 @@ export default function Hero() {
             {/* START OF LOGO */}
             <a href={`${window.location.origin}`} className="-m-1.5 p-1.5">
               <span className="sr-only">CHRT</span>
-              <a
-                href={window.location.origin}
-                className="z-10 h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500"
-              >
+              <p className="z-10 h-8 w-auto font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500">
                 chrt
-              </a>
+              </p>
             </a>
             {/* END OF LOGO */}
           </div>
