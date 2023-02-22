@@ -36,8 +36,6 @@ export default function EChart({ option, height, width }) {
     }
   };
 
-  let currentTheme;
-
   //-- Click Handlers --//
 
   //-- Side Effects --//
