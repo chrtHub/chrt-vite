@@ -1,6 +1,6 @@
 export default function TypographyWrapper({ children }) {
   return (
-    <div className="flex justify-center">
+    <div id="wrapper-div" className="flex justify-center">
       <div className="flex-column">
         <article
           className="lg:prose-md prose prose-zinc mt-8

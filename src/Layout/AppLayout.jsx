@@ -320,7 +320,7 @@ export default function AppLayout({ skeletonMode, infoMode }) {
       {/* END OF STATIC SIDEBAR */}
 
       {/* START OF RHS */}
-      <div className="h-full overflow-x-hidden md:pl-48">
+      <div id="rhs-div" className="h-full overflow-x-hidden md:pl-48">
         {/* <div className="mx-auto flex max-w-4xl flex-col md:px-8 xl:px-0"> */}
         <div className="mx-auto flex max-w-screen-2xl flex-col px-4 xl:px-6">
           {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
