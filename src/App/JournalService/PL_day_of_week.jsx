@@ -62,8 +62,6 @@ export default function PL_day_of_week() {
     animation: false,
   };
 
-  console.log(JSON.stringify(option_pl_last_45_days, null, 2));
-
   //-- Click Handlers --//
 
   //-- Side Effects --//
