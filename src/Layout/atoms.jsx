@@ -1,8 +1,16 @@
 import { atom } from "recoil";
 
-let theme = localStorage.getItem("theme");
+//-- If theme set in localStorage, use that --//
+let theme = localStorage.getItem("theme"); //-- light || dark || null --//
+
+//-- Else use OS preference --//
+if (!theme) {
+  window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? (theme = "dark")
+    : (theme = "light");
+}
 
 export const echartsThemeState = atom({
   key: "echartsThemeState",
-  default: theme || "light", //-- if null, use 'light' --//
+  default: theme,
 });
