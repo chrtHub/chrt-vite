@@ -41,8 +41,7 @@ function classNames(...classes) {
 import { echartsThemeState } from "./atoms";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function AppLayout(props) {
-  let { skeletonMode, infoMode } = props;
+export default function AppLayout({ skeletonMode, infoMode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentNavItem, setCurrentNavItem] = useState(
     window.location.pathname
