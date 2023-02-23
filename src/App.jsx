@@ -1,4 +1,6 @@
 //-- react, react-router-dom, recoil, Auth0 --//
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- JSX Components --//
@@ -27,11 +29,28 @@ const infoRoutes = [
 ];
 let VITE_HIGHLIGHT_ENV = import.meta.env.VITE_HIGHLIGHT_ENV;
 
+//-- Scroll to top of page whenever pathname changes --//
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const rhsDiv = document.getElementById("rhs-div");
+    rhsDiv.scrollTo({ top: 0, behavior: "auto" });
+  }, [pathname]);
+
+  return null;
+};
+
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function App() {
   //-- Without checking for user --> For Info routes, load AppLayout in infoMode --//
   if (infoRoutes.includes(window.location.pathname)) {
-    return <AppLayout skeletonMode={false} infoMode={true} />;
+    return (
+      <>
+        <ScrollToTop />
+        <AppLayout skeletonMode={false} infoMode={true} />
+      </>
+    );
   }
 
   //-- Check for authenticated user --//
