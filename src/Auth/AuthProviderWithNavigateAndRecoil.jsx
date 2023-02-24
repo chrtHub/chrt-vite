@@ -42,8 +42,6 @@ export default function AuthProviderWithNavigateAndRecoil() {
     mobile = true;
   }
 
-  alert("mobile: " + mobile); // DEV
-
   return (
     <RecoilRoot>
       <Auth0Provider
