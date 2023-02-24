@@ -30,19 +30,17 @@ export default function AuthProviderWithNavigateAndRecoil() {
   const userAgent = parser.getResult();
   const type = userAgent.device.type;
   const mobileTypes = [
-    "console",
-    "mobile",
-    "tablet",
-    "smarttv",
-    "wearable",
-    "embedded",
+    "console", //-- e.g. Xbox --//
+    "mobile", //-- e.g. iPhone --//
+    "tablet", //-- e.g. iPad --//
+    "smarttv", //-- e.g. Apple TV --//
+    "wearable", //-- e.g. Apple Watch --//
+    "embedded", //-- e.g. iot device --//
   ];
   let mobile = false;
   if (mobileTypes.includes(type)) {
     mobile = true;
   }
-
-  alert("mobile: " + mobile); // DEV
 
   return (
     <RecoilRoot>
