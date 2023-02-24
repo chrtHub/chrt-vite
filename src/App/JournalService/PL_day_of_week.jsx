@@ -44,19 +44,38 @@ export default function PL_day_of_week() {
         type: "cross",
         label: {
           backgroundColor: "#6a7985",
+          formatter: function (params) {
+            console.log(params);
+            console.log(params.axisDimension);
+
+            let data = params.seriesData?.data;
+
+            if (data && data[0] && data[1]) {
+              if (params.axisDimension === "x") {
+                let date = parseISO(data[0]);
+                let dateFormatted = format(date, "MMM dd");
+                return `${dateFormatted}`;
+              } else {
+                let profit = parseFloat(data[1]);
+                let profitFormatted = numeral(profit).format("$0,0.00");
+                return `${profitFormatted}`;
+              }
+            } else {
+              return null;
+            }
+          },
         },
       },
       formatter: function (params) {
         const data = params[0].data;
 
         const date = parseISO(data[0]);
-        const dateStr = format(date, "MMM dd");
+        const dateFormatted = format(date, "MMM dd");
 
-        const value = parseFloat(data[1]);
-        const valueStr = numeral(value).format("$0,0.00");
-        // const valueStr = value.toFixed(2);
+        const profit = parseFloat(data[1]);
+        const profitFormatted = numeral(profit).format("$0,0.00");
 
-        return `${dateStr}: ${valueStr}`;
+        return `${dateFormatted}: ${profitFormatted}`;
       },
     },
     xAxis: {
@@ -81,6 +100,18 @@ export default function PL_day_of_week() {
         name: "Quantity",
         type: "bar",
         data: journalPL45Days,
+        itemStyle: {
+          normal: {
+            color: function (params) {
+              const profit = params.data[1];
+              if (profit >= 0) {
+                return "#4ade80"; // green 400
+              } else {
+                return "#ef4444"; // red 500
+              }
+            },
+          },
+        },
       },
     ],
     animation: false,
