@@ -7,6 +7,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import AppLayout from "./Layout/AppLayout";
 import LandingPage from "./LandingPage/LandingPage";
 import CHRTLoading from "./Navigation/CHRTLoading";
+import CHRTLoadingWithHiddenOutlet from "./Navigation/CHRTLoadingWithHiddenOutlet";
 
 //-- NPM Components --//
 
@@ -83,9 +84,8 @@ export default function App() {
     if (window.location.pathname === "/") {
       return <LandingPage />;
     } else {
-      //-- For all other routes, show the AppLayout in skeleton mode. The AuthGuard will redirect user to sign in. --//
-      // return <AppLayout skeletonMode={true} infoMode={false} />;
-      return <CHRTLoading />;
+      //-- For protected routes, Outlet renders the AuthGuard component, redirecting users to sign in --//
+      return <CHRTLoadingWithHiddenOutlet />;
     }
   }
 }
