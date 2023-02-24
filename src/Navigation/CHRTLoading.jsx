@@ -1,4 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
+import { useAuth0 } from "@auth0/auth0-react";
 
 //-- JSX Components --//
 
@@ -20,6 +21,7 @@ export default function CHRTLoading() {
   //-- Recoil State --//
 
   //-- Auth --//
+  const { user } = useAuth0();
 
   //-- Other [] --//
 
@@ -32,6 +34,7 @@ export default function CHRTLoading() {
     <div className="flex h-full flex-row items-start justify-center">
       <img
         src={barChartEmoji}
+        about={`user: ${user}`}
         alt="bar chart emoji"
         width={192}
         height={192}
