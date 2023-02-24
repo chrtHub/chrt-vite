@@ -6,6 +6,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 //-- JSX Components --//
 import AppLayout from "./Layout/AppLayout";
 import LandingPage from "./LandingPage/LandingPage";
+import CHRTLoading from "./Navigation/CHRTLoading";
 
 //-- NPM Components --//
 
@@ -55,6 +56,11 @@ export default function App() {
 
   //-- Check for authenticated user --//
   const { isLoading, isAuthenticated, user } = useAuth0();
+
+  //-- While loading, show CHRT Loading animation --//
+  if (isLoading) {
+    return <CHRTLoading />;
+  }
 
   //-- Loading is complete, user is authenticated --> show the app --//
   if (isAuthenticated) {
