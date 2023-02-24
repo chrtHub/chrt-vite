@@ -98,7 +98,7 @@ export default function AppLayout({ skeletonMode, infoMode }) {
   }
   //-- Theming - Light Mode, Dark Mode, Match OS Mode --//
   let theme = localStorage.getItem("theme");
-  const [themeButtonSelection, setThemeButtonSelection] = useState(theme);
+  const [themeButtonSelection, setThemeButtonSelection] = useState(theme); //-- light || dark || null (OS match) --//
   const [echartsTheme, setEchartsTheme] = useRecoilState(echartsThemeState);
 
   //-- NOTES ABOUT THEMES: --//

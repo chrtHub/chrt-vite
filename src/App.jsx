@@ -63,7 +63,7 @@ export default function App() {
       H.identify(user?.email, {
         id: user?.sub,
         phone: user?.phone,
-        avatar: user?.picture, // TODO - verify that this works
+        avatar: user?.picture,
         // TODO - add versioning
       });
     }

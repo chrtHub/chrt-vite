@@ -12,6 +12,8 @@ import EChart from "../EChart/EChart";
 
 //-- NPM Functions --//
 import axios from "axios";
+import { format, parseISO } from "date-fns";
+import numeral from "numeral";
 
 //-- Utility Functions --//
 function classNames(...classes) {
@@ -41,28 +43,80 @@ export default function PL_day_of_week() {
       axisPointer: {
         type: "cross",
         label: {
+          show: false, // REMOVE TO SHOW AXIS POINTER LABELS
           backgroundColor: "#6a7985",
+          formatter: function (params) {
+            console.log(params);
+            console.log(params.axisDimension);
+
+            let data = params.seriesData?.data;
+
+            if (data && data[0] && data[1]) {
+              if (params.axisDimension === "x") {
+                let date = parseISO(data[0]);
+                let dateFormatted = format(date, "MMM dd");
+                return `${dateFormatted}`;
+              } else {
+                let profit = parseFloat(data[1]);
+                let profitFormatted = numeral(profit).format("$0,0.00");
+                return `${profitFormatted}`;
+              }
+            } else {
+              return null;
+            }
+          },
         },
+      },
+      formatter: function (params) {
+        const data = params[0].data;
+
+        const date = parseISO(data[0]);
+        const dateFormatted = format(date, "MMM dd");
+
+        const profit = parseFloat(data[1]);
+        const profitFormatted = numeral(profit).format("$0,0.00");
+
+        return `${dateFormatted}: ${profitFormatted}`;
       },
     },
     xAxis: {
-      data: journalPL45Days.dates,
-      inverse: true,
+      type: "time",
+      axisLabel: {
+        formatter: function (x) {
+          return format(new Date(x), "MMM dd");
+        },
+      },
     },
     yAxis: {
       type: "value",
+      axisLabel: {
+        formatter: function (x) {
+          let valueStr = numeral(x).format("$0,0.00");
+          return `${valueStr}`;
+        },
+      },
     },
     series: [
       {
         name: "Quantity",
         type: "bar",
-        data: journalPL45Days.profits,
+        data: journalPL45Days,
+        itemStyle: {
+          normal: {
+            color: function (params) {
+              const profit = params.data[1];
+              if (profit >= 0) {
+                return "#4ade80"; // green 400
+              } else {
+                return "#ef4444"; // red 500
+              }
+            },
+          },
+        },
       },
     ],
     animation: false,
   };
-
-  console.log(JSON.stringify(option_pl_last_45_days, null, 2));
 
   //-- Click Handlers --//
 
@@ -85,25 +139,19 @@ export default function PL_day_of_week() {
         );
         let data = res.data;
 
-        //-- Make separate arrays for dates and profits --//
-        let dates = data.map((x) => {
-          return x.date;
+        //-- Make array for dates and profits --//
+        let datesAndProfits = data.map((x) => {
+          return [x.date, x.profit];
         });
-        let profits = data.map((x) => {
-          return x.profit;
-        });
+        let reversedDatesAndProfits = datesAndProfits.reverse();
 
         //-- Set Recoil state --//
-        setJournalPL45Days({
-          dates: dates,
-          profits: profits,
-        });
+        setJournalPL45Days(reversedDatesAndProfits);
       } catch (e) {
         console.log(e);
       }
       setLoading(false);
     };
-
     fetchData();
   }, [getAccessTokenSilently]);
 
