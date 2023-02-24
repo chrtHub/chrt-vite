@@ -43,6 +43,7 @@ export default function PL_day_of_week() {
       axisPointer: {
         type: "cross",
         label: {
+          show: false, // REMOVE TO SHOW AXIS POINTER LABELS
           backgroundColor: "#6a7985",
           formatter: function (params) {
             console.log(params);
