@@ -10,6 +10,7 @@ import { RecoilRoot } from "recoil";
 //-- Icons --//
 
 //-- NPM Functions --//
+import UAParser from "ua-parser-js";
 
 //-- Utility Functions --//
 
@@ -24,11 +25,20 @@ export default function AuthProviderWithNavigateAndRecoil() {
     navigate(appState?.returnTo || window.location.pathname);
   };
 
+  //-- For mobile clients, use 'localStorage' cache because sometimes the auth redirect hangs if using 'memory' --//
+  const parser = new UAParser();
+  const userAgent = parser.getResult();
+
+  alert(userAgent.device.type); // DEV
+
   return (
     <RecoilRoot>
       <Auth0Provider
         domain="chrt-prod.us.auth0.com" //-- Tenant: 'chrt-prod' --//
         clientId="8bDLHYeEUfPHH81VRDBsCTN5TYklAMCu" //-- Application: 'chrt-prod-app' --//
+        cacheLocation={
+          userAgent.device.type === "mobile" ? "localstorage" : "memory"
+        }
         authorizationParams={{
           redirect_uri: `${window.location.origin}`, //-- redirect_uri NOTE - localhost not allowed by Auth0 for prod tenant (which is 'chrt-prod') --//
           audience: "https://chrt.com", //-- API: 'chrt' (also /userinfo by default) --//
