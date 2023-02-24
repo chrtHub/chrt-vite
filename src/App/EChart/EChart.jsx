@@ -22,6 +22,7 @@ export default function EChart({ option, height, width }) {
 
   //-- Recoil State --//
   const echartsTheme = useRecoilValue(echartsThemeState);
+
   //-- Auth --//
 
   //-- Data Fetching --//

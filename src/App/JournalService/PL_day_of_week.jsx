@@ -12,6 +12,8 @@ import EChart from "../EChart/EChart";
 
 //-- NPM Functions --//
 import axios from "axios";
+import { format, parseISO } from "date-fns";
+import numeral from "numeral";
 
 //-- Utility Functions --//
 function classNames(...classes) {
@@ -44,19 +46,41 @@ export default function PL_day_of_week() {
           backgroundColor: "#6a7985",
         },
       },
+      formatter: function (params) {
+        const data = params[0].data;
+
+        const date = parseISO(data[0]);
+        const dateStr = format(date, "MMM dd");
+
+        const value = parseFloat(data[1]);
+        const valueStr = numeral(value).format("$0,0.00");
+        // const valueStr = value.toFixed(2);
+
+        return `${dateStr}: ${valueStr}`;
+      },
     },
     xAxis: {
-      data: journalPL45Days.dates,
-      inverse: true,
+      type: "time",
+      axisLabel: {
+        formatter: function (x) {
+          return format(new Date(x), "MMM dd");
+        },
+      },
     },
     yAxis: {
       type: "value",
+      axisLabel: {
+        formatter: function (x) {
+          let valueStr = numeral(x).format("$0,0.00");
+          return `${valueStr}`;
+        },
+      },
     },
     series: [
       {
         name: "Quantity",
         type: "bar",
-        data: journalPL45Days.profits,
+        data: journalPL45Days,
       },
     ],
     animation: false,
@@ -83,25 +107,19 @@ export default function PL_day_of_week() {
         );
         let data = res.data;
 
-        //-- Make separate arrays for dates and profits --//
-        let dates = data.map((x) => {
-          return x.date;
+        //-- Make array for dates and profits --//
+        let datesAndProfits = data.map((x) => {
+          return [x.date, x.profit];
         });
-        let profits = data.map((x) => {
-          return x.profit;
-        });
+        let reversedDatesAndProfits = datesAndProfits.reverse();
 
         //-- Set Recoil state --//
-        setJournalPL45Days({
-          dates: dates,
-          profits: profits,
-        });
+        setJournalPL45Days(reversedDatesAndProfits);
       } catch (e) {
         console.log(e);
       }
       setLoading(false);
     };
-
     fetchData();
   }, [getAccessTokenSilently]);
 

@@ -7,10 +7,7 @@ export const journalPLDayOfWeekState = atom({
 
 export const journalPL45DaysState = atom({
   key: "journalPL45DaysState",
-  default: {
-    dates: [],
-    profits: [],
-  },
+  default: [],
 });
 
 export const journalTradeUUIDsByDateState = atom({
