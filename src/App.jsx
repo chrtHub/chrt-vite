@@ -84,8 +84,8 @@ export default function App() {
       return <LandingPage />;
     } else {
       //-- For all other routes, show the AppLayout in skeleton mode. The AuthGuard will redirect user to sign in. --//
-      return <AppLayout skeletonMode={true} infoMode={false} />;
-      // return <CHRTLoading />;
+      // return <AppLayout skeletonMode={true} infoMode={false} />;
+      return <CHRTLoading />;
     }
   }
 }
