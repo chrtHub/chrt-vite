@@ -46,9 +46,6 @@ export default function PL_day_of_week() {
           show: false, // REMOVE TO SHOW AXIS POINTER LABELS
           backgroundColor: "#6a7985",
           formatter: function (params) {
-            console.log(params);
-            console.log(params.axisDimension);
-
             let data = params.seriesData?.data;
 
             if (data && data[0] && data[1]) {
