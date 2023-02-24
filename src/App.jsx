@@ -1,5 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -45,6 +45,9 @@ const ScrollToTop = () => {
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function App() {
+  //-- React state --//
+  const [showLoading, setShowLoading] = useState(true);
+
   //-- Without checking for user --> For Info routes, load AppLayout in infoMode --//
   if (infoRoutes.includes(window.location.pathname)) {
     return (
@@ -58,8 +61,23 @@ export default function App() {
   //-- Check for authenticated user --//
   const { isLoading, isAuthenticated, user } = useAuth0();
 
+  //-- Begin 500 ms timer that prevents UI flash when going to authenticated routes --//
+  useEffect(() => {
+    let timeout;
+    timeout = setTimeout(() => {
+      setShowLoading(false);
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [isLoading]);
+
   //-- While loading, show CHRT Loading animation --//
   if (isLoading) {
+    return <CHRTLoading />;
+  }
+
+  //-- Prevent UI flash by extending loading time for authenticated routes --//
+  if (isAuthenticated && showLoading) {
     return <CHRTLoading />;
   }
 
