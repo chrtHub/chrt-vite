@@ -18,11 +18,7 @@ import { LockClosedIcon } from "@heroicons/react/24/outline";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function AuthGuard({ component }) {
   const Component = withAuthenticationRequired(component, {
-    onRedirecting: () => (
-      <div className="flex justify-center">
-        <LockClosedIcon className="h-64 w-64 animate-pulse text-zinc-200 dark:text-zinc-700" />
-      </div>
-    ),
+    onRedirecting: () => <div />,
   });
 
   return <Component />;
