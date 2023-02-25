@@ -5,12 +5,12 @@ module.exports = {
   theme: {
     extend: {
       animation: {
-        fadeout: "fadeout 2s infinite",
+        fadeout: "fadeout 20s",
       },
       keyframes: {
         fadeout: {
           "0%": { opacity: "1" },
-          "50%": { opacity: "0" },
+          "5%": { opacity: "0" },
           "100%": { opacity: "0" },
         },
       },
