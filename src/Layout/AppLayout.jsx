@@ -41,7 +41,7 @@ function classNames(...classes) {
 import { echartsThemeState } from "./atoms";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function AppLayout({ skeletonMode, infoMode }) {
+export default function AppLayout({ showLockIcon, infoMode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentNavItem, setCurrentNavItem] = useState(
     window.location.pathname
@@ -353,7 +353,7 @@ export default function AppLayout({ skeletonMode, infoMode }) {
                     </div> */}
                     {/* <input
                       id="search-field"
-                      disabled={skeletonMode}
+                      disabled={showLockIcon}
                       className="block h-full w-full border-transparent border-b-zinc-300 bg-zinc-50 py-2 pl-10 pr-3 text-zinc-900 placeholder-zinc-500 focus:border-transparent focus:border-b-zinc-400 focus:placeholder-zinc-400 focus:outline-none focus:ring-0 dark:border-b-zinc-500 dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-400 dark:focus:border-b-zinc-400 dark:focus:placeholder-zinc-500 md:pl-8"
                       placeholder="Search"
                       type="search"

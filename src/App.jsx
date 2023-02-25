@@ -46,14 +46,14 @@ const ScrollToTop = () => {
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function App() {
   //-- React state --//
-  const [showLoading, setShowLoading] = useState(true);
+  // const [showLoading, setShowLoading] = useState(true);
 
   //-- Without checking for user --> For Info routes, load AppLayout in infoMode --//
   if (infoRoutes.includes(window.location.pathname)) {
     return (
       <>
         <ScrollToTop />
-        <AppLayout skeletonMode={false} infoMode={true} />
+        <AppLayout infoMode={true} />
       </>
     );
   }
@@ -61,18 +61,6 @@ export default function App() {
   //-- Check for authenticated user --//
   const { isLoading, isAuthenticated, user } = useAuth0();
   let auth0Stuff = false;
-
-  //-- Begin 750 ms timer that elapses before showing auth'd routes --//
-  useEffect(() => {
-    let loadingTimeout;
-    loadingTimeout = setTimeout(() => {
-      setShowLoading(false);
-    }, 250);
-
-    return () => {
-      clearTimeout(loadingTimeout);
-    };
-  }, [isLoading]);
 
   //-- Check cookies (used for desktop) for Auth0 stuff --//
   const auth0Cookies = document.cookie
@@ -89,13 +77,6 @@ export default function App() {
     }
   }
 
-  //-- If no auth0Stuff, never show loading screen --//
-  if (auth0Stuff) {
-    if (isLoading || showLoading) {
-      return <CHRTLoading />;
-    }
-  }
-
   //-- Loading is complete, user is authenticated --> show the app --//
   if (isAuthenticated) {
     if (VITE_HIGHLIGHT_ENV === "production") {
@@ -107,8 +88,11 @@ export default function App() {
         // TODO - add versioning
       });
     }
+    return <AppLayout infoMode={false} />;
+  }
 
-    return <AppLayout skeletonMode={false} infoMode={false} />;
+  if (isLoading && auth0Stuff) {
+    return <AppLayout infoMode={false} />;
   }
 
   //-- Loading is complete and no authenticated user was found --//
@@ -118,7 +102,7 @@ export default function App() {
       return <LandingPage />;
     } else {
       //-- For protected routes, Outlet renders the AuthGuard component, redirecting users to sign in --//
-      return <CHRTLoadingWithHiddenOutlet />;
+      return <AppLayout infoMode={false} />;
     }
   }
 }
