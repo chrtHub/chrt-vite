@@ -37,7 +37,10 @@ export default function PL_day_of_week() {
   const { getAccessTokenSilently } = useAuth0();
 
   //-- Other [ECharts options] --//
-  let option_pl_last_45_days = {
+  const option = {
+    grid: {
+      containLabel: true,
+    },
     tooltip: {
       trigger: "axis",
       axisPointer: {
@@ -88,7 +91,7 @@ export default function PL_day_of_week() {
       type: "value",
       axisLabel: {
         formatter: function (x) {
-          let valueStr = numeral(x).format("$0,0.00");
+          let valueStr = numeral(x).format("$0,0");
           return `${valueStr}`;
         },
       },
@@ -158,13 +161,9 @@ export default function PL_day_of_week() {
       <p className="text-center">
         Profit & Loss, Trading Days in Past 45 Calendar Days
       </p>
-      <EChart option={option_pl_last_45_days} height={"400px"} width={"100%"} />
+      <div className="ml-4">
+        <EChart option={option} height={"400px"} width={"100%"} />
+      </div>
     </>
   );
 }
-
-//   className={classNames(
-//     loading ? "" : "bg-white dark:bg-zinc-900",
-//     "mt-2 divide-y divide-zinc-200 overflow-hidden rounded-lg text-black shadow dark:divide-zinc-600  dark:text-white"
-//   )}
-// >
