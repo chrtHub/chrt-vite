@@ -4,28 +4,14 @@ module.exports = {
   darkMode: "class",
   theme: {
     extend: {
-      animation: {
-        text: "text 25s ease infinite",
-      },
       keyframes: {
-        text: {
-          "0%, 100%": {
-            "background-size": "200% 200%",
-            "background-position": "right center",
-          },
-          "25%": {
-            "background-size": "400% 500%",
-            "background-position": "right center",
-          },
-          "50%": {
-            "background-size": "600% 600%",
-            "background-position": "left center",
-          },
-          "75%": {
-            "background-size": "500% 400%",
-            "background-position": "right center",
-          },
+        pulseDeep: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0" },
         },
+      },
+      animation: {
+        pulseDeep: "pulseDeep 4s infinite",
       },
     },
   },
