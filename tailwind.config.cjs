@@ -4,14 +4,15 @@ module.exports = {
   darkMode: "class",
   theme: {
     extend: {
-      keyframes: {
-        pulseDeep: {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0" },
-        },
-      },
       animation: {
-        pulseDeep: "pulseDeep 4s infinite",
+        fadeout: "fadeout 2s infinite",
+      },
+      keyframes: {
+        fadeout: {
+          "0%": { opacity: "1" },
+          "50%": { opacity: "0" },
+          "100%": { opacity: "0" },
+        },
       },
     },
   },

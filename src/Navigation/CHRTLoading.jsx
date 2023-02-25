@@ -35,7 +35,7 @@ export default function CHRTLoading() {
         alt="bar chart emoji"
         width={192}
         height={192}
-        className="mt-28 animate-pulseDeep bg-transparent drop-shadow-xl"
+        className="mt-28 animate-fadeout bg-transparent drop-shadow-xl"
       />
     </div>
   );

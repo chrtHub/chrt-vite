@@ -47,6 +47,7 @@ const ScrollToTop = () => {
 export default function App() {
   //-- React state --//
   const [showLoading, setShowLoading] = useState(true);
+  const [tooSoon, setTooSoon] = useState(true);
 
   //-- Without checking for user --> For Info routes, load AppLayout in infoMode --//
   if (infoRoutes.includes(window.location.pathname)) {
@@ -61,19 +62,30 @@ export default function App() {
   //-- Check for authenticated user --//
   const { isLoading, isAuthenticated, user } = useAuth0();
 
-  //-- Begin 500 ms timer that prevents UI flash when going to authenticated routes --//
   useEffect(() => {
-    let timeout;
-    timeout = setTimeout(() => {
+    //-- Begin 750 ms timer that elapses before showing auth'd routes --//
+    let loadingTimeout;
+    loadingTimeout = setTimeout(() => {
       setShowLoading(false);
-    }, 1000);
+    }, 750);
 
-    return () => clearTimeout(timeout);
+    //-- 100 ms before CHRTLoading can display, preventing UI flash before Landing Page --//
+    let tooSoonTimeout;
+    tooSoonTimeout = setTimeout(() => {
+      setTooSoon(false);
+    }, 100);
+
+    return () => {
+      clearTimeout(loadingTimeout);
+      clearTimeout(tooSoonTimeout);
+    };
   }, [isLoading]);
 
   //-- While loading, show CHRT Loading animation --//
-  if (isLoading) {
-    return <CHRTLoading />;
+  if (!tooSoon) {
+    if (isLoading) {
+      return <CHRTLoading />;
+    }
   }
 
   //-- Prevent UI flash by extending loading time for authenticated routes --//
