@@ -66,7 +66,7 @@ export default function App() {
     let timeout;
     timeout = setTimeout(() => {
       setShowLoading(false);
-    }, 300);
+    }, 1000);
 
     return () => clearTimeout(timeout);
   }, [isLoading]);
