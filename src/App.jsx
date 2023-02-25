@@ -47,7 +47,6 @@ const ScrollToTop = () => {
 export default function App() {
   //-- React state --//
   const [showLoading, setShowLoading] = useState(true);
-  const [tooSoon, setTooSoon] = useState(true);
 
   //-- Without checking for user --> For Info routes, load AppLayout in infoMode --//
   if (infoRoutes.includes(window.location.pathname)) {
@@ -61,36 +60,40 @@ export default function App() {
 
   //-- Check for authenticated user --//
   const { isLoading, isAuthenticated, user } = useAuth0();
+  let auth0Stuff = false;
 
+  //-- Begin 750 ms timer that elapses before showing auth'd routes --//
   useEffect(() => {
-    //-- Begin 750 ms timer that elapses before showing auth'd routes --//
     let loadingTimeout;
     loadingTimeout = setTimeout(() => {
       setShowLoading(false);
     }, 750);
 
-    //-- 100 ms before CHRTLoading can display, preventing UI flash before Landing Page --//
-    let tooSoonTimeout;
-    tooSoonTimeout = setTimeout(() => {
-      setTooSoon(false);
-    }, 100);
-
     return () => {
       clearTimeout(loadingTimeout);
-      clearTimeout(tooSoonTimeout);
     };
   }, [isLoading]);
 
-  //-- While loading, show CHRT Loading animation --//
-  if (!tooSoon) {
-    if (isLoading) {
-      return <CHRTLoading />;
+  //-- Check cookies (used for desktop) for Auth0 stuff --//
+  const auth0Cookies = document.cookie
+    .split("; ")
+    .filter((cookie) => cookie.includes("auth0"));
+  if (auth0Cookies.length > 0) {
+    auth0Stuff = true;
+  }
+
+  //-- Check localStorage (used for mobile) for Auth0 stuff --//
+  for (let key in localStorage) {
+    if (key.includes("auth0")) {
+      auth0Stuff = true;
     }
   }
 
-  //-- Prevent UI flash by extending loading time for authenticated routes --//
-  if (isAuthenticated && showLoading) {
-    return <CHRTLoading />;
+  //-- If no auth0Stuff, never show loading screen --//
+  if (auth0Stuff) {
+    if (isLoading || showLoading) {
+      return <CHRTLoading />;
+    }
   }
 
   //-- Loading is complete, user is authenticated --> show the app --//
