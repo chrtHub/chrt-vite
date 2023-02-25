@@ -62,19 +62,23 @@ export default function App() {
   const { isLoading, isAuthenticated, user } = useAuth0();
   let auth0Stuff = false;
 
-  //-- Check cookies (used for desktop) for Auth0 stuff --//
-  const auth0Cookies = document.cookie
-    .split("; ")
-    .filter((cookie) => cookie.includes("auth0"));
-  if (auth0Cookies.length > 0) {
-    auth0Stuff = true;
-  }
-
-  //-- Check localStorage (used for mobile) for Auth0 stuff --//
-  for (let key in localStorage) {
-    if (key.includes("auth0")) {
+  try {
+    //-- Check cookies (used for desktop) for Auth0 stuff --//
+    const auth0Cookies = document.cookie
+      .split("; ")
+      .filter((cookie) => cookie.includes("auth0"));
+    if (auth0Cookies.length > 0) {
       auth0Stuff = true;
     }
+
+    //-- Check localStorage (used for mobile) for Auth0 stuff --//
+    for (let key in localStorage) {
+      if (key.includes("auth0")) {
+        auth0Stuff = true;
+      }
+    }
+  } catch (e) {
+    console.log(e);
   }
 
   //-- Loading is complete, user is authenticated --> show the app --//
@@ -91,6 +95,7 @@ export default function App() {
     return <AppLayout infoMode={false} />;
   }
 
+  //-- isLoading starts as 'true'. Only show AppLayout if auth0Stuff found --//
   if (isLoading && auth0Stuff) {
     return <AppLayout infoMode={false} />;
   }
