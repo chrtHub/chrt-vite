@@ -1,6 +1,6 @@
 //-- react, react-router-dom, Auth0 --//
 
-//-- JSX Components --//
+//-- TSX Components --//
 import Auth0Profile from "../../Auth/Auth0Profile";
 
 //-- NPM Components --//

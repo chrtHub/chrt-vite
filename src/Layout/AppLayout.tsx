@@ -4,7 +4,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useRecoilState } from "recoil";
 
-//-- JSX Components --//
+//-- TSX Components --//
 
 //-- NPM Components --//
 import { Dialog, Menu, Transition } from "@headlessui/react";

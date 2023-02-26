@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 
-//-- JSX Components --//
+//-- TSX Components --//
+import EChart from "../EChart/EChart";
 
 //-- NPM Components --//
-import EChart from "../EChart/EChart";
+import { BarSeriesOption } from "echarts";
 
 //-- Icons --//
 
@@ -16,9 +17,7 @@ import { format, parseISO } from "date-fns";
 import numeral from "numeral";
 
 //-- Utility Functions --//
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import classNames from "../../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 import { journalPL45DaysState } from "./atoms";
@@ -37,7 +36,7 @@ export default function PL_day_of_week() {
   const { getAccessTokenSilently } = useAuth0();
 
   //-- Other [ECharts options] --//
-  const option = {
+  const option: BarSeriesOption = {
     grid: {
       containLabel: true,
     },

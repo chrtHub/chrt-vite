@@ -3,7 +3,7 @@ import { Fragment, useState, useEffect, useCallback, useRef } from "react";
 import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 
-//-- JSX Components --//
+//-- TSX Components --//
 
 //-- NPM Components --//
 import { Listbox, Dialog, Transition } from "@headlessui/react";

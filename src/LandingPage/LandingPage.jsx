@@ -1,6 +1,6 @@
 //-- react, react-router-dom, Auth0 --//
 
-//-- JSX Components --//
+//-- TSX Components --//
 import Footer from "./Hero/Footer";
 import Hero from "./Hero/Hero";
 

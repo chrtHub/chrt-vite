@@ -2,7 +2,7 @@
 import React from "react";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 
-//-- JSX Components --//
+//-- TSX Components --//
 
 //-- NPM Components --//
 import { LockClosedIcon } from "@heroicons/react/24/outline";

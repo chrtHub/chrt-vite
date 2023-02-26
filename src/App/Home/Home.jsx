@@ -1,6 +1,6 @@
 //-- react, react-router-dom, Auth0 --//
 
-//-- JSX Components --//
+//-- TSX Components --//
 
 //-- NPM Components --//
 

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
-//-- JSX Components --//
+//-- TSX Components --//
 
 //-- NPM Components --//
 

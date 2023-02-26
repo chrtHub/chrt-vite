@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 
-//-- JSX Components --//
+//-- TSX Components --//
 
 //-- NPM Components --//
 
@@ -18,6 +18,8 @@ function classNames(...classes) {
 //-- Data Objects, Environment Variables --//
 import { barState } from "./atoms";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
+
+//-- Types --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ComponentName() {

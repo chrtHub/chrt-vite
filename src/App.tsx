@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
-//-- JSX Components --//
+//-- TSX Components --//
 import AppLayout from "./Layout/AppLayout";
 import LandingPage from "./LandingPage/LandingPage";
 import CHRTLoading from "./Navigation/CHRTLoading";

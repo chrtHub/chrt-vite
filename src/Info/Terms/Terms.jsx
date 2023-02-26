@@ -1,6 +1,6 @@
 //-- react, react-router-dom, Auth0 --//
 
-//-- JSX Components --//
+//-- TSX Components --//
 import TypographyWrapper from "../TypographyWrapper";
 import TermsDoc from "./TermsDoc";
 
