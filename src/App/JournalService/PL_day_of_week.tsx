@@ -7,9 +7,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import EChart from "../EChart/EChart";
 
 //-- NPM Components --//
-import { BarSeriesOption, TooltipComponentOption } from "echarts";
-import { EChartsOption } from "echarts";
-// type EChartsOption = echarts.EChartsCoreOption;
 
 //-- Icons --//
 
@@ -142,7 +139,7 @@ export default function PL_day_of_week() {
         let data = res.data;
 
         //-- Make array for dates and profits --//
-        let datesAndProfits = data.map((x) => {
+        let datesAndProfits = data.map((x: any) => {
           return [x.date, x.profit];
         });
         let reversedDatesAndProfits = datesAndProfits.reverse();
