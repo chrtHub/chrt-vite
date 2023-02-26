@@ -8,32 +8,32 @@ import { useRecoilValue } from "recoil";
 import * as echarts from "echarts/core";
 import {
   BarChart,
-  BarSeriesOption,
-  LineChart,
-  LineSeriesOption,
+  // BarSeriesOption,
+  // LineChart,
+  // LineSeriesOption,
 } from "echarts/charts";
 import {
   TitleComponent,
-  TitleComponentOption,
+  // TitleComponentOption,
   TooltipComponent,
-  TooltipComponentOption,
+  // TooltipComponentOption,
   GridComponent,
-  GridComponentOption,
+  // GridComponentOption,
   DatasetComponent,
-  DatasetComponentOption,
+  // DatasetComponentOption,
   TransformComponent,
   LegendComponent,
 } from "echarts/components";
 import { LabelLayout, UniversalTransition } from "echarts/features";
 import { CanvasRenderer } from "echarts/renderers";
-type ECOption = echarts.ComposeOption<
-  | BarSeriesOption
-  | LineSeriesOption
-  | TitleComponentOption
-  | TooltipComponentOption
-  | GridComponentOption
-  | DatasetComponentOption
->;
+// type ECOption = echarts.ComposeOption<
+//   | BarSeriesOption
+//   | LineSeriesOption
+//   | TitleComponentOption
+//   | TooltipComponentOption
+//   | GridComponentOption
+//   | DatasetComponentOption
+// >;
 echarts.use([
   //-- Charts --//
   BarChart,
@@ -64,7 +64,7 @@ import { echartsThemeState } from "../../Layout/atoms.jsx";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 interface EChartProps {
-  option: ECOption;
+  option: {}; //-- ECharts options types are very poor :( --//
   height: string;
   width: string;
 }
