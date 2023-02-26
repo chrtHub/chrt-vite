@@ -19,7 +19,7 @@ import { H } from "highlight.run";
 //-- Utility Functions --//
 
 //-- Data Objects, Environment Variables --//
-const infoRoutes = [
+const infoRoutes: string[] = [
   "/info",
   "/cookies",
   "/faq",
@@ -29,7 +29,7 @@ const infoRoutes = [
   "/system_requirements",
   "/terms",
 ];
-let VITE_HIGHLIGHT_ENV = import.meta.env.VITE_HIGHLIGHT_ENV;
+let VITE_HIGHLIGHT_ENV: string = import.meta.env.VITE_HIGHLIGHT_ENV;
 
 //-- Scroll to top of page whenever pathname changes --//
 const ScrollToTop = () => {
@@ -37,16 +37,17 @@ const ScrollToTop = () => {
 
   useEffect(() => {
     const rhsDiv = document.getElementById("rhs-div");
-    rhsDiv.scrollTo({ top: 0, behavior: "auto" });
+    rhsDiv?.scrollTo({ top: 0, behavior: "auto" });
   }, [pathname]);
 
   return null;
 };
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function App() {
+interface AppProps {}
+export default function App({}: AppProps) {
   //-- React state --//
-  // const [showLoading, setShowLoading] = useState(true);
+  // const [showLoading, setShowLoading] = useState<boolean>(true);
 
   //-- Without checking for user --> For Info routes, load AppLayout in infoMode --//
   if (infoRoutes.includes(window.location.pathname)) {
@@ -84,13 +85,13 @@ export default function App() {
   //-- Loading is complete, user is authenticated --> show the app --//
   if (isAuthenticated) {
     if (VITE_HIGHLIGHT_ENV === "production") {
-      //-- Identify user in Highlight --//
-      H.identify(user?.email, {
-        id: user?.sub,
-        phone: user?.phone,
-        avatar: user?.picture,
-        // TODO - add versioning
-      });
+      //-- Identify user found, identify in Highlight --//
+      if (user?.email) {
+        H.identify(user.email, {
+          id: user.sub || "",
+          avatar: user.picture || "",
+        });
+      }
     }
     return <AppLayout infoMode={false} />;
   }
@@ -110,4 +111,6 @@ export default function App() {
       return <AppLayout infoMode={false} />;
     }
   }
+
+  return <></>; //-- In the name of type safety, this prevents returning 'undefined' --//
 }

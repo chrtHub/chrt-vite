@@ -33,17 +33,18 @@ import {
 //-- NPM Functions --//
 
 //-- Utility Functions --//
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import classNames from "../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 import { echartsThemeState } from "./atoms";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function AppLayout({ showLockIcon, infoMode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [currentNavItem, setCurrentNavItem] = useState(
+interface AppLayoutProps {
+  infoMode: boolean;
+}
+export default function AppLayout({ infoMode }: AppLayoutProps) {
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [currentNavItem, setCurrentNavItem] = useState<string>(
     window.location.pathname
   );
 
@@ -51,10 +52,15 @@ export default function AppLayout({ showLockIcon, infoMode }) {
   const { logout, user } = useAuth0();
 
   //--- Navigation array depend on infoMode --//
-  let navigation;
+  interface NavigationItem {
+    name: string;
+    to: string;
+    icon: React.ComponentType<any>;
+  }
+  let navigationItems: NavigationItem[];
   {
     infoMode
-      ? (navigation = [
+      ? (navigationItems = [
           // { name: "Info", to: "/info", icon: InformationCircleIcon },
           { name: "Terms of Service", to: "/terms", icon: DocumentTextIcon },
           {
@@ -75,19 +81,23 @@ export default function AppLayout({ showLockIcon, infoMode }) {
             icon: LockClosedIcon,
           },
         ])
-      : (navigation = [
+      : (navigationItems = [
           { name: "Home", to: "/", icon: HomeIcon },
           { name: "Journal", to: "/journal", icon: CalendarDaysIcon },
           { name: "Journal Files", to: "/files", icon: FolderIcon },
           // { name: "Market Data", to: "/data", icon: PresentationChartLineIcon },
         ]);
   }
-  //-- userNavigation array depend on infoMode --//
-  let userNavigation;
+  //-- userNavigationItems array depend on infoMode --//
+  interface UserNavigationItem {
+    name: string;
+    to: string;
+  }
+  let userNavigationItems: UserNavigationItem[];
   {
     infoMode
-      ? (userNavigation = [])
-      : (userNavigation = [
+      ? (userNavigationItems = [])
+      : (userNavigationItems = [
           { name: "Profile", to: "/profile" },
           { name: "Settings", to: "/settings" },
           //-- Items using 'onClick' method, not NavLink with 'to' prop
@@ -97,8 +107,10 @@ export default function AppLayout({ showLockIcon, infoMode }) {
         ]);
   }
   //-- Theming - Light Mode, Dark Mode, Match OS Mode --//
-  let theme = localStorage.getItem("theme");
-  const [themeButtonSelection, setThemeButtonSelection] = useState(theme); //-- light || dark || null (OS match) --//
+  let theme: string | null = localStorage.getItem("theme");
+  const [themeButtonSelection, setThemeButtonSelection] = useState<
+    string | null
+  >(theme); //-- light || dark || null (OS match) --//
   const [echartsTheme, setEchartsTheme] = useRecoilState(echartsThemeState);
 
   //-- NOTES ABOUT THEMES: --//
@@ -148,7 +160,7 @@ export default function AppLayout({ showLockIcon, infoMode }) {
   };
 
   useEffect(() => {
-    const handleThemeChange = ({ matches }) => {
+    const handleThemeChange = ({ matches }: MediaQueryListEvent) => {
       //-- Only react to OS theme changes if no 'theme' value is set in localStorage --//
       if (!("theme" in localStorage)) {
         if (matches) {
@@ -234,7 +246,7 @@ export default function AppLayout({ showLockIcon, infoMode }) {
                 </div>
                 <div className="mt-5 h-0 flex-1 overflow-y-auto">
                   <nav className="space-y-1 px-2">
-                    {navigation.map((item) => (
+                    {navigationItems.map((item) => (
                       <NavLink
                         key={item.name}
                         to={item.to}
@@ -286,7 +298,7 @@ export default function AppLayout({ showLockIcon, infoMode }) {
           {/* START OF NAVIGATION ITEMS */}
           <div className="mt-5 flex flex-grow flex-col">
             <nav className="flex-1 space-y-1 pl-4 pb-4">
-              {navigation.map((item) => (
+              {navigationItems.map((item) => (
                 <NavLink
                   key={item.name}
                   to={item.to}
@@ -459,9 +471,9 @@ export default function AppLayout({ showLockIcon, infoMode }) {
                         )}
                       </Menu.Item>
 
-                      {/* Buttons mapped from user navigation array */}
-                      {userNavigation &&
-                        userNavigation.map((item) => (
+                      {/* Buttons mapped from user navigationItems array */}
+                      {userNavigationItems &&
+                        userNavigationItems.map((item) => (
                           <Menu.Item key={item.name}>
                             {({ active }) => (
                               <NavLink
