@@ -35,25 +35,31 @@ import Terms from "./Info/Terms/Terms";
 import NotFoundPage from "./Navigation/NotFoundPage";
 
 //-- Other --//
-import { H } from "highlight.run";
-let VITE_HIGHLIGHT_ENV = import.meta.env.VITE_HIGHLIGHT_ENV;
+import { H, HighlightOptions } from "highlight.run";
+let VITE_HIGHLIGHT_ENV: string = import.meta.env.VITE_HIGHLIGHT_ENV;
 
 //-- CSS --//
 import "./index.css";
 
 //-- Initialize Highlight --//
 if (VITE_HIGHLIGHT_ENV === "production") {
-  H.init("kevvxle3", {
+  const highlightOptions: HighlightOptions = {
     environment: VITE_HIGHLIGHT_ENV,
     enableStrictPrivacy: false,
-    networkRecording: true,
-    urlBlocklist: [
-      //-- TODO - work on this list --//
-      "https://accounts.google.com",
-      "https://accounts.youtube.com",
-      "https://chrt-prod.us.auth0.com",
-    ],
-  });
+    networkRecording: {
+      enabled: true,
+      recordHeadersAndBody: false,
+      urlBlocklist: [
+        //-- TODO - work on this list --//
+        "https://accounts.google.com",
+        "https://accounts.youtube.com",
+        "https://chrt-prod.us.auth0.com",
+        "https://securetoken.googleapis.com", //-- included by default --//
+        "https://www.googleapis.com/identitytoolkit", //-- included by default --//
+      ],
+    },
+  };
+  H.init("kevvxle3", highlightOptions);
 }
 
 //-- Create router object --//
@@ -87,7 +93,7 @@ const router = createBrowserRouter(
 );
 
 //-- ***** ***** ***** Root Element ***** ***** ***** --//
-ReactDOM.createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <RouterProvider router={router} />
   </React.StrictMode>

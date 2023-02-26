@@ -1,7 +1,7 @@
 //-- react, react-router-dom, recoil, Auth0 --//
 import { useAuth0 } from "@auth0/auth0-react";
 
-//-- JSX Components --//
+//-- TSX Components --//
 import PL_day_of_week from "./PL_day_of_week";
 
 //-- NPM Components --//

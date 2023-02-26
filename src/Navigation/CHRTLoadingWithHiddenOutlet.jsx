@@ -1,7 +1,7 @@
 //-- react, react-router-dom, recoil, Auth0 --//
 import { Outlet } from "react-router-dom";
 
-//-- JSX Components --//
+//-- TSX Components --//
 
 //-- NPM Components --//
 

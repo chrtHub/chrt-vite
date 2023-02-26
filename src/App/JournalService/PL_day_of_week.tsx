@@ -3,10 +3,13 @@ import { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 
-//-- JSX Components --//
+//-- TSX Components --//
+import EChart from "../EChart/EChart";
 
 //-- NPM Components --//
-import EChart from "../EChart/EChart";
+import { BarSeriesOption, TooltipComponentOption } from "echarts";
+import { EChartsOption } from "echarts";
+// type EChartsOption = echarts.EChartsCoreOption;
 
 //-- Icons --//
 
@@ -16,9 +19,7 @@ import { format, parseISO } from "date-fns";
 import numeral from "numeral";
 
 //-- Utility Functions --//
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import classNames from "../../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 import { journalPL45DaysState } from "./atoms";
@@ -27,7 +28,7 @@ let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function PL_day_of_week() {
   //-- React State --//
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState<boolean>(false);
 
   //-- Recoil State --//
   const [journalPL45Days, setJournalPL45Days] =
@@ -48,7 +49,7 @@ export default function PL_day_of_week() {
         label: {
           show: false, // REMOVE TO SHOW AXIS POINTER LABELS
           backgroundColor: "#6a7985",
-          formatter: function (params) {
+          formatter: function (params: any) {
             let data = params.seriesData?.data;
 
             if (data && data[0] && data[1]) {
@@ -67,7 +68,7 @@ export default function PL_day_of_week() {
           },
         },
       },
-      formatter: function (params) {
+      formatter: function (params: any) {
         const data = params[0].data;
 
         const date = parseISO(data[0]);
@@ -82,7 +83,8 @@ export default function PL_day_of_week() {
     xAxis: {
       type: "time",
       axisLabel: {
-        formatter: function (x) {
+        rotate: 45,
+        formatter: function (x: any) {
           return format(new Date(x), "MMM dd");
         },
       },
@@ -90,7 +92,7 @@ export default function PL_day_of_week() {
     yAxis: {
       type: "value",
       axisLabel: {
-        formatter: function (x) {
+        formatter: function (x: any) {
           let valueStr = numeral(x).format("$0,0");
           return `${valueStr}`;
         },
@@ -103,7 +105,7 @@ export default function PL_day_of_week() {
         data: journalPL45Days,
         itemStyle: {
           normal: {
-            color: function (params) {
+            color: function (params: any) {
               const profit = params.data[1];
               if (profit >= 0) {
                 return "#4ade80"; // green 400
