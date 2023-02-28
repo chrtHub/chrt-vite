@@ -14,6 +14,6 @@ export default defineConfig({
     preserveSymlinks: true,
   },
   build: {
-    sourcemap: false, //-- Defaults to 'false' --//
+    sourcemap: true, //-- Defaults to 'false' --//
   },
 });
