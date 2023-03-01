@@ -15,7 +15,7 @@ phases:
     commands:
       - npm run build
       # Upload sourcemaps to Highlight
-      - npx --yes @highlight-run/sourcemap-uploader upload --apiKey SOURCEMAPS_API_KEY --path ./dist/assets
+      - npx --yes @highlight-run/sourcemap-uploader upload --apiKey $SOURCEMAPS_API_KEY --path ./dist/assets
       - find dist/assets -name '*.js.map' -type f -delete
   post_build:
     commands:
