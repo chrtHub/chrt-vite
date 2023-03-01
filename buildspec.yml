@@ -1,15 +1,22 @@
 version: 0.2
 
+env:
+  secrets-manager:
+    SOURCEMAPS_API_KEY: "/chrt/chrt-vite/highlight/sourcemaps_api_key:chrt-vite"
+
 phases:
   install:
     runtime-versions:
       nodejs: latest
     commands:
       - aws codeartifact login --tool npm --domain-owner 897621100871 --domain chrt --repository chrt-npm-packages
-      - npm install --legacy-peer-deps
+      - npm install
   build:
     commands:
       - npm run build
+      # Upload sourcemaps to Highlight
+      - npx --yes @highlight-run/sourcemap-uploader upload --apiKey SOURCEMAPS_API_KEY --path ./dist/assets
+      - find dist/assets -name '*.js.map' -type f -delete
   post_build:
     commands:
       - aws cloudfront create-invalidation --distribution-id=EM4IOR3AXZTHT --paths '/*'
