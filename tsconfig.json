@@ -4,7 +4,7 @@
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": true,
-    "checkJs": false,
+    "checkJs": true,
     "types": ["vite/client"],
     "skipLibCheck": true,
     "esModuleInterop": false,

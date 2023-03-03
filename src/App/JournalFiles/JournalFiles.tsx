@@ -1,5 +1,12 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { Fragment, useState, useEffect, useCallback, useRef } from "react";
+import {
+  Fragment,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  ChangeEvent,
+} from "react";
 import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -24,27 +31,38 @@ import {
 //-- NPM Functions --//
 import axios from "axios";
 import { saveAs } from "file-saver";
-import { useDropzone } from "react-dropzone";
+import { FileWithPath, useDropzone } from "react-dropzone";
 import { format, parseISO } from "date-fns";
 
 //-- Utility Functions --//
 import orderBy from "lodash/orderBy";
+import classNames from "../../Util/classNames";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-//-- Data Objects, Environment Variables --//
+//-- Environment Variables, TypeScript Interfaces, Data Objects --//
+let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 import { filesListState } from "./atoms";
-const brokerages = [
+import { IFileMetadata } from "./atoms";
+
+interface IBrokerage {
+  id: number;
+  nickname: string;
+  name: string;
+}
+const brokerages: IBrokerage[] = [
   //-- Server only ever sees 'name', not 'nickname' --//
   { id: 0, nickname: "TD Ameritrade", name: "td_ameritrade" },
   // { id: 1, nickname: "TradeZero", name: "tradezero" },
   // { id: 2, nickname: "Webull", name: "webull" },
 ];
 
-const tableColumns = [
-  { id: 0, name: "", classes: "" }, //-- Checkbox column --//
+interface ITableRow {
+  id: number;
+  name: string;
+  nickname: string;
+  classes: string;
+}
+const tableColumns: ITableRow[] = [
+  { id: 0, name: "", nickname: "", classes: "" }, //-- Checkbox column --//
   {
     id: 1,
     name: "filename",
@@ -55,29 +73,33 @@ const tableColumns = [
   { id: 3, name: "last_modified", nickname: "Uploaded", classes: "" },
   { id: 4, name: "size_mb", nickname: "Size (MB)", classes: "" },
 ];
-let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function JournalFiles() {
+interface IProps {}
+export default function JournalFiles({}: IProps) {
   //-- React State --//
-  const [selectedBrokerage, setSelectedBrokerage] = useState(brokerages[0]);
+  const [selectedBrokerage, setSelectedBrokerage] = useState<IBrokerage>(
+    brokerages[0]
+  );
 
-  const [putFilename, setPutFilename] = useState();
-  const [putFileData, setPutFileData] = useState();
+  const [putFilename, setPutFilename] = useState<string | null>(null);
+  const [putFileData, setPutFileData] = useState<Blob | null>(null);
 
-  const [listFilesLoading, setListFilesLoading] = useState();
-  const [getFileLoading, setGetFileLoading] = useState();
-  const [putFileLoading, setPutFileLoading] = useState();
-  const [deleteFileLoading, setDeleteFileLoading] = useState();
+  const [listFilesLoading, setListFilesLoading] = useState<boolean>(false);
+  const [getFileLoading, setGetFileLoading] = useState<boolean>();
+  const [putFileLoading, setPutFileLoading] = useState<boolean>();
+  const [deleteFileLoading, setDeleteFileLoading] = useState<boolean>();
 
-  const [tableSelectionFile, setTableSelectionFile] = useState();
-  const [currentSort, setCurrentSort] = useState("last_modified_desc");
+  const [tableSelectionFile, setTableSelectionFile] =
+    useState<IFileMetadata | null>(null);
+  const [currentSort, setCurrentSort] = useState<string>("last_modified_desc");
 
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false); //-- <Transition show={} /> requies false, not null --//
-  const cancelButtonRef = useRef(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false); //-- <Transition show={} /> requies false, not null --//
+  const cancelButtonRef = useRef<HTMLButtonElement | null>(null);
 
   //-- Recoil State --//
-  const [filesList, setFilesList] = useRecoilState(filesListState);
+  const [filesList, setFilesList] =
+    useRecoilState<IFileMetadata[]>(filesListState);
 
   //-- Auth --//
   const { getAccessTokenSilently } = useAuth0();
@@ -112,7 +134,7 @@ export default function JournalFiles() {
     try {
       //-- Make GET request --//
       let res = await axios.get(
-        `${VITE_ALB_BASE_URL}/journal_files/get_file/${selectedBrokerage.name}/${tableSelectionFile.file_uuid}_${tableSelectionFile.filename}`,
+        `${VITE_ALB_BASE_URL}/journal_files/get_file/${selectedBrokerage.name}/${tableSelectionFile?.file_uuid}_${tableSelectionFile?.filename}`,
         {
           headers: {
             authorization: `Bearer ${accessToken}`,
@@ -121,7 +143,7 @@ export default function JournalFiles() {
       );
       //-- Handle reponse by downloading file --//
       let blob = new Blob([res.data], { type: "text/plain;charset=utf-8" });
-      saveAs(blob, tableSelectionFile.filename);
+      saveAs(blob, tableSelectionFile?.filename);
       //----//
     } catch (error) {}
     setGetFileLoading(false);
@@ -132,7 +154,7 @@ export default function JournalFiles() {
     let accessToken = await getAccessTokenSilently();
 
     let formData = new FormData();
-    formData.append("file", putFileData);
+    formData.append("file", putFileData || "");
 
     setPutFileLoading(true);
     try {
@@ -150,7 +172,7 @@ export default function JournalFiles() {
         }
       );
       //----//
-    } catch (error) {
+    } catch (error: any) {
       if (error?.response?.status === 415) {
         alert("File type not supported. Please upload a CSV file."); // DEV
       }
@@ -172,7 +194,7 @@ export default function JournalFiles() {
 
       //-- Make DELETE request --//
       let res = await axios.delete(
-        `${VITE_ALB_BASE_URL}/journal_files/delete_file/${selectedBrokerage.name}/${tableSelectionFile.file_uuid}_${tableSelectionFile.filename}`,
+        `${VITE_ALB_BASE_URL}/journal_files/delete_file/${selectedBrokerage.name}/${tableSelectionFile?.file_uuid}_${tableSelectionFile?.filename}`,
         {
           headers: {
             authorization: `Bearer ${accessToken}`,
@@ -189,10 +211,14 @@ export default function JournalFiles() {
   };
 
   //-- Other --//
-  const onDrop = useCallback((acceptedFiles) => {
-    setPutFileData(acceptedFiles[0]);
-    setPutFilename(acceptedFiles[0].name);
-  });
+  const onDrop = useCallback(
+    (acceptedFiles: FileWithPath[]) => {
+      setPutFileData(acceptedFiles[0]);
+      setPutFilename(acceptedFiles[0].name);
+    },
+    [setPutFileData, setPutFilename] //-- State setters shouldn't ever change, but including anyways --//
+  );
+
   const { getRootProps, getInputProps, isDragAccept, isDragReject } =
     useDropzone({
       accept: {
@@ -202,8 +228,10 @@ export default function JournalFiles() {
       maxSize: 10485760, //-- 10 MB --//
       onDrop: onDrop,
     });
-  const fileUploadHandler = (event) => {
-    let file = event?.target?.files[0];
+
+  const fileUploadHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+    let file = event.target.files[0];
     //-- Check file size --//
     if (file?.size < 10 * 1024 * 1024) {
       alert("File size limit is 10 MB");
@@ -213,12 +241,12 @@ export default function JournalFiles() {
     }
   };
 
-  const getBrokerageNickname = (brokerageName) => {
+  const getBrokerageNickname = (brokerageName: string) => {
     const nickname = brokerages.find((x) => x.name === brokerageName);
     return nickname?.nickname || null;
   };
 
-  const getSortIcon = (tableColumn) => {
+  const getSortIcon = (tableColumn: ITableRow) => {
     if (tableColumn.name === "") {
       return null; //-- Checkbox column - no sort icon --//
     } else if (currentSort === `${tableColumn.name}_desc`) {
@@ -242,14 +270,14 @@ export default function JournalFiles() {
     }
   };
 
-  const getLocalTime = (last_modified) => {
+  const getLocalTime = (last_modified: string) => {
     let date = parseISO(last_modified);
     let localTime = format(date, "MMM dd, yyyy @ hh:mm:ss aaa");
     return localTime;
   };
 
   //-- Click Handlers --//
-  const sortByHandler = (columnName) => {
+  const sortByHandler = (columnName: string) => {
     //-- Sort ('_.orderBy') descending. But if already sorted descending, sort ascending. --//
     const sortedFilesList = orderBy(
       filesList, //-- array --//
@@ -358,7 +386,7 @@ export default function JournalFiles() {
                           }
                           value={brokerage}
                         >
-                          {({ selectedBrokerage, active }) => (
+                          {({ active }) => (
                             <>
                               <span
                                 className={classNames(
@@ -415,7 +443,7 @@ export default function JournalFiles() {
                 value={putFilename ? putFilename : ""}
                 onChange={(event) => setPutFilename(event.target.value)}
                 className={classNames(
-                  putFilename && "bg-green-100 dark:bg-green-900",
+                  putFilename ? "bg-green-100 dark:bg-green-900" : "",
                   putFileLoading
                     ? "animate-pulse bg-green-400 opacity-30 dark:bg-green-900"
                     : "",
@@ -451,8 +479,9 @@ export default function JournalFiles() {
                   {/* Table Headers */}
                   <thead
                     className={classNames(
-                      listFilesLoading &&
-                        "animate-pulse bg-green-100 dark:bg-green-900",
+                      listFilesLoading
+                        ? "animate-pulse bg-green-100 dark:bg-green-900"
+                        : "",
                       "bg-zinc-100 dark:bg-zinc-900"
                     )}
                   >
@@ -500,7 +529,7 @@ export default function JournalFiles() {
                             : "bg-zinc-100 dark:bg-zinc-800", //-- Striped Rows --//
                           tableSelectionFile?.file_uuid === file.file_uuid
                             ? "bg-green-100 dark:bg-green-900"
-                            : undefined //-- Selected Row --> Green --//
+                            : "" //-- Selected Row --> Green --//
                         )}
                       >
                         {/* Checkbox */}

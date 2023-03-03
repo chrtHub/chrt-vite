@@ -15,7 +15,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-//-- Data Objects, Environment Variables --//
+//-- Environment Variables, TypeScript Interfaces, Data Objects --//
 import { barState } from "./atoms";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 

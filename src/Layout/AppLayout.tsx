@@ -39,10 +39,10 @@ import classNames from "../Util/classNames";
 import { echartsThemeState } from "./atoms";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-interface AppLayoutProps {
+interface IProps {
   infoMode: boolean;
 }
-export default function AppLayout({ infoMode }: AppLayoutProps) {
+export default function AppLayout({ infoMode }: IProps) {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [currentNavItem, setCurrentNavItem] = useState<string>(
     window.location.pathname
@@ -52,12 +52,12 @@ export default function AppLayout({ infoMode }: AppLayoutProps) {
   const { logout, user } = useAuth0();
 
   //--- Navigation array depend on infoMode --//
-  interface NavigationItem {
+  interface INavigationItem {
     name: string;
     to: string;
     icon: React.ComponentType<any>;
   }
-  let navigationItems: NavigationItem[];
+  let navigationItems: INavigationItem[];
   {
     infoMode
       ? (navigationItems = [
@@ -89,11 +89,11 @@ export default function AppLayout({ infoMode }: AppLayoutProps) {
         ]);
   }
   //-- userNavigationItems array depend on infoMode --//
-  interface UserNavigationItem {
+  interface IUserNavigationItem {
     name: string;
     to: string;
   }
-  let userNavigationItems: UserNavigationItem[];
+  let userNavigationItems: IUserNavigationItem[];
   {
     infoMode
       ? (userNavigationItems = [])

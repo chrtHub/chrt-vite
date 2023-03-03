@@ -44,12 +44,11 @@ const ScrollToTop = () => {
 };
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-interface AppProps {}
-export default function App({}: AppProps) {
+interface IProps {}
+export default function App({}: IProps) {
   //-- React state --//
-  // const [showLoading, setShowLoading] = useState<boolean>(true);
 
-  //-- Without checking for user --> For Info routes, load AppLayout in infoMode --//
+  //-- Before checking for user --> For Info routes, load AppLayout in infoMode --//
   if (infoRoutes.includes(window.location.pathname)) {
     return (
       <>

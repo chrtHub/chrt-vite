@@ -63,12 +63,12 @@ import { echartsThemeState } from "../../Layout/atoms.jsx";
 //-- Types --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-interface EChartProps {
+interface IProps {
   option: {}; //-- ECharts options types are very poor :( --//
   height: string;
   width: string;
 }
-export default function EChart({ option, height, width }: EChartProps) {
+export default function EChart({ option, height, width }: IProps) {
   //-- React State --//
 
   //-- Recoil State --//

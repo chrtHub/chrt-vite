@@ -1,4 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
+import { Outlet } from "react-router-dom";
 
 //-- TSX Components --//
 
@@ -14,7 +15,8 @@ import barChartEmoji from "../Assets/twemoji_bar_chart/android-chrome-192x192.pn
 //-- Data Objects, Environment Variables --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function CHRTLoading() {
+interface IProps {}
+export default function CHRTLoadingWithHiddenOutlet({}: IProps) {
   //-- React State --//
 
   //-- Recoil State --//
@@ -35,8 +37,11 @@ export default function CHRTLoading() {
         alt="bar chart emoji"
         width={192}
         height={192}
-        className="mt-28 animate-fadeout bg-transparent drop-shadow-xl"
+        className="mt-28 animate-pulse bg-transparent drop-shadow-xl"
       />
+      <div className="hidden">
+        <Outlet />
+      </div>
     </div>
   );
 }
