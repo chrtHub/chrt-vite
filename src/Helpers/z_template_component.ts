@@ -1,6 +1,7 @@
 //-- react, react-router-dom, recoil, Auth0 --//
 import { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
+import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
 
@@ -9,25 +10,24 @@ import { useRecoilState } from "recoil";
 //-- Icons --//
 
 //-- NPM Functions --//
+import axios from "axios";
 
 //-- Utility Functions --//
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import classNames from "../Util/classNames";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
-import { barState } from "./atoms";
-let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
+import { fooState } from "./z_atoms";
+let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- Types --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ComponentName() {
   //-- React State --//
-  const [fooLoading, setFooLoading] = useState(null);
+  const [fooLoading, setFooLoading] = useState<boolean>(false);
 
   //-- Recoil State --//
-  const [bar, setBar] = useRecoilState(barState);
+  const [bar, setBar] = useRecoilState(fooState);
 
   //-- Auth --//
   const { getAccessTokenSilently } = useAuth0();
@@ -60,11 +60,11 @@ export default function ComponentName() {
   //-- Click Handlers --//
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
-  return (
-    <div>
-      {fooLoading && <p>foo loading</p>}
-      <p>{bar}</p>
-      <p>baz</p>
-    </div>
-  );
+  // return (
+  //   <div>
+  //     {fooLoading ? <p>foo loading</p> : <></>}
+  //     <p>{bar}</p>
+  //     <p>baz</p>
+  //   </div>
+  // );
 }

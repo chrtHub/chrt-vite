@@ -15,7 +15,8 @@ import Hero from "./Hero/Hero";
 //-- Data Objects --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function () {
+interface IProps {}
+export default function ({}: IProps) {
   return (
     <div className="flex h-full flex-col">
       <div className="">

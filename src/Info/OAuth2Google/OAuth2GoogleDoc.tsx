@@ -1,4 +1,4 @@
-export default function TermsDoc() {
+export default function OAuth2GoogleDoc() {
   return (
     <>
       <h1 id="google-oauth2-homepage">OAuth 2 - Google Accounts</h1>
