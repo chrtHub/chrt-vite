@@ -16,7 +16,10 @@ import { LockClosedIcon } from "@heroicons/react/24/outline";
 //-- Data Objects --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function AuthGuard({ component }) {
+interface IProps {
+  component: React.ComponentType;
+}
+export default function AuthGuard({ component }: IProps) {
   const Component = withAuthenticationRequired(component, {
     onRedirecting: () => <div />,
   });

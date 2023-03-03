@@ -1,4 +1,7 @@
-export default function TypographyWrapper({ children }) {
+interface IProps {
+  children?: React.ReactNode;
+}
+export default function TypographyWrapper({ children }: IProps) {
   return (
     <div id="wrapper-div" className="flex justify-center">
       <div className="flex-column">

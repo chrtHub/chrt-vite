@@ -1,4 +1,4 @@
-export default function TermsDoc() {
+export default function CookiesDoc() {
   return (
     <>
       <h1 id="cookies-policy">Cookies Policy</h1>

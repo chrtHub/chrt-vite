@@ -30,9 +30,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 //   },
 // ];
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import classNames from "../../Util/classNames";
 
 export default function Hero() {
   //-- Detect theme value (a) set in localStorage, or (b) from OS theme --//

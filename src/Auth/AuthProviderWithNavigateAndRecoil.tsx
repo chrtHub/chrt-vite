@@ -1,6 +1,6 @@
 //-- react, react-router-dom, Auth0 --//
 import { Outlet, useNavigate } from "react-router-dom";
-import { Auth0Provider } from "@auth0/auth0-react";
+import { Auth0Provider, AppState, User } from "@auth0/auth0-react";
 import { RecoilRoot } from "recoil";
 
 //-- TSX Components --//
@@ -21,7 +21,7 @@ export default function AuthProviderWithNavigateAndRecoil() {
   const navigate = useNavigate();
 
   //-- If user requested a Guarded Route, but was sent to login, then upon redirect to this SPA, the Guarded Route's path that the user tried to access is returned by the server as the value appState.returnTo --//
-  const onRedirectCallback = (appState) => {
+  const onRedirectCallback = (appState?: AppState, user?: User) => {
     navigate(appState?.returnTo || window.location.pathname);
   };
 
@@ -37,10 +37,7 @@ export default function AuthProviderWithNavigateAndRecoil() {
     "wearable", //-- e.g. Apple Watch --//
     "embedded", //-- e.g. iot device --//
   ];
-  let mobile = false;
-  if (mobileTypes.includes(type)) {
-    mobile = true;
-  }
+  const mobile = type && mobileTypes.includes(type);
 
   return (
     <RecoilRoot>
