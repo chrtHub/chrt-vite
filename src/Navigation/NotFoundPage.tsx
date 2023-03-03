@@ -15,20 +15,25 @@ import axios from "axios";
 
 //-- Data Objects --//
 
-//-- ***** ***** ***** Exported Component ***** ***** ***** --//
+interface IAnimal {
+  type: string;
+  url: string;
+}
 
-export default function NotFoundPage() {
-  const [imageSrc, setImageSrc] = useState();
-  const [imageLoaded, setImageLoaded] = useState(false);
+//-- ***** ***** ***** Exported Component ***** ***** ***** --//
+interface IProps {}
+export default function NotFoundPage({}: IProps) {
+  const [imageSrc, setImageSrc] = useState<string | undefined>();
+  const [imageLoaded, setImageLoaded] = useState<boolean>(false);
 
   //-- Randomly select an animal image to display --//
-  const animals = [
+  const animals: IAnimal[] = [
     { type: "cat", url: "https://s3.amazonaws.com/chrt.com/catImage.jpeg" },
     { type: "dog", url: "https://s3.amazonaws.com/chrt.com/dogImage.jpeg" },
     { type: "puppy", url: "https://s3.amazonaws.com/chrt.com/puppyImage.jpeg" },
   ];
-  let randomNumber = Math.floor(Math.random() * animals.length);
-  let randomAnimal = animals[randomNumber];
+  let randomNumber: number = Math.floor(Math.random() * animals.length);
+  let randomAnimal: IAnimal = animals[randomNumber];
 
   //-- Fetch image of randomAnimal from S3 bucket --//
   useEffect(() => {
@@ -36,8 +41,8 @@ export default function NotFoundPage() {
       const response = await axios.get(randomAnimal.url, {
         responseType: "blob",
       });
-      const imageBlob = await response.data;
-      const imageURL = URL.createObjectURL(imageBlob);
+      const imageBlob: Blob = await response.data;
+      const imageURL: string = URL.createObjectURL(imageBlob);
       setImageSrc(imageURL);
       setImageLoaded(true);
     };
