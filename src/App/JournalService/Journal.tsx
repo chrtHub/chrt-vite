@@ -2,7 +2,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
-import PL_day_of_week from "./PL_day_of_week";
+import PL_45_Days from "./PL_45_Days";
 
 //-- NPM Components --//
 
@@ -32,7 +32,7 @@ export default function Journal() {
 
   return (
     <>
-      <PL_day_of_week />
+      <PL_45_Days />
     </>
   );
 }
