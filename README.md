@@ -1,3 +1,5 @@
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+
 # :file_folder: React SPA repo
 
 - This repo is for a React SPA (Single-Page Application) available at [chrt.com](https://chrt.com)
