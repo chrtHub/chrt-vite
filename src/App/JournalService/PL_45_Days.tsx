@@ -19,17 +19,18 @@ import numeral from "numeral";
 import classNames from "../../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
-import { journalPL45DaysState } from "./atoms";
+import { journalPL45DaysAtom } from "./atoms";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function PL_day_of_week() {
+
+export default function PL_45_Days() {
   //-- React State --//
   const [loading, setLoading] = useState<boolean>(false);
 
   //-- Recoil State --//
   const [journalPL45Days, setJournalPL45Days] =
-    useRecoilState(journalPL45DaysState);
+    useRecoilState(journalPL45DaysAtom);
 
   //-- Auth --//
   const { getAccessTokenSilently } = useAuth0();

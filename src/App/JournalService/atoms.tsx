@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
-export const journalPL45DaysState = atom({
-  key: "journalPL45DaysState",
+export const journalPL45DaysAtom = atom({
+  key: "journalPL45DaysAtom",
   default: [],
 });
 
