@@ -50,10 +50,6 @@ export default function CookiesDoc() {
               Cookie(s) related to Google&#39;s reCAPTCHA process used for
               verifying human users
             </li>
-            <li>
-              Cookie(s) related to Highlight.io's service used for ensuring site
-              functionality and debugging errors
-            </li>
           </ul>
         </li>
       </ul>
