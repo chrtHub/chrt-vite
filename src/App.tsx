@@ -6,15 +6,12 @@ import { useAuth0 } from "@auth0/auth0-react";
 //-- TSX Components --//
 import AppLayout from "./Layout/AppLayout";
 import LandingPage from "./LandingPage/LandingPage";
-import CHRTLoading from "./Navigation/CHRTLoading";
-import CHRTLoadingWithHiddenOutlet from "./Navigation/CHRTLoadingWithHiddenOutlet";
 
 //-- NPM Components --//
 
 //-- Icons --//
 
 //-- NPM Functions --//
-import { H } from "highlight.run";
 
 //-- Utility Functions --//
 
@@ -29,7 +26,6 @@ const infoRoutes: string[] = [
   "/system_requirements",
   "/terms",
 ];
-let VITE_HIGHLIGHT_ENV: string = import.meta.env.VITE_HIGHLIGHT_ENV;
 
 //-- Scroll to top of page whenever pathname changes --//
 const ScrollToTop = () => {
@@ -83,29 +79,6 @@ export default function App({}: IProps) {
 
   //-- Loading is complete, user is authenticated --> show the app --//
   if (isAuthenticated) {
-    if (VITE_HIGHLIGHT_ENV === "production") {
-      //-- If user found, identify in Highlight --//
-      if (user?.email) {
-        H.identify(user.email, {
-          id: user.sub || "",
-          avatar: user.picture || "",
-        });
-
-        //-- Canary error each 1 min for users with emails starting with 'aaron' --//
-        useEffect(() => {
-          if (user.email?.startsWith("aaron")) {
-            const interval = setInterval(() => {
-              console.log("canary error for highlight.io firing");
-              throw new Error("canary error for highlight.io");
-            }, 60 * 1000);
-
-            return () => {
-              clearInterval(interval);
-            };
-          }
-        }, []);
-      }
-    }
     return <AppLayout infoMode={false} />;
   }
 
