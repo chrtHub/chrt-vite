@@ -15,8 +15,8 @@ phases:
     commands:
       - npm run build
       # Upload sourcemaps to Highlight
-      - npx --yes @highlight-run/sourcemap-uploader upload --apiKey $SOURCEMAPS_API_KEY --path ./dist/assets
-      - find dist/assets -name '*.js.map' -type f -delete
+      # - npx --yes @highlight-run/sourcemap-uploader upload --apiKey $SOURCEMAPS_API_KEY --path ./dist/assets
+      # - find dist/assets -name '*.js.map' -type f -delete
   post_build:
     commands:
       - aws cloudfront create-invalidation --distribution-id=EM4IOR3AXZTHT --paths '/*'
