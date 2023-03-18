@@ -1,28 +1,39 @@
 //-- react, react-router-dom, Auth0 --//
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState, useEffect } from "react";
+import { useRecoilValue } from "recoil";
 
 //-- TSX Components --//
 
 //-- NPM Components --//
 import { Popover } from "@headlessui/react";
+import ReactJson, { ThemeKeys } from "react-json-view";
 
 //-- Icons --//
-import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
-import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import {
+  ClipboardDocumentIcon,
+  EyeIcon,
+  EyeSlashIcon,
+} from "@heroicons/react/24/outline";
+import { CheckCircleIcon } from "@heroicons/react/20/solid";
 
 //-- NPM Functions --//
 import { useCopyToClipboard } from "usehooks-ts";
 import { usePopper } from "react-popper";
+import jwtDecode from "jwt-decode";
 
 //-- Utility Functions --//
 import classNames from "../Util/classNames";
 
 //-- Data Objects --//
+import { echartsThemeState } from "../Layout/atoms";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 const Profile = () => {
   const [accessToken, setAccessToken] = useState<string>("");
+  const [accessTokenDecoded, setAccessTokenDecoded] = useState<object>({});
+  const [viewDecodedToken, setViewDecodedToken] = useState<boolean>(false);
+  const [jsonTheme, setJSONTheme] = useState<ThemeKeys>("rjv-default");
   const [popoverOpen, setPopoverOpen] = useState<boolean>(false);
   const [clipboardValue, copyToClipboard] = useCopyToClipboard();
 
@@ -32,7 +43,7 @@ const Profile = () => {
   );
   const [popperElement, setPopperElement] = useState<HTMLElement | null>(null);
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    placement: "bottom",
+    placement: "top",
   });
 
   const { user, getAccessTokenSilently } = useAuth0();
@@ -42,21 +53,35 @@ const Profile = () => {
 
     setPopoverOpen(true);
     setTimeout(() => {
-      console.log("interval");
       setPopoverOpen(false);
     }, 2420);
   };
+
+  /** JSON theme */
+  const echartsTheme = useRecoilValue(echartsThemeState);
+  useEffect(() => {
+    if (echartsTheme === "light") {
+      let theme: ThemeKeys = "rjv-default";
+      setJSONTheme(theme);
+    } else if (echartsTheme === "dark") {
+      let theme: ThemeKeys = "brewer";
+      setJSONTheme(theme);
+    }
+  }, [echartsTheme]);
 
   useEffect(() => {
     const fetchToken = async () => {
       let res = await getAccessTokenSilently();
       setAccessToken(res);
+
+      let resDecoded: object = jwtDecode(res);
+      setAccessTokenDecoded(resDecoded);
     };
     fetchToken();
   }, [user]);
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center">
+    <div className="flex h-screen flex-col items-center justify-start">
       <img
         src={user?.picture}
         alt={user?.name}
@@ -65,8 +90,7 @@ const Profile = () => {
       <h2 className="mt-4 text-2xl font-medium text-black dark:text-white">
         {user?.name}
       </h2>
-      <p className="text-zinc-500 dark:text-zinc-400">{user?.email}</p>
-
+      <p className="mb-2 text-zinc-500 dark:text-zinc-400">{user?.email}</p>
       <Popover>
         <Popover.Button
           ref={setReferenceElement}
@@ -75,9 +99,7 @@ const Profile = () => {
           <button
             disabled={popoverOpen}
             type="button"
-            className={classNames(
-              "mt-4 mb-1  inline-flex items-center gap-x-2 rounded-md bg-green-500 py-2.5 px-3.5 text-sm font-semibold text-white shadow-sm hover:bg-green-600 focus:outline-none dark:bg-green-800 dark:hover:bg-green-700"
-            )}
+            className="mt-2 mb-1 inline-flex w-56 justify-center  gap-x-2 rounded-md bg-green-500 py-3 text-sm font-semibold text-white shadow-sm hover:bg-green-600 focus:outline-none dark:bg-green-800 dark:hover:bg-green-700"
             onClick={copyHandler}
           >
             Copy Auth Token
@@ -108,6 +130,33 @@ const Profile = () => {
           </Popover.Panel>
         )}
       </Popover>
+      <button
+        className="mt-2 inline-flex w-56 justify-center gap-x-2 rounded-md bg-zinc-500 py-3  text-sm font-semibold text-white shadow-sm hover:bg-zinc-600 focus:outline-none dark:bg-zinc-600 dark:hover:bg-zinc-500"
+        onClick={() => {
+          setViewDecodedToken((state) => !state);
+        }}
+      >
+        {!viewDecodedToken ? (
+          <>
+            <div>View Decoded Token</div>
+            <EyeIcon className="h-5 w-5" aria-hidden="true" />
+          </>
+        ) : (
+          <>
+            <div>Hide Decoded Token</div>
+            <EyeSlashIcon className="h-5 w-5" aria-hidden="true" />
+          </>
+        )}
+      </button>
+      <div className="mt-8">
+        {viewDecodedToken && (
+          <ReactJson
+            src={accessTokenDecoded}
+            theme={jsonTheme}
+            enableClipboard={false}
+          />
+        )}
+      </div>
     </div>
   );
 };
