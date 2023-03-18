@@ -10,7 +10,7 @@ phases:
       nodejs: latest
     commands:
       - aws codeartifact login --tool npm --domain-owner 897621100871 --domain chrt --repository chrt-npm-packages
-      - npm install
+      - npm install --legacy-peer-deps
   build:
     commands:
       - npm run build
