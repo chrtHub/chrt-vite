@@ -148,7 +148,7 @@ const Profile = () => {
           </>
         )}
       </button>
-      <div className="mt-8">
+      <div className="mt-4 pb-4">
         {viewDecodedToken && (
           <ReactJson
             src={accessTokenDecoded}
