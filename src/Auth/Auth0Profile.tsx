@@ -46,8 +46,10 @@ const Profile = () => {
     placement: "top",
   });
 
+  /** */
   const { user, getAccessTokenSilently } = useAuth0();
 
+  /** */
   const copyHandler = () => {
     copyToClipboard(accessToken);
 
@@ -80,8 +82,10 @@ const Profile = () => {
     fetchToken();
   }, [user]);
 
+  /** */
   return (
     <div className="flex h-screen flex-col items-center justify-start">
+      {/* START OF IMAGE, NAME, EMAIL */}
       <img
         src={user?.picture}
         alt={user?.name}
@@ -91,6 +95,9 @@ const Profile = () => {
         {user?.name}
       </h2>
       <p className="mb-2 text-zinc-500 dark:text-zinc-400">{user?.email}</p>
+      {/* END OF IMAGE, NAME, EMAIL */}
+
+      {/* START OF AUTH TOKEN BUTTON AND POPOVER */}
       <Popover>
         <Popover.Button
           ref={setReferenceElement}
@@ -130,6 +137,9 @@ const Profile = () => {
           </Popover.Panel>
         )}
       </Popover>
+      {/* START OF AUTH TOKEN BUTTON AND POPOVER */}
+
+      {/* START OF DECODED TOKEN BUTTON */}
       <button
         className="mt-2 inline-flex w-56 justify-center gap-x-2 rounded-md bg-zinc-500 py-3  text-sm font-semibold text-white shadow-sm hover:bg-zinc-600 focus:outline-none dark:bg-zinc-600 dark:hover:bg-zinc-500"
         onClick={() => {
@@ -148,6 +158,9 @@ const Profile = () => {
           </>
         )}
       </button>
+      {/* START OF DECODED TOKEN BUTTON */}
+
+      {/* START OF JSON */}
       <div className="mt-4 pb-4">
         {viewDecodedToken && (
           <ReactJson
@@ -157,6 +170,7 @@ const Profile = () => {
           />
         )}
       </div>
+      {/* END OF JSON */}
     </div>
   );
 };
