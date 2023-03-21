@@ -19,6 +19,7 @@ import AuthGuard from "./Auth/AuthGuard";
 import Data from "./App/DataService/Data";
 import Journal from "./App/JournalService/Journal";
 import JournalFiles from "./App/JournalFiles/JournalFiles";
+import GPT from "./App/GPT/GPT";
 import Profile from "./App/Profile/Profile";
 import Settings from "./App/Settings/Settings";
 
@@ -50,6 +51,7 @@ const router = createBrowserRouter(
         <Route path="/data" element={<AuthGuard component={Data} />} />
         <Route path="/journal" element={<AuthGuard component={Journal} />} />
         <Route path="/files" element={<AuthGuard component={JournalFiles} />} />
+        <Route path="/gpt" element={<AuthGuard component={GPT} />} />
         <Route path="/profile" element={<AuthGuard component={Profile} />} />
         <Route path="/settings" element={<AuthGuard component={Settings} />} />
 

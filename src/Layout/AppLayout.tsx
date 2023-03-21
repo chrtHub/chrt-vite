@@ -21,6 +21,7 @@ import {
   ComputerDesktopIcon,
   DocumentTextIcon,
   FolderIcon,
+  ChatBubbleLeftRightIcon,
   HomeIcon,
   LockClosedIcon,
   PresentationChartLineIcon,
@@ -85,6 +86,7 @@ export default function AppLayout({ infoMode }: IProps) {
           { name: "Home", to: "/", icon: HomeIcon },
           { name: "Journal", to: "/journal", icon: CalendarDaysIcon },
           { name: "Journal Files", to: "/files", icon: FolderIcon },
+          { name: "ChrtGPT", to: "/gpt", icon: ChatBubbleLeftRightIcon },
           // { name: "Market Data", to: "/data", icon: PresentationChartLineIcon },
         ]);
   }
