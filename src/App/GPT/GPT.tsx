@@ -44,17 +44,25 @@ export default function GPT() {
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <div className="grid grid-cols-12 gap-2">
-      <div className="col-span-9">
-        <ModelListbox />
-        <ChatSession />
-        <PromptInput />
-      </div>
+    <>
+      <div id="gpt-grid-div" className="grid h-full grid-cols-12 gap-2">
+        <div
+          id="gpt-chat-current"
+          className="col-span-9 h-full overflow-y-auto"
+        >
+          <ModelListbox />
+          <ChatSession />
+          <PromptInput />
+        </div>
 
-      <div className="col-span-3 overflow-y-scroll">
-        {/* hidden until large? hidden lg:??? */}
-        <ChatHistory />
+        <div
+          id="gpt-chat-history"
+          className="col-span-3 h-full overflow-y-auto"
+        >
+          {/* hidden until large? hidden lg:??? */}
+          <ChatHistory />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
