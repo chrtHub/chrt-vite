@@ -186,7 +186,7 @@ export default function AppLayout({ infoMode }: IProps) {
     <div
       id="app-layout-top-level-div"
       // NOTE - how to prevent overscroll? use `fixed`? `overscroll-none`?
-      className="fixed h-full overflow-auto overscroll-none bg-zinc-50 dark:bg-zinc-800"
+      className="fixed h-full w-full overflow-auto overscroll-none bg-zinc-50 dark:bg-zinc-800"
     >
       {/* START OF MOBILE SIDEBAR */}
       <Transition.Root show={sidebarOpen} as={Fragment}>
