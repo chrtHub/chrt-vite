@@ -1,21 +1,16 @@
 {
+  "jaison_version": "2023-03-26-A",
   "notes": {
     "metatdata": "Basic info and stats about this chat object",
-    "linear_message_history": "Used as the source of truth for (1) what messages to send to the LLM API, (2) what messages to render on the screen. The linear history is mutable because a user may choose to delete certain messages before continuing a chat.",
-    "api_call_history": "An append-only log of API calls made. Useful for having the history intact and for stats like tokens consumed."
+    "linear_message_history": "Mutable message history used as source of truth for (1) sending requests to the LLM, (2) rendering a chat on screen to a user. Note - the system message is immutable.",
+    "api_call_history": "An append-only log of API calls used to track token consumption and for general reference."
   },
   "metadata": {
-    "user_id": "google-oauth2|113725528803072296942",
+    "single-or-multi-user": "single",
+    "user_ids": ["google-oauth2|113725528803072296942"],
     "chat_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
-    "model": "gpt-3.5-turbo",
-    "system_message": "Your name is ChrtGPT. Refer to yourself as ChrtGPT. You are ChrtGPT, a helpful assistant that helps power a day trading performance journal. You sometimes make jokes and say silly things on purpose.",
     "creation_timestamp_immutable": "1679862885",
-    "creation_timestamp_mutable": "1679862885",
-    "count_prompts": "0",
-    "count_responses": "0",
-    "sum_prompt_tokens": "0",
-    "sum_response_tokens": "0",
-    "sum_all_tokens": "0",
+    "reference_timestamp_mutable": "1679862885",
     "user_tags": [],
     "chrt_tags": [],
     "opensearch_tags": []
@@ -25,35 +20,33 @@
       "role": "system",
       "timestamp": "1679862885",
       "user_id": "google-oauth2|113725528803072296942",
-      "chat_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
-      "message_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000"
+      "message_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
+      "content": "Your name is ChrtGPT. Refer to yourself as ChrtGPT. You are ChrtGPT, a helpful assistant that helps power a day trading performance journal. You sometimes make jokes and say silly things on purpose."
     },
     {
       "role": "user",
       "timestamp": "1679862885",
       "user_id": "google-oauth2|113725528803072296942",
-      "chat_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
-      "message_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000"
+      "message_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
+      "content": "provide an example of how to make an axios GET request"
     },
     {
       "role": "assistant",
       "timestamp": "1679862885",
       "user_id": "google-oauth2|113725528803072296942",
-      "chat_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
-      "message_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000"
+      "message_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
+      "content": "Sure, here's an example of how to make an Axios GET request in JavaScript:\n\n```\naxios.get('https://example.com/api/data')\n  .then((response) => {\n    console.log(response.data);\n  })\n  .catch((error) => {\n    console.error(error);\n  });\n```\n\nIn this example, we make an Axios GET request to `https://example.com/api/data` and then handle the response and any errors that may occur. The response data is logged to the console using `console.log()`, while any errors are logged using `console.error()`."
     }
   ],
   "api_call_history": [
     {
       "timestamp": "1679862885",
+      "request_id": "chatcmpl-6p9XYPYSTTRi0xEviKjjilqrWU2Ve",
+      "object": "chat.completion",
       "model": "gpt-3.5-turbo",
       "prompt_tokens": "420",
       "response_tokens": "420",
-      "message_uuids": [
-        "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
-        "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
-        "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000"
-      ]
+      "total_tokens": "840"
     }
   ]
 }
