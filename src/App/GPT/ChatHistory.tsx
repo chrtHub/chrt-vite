@@ -67,7 +67,7 @@ export default function ChatHistory() {
                       <img
                         className="h-10 w-10 rounded-full"
                         src={logo}
-                        alt="chart logo"
+                        alt="logo"
                       />
                     </div>
                     <div className="min-w-0 flex-1">

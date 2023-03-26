@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
+let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 const { getAccessTokenSilently } = useAuth0();
 
@@ -9,7 +10,7 @@ try {
 
   //-- Make POST request --//
   let res = await axios.post(
-    "https://alb.chrt.com",
+    `${VITE_ALB_BASE_URL}`,
     //-- Body Content --//
     {
       key1: "value1",

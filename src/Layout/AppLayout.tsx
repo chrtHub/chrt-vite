@@ -24,7 +24,6 @@ import {
   ChatBubbleLeftRightIcon,
   HomeIcon,
   LockClosedIcon,
-  PresentationChartLineIcon,
   QuestionMarkCircleIcon,
   ShieldCheckIcon,
   SunIcon,
@@ -184,10 +183,15 @@ export default function AppLayout({ infoMode }: IProps) {
   }, []);
 
   return (
-    <div className="h-full overflow-auto bg-zinc-50 dark:bg-zinc-800">
+    <div
+      id="app-layout-top-level-div"
+      // NOTE - how to prevent overscroll? use `fixed`? `overscroll-none`?
+      className="fixed h-full w-full overflow-auto overscroll-none bg-zinc-50 dark:bg-zinc-800"
+    >
       {/* START OF MOBILE SIDEBAR */}
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog
+          id="app-layout-mobile-sidebar"
           as="div"
           className="relative z-40 md:hidden"
           onClose={setSidebarOpen}
@@ -287,7 +291,10 @@ export default function AppLayout({ infoMode }: IProps) {
       {/* END OF MOBILE SIDEBAR */}
 
       {/* START OF STATIC SIDEBAR */}
-      <div className="hidden md:fixed md:inset-y-0 md:flex md:w-48 md:flex-col">
+      <div
+        id="app-layout-static-sidebar"
+        className="hidden md:fixed md:inset-y-0 md:flex md:w-48 md:flex-col"
+      >
         <div className="flex flex-grow flex-col overflow-y-auto  bg-zinc-50 pt-5 dark:bg-zinc-800">
           <div className="flex flex-shrink-0 items-center px-6">
             <a
@@ -334,9 +341,11 @@ export default function AppLayout({ infoMode }: IProps) {
       {/* END OF STATIC SIDEBAR */}
 
       {/* START OF RHS */}
-      <div id="rhs-div" className="h-full overflow-x-hidden md:pl-48">
-        {/* <div className="mx-auto flex max-w-4xl flex-col md:px-8 xl:px-0"> */}
-        <div className="mx-auto flex max-w-screen-2xl flex-col px-4 xl:px-6">
+      <div
+        id="app-layout-rhs-div"
+        className="h-full overflow-x-hidden md:pl-48"
+      >
+        <div className="mx-auto flex h-full max-w-screen-2xl flex-col px-4 xl:px-6">
           {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
           <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-zinc-50 dark:bg-zinc-800">
             {/* START OF HAMBURGER BUTTON */}
@@ -542,7 +551,7 @@ export default function AppLayout({ infoMode }: IProps) {
           {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
 
           {/* START OF MAIN */}
-          <main className="flex-1">
+          <main id="app-layout-react-router-Outlet" className="flex-1">
             <Outlet />
           </main>
           {/* END OF MAIN */}

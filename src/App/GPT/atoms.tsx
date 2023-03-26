@@ -8,3 +8,15 @@ export const fooState = atom<IFoo>({
   key: "fooState",
   default: { baz: "boz" },
 });
+
+/**  */
+interface ChatResponse {
+  response: string;
+}
+
+export const chatResponseState = atom<ChatResponse>({
+  key: "chatResponseState",
+  default: {
+    response: "",
+  },
+});
