@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
+let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 const { getAccessTokenSilently } = useAuth0();
 
@@ -8,7 +9,7 @@ try {
   let accessToken = await getAccessTokenSilently();
 
   //-- Make GET request --//
-  let res = await axios.get("https://alb.chrt.com", {
+  let res = await axios.get(`${VITE_ALB_BASE_URL}`, {
     headers: {
       authorization: `Bearer ${accessToken}`,
     },
