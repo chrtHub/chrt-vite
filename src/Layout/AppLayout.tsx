@@ -390,7 +390,11 @@ export default function AppLayout({ infoMode }: IProps) {
               {/* START OF DROPDOWN MENU + PROFILE PICTURE*/}
               <div className="ml-4 flex items-center md:ml-6">
                 {/* START OF DROPDOWN MENU */}
-                <Menu as="div" className="relative ml-3">
+                <Menu
+                  id="app-layout-dropdown-menu"
+                  as="div"
+                  className="relative ml-3"
+                >
                   <div>
                     {/* START OF PROFILE PICTURE */}
 
@@ -418,7 +422,7 @@ export default function AppLayout({ infoMode }: IProps) {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-900 dark:ring-zinc-500">
+                    <Menu.Items className="absolute right-0 z-40 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-900 dark:ring-zinc-500">
                       {/* Light/Dark Mode Button - uses onClick isntead of href */}
                       <Menu.Item key={"light-dark-mode-button"}>
                         {({ active }) => (

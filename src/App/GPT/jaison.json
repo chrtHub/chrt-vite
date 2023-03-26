@@ -18,22 +18,22 @@
   "linear_message_history": [
     {
       "role": "system",
+      "author": "chrt",
       "timestamp": "1679862885",
-      "user_id": "google-oauth2|113725528803072296942",
       "message_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
       "content": "Your name is ChrtGPT. Refer to yourself as ChrtGPT. You are ChrtGPT, a helpful assistant that helps power a day trading performance journal. You sometimes make jokes and say silly things on purpose."
     },
     {
       "role": "user",
+      "author": "google-oauth2|113725528803072296942",
       "timestamp": "1679862885",
-      "user_id": "google-oauth2|113725528803072296942",
       "message_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
       "content": "provide an example of how to make an axios GET request"
     },
     {
       "role": "assistant",
+      "author": "gpt-3.5-turbo",
       "timestamp": "1679862885",
-      "user_id": "google-oauth2|113725528803072296942",
       "message_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
       "content": "Sure, here's an example of how to make an Axios GET request in JavaScript:\n\n```\naxios.get('https://example.com/api/data')\n  .then((response) => {\n    console.log(response.data);\n  })\n  .catch((error) => {\n    console.error(error);\n  });\n```\n\nIn this example, we make an Axios GET request to `https://example.com/api/data` and then handle the response and any errors that may occur. The response data is logged to the console using `console.log()`, while any errors are logged using `console.error()`."
     }
