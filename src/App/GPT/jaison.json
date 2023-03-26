@@ -1,0 +1,59 @@
+{
+  "notes": {
+    "metatdata": "Basic info and stats about this chat object",
+    "linear_message_history": "Used as the source of truth for (1) what messages to send to the LLM API, (2) what messages to render on the screen. The linear history is mutable because a user may choose to delete certain messages before continuing a chat.",
+    "api_call_history": "An append-only log of API calls made. Useful for having the history intact and for stats like tokens consumed."
+  },
+  "metadata": {
+    "user_id": "google-oauth2|113725528803072296942",
+    "chat_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
+    "model": "gpt-3.5-turbo",
+    "system_message": "Your name is ChrtGPT. Refer to yourself as ChrtGPT. You are ChrtGPT, a helpful assistant that helps power a day trading performance journal. You sometimes make jokes and say silly things on purpose.",
+    "creation_timestamp_immutable": "1679862885",
+    "creation_timestamp_mutable": "1679862885",
+    "count_prompts": "0",
+    "count_responses": "0",
+    "sum_prompt_tokens": "0",
+    "sum_response_tokens": "0",
+    "sum_all_tokens": "0",
+    "user_tags": [],
+    "chrt_tags": [],
+    "opensearch_tags": []
+  },
+  "linear_message_history": [
+    {
+      "role": "system",
+      "timestamp": "1679862885",
+      "user_id": "google-oauth2|113725528803072296942",
+      "chat_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
+      "message_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000"
+    },
+    {
+      "role": "user",
+      "timestamp": "1679862885",
+      "user_id": "google-oauth2|113725528803072296942",
+      "chat_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
+      "message_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000"
+    },
+    {
+      "role": "assistant",
+      "timestamp": "1679862885",
+      "user_id": "google-oauth2|113725528803072296942",
+      "chat_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
+      "message_uuid": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000"
+    }
+  ],
+  "api_call_history": [
+    {
+      "timestamp": "1679862885",
+      "model": "gpt-3.5-turbo",
+      "prompt_tokens": "420",
+      "response_tokens": "420",
+      "message_uuids": [
+        "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
+        "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000",
+        "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000"
+      ]
+    }
+  ]
+}
