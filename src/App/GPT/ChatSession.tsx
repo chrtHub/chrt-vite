@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
 import ModelListbox from "./ModelListbox";
+import * as chatson from "./chatson/chatson";
 
 //-- NPM Components --//
 import TextareaAutosize from "react-textarea-autosize";
@@ -44,14 +45,13 @@ export default function ChatSession() {
 
   //-- Click Handlers --//
   const submitPromptHandler = async () => {
-    console.log(prompt); // DEV
+    let chat = chatson.create_chat(chatson.Chatson_Format["2023-03-26-A"]);
+    console.log(JSON.stringify(chat, null, 2));
 
     setLLMLoading(true);
     try {
       //-- Get access token from memory or request new token --//
       let accessToken = await getAccessTokenSilently();
-
-      // DEV - to add logic here for using jaison object
 
       //-- Make POST request --//
       let res = await axios.post(
