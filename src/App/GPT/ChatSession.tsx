@@ -95,7 +95,7 @@ export default function ChatSession() {
       </div>
 
       {/* PROMPT INPUT */}
-      <div id="llm-old-prompt-input" className="flex justify-center">
+      <div id="llm-prompt-input" className="flex justify-center">
         <label htmlFor="prompt-input" className="sr-only">
           Prompt Input
         </label>
@@ -115,11 +115,12 @@ export default function ChatSession() {
           />
 
           <button
+            id="submit-prompt-button"
             onClick={submitPromptHandler}
             disabled={llmLoading || !prompt ? true : false}
             className={classNames(
               !prompt || llmLoading ? "cursor-not-allowed" : "cursor-pointer",
-              "absolute inset-y-0 right-0 flex  items-center pr-3"
+              "absolute right-0 bottom-0 flex items-center p-2 focus:outline-green-600"
             )}
           >
             <ArrowUpCircleIcon
