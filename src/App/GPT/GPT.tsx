@@ -4,9 +4,7 @@ import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
-import ModelListbox from "./ModelListbox";
 import ChatSession from "./ChatSession";
-import PromptInput from "./PromptInput";
 import ChatHistory from "./ChatHistory";
 
 //-- NPM Components --//
@@ -50,9 +48,7 @@ export default function GPT() {
           id="gpt-chat-current"
           className="col-span-9 h-full overflow-y-auto"
         >
-          <ModelListbox />
           <ChatSession />
-          <PromptInput />
         </div>
 
         <div
