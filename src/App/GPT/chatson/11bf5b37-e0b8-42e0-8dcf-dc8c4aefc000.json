@@ -1,5 +1,5 @@
 {
-  "jaison_version": "2023-03-26-A",
+  "chatson_version": "2023-03-26-A",
   "notes": {
     "metatdata": "Basic info and stats about this chat object",
     "linear_message_history": "Mutable message history used as source of truth for (1) sending requests to the LLM, (2) rendering a chat on screen to a user. Note - the system message is immutable.",

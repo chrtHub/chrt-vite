@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
 import ModelListbox from "./ModelListbox";
+import * as chatson from "./chatson/chatson";
 
 //-- NPM Components --//
 import TextareaAutosize from "react-textarea-autosize";
@@ -44,14 +45,13 @@ export default function ChatSession() {
 
   //-- Click Handlers --//
   const submitPromptHandler = async () => {
-    console.log(prompt); // DEV
+    let chat = chatson.create_chat(chatson.Chatson_Format["2023-03-26-A"]);
+    console.log(JSON.stringify(chat, null, 2));
 
     setLLMLoading(true);
     try {
       //-- Get access token from memory or request new token --//
       let accessToken = await getAccessTokenSilently();
-
-      // DEV - to add logic here for using jaison object
 
       //-- Make POST request --//
       let res = await axios.post(
@@ -77,14 +77,14 @@ export default function ChatSession() {
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <div className="flex-column justify-center">
+    <div className="flex min-h-full flex-col">
       {/* MODEL LISTBOX */}
       <div id="llm-model-listbox" className="flex justify-center">
         <ModelListbox />
       </div>
 
       {/* CHAT MESSAGES */}
-      <div id="llm-current-chat" className="flex justify-center">
+      <div id="llm-current-chat" className="flex flex-grow justify-center">
         <ul role="list" className="divide-y divide-zinc-200">
           <article className="prose prose-zinc">
             <li>
@@ -95,7 +95,7 @@ export default function ChatSession() {
       </div>
 
       {/* PROMPT INPUT */}
-      <div id="llm-old-prompt-input" className="flex justify-center">
+      <div id="llm-prompt-input" className="flex justify-center pt-3 pb-6">
         <label htmlFor="prompt-input" className="sr-only">
           Prompt Input
         </label>
@@ -115,11 +115,12 @@ export default function ChatSession() {
           />
 
           <button
+            id="submit-prompt-button"
             onClick={submitPromptHandler}
             disabled={llmLoading || !prompt ? true : false}
             className={classNames(
               !prompt || llmLoading ? "cursor-not-allowed" : "cursor-pointer",
-              "absolute inset-y-0 right-0 flex  items-center pr-3"
+              "absolute right-0 bottom-0 flex items-center p-2 focus:outline-green-600"
             )}
           >
             <ArrowUpCircleIcon
