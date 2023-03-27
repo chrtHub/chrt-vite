@@ -1,5 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -99,8 +99,9 @@ export default function ChatSession() {
         <label htmlFor="prompt-input" className="sr-only">
           Prompt Input
         </label>
-        <div className="relative mt-2 w-full max-w-prose rounded-md shadow-sm">
+        <div className="relative mt-2 w-full max-w-prose rounded-md shadow-md">
           <TextareaAutosize
+            autoFocus
             maxRows={10}
             id="prompt-input"
             name="prompt-input"
@@ -110,7 +111,7 @@ export default function ChatSession() {
             onChange={(event) => setPrompt(event.target.value)}
             className={classNames(
               llmLoading ? "animate-pulse ring-2 ring-indigo-500" : "",
-              "focs:ring-inset block w-full resize-none rounded-md border-0 py-1.5 pr-10 text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-green-600 sm:text-sm sm:leading-6"
+              "block w-full resize-none rounded-md border-0 py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:leading-6"
             )}
           />
 
