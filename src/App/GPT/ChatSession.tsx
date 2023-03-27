@@ -77,14 +77,14 @@ export default function ChatSession() {
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <div className="flex-column justify-center">
+    <div className="flex min-h-full flex-col">
       {/* MODEL LISTBOX */}
       <div id="llm-model-listbox" className="flex justify-center">
         <ModelListbox />
       </div>
 
       {/* CHAT MESSAGES */}
-      <div id="llm-current-chat" className="flex justify-center">
+      <div id="llm-current-chat" className="flex flex-grow justify-center">
         <ul role="list" className="divide-y divide-zinc-200">
           <article className="prose prose-zinc">
             <li>
@@ -95,7 +95,7 @@ export default function ChatSession() {
       </div>
 
       {/* PROMPT INPUT */}
-      <div id="llm-prompt-input" className="flex justify-center">
+      <div id="llm-prompt-input" className="flex justify-center pt-3 pb-6">
         <label htmlFor="prompt-input" className="sr-only">
           Prompt Input
         </label>

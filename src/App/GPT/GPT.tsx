@@ -46,18 +46,17 @@ export default function GPT() {
       <div id="gpt-grid-div" className="grid h-full grid-cols-12 gap-2">
         <div
           id="gpt-chat-current"
-          className="col-span-9 h-full overflow-y-auto"
+          className="col-span-12 h-full overflow-y-auto"
         >
           <ChatSession />
         </div>
 
-        <div
+        {/* <div
           id="gpt-chat-history"
           className="col-span-3 h-full overflow-y-auto"
         >
-          {/* hidden until large? hidden lg:??? */}
           <ChatHistory />
-        </div>
+        </div> */}
       </div>
     </>
   );
