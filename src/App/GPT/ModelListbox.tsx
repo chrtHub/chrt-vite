@@ -39,12 +39,12 @@ const models: IModel[] = [
   {
     apiName: "gpt-4",
     friendlyName: "GPT-4",
-    description: "Extra power, but slower",
+    description: "Extra Power (Slower)",
   },
   {
     apiName: "gpt-4-32k-0314",
-    friendlyName: "GPT-4-32k, March 14",
-    description: "The large prompts version",
+    friendlyName: "GPT-4-32k",
+    description: "For very large prompts",
     deprecation: new Date("June 14, 2023"),
   },
 ];
@@ -72,10 +72,7 @@ export default function ModelListbox() {
       <Listbox value={selectedModel} onChange={setSelectedModel}>
         {({ open }) => (
           <>
-            <Listbox.Label className="block text-sm font-medium leading-6 text-zinc-900">
-              Select a model
-            </Listbox.Label>
-            <div className="relative mt-2">
+            <div className="relative w-80">
               <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 focus:outline-none focus:ring-2 focus:ring-green-500 sm:text-sm sm:leading-6">
                 <span className="inline-flex w-full truncate">
                   <span className="truncate">{selectedModel.friendlyName}</span>
