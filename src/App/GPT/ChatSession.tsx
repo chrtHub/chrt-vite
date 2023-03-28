@@ -33,6 +33,7 @@ export default function ChatSession() {
   const [chat, setChat] = useState<IChatsonObject>(chatson.version_A);
   const [prompt, setPrompt] = useState<string>("");
   const [llmLoading, setLLMLoading] = useState<boolean>(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   //-- Recoil State --//
   const [chatResponse, setChatResponse] = useRecoilState(chatResponseState);
@@ -75,13 +76,23 @@ export default function ChatSession() {
           },
         }
       );
-      setChatResponse({ response: res.data.choices[0].message.content }); // DEV
+      setChatResponse({
+        prompt: prompt,
+        response: res.data.choices[0].message.content,
+      }); // DEV
       console.log(res.data.choices[0].message.content); // DEV
+
+      setPrompt("");
       //----//
     } catch (err) {
       console.log(err);
     }
     setLLMLoading(false);
+
+    //-- Refocus textarea after submitting a prompt --//
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
   };
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
@@ -98,6 +109,9 @@ export default function ChatSession() {
           <ul role="list" className="divide-y divide-zinc-200">
             <article className="prose prose-zinc dark:prose-invert">
               <li>
+                <p className="font-bold text-zinc-800 dark:text-zinc-50">
+                  {chatResponse.prompt}
+                </p>
                 <p>{chatResponse.response}</p>
               </li>
             </article>
@@ -129,6 +143,7 @@ export default function ChatSession() {
         <div className="relative mt-2 w-full max-w-prose rounded-md shadow-md">
           <TextareaAutosize
             autoFocus
+            ref={textareaRef}
             maxRows={10}
             id="prompt-input"
             name="prompt-input"

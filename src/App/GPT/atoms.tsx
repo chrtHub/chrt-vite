@@ -11,12 +11,14 @@ export const fooState = atom<IFoo>({
 
 /**  */
 interface ChatResponse {
+  prompt: string;
   response: string;
 }
 
 export const chatResponseState = atom<ChatResponse>({
   key: "chatResponseState",
   default: {
+    prompt: "",
     response: "",
   },
 });
