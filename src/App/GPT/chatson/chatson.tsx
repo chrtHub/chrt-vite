@@ -22,21 +22,21 @@ export function send_message(
   model: IChatsonModel,
   message: string
 ) {
-  //-- If no chat object, create a new chat object --//
+  //-- If chat object is null, create a new chat object --//
   if (!chatson_object) {
-    let newChatObject: IChatsonObject = version_A;
+    chatson_object = version_A;
 
-    newChatObject.metadata["single-or-multi-user"] = "single";
-    newChatObject.metadata.user_ids = user_ids;
-    newChatObject.metadata.chat_uuid = uuidv4();
-    newChatObject.metadata.creation_timestamp_immutable = timestamp();
-    newChatObject.metadata.reference_timestamp_mutable = timestamp();
+    chatson_object.metadata["single-or-multi-user"] = "single";
+    chatson_object.metadata.user_ids = user_ids;
+    chatson_object.metadata.chat_uuid = uuidv4();
+    chatson_object.metadata.creation_timestamp_immutable = timestamp();
+    chatson_object.metadata.reference_timestamp_mutable = timestamp();
 
-    console.log(JSON.stringify(newChatObject, null, 2)); // DEV
+    console.log(JSON.stringify(chatson_object, null, 2)); // DEV
   }
 
-  // TODO
-  let new_message: IChatsonMessage = {
+  //-- Crete chatson_message --//
+  let chatson_message: IChatsonMessage = {
     role: "user",
     user: user_ids[0],
     model: model.apiName,
@@ -44,12 +44,26 @@ export function send_message(
     message_uuid: uuidv4(),
     message: message,
   };
-  // add prompt to chatson object
-  // chatson_object.linear_message_history.push(new_message);
-  // extract appropriate messages from chatson object to be sent to the LLM API
-  // // e.g. system message, previous chat messages up to model's token limit
-  // make an API call
-  // when the response is fully received, it's added to the chatson object
+
+  //-- Add chatson_message to chatson_object --//
+  chatson_object.linear_message_history.push(chatson_message);
+  // set state using the ChatContext setters? to the new chatson_object value
+
+  //-- Count tokens and send up to 3,000 tokens of messages to the API --//
+  // first, unshift the "system" message and count its tokens
+  // // add the system message to the API call messages
+  // start a running total of tokens at the "system" messge token count
+  // pop messages from the linear message history
+  // count the tokens of the message
+  // if the sum of the running total and the message tokens <= 3000, add the message to the API call messages
+  // // if >3000, don't add the message. Send the API request
+  // // if pop returns nothing, send the API request
+
+  // when the response is received, use it to create:
+  // // message for linear_message_history
+  // // ChatsonAPIResposne for api_response_history
+  // push those objects into the arrays
+  // call setState from ChatContext to update the chatson_object
 }
 
 //-- Chatson Templates --//
