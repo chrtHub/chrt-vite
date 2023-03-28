@@ -96,7 +96,7 @@ export default function ChatSession() {
       {chatResponse.response ? (
         <div id="llm-current-chat" className="flex flex-grow justify-center">
           <ul role="list" className="divide-y divide-zinc-200">
-            <article className="prose prose-zinc">
+            <article className="prose prose-zinc dark:prose-invert">
               <li>
                 <p>{chatResponse.response}</p>
               </li>
@@ -108,8 +108,10 @@ export default function ChatSession() {
           id="llm-sample-prompts"
           className="flex flex-grow flex-col items-center justify-center"
         >
-          <p className="text-4xl font-medium text-zinc-500">ChrtGPT</p>
-          <article className="prose prose-zinc">
+          <p className="text-4xl font-medium text-zinc-500 dark:text-zinc-400">
+            ChrtGPT
+          </p>
+          <article className="prose prose-zinc dark:prose-invert">
             <div className="">
               <p className="italic">What is ChrtGPT?</p>
               <p className="italic">How to be a good day trader?</p>
