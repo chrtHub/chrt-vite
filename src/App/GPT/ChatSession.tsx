@@ -22,6 +22,7 @@ import classNames from "../../Util/classNames";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
+import { IChatsonObject } from "./chatson/types";
 import { chatResponseState } from "./atoms";
 
 //-- Types --//
@@ -29,6 +30,7 @@ import { chatResponseState } from "./atoms";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ChatSession() {
   //-- React State --//
+  const [chat, setChat] = useState<IChatsonObject>(chatson.version_A);
   const [prompt, setPrompt] = useState<string>("");
   const [llmLoading, setLLMLoading] = useState<boolean>(false);
 
@@ -36,7 +38,7 @@ export default function ChatSession() {
   const [chatResponse, setChatResponse] = useRecoilState(chatResponseState);
 
   //-- Auth --//
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently, user } = useAuth0();
 
   //-- Other [] --//
   // TODO - watch the prompt length. based on the current model's limit, if the prompt is too long, warn the user
@@ -45,8 +47,15 @@ export default function ChatSession() {
 
   //-- Click Handlers --//
   const submitPromptHandler = async () => {
-    let chat = chatson.create_chat(chatson.Chatson_Format["2023-03-26-A"]);
-    console.log(JSON.stringify(chat, null, 2));
+    //-- Add prompt to chat --//
+    if (!chat && user?.sub) {
+      let updatedChat = chatson.add_prompt(prompt, [user.sub], null);
+      // call LLM?
+      // how will the server-sent events be returned?
+      // setState?
+    } else if (chat && user?.sub) {
+      let updatedChat = chatson.add_prompt(prompt, [user.sub], chat);
+    }
 
     setLLMLoading(true);
     try {
@@ -83,16 +92,34 @@ export default function ChatSession() {
         <ModelListbox />
       </div>
 
-      {/* CHAT MESSAGES */}
-      <div id="llm-current-chat" className="flex flex-grow justify-center">
-        <ul role="list" className="divide-y divide-zinc-200">
-          <article className="prose prose-zinc">
-            <li>
-              <p>{chatResponse.response}</p>
-            </li>
+      {/* CURRENT CHAT or SAMPLE PROPMTS */}
+      {chatResponse.response ? (
+        <div id="llm-current-chat" className="flex flex-grow justify-center">
+          <ul role="list" className="divide-y divide-zinc-200">
+            <article className="prose prose-zinc dark:prose-invert">
+              <li>
+                <p>{chatResponse.response}</p>
+              </li>
+            </article>
+          </ul>
+        </div>
+      ) : (
+        <div
+          id="llm-sample-prompts"
+          className="flex flex-grow flex-col items-center justify-center"
+        >
+          <p className="text-4xl font-medium text-zinc-500 dark:text-zinc-400">
+            ChrtGPT
+          </p>
+          <article className="prose prose-zinc dark:prose-invert">
+            <div className="">
+              <p className="italic">What is ChrtGPT?</p>
+              <p className="italic">How to be a good day trader?</p>
+              <p className="italic">What are some risks of day trading?</p>
+            </div>
           </article>
-        </ul>
-      </div>
+        </div>
+      )}
 
       {/* PROMPT INPUT */}
       <div id="llm-prompt-input" className="flex justify-center pt-3 pb-6">
