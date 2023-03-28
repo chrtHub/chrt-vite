@@ -1,8 +1,7 @@
-import { Dispatch, SetStateAction } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { getUnixTime } from "date-fns";
 
-import { IChatsonObject, IChatsonMessage } from "./types";
+import { IChatsonObject, IChatsonMessage, IChatsonModel } from "./types";
 
 //-- Utility Function --//
 const timestamp = (): string => {
@@ -12,15 +11,16 @@ const timestamp = (): string => {
 /**
  * Causes an LLM API call after adding a propmt to a chatson object
  *
- * @param prompt user input to be added to the chat history and sent to the LLM
+ * @param message user input to be added to the chat history and sent to the LLM
  * @param user_ids array of user ids. current user should be at index 0.
  * @param chatson_object if null, a new chat is created. otherwise, the prompt is appended to the chatson_object
  * @returns IChatsonObject updated with the new prompt
  */
-export function add_prompt(
-  prompt: string,
+export function send_message(
+  chatson_object: IChatsonObject | null,
   user_ids: string[],
-  chatson_object: IChatsonObject | null
+  model: IChatsonModel,
+  message: string
 ) {
   //-- If no chat object, create a new chat object --//
   if (!chatson_object) {
@@ -38,10 +38,11 @@ export function add_prompt(
   // TODO
   let new_message: IChatsonMessage = {
     role: "user",
-    author: user_ids[0],
+    user: user_ids[0],
+    model: model.apiName,
     timestamp: timestamp(),
     message_uuid: uuidv4(),
-    content: prompt,
+    message: message,
   };
   // add prompt to chatson object
   // chatson_object.linear_message_history.push(new_message);
@@ -53,14 +54,6 @@ export function add_prompt(
 
 //-- Chatson Templates --//
 export const version_A: IChatsonObject = {
-  chatson_version: "A",
-  notes: {
-    metadata: "Basic info and stats about this chat object",
-    linear_message_history:
-      "Mutable message history used as source of truth for (1) sending requests to the LLM, (2) rendering a chat on screen to a user. Note - the system message is immutable.",
-    api_call_history:
-      "An append-only log of API calls used to track token consumption and for general reference.",
-  },
   metadata: {
     "single-or-multi-user": "",
     user_ids: [],
@@ -74,12 +67,13 @@ export const version_A: IChatsonObject = {
   linear_message_history: [
     {
       role: "system",
-      author: "chrt",
+      user: "chrt",
+      model: "",
       timestamp: "",
       message_uuid: "",
-      content:
+      message:
         "Your name is ChrtGPT. Refer to yourself as ChrtGPT. You are ChrtGPT, a helpful assistant that helps power a day trading performance journal. You sometimes make jokes and say silly things on purpose.",
     },
   ],
-  api_call_history: [],
+  api_response_history: [],
 };

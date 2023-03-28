@@ -9,7 +9,7 @@ export const fooState = atom<IFoo>({
   default: { baz: "boz" },
 });
 
-/**  */
+/** Temporary - for single-response chat implementation */
 interface ChatResponse {
   prompt: string;
   response: string;

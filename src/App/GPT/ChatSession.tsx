@@ -1,7 +1,8 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
+import { ChatContext as _ChatContext } from "./GPT";
 
 //-- TSX Components --//
 import ModelListbox from "./ModelListbox";
@@ -25,12 +26,12 @@ let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 import { IChatsonObject } from "./chatson/types";
 import { chatResponseState } from "./atoms";
 
-//-- Types --//
-
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ChatSession() {
+  //-- React Context --//
+  const ChatContext = useContext(_ChatContext);
+
   //-- React State --//
-  const [chat, setChat] = useState<IChatsonObject>(chatson.version_A);
   const [prompt, setPrompt] = useState<string>("");
   const [llmLoading, setLLMLoading] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -48,14 +49,14 @@ export default function ChatSession() {
 
   //-- Click Handlers --//
   const submitPromptHandler = async () => {
-    //-- Add prompt to chat --//
-    if (!chat && user?.sub) {
-      let updatedChat = chatson.add_prompt(prompt, [user.sub], null);
-      // call LLM?
-      // how will the server-sent events be returned?
-      // setState?
-    } else if (chat && user?.sub) {
-      let updatedChat = chatson.add_prompt(prompt, [user.sub], chat);
+    //-- Send prompt as chat message --//
+    if (user?.sub) {
+      let updatedChat = chatson.send_message(
+        null,
+        [user.sub],
+        ChatContext.model,
+        prompt
+      );
     }
 
     setLLMLoading(true);

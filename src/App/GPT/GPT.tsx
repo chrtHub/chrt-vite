@@ -1,38 +1,78 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
-import { useAuth0 } from "@auth0/auth0-react";
+import { createContext, useState } from "react";
 
 //-- TSX Components --//
 import ChatSession from "./ChatSession";
-import ChatHistory from "./ChatHistory";
+// import ChatHistory from "./ChatHistory";
+import {
+  IChatsonObject,
+  IChatsonModel,
+  CurrentChatsonModelNames,
+} from "./chatson/types";
 
 //-- NPM Components --//
 
 //-- Icons --//
 
 //-- NPM Functions --//
-import axios from "axios";
 
 //-- Utility Functions --//
-import classNames from "../../Util/classNames";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
-import { fooState } from "./atoms";
-let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
-//-- Types --//
+//-- Chat Context --//
+const CurrentChatsonModels: Record<CurrentChatsonModelNames, IChatsonModel> = {
+  "gpt-3.5-turbo": {
+    apiName: "gpt-3.5-turbo",
+    friendlyName: "GPT-3.5 Turbo",
+    description: "Power and Speed",
+  },
+  "gpt-4": {
+    apiName: "gpt-4",
+    friendlyName: "GPT-4",
+    description: "Extra Power (Slower)",
+  },
+  "gpt-4-32k": {
+    apiName: "gpt-4-32k",
+    friendlyName: "GPT-4-32k",
+    description: "For very large prompts",
+  },
+};
+
+interface IChatContext {
+  chatson: IChatsonObject | null;
+  setChatson: React.Dispatch<React.SetStateAction<IChatsonObject | null>>;
+  model: IChatsonModel;
+  setModel: React.Dispatch<React.SetStateAction<IChatsonModel>>;
+  CurrentChatsonModels: Record<CurrentChatsonModelNames, IChatsonModel>;
+}
+const defaultContextValue: IChatContext = {
+  chatson: null,
+  setChatson: () => {},
+  model: CurrentChatsonModels["gpt-3.5-turbo"],
+  setModel: () => {},
+  CurrentChatsonModels: CurrentChatsonModels,
+};
+export const ChatContext = createContext<IChatContext>(defaultContextValue);
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function GPT() {
   //-- React State --//
-  const [fooLoading, setFooLoading] = useState<boolean>(false);
+  const [chatson, setChatson] = useState<IChatsonObject | null>(null);
+  const [model, setModel] = useState<IChatsonModel>(
+    CurrentChatsonModels["gpt-3.5-turbo"]
+  );
+  const chatContextValue = {
+    chatson,
+    setChatson,
+    model,
+    setModel,
+    CurrentChatsonModels,
+  };
 
   //-- Recoil State --//
-  const [bar, setBar] = useRecoilState(fooState);
 
   //-- Auth --//
-  const { getAccessTokenSilently } = useAuth0();
 
   //-- Other [] --//
 
@@ -42,7 +82,7 @@ export default function GPT() {
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <>
+    <ChatContext.Provider value={chatContextValue}>
       <div id="gpt-grid-div" className="grid h-full grid-cols-12 gap-2">
         <div
           id="gpt-chat-current"
@@ -58,6 +98,6 @@ export default function GPT() {
           <ChatHistory />
         </div> */}
       </div>
-    </>
+    </ChatContext.Provider>
   );
 }

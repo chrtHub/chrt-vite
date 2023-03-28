@@ -1,21 +1,8 @@
-export interface IChatsonMessage {
-  role: string;
-  author: string;
-  timestamp: string;
-  message_uuid: string;
-  content: string;
-}
+//-- OpenAI Docs for "Create chat completion"
+//-- https://platform.openai.com/docs/api-reference/chat/create --//
 
-// TODO - specify the Record type for this interface
-export interface IChatsonAPICall extends Record<string, any> {}
-
+//-- IChatsonObject - represents one entire chat --//
 export interface IChatsonObject {
-  chatson_version: string;
-  notes: {
-    metadata: string; // Corrected property name
-    linear_message_history: string;
-    api_call_history: string;
-  };
   metadata: {
     "single-or-multi-user": string;
     user_ids: string[];
@@ -27,5 +14,36 @@ export interface IChatsonObject {
     opensearch_tags: string[];
   };
   linear_message_history: IChatsonMessage[];
-  api_call_history: IChatsonAPICall[];
+  api_response_history: IChatsonAPIResponse[];
+}
+
+//-- IChatsonMessage - used for both prompts and responses --//
+export interface IChatsonMessage {
+  role: string;
+  user: string;
+  model: string;
+  timestamp: string;
+  message_uuid: string;
+  message: string;
+}
+
+//-- List of LLM models --//
+export type CurrentChatsonModelNames = "gpt-3.5-turbo" | "gpt-4" | "gpt-4-32k";
+
+export interface IChatsonModel {
+  apiName: CurrentChatsonModelNames;
+  friendlyName: string;
+  description: string;
+}
+
+//-- Information about API Responses --//
+export interface IChatsonAPIResponse {
+  user: string;
+  model: string;
+  id: string;
+  object: string;
+  created: number;
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
 }
