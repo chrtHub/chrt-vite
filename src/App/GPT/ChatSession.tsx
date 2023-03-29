@@ -51,11 +51,12 @@ export default function ChatSession() {
   const submitPromptHandler = async () => {
     //-- Send prompt as chat message --//
     if (user?.sub) {
-      let updatedChat = chatson.send_message(
+      chatson.send_message(
         null,
         [user.sub],
         ChatContext.model,
-        prompt
+        prompt,
+        ChatContext.setChatson
       );
     }
 
@@ -96,6 +97,10 @@ export default function ChatSession() {
     }
   };
 
+  useEffect(() => {
+    console.log(ChatContext.chatson);
+  }, [ChatContext.chatson]);
+
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div className="flex min-h-full flex-col">
@@ -109,12 +114,17 @@ export default function ChatSession() {
         <div id="llm-current-chat" className="flex flex-grow justify-center">
           <ul role="list" className="divide-y divide-zinc-200">
             <article className="prose prose-zinc dark:prose-invert">
+              {/* from Context API */}
               <li>
-                <p className="font-bold text-zinc-800 dark:text-zinc-50">
-                  {chatResponse.prompt}
-                </p>
-                <p>{chatResponse.response}</p>
+                {ChatContext.chatson?.linear_message_history.map((message) => (
+                  <li>
+                    <p>user: {message.user}</p>
+                    <p>model: {message.model}</p>
+                    <p>message: {message.message}</p>
+                  </li>
+                ))}
               </li>
+              {/*  */}
             </article>
           </ul>
         </div>

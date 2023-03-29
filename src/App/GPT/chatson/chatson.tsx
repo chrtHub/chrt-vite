@@ -1,7 +1,9 @@
+import { useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { getUnixTime } from "date-fns";
 
 import { IChatsonObject, IChatsonMessage, IChatsonModel } from "./types";
+import { tiktoken } from "./tiktoken";
 
 //-- Utility Function --//
 const timestamp = (): string => {
@@ -20,22 +22,28 @@ export function send_message(
   chatson_object: IChatsonObject | null,
   user_ids: string[],
   model: IChatsonModel,
-  message: string
+  message: string,
+  setChatson: React.Dispatch<React.SetStateAction<IChatsonObject | null>>
 ) {
   //-- If chat object is null, create a new chat object --//
   if (!chatson_object) {
+    //-- Instantiate new object from template --//
     chatson_object = version_A;
 
+    //-- Set metadata --//
     chatson_object.metadata["single-or-multi-user"] = "single";
     chatson_object.metadata.user_ids = user_ids;
     chatson_object.metadata.chat_uuid = uuidv4();
     chatson_object.metadata.creation_timestamp_immutable = timestamp();
     chatson_object.metadata.reference_timestamp_mutable = timestamp();
 
-    console.log(JSON.stringify(chatson_object, null, 2)); // DEV
+    //-- Set system message data --//
+    chatson_object.linear_message_history[0].model = model.apiName;
+    chatson_object.linear_message_history[0].timestamp = timestamp();
+    chatson_object.linear_message_history[0].message_uuid = uuidv4();
   }
 
-  //-- Crete chatson_message --//
+  //-- Crete new chatson_message --//
   let chatson_message: IChatsonMessage = {
     role: "user",
     user: user_ids[0],
@@ -45,12 +53,17 @@ export function send_message(
     message: message,
   };
 
-  //-- Add chatson_message to chatson_object --//
+  //-- Append chatson_message to chatson_object and update state --//
   chatson_object.linear_message_history.push(chatson_message);
-  // set state using the ChatContext setters? to the new chatson_object value
+  setChatson(chatson_object);
 
-  //-- Count tokens and send up to 3,000 tokens of messages to the API --//
-  // first, unshift the "system" message and count its tokens
+  //-- Estimate token count per message --//
+  // let tokens: number = 0;
+  // tokens += tiktoken(chatson_object.linear_message_history[0].message);
+  // tokens += tiktoken(chatson_message.message);
+
+  // Make API call from here and add reponse to state
+
   // // add the system message to the API call messages
   // start a running total of tokens at the "system" messge token count
   // pop messages from the linear message history
