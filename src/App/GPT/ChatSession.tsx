@@ -90,11 +90,56 @@ export default function ChatSession() {
               {/* from Context API */}
               <li>
                 {ChatContext.chatson?.linear_message_history.map((message) => (
-                  <li>
-                    <p>user: {message.user}</p>
-                    <p>model: {message.model}</p>
-                    <p>message: {message.message}</p>
-                    ---
+                  // <li>
+                  //   <p>user: {message.user}</p>
+                  //   <p>model: {message.model}</p>
+                  //   <p>message: {message.message}</p>
+                  //   <p>timestamp: {message.timestamp}</p>
+                  //   <p>role: {message.role}</p>
+                  //   ---
+                  // </li>
+                  <li className="flex flex-col space-y-2 rounded-lg bg-white p-4 shadow-md">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-semibold text-gray-700">User:</span>
+                      <span className="font-normal text-gray-600">
+                        {message.user}
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-semibold text-gray-700">
+                        Model:
+                      </span>
+                      <span className="font-normal text-gray-600">
+                        {message.model}
+                      </span>
+                    </div>
+
+                    <div className="flex space-x-2 align-top">
+                      <div className="flex-col items-center">
+                        <span className="font-semibold text-gray-700">
+                          Message:
+                        </span>
+                      </div>
+
+                      <span className="font-normal text-gray-600">
+                        {message.message}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <span className="font-semibold text-gray-700">
+                        Timestamp:
+                      </span>
+                      <span className="font-normal text-gray-600">
+                        {message.timestamp}
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-semibold text-gray-700">Role:</span>
+                      <span className="font-normal text-gray-600">
+                        {message.role}
+                      </span>
+                    </div>
                   </li>
                 ))}
               </li>
@@ -121,7 +166,7 @@ export default function ChatSession() {
       )}
 
       {/* PROMPT INPUT */}
-      <div id="llm-prompt-input" className="flex justify-center pt-3 pb-6">
+      <div id="llm-prompt-input" className="flex justify-center pb-6 pt-3">
         <label htmlFor="prompt-input" className="sr-only">
           Prompt Input
         </label>
@@ -152,7 +197,7 @@ export default function ChatSession() {
               !prompt || ChatContext.llmLoading
                 ? "cursor-not-allowed"
                 : "cursor-pointer",
-              "absolute right-0 bottom-0 flex items-center p-2 focus:outline-green-600"
+              "absolute bottom-0 right-0 flex items-center p-2 focus:outline-green-600"
             )}
           >
             <ArrowUpCircleIcon
