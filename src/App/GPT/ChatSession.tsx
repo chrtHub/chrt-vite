@@ -62,6 +62,7 @@ export default function ChatSession() {
       );
       // setLLMLoading to false here??
     }
+    setPrompt("");
 
     //-- Refocus textarea after submitting a prompt --//
     if (textareaRef.current) {

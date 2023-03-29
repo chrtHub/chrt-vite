@@ -71,7 +71,7 @@ export async function send_message(
 
   //-- Start with "system" message and add up to 3,000 tokens worth of messages --//
   let system_message = chatson_object.linear_message_history[0];
-  let tokens: number = tiktoken(system_message.message);
+  let tokens = tiktoken(system_message.message);
 
   let chatRequestMessages: Array<ChatCompletionRequestMessage> = [
     {
@@ -89,14 +89,18 @@ export async function send_message(
     let contentTokens = tiktoken(content);
 
     if (tokens + contentTokens < 3000) {
+      tokens += contentTokens;
+      console.log("tokens: " + tokens); // DEV
       let chatRequestMessage: ChatCompletionRequestMessage = {
         role: chatson_object.linear_message_history[idx].role,
         content: content,
       };
 
-      chatRequestMessages.push(chatRequestMessage);
+      //-- Insert after system message, shifting any other messages --//
+      chatRequestMessages.splice(1, 0, chatRequestMessage);
     } else {
       tokenLimitHit = true;
+      console.log("token limit hit!"); // DEV
     }
 
     idx--;
