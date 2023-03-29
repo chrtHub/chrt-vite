@@ -1,21 +1,5 @@
-export interface IChatsonMessage {
-  role: string;
-  author: string;
-  timestamp: string;
-  message_uuid: string;
-  content: string;
-}
-
-// TODO - specify the Record type for this interface
-export interface IChatsonAPICall extends Record<string, any> {}
-
+//-- IChatsonObject - represents one entire chat --//
 export interface IChatsonObject {
-  chatson_version: string;
-  notes: {
-    metadata: string; // Corrected property name
-    linear_message_history: string;
-    api_call_history: string;
-  };
   metadata: {
     "single-or-multi-user": string;
     user_ids: string[];
@@ -27,5 +11,197 @@ export interface IChatsonObject {
     opensearch_tags: string[];
   };
   linear_message_history: IChatsonMessage[];
-  api_call_history: IChatsonAPICall[];
+  api_response_history: IChatsonAPIResponse[];
+}
+
+//-- IChatsonMessage - used for both prompts and responses --//
+export interface IChatsonMessage {
+  user: string;
+  model: string;
+  timestamp: string;
+  message_uuid: string;
+  role: ChatCompletionRequestMessageRoleEnum;
+  message: string;
+}
+
+//-- List of LLM models --//
+export type CurrentChatsonModelNames = "gpt-3.5-turbo" | "gpt-4" | "gpt-4-32k";
+
+export interface IChatsonModel {
+  apiName: CurrentChatsonModelNames;
+  friendlyName: string;
+  description: string;
+}
+
+//-- Information about API Responses --//
+export interface IChatsonAPIResponse {
+  user: string;
+  model: string;
+  response_id: string;
+  object: string;
+  created: number;
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+}
+
+//-- (2023-03-28) Types copy-pasted from OpenAI Node SDK --//
+
+/**
+ *
+ * @export
+ * @interface ChatCompletionRequestMessage
+ */
+export interface ChatCompletionRequestMessage {
+  /**
+   * The role of the author of this message.
+   * @type {string}
+   * @memberof ChatCompletionRequestMessage
+   */
+  role: ChatCompletionRequestMessageRoleEnum;
+  /**
+   * The contents of the message
+   * @type {string}
+   * @memberof ChatCompletionRequestMessage
+   */
+  content: string;
+  /**
+   * The name of the user in a multi-user chat
+   * @type {string}
+   * @memberof ChatCompletionRequestMessage
+   */
+  name?: string;
+}
+export declare const ChatCompletionRequestMessageRoleEnum: {
+  readonly System: "system";
+  readonly User: "user";
+  readonly Assistant: "assistant";
+};
+export declare type ChatCompletionRequestMessageRoleEnum =
+  (typeof ChatCompletionRequestMessageRoleEnum)[keyof typeof ChatCompletionRequestMessageRoleEnum];
+
+/**
+ *
+ * @export
+ * @interface ChatCompletionResponseMessage
+ */
+export interface ChatCompletionResponseMessage {
+  /**
+   * The role of the author of this message.
+   * @type {string}
+   * @memberof ChatCompletionResponseMessage
+   */
+  role: ChatCompletionResponseMessageRoleEnum;
+  /**
+   * The contents of the message
+   * @type {string}
+   * @memberof ChatCompletionResponseMessage
+   */
+  content: string;
+}
+
+export declare const ChatCompletionResponseMessageRoleEnum: {
+  readonly System: "system";
+  readonly User: "user";
+  readonly Assistant: "assistant";
+};
+
+export declare type ChatCompletionResponseMessageRoleEnum =
+  (typeof ChatCompletionResponseMessageRoleEnum)[keyof typeof ChatCompletionResponseMessageRoleEnum];
+
+/**
+ *
+ * @export
+ * @interface CreateChatCompletionResponse
+ */
+
+export interface CreateChatCompletionResponse {
+  /**
+   *
+   * @type {string}
+   * @memberof CreateChatCompletionResponse
+   */
+  id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof CreateChatCompletionResponse
+   */
+  object: string;
+  /**
+   *
+   * @type {number}
+   * @memberof CreateChatCompletionResponse
+   */
+  created: number;
+  /**
+   *
+   * @type {string}
+   * @memberof CreateChatCompletionResponse
+   */
+  model: string;
+  /**
+   *
+   * @type {Array<CreateChatCompletionResponseChoicesInner>}
+   * @memberof CreateChatCompletionResponse
+   */
+  choices: Array<CreateChatCompletionResponseChoicesInner>;
+  /**
+   *
+   * @type {CreateCompletionResponseUsage}
+   * @memberof CreateChatCompletionResponse
+   */
+  usage?: CreateCompletionResponseUsage;
+}
+
+/**
+ *
+ * @export
+ * @interface CreateChatCompletionResponseChoicesInner
+ */
+export interface CreateChatCompletionResponseChoicesInner {
+  /**
+   *
+   * @type {number}
+   * @memberof CreateChatCompletionResponseChoicesInner
+   */
+  index?: number;
+  /**
+   *
+   * @type {ChatCompletionResponseMessage}
+   * @memberof CreateChatCompletionResponseChoicesInner
+   */
+  message?: ChatCompletionResponseMessage;
+  /**
+   *
+   * @type {string}
+   * @memberof CreateChatCompletionResponseChoicesInner
+   */
+  finish_reason?: string;
+}
+
+/**
+ *
+ * @export
+ * @interface CreateCompletionResponseUsage
+ */
+export interface CreateCompletionResponseUsage {
+  /**
+   *
+   * @type {number}
+   * @memberof CreateCompletionResponseUsage
+   */
+  prompt_tokens: number;
+  /**
+   *
+   * @type {number}
+   * @memberof CreateCompletionResponseUsage
+   */
+  completion_tokens: number;
+  /**
+   *
+   * @type {number}
+   * @memberof CreateCompletionResponseUsage
+   */
+  total_tokens: number;
 }

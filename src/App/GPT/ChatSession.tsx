@@ -1,7 +1,8 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
+import { ChatContext as _ChatContext } from "./GPT";
 
 //-- TSX Components --//
 import ModelListbox from "./ModelListbox";
@@ -22,21 +23,17 @@ import classNames from "../../Util/classNames";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
-import { IChatsonObject } from "./chatson/types";
-import { chatResponseState } from "./atoms";
-
-//-- Types --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ChatSession() {
+  //-- React Context --//
+  const ChatContext = useContext(_ChatContext);
+
   //-- React State --//
-  const [chat, setChat] = useState<IChatsonObject>(chatson.version_A);
   const [prompt, setPrompt] = useState<string>("");
-  const [llmLoading, setLLMLoading] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   //-- Recoil State --//
-  const [chatResponse, setChatResponse] = useRecoilState(chatResponseState);
 
   //-- Auth --//
   const { getAccessTokenSilently, user } = useAuth0();
@@ -48,52 +45,34 @@ export default function ChatSession() {
 
   //-- Click Handlers --//
   const submitPromptHandler = async () => {
-    //-- Add prompt to chat --//
-    if (!chat && user?.sub) {
-      let updatedChat = chatson.add_prompt(prompt, [user.sub], null);
-      // call LLM?
-      // how will the server-sent events be returned?
-      // setState?
-    } else if (chat && user?.sub) {
-      let updatedChat = chatson.add_prompt(prompt, [user.sub], chat);
-    }
+    const accessToken = await getAccessTokenSilently();
+    // TODO - implement ability to add message to existing chatson object
 
-    setLLMLoading(true);
-    try {
-      //-- Get access token from memory or request new token --//
-      let accessToken = await getAccessTokenSilently();
-
-      //-- Make POST request --//
-      let res = await axios.post(
-        `${VITE_ALB_BASE_URL}/llm/gpt-3.5-turbo`,
-        //-- Body Content --//
-        {
-          prompt: prompt,
-        },
-        {
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        }
+    //-- Send prompt as chat message --//
+    if (user?.sub) {
+      // setLLMLoading to true here??
+      await chatson.send_message(
+        accessToken,
+        null, //-- chatson_object --//
+        [user.sub],
+        ChatContext.model,
+        prompt,
+        ChatContext.setChatson,
+        ChatContext.setLLMLoading
       );
-      setChatResponse({
-        prompt: prompt,
-        response: res.data.choices[0].message.content,
-      }); // DEV
-      console.log(res.data.choices[0].message.content); // DEV
-
-      setPrompt("");
-      //----//
-    } catch (err) {
-      console.log(err);
+      // setLLMLoading to false here??
     }
-    setLLMLoading(false);
+    setPrompt("");
 
     //-- Refocus textarea after submitting a prompt --//
     if (textareaRef.current) {
       textareaRef.current.focus();
     }
   };
+
+  useEffect(() => {
+    console.log(ChatContext.chatson);
+  }, [ChatContext.chatson]);
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
@@ -104,16 +83,67 @@ export default function ChatSession() {
       </div>
 
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
-      {chatResponse.response ? (
+      {true ? (
         <div id="llm-current-chat" className="flex flex-grow justify-center">
           <ul role="list" className="divide-y divide-zinc-200">
             <article className="prose prose-zinc dark:prose-invert">
+              {/* from Context API */}
               <li>
-                <p className="font-bold text-zinc-800 dark:text-zinc-50">
-                  {chatResponse.prompt}
-                </p>
-                <p>{chatResponse.response}</p>
+                {ChatContext.chatson?.linear_message_history.map((message) => (
+                  // <li>
+                  //   <p>user: {message.user}</p>
+                  //   <p>model: {message.model}</p>
+                  //   <p>message: {message.message}</p>
+                  //   <p>timestamp: {message.timestamp}</p>
+                  //   <p>role: {message.role}</p>
+                  //   ---
+                  // </li>
+                  <li className="flex flex-col space-y-2 rounded-lg bg-white p-4 shadow-md">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-semibold text-gray-700">User:</span>
+                      <span className="font-normal text-gray-600">
+                        {message.user}
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-semibold text-gray-700">
+                        Model:
+                      </span>
+                      <span className="font-normal text-gray-600">
+                        {message.model}
+                      </span>
+                    </div>
+
+                    <div className="flex space-x-2 align-top">
+                      <div className="flex-col items-center">
+                        <span className="font-semibold text-gray-700">
+                          Message:
+                        </span>
+                      </div>
+
+                      <span className="font-normal text-gray-600">
+                        {message.message}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <span className="font-semibold text-gray-700">
+                        Timestamp:
+                      </span>
+                      <span className="font-normal text-gray-600">
+                        {message.timestamp}
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-semibold text-gray-700">Role:</span>
+                      <span className="font-normal text-gray-600">
+                        {message.role}
+                      </span>
+                    </div>
+                  </li>
+                ))}
               </li>
+              {/*  */}
             </article>
           </ul>
         </div>
@@ -136,7 +166,7 @@ export default function ChatSession() {
       )}
 
       {/* PROMPT INPUT */}
-      <div id="llm-prompt-input" className="flex justify-center pt-3 pb-6">
+      <div id="llm-prompt-input" className="flex justify-center pb-6 pt-3">
         <label htmlFor="prompt-input" className="sr-only">
           Prompt Input
         </label>
@@ -152,7 +182,9 @@ export default function ChatSession() {
             value={prompt}
             onChange={(event) => setPrompt(event.target.value)}
             className={classNames(
-              llmLoading ? "animate-pulse ring-2 ring-indigo-500" : "",
+              ChatContext.llmLoading
+                ? "animate-pulse ring-2 ring-indigo-500"
+                : "",
               "block w-full resize-none rounded-md border-0 py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:leading-6"
             )}
           />
@@ -160,16 +192,20 @@ export default function ChatSession() {
           <button
             id="submit-prompt-button"
             onClick={submitPromptHandler}
-            disabled={llmLoading || !prompt ? true : false}
+            disabled={ChatContext.llmLoading || !prompt ? true : false}
             className={classNames(
-              !prompt || llmLoading ? "cursor-not-allowed" : "cursor-pointer",
-              "absolute right-0 bottom-0 flex items-center p-2 focus:outline-green-600"
+              !prompt || ChatContext.llmLoading
+                ? "cursor-not-allowed"
+                : "cursor-pointer",
+              "absolute bottom-0 right-0 flex items-center p-2 focus:outline-green-600"
             )}
           >
             <ArrowUpCircleIcon
               className={classNames(
                 prompt ? "text-green-600" : "text-zinc-300",
-                llmLoading ? "texgt- animate-spin text-indigo-500" : "",
+                ChatContext.llmLoading
+                  ? "texgt- animate-spin text-indigo-500"
+                  : "",
                 "h-5 w-5"
               )}
               aria-hidden="true"

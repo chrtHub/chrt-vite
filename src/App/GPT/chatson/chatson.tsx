@@ -1,8 +1,19 @@
-import { Dispatch, SetStateAction } from "react";
+import { useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { getUnixTime } from "date-fns";
+import axios from "axios";
 
-import { IChatsonObject, IChatsonMessage } from "./types";
+let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
+
+import {
+  IChatsonObject,
+  IChatsonMessage,
+  IChatsonModel,
+  IChatsonAPIResponse,
+  ChatCompletionRequestMessage,
+  CreateChatCompletionResponse,
+} from "./types";
+import { tiktoken } from "./tiktoken";
 
 //-- Utility Function --//
 const timestamp = (): string => {
@@ -12,55 +23,149 @@ const timestamp = (): string => {
 /**
  * Causes an LLM API call after adding a propmt to a chatson object
  *
- * @param prompt user input to be added to the chat history and sent to the LLM
+ * @param message user input to be added to the chat history and sent to the LLM
  * @param user_ids array of user ids. current user should be at index 0.
  * @param chatson_object if null, a new chat is created. otherwise, the prompt is appended to the chatson_object
  * @returns IChatsonObject updated with the new prompt
  */
-export function add_prompt(
-  prompt: string,
+export async function send_message(
+  accessToken: string,
+  chatson_object: IChatsonObject | null,
   user_ids: string[],
-  chatson_object: IChatsonObject | null
+  model: IChatsonModel,
+  message: string,
+  setChatson: React.Dispatch<React.SetStateAction<IChatsonObject | null>>,
+  setLLMLoading: React.Dispatch<React.SetStateAction<boolean>>
 ) {
-  //-- If no chat object, create a new chat object --//
+  //-- If chat object is null, create a new chat object --//
   if (!chatson_object) {
-    let newChatObject: IChatsonObject = version_A;
+    //-- Instantiate new object from template --//
+    chatson_object = version_A;
 
-    newChatObject.metadata["single-or-multi-user"] = "single";
-    newChatObject.metadata.user_ids = user_ids;
-    newChatObject.metadata.chat_uuid = uuidv4();
-    newChatObject.metadata.creation_timestamp_immutable = timestamp();
-    newChatObject.metadata.reference_timestamp_mutable = timestamp();
+    //-- Set metadata --//
+    chatson_object.metadata["single-or-multi-user"] = "single";
+    chatson_object.metadata.user_ids = user_ids;
+    chatson_object.metadata.chat_uuid = uuidv4();
+    chatson_object.metadata.creation_timestamp_immutable = timestamp();
+    chatson_object.metadata.reference_timestamp_mutable = timestamp();
 
-    console.log(JSON.stringify(newChatObject, null, 2)); // DEV
+    //-- Set system message data --//
+    chatson_object.linear_message_history[0].model = model.apiName;
+    chatson_object.linear_message_history[0].timestamp = timestamp();
+    chatson_object.linear_message_history[0].message_uuid = uuidv4();
   }
 
-  // TODO
-  let new_message: IChatsonMessage = {
+  //-- Crete new chatson_message --//
+  let chatson_message: IChatsonMessage = {
     role: "user",
-    author: user_ids[0],
+    user: user_ids[0],
+    model: model.apiName,
     timestamp: timestamp(),
     message_uuid: uuidv4(),
-    content: prompt,
+    message: message,
   };
-  // add prompt to chatson object
-  // chatson_object.linear_message_history.push(new_message);
-  // extract appropriate messages from chatson object to be sent to the LLM API
-  // // e.g. system message, previous chat messages up to model's token limit
-  // make an API call
-  // when the response is fully received, it's added to the chatson object
+
+  //-- Append chatson_message to chatson_object and update state --//
+  chatson_object.linear_message_history.push(chatson_message);
+  setChatson(chatson_object);
+
+  //-- Start with "system" message and add up to 3,000 tokens worth of messages --//
+  let system_message = chatson_object.linear_message_history[0];
+  let tokens = tiktoken(system_message.message);
+
+  let chatRequestMessages: Array<ChatCompletionRequestMessage> = [
+    {
+      role: system_message.role,
+      content: system_message.message,
+    },
+  ];
+
+  let tokenLimitHit = false;
+  let idx = chatson_object.linear_message_history.length - 1;
+
+  //-- Add messages until token limit hit or all non-system messages added --//
+  while (!tokenLimitHit && idx > 0) {
+    let content = chatson_object.linear_message_history[idx].message;
+    let contentTokens = tiktoken(content);
+
+    if (tokens + contentTokens < 3000) {
+      tokens += contentTokens;
+      console.log("tokens: " + tokens); // DEV
+      let chatRequestMessage: ChatCompletionRequestMessage = {
+        role: chatson_object.linear_message_history[idx].role,
+        content: content,
+      };
+
+      //-- Insert after system message, shifting any other messages --//
+      chatRequestMessages.splice(1, 0, chatRequestMessage);
+    } else {
+      tokenLimitHit = true;
+      console.log("token limit hit!"); // DEV
+    }
+
+    idx--;
+  }
+
+  console.log(chatRequestMessages); // DEV
+
+  //-- Make API call - send chatRequestMessages --//
+  setLLMLoading(true);
+  try {
+    //-- Make POST request --//
+    let res = await axios.post(
+      `${VITE_ALB_BASE_URL}/llm/gpt-3.5-turbo`,
+      //-- Body Content --//
+      {
+        model: model.apiName,
+        chatRequestMessages: chatRequestMessages,
+      },
+      {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    let chatCompletionsResponse: CreateChatCompletionResponse = res.data;
+
+    if (chatCompletionsResponse.choices[0].message) {
+      console.log(chatCompletionsResponse.choices[0].message.content); // DEV
+
+      //-- Add response to chatson_object --//
+      let chat_response: IChatsonMessage = {
+        user: model.apiName,
+        model: model.apiName,
+        timestamp: timestamp(),
+        message_uuid: uuidv4(),
+        role: "assistant",
+        message: res.data.choices[0].message.content,
+      };
+      chatson_object.linear_message_history.push(chat_response);
+
+      //-- Add API Call to chatson_object --//
+      let api_call_data: IChatsonAPIResponse = {
+        user: user_ids[0],
+        model: model.apiName,
+        response_id: chatCompletionsResponse.id,
+        object: chatCompletionsResponse.object,
+        created: chatCompletionsResponse.created,
+        prompt_tokens: chatCompletionsResponse.usage?.prompt_tokens || 0,
+        completion_tokens:
+          chatCompletionsResponse.usage?.completion_tokens || 0,
+        total_tokens: chatCompletionsResponse.usage?.total_tokens || 0,
+      };
+      chatson_object.api_response_history.push(api_call_data);
+    }
+
+    setChatson(chatson_object);
+    //----//
+  } catch (err) {
+    console.log(err);
+  }
+  setLLMLoading(false);
 }
 
 //-- Chatson Templates --//
 export const version_A: IChatsonObject = {
-  chatson_version: "A",
-  notes: {
-    metadata: "Basic info and stats about this chat object",
-    linear_message_history:
-      "Mutable message history used as source of truth for (1) sending requests to the LLM, (2) rendering a chat on screen to a user. Note - the system message is immutable.",
-    api_call_history:
-      "An append-only log of API calls used to track token consumption and for general reference.",
-  },
   metadata: {
     "single-or-multi-user": "",
     user_ids: [],
@@ -73,13 +178,14 @@ export const version_A: IChatsonObject = {
   },
   linear_message_history: [
     {
-      role: "system",
-      author: "chrt",
+      user: "chrt",
+      model: "",
       timestamp: "",
       message_uuid: "",
-      content:
+      role: "system",
+      message:
         "Your name is ChrtGPT. Refer to yourself as ChrtGPT. You are ChrtGPT, a helpful assistant that helps power a day trading performance journal. You sometimes make jokes and say silly things on purpose.",
     },
   ],
-  api_call_history: [],
+  api_response_history: [],
 };
