@@ -2,7 +2,6 @@ import { useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { getUnixTime } from "date-fns";
 import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
 
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
@@ -10,7 +9,9 @@ import {
   IChatsonObject,
   IChatsonMessage,
   IChatsonModel,
+  IChatsonAPIResponse,
   ChatCompletionRequestMessage,
+  CreateChatCompletionResponse,
 } from "./types";
 import { tiktoken } from "./tiktoken";
 
@@ -120,14 +121,38 @@ export async function send_message(
         },
       }
     );
-    console.log(res.data.choices[0].message.content); // DEV
+    let chatCompletionsResponse: CreateChatCompletionResponse = res.data;
 
-    // when the response is received, use it to create:
-    // // message for linear_message_history
-    // // ChatsonAPIResposne for api_response_history
-    // push those objects into the arrays
-    // call setState from ChatContext to update the chatson_object
+    if (chatCompletionsResponse.choices[0].message) {
+      console.log(chatCompletionsResponse.choices[0].message.content); // DEV
 
+      //-- Add response to chatson_object --//
+      let chat_response: IChatsonMessage = {
+        user: model.apiName,
+        model: model.apiName,
+        timestamp: timestamp(),
+        message_uuid: uuidv4(),
+        role: "assistant",
+        message: res.data.choices[0].message.content,
+      };
+      chatson_object.linear_message_history.push(chat_response);
+
+      //-- Add API Call to chatson_object --//
+      let api_call_data: IChatsonAPIResponse = {
+        user: user_ids[0],
+        model: model.apiName,
+        response_id: chatCompletionsResponse.id,
+        object: chatCompletionsResponse.object,
+        created: chatCompletionsResponse.created,
+        prompt_tokens: chatCompletionsResponse.usage?.prompt_tokens || 0,
+        completion_tokens:
+          chatCompletionsResponse.usage?.completion_tokens || 0,
+        total_tokens: chatCompletionsResponse.usage?.total_tokens || 0,
+      };
+      chatson_object.api_response_history.push(api_call_data);
+    }
+
+    setChatson(chatson_object);
     //----//
   } catch (err) {
     console.log(err);
