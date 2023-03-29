@@ -1,6 +1,3 @@
-//-- OpenAI Docs for "Create chat completion"
-//-- https://platform.openai.com/docs/api-reference/chat/create --//
-
 //-- IChatsonObject - represents one entire chat --//
 export interface IChatsonObject {
   metadata: {
@@ -19,11 +16,11 @@ export interface IChatsonObject {
 
 //-- IChatsonMessage - used for both prompts and responses --//
 export interface IChatsonMessage {
-  role: string;
   user: string;
   model: string;
   timestamp: string;
   message_uuid: string;
+  role: ChatCompletionRequestMessageRoleEnum;
   message: string;
 }
 
@@ -47,3 +44,65 @@ export interface IChatsonAPIResponse {
   completion_tokens: number;
   total_tokens: number;
 }
+
+//-- (2023-03-28) Types copy-pasted from OpenAI Node SDK --//
+
+/**
+ *
+ * @export
+ * @interface ChatCompletionRequestMessage
+ */
+export interface ChatCompletionRequestMessage {
+  /**
+   * The role of the author of this message.
+   * @type {string}
+   * @memberof ChatCompletionRequestMessage
+   */
+  role: ChatCompletionRequestMessageRoleEnum;
+  /**
+   * The contents of the message
+   * @type {string}
+   * @memberof ChatCompletionRequestMessage
+   */
+  content: string;
+  /**
+   * The name of the user in a multi-user chat
+   * @type {string}
+   * @memberof ChatCompletionRequestMessage
+   */
+  name?: string;
+}
+export declare const ChatCompletionRequestMessageRoleEnum: {
+  readonly System: "system";
+  readonly User: "user";
+  readonly Assistant: "assistant";
+};
+export declare type ChatCompletionRequestMessageRoleEnum =
+  (typeof ChatCompletionRequestMessageRoleEnum)[keyof typeof ChatCompletionRequestMessageRoleEnum];
+
+/**
+ *
+ * @export
+ * @interface ChatCompletionResponseMessage
+ */
+export interface ChatCompletionResponseMessage {
+  /**
+   * The role of the author of this message.
+   * @type {string}
+   * @memberof ChatCompletionResponseMessage
+   */
+  role: ChatCompletionResponseMessageRoleEnum;
+  /**
+   * The contents of the message
+   * @type {string}
+   * @memberof ChatCompletionResponseMessage
+   */
+  content: string;
+}
+export declare const ChatCompletionResponseMessageRoleEnum: {
+  readonly System: "system";
+  readonly User: "user";
+  readonly Assistant: "assistant";
+};
+export declare type ChatCompletionResponseMessageRoleEnum =
+  (typeof ChatCompletionResponseMessageRoleEnum)[keyof typeof ChatCompletionResponseMessageRoleEnum];

@@ -45,6 +45,8 @@ interface IChatContext {
   model: IChatsonModel;
   setModel: React.Dispatch<React.SetStateAction<IChatsonModel>>;
   CurrentChatsonModels: Record<CurrentChatsonModelNames, IChatsonModel>;
+  llmLoading: boolean;
+  setLLMLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const defaultContextValue: IChatContext = {
   chatson: null,
@@ -52,6 +54,8 @@ const defaultContextValue: IChatContext = {
   model: CurrentChatsonModels["gpt-3.5-turbo"],
   setModel: () => {},
   CurrentChatsonModels: CurrentChatsonModels,
+  llmLoading: false,
+  setLLMLoading: () => {},
 };
 export const ChatContext = createContext<IChatContext>(defaultContextValue);
 
@@ -62,12 +66,15 @@ export default function GPT() {
   const [model, setModel] = useState<IChatsonModel>(
     CurrentChatsonModels["gpt-3.5-turbo"]
   );
+  const [llmLoading, setLLMLoading] = useState<boolean>(false);
   const chatContextValue = {
     chatson,
     setChatson,
     model,
     setModel,
     CurrentChatsonModels,
+    llmLoading,
+    setLLMLoading,
   };
 
   //-- Recoil State --//

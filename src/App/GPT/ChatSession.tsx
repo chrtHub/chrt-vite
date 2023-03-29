@@ -23,8 +23,6 @@ import classNames from "../../Util/classNames";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
-import { IChatsonObject } from "./chatson/types";
-import { chatResponseState } from "./atoms";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ChatSession() {
@@ -33,11 +31,9 @@ export default function ChatSession() {
 
   //-- React State --//
   const [prompt, setPrompt] = useState<string>("");
-  const [llmLoading, setLLMLoading] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   //-- Recoil State --//
-  const [chatResponse, setChatResponse] = useRecoilState(chatResponseState);
 
   //-- Auth --//
   const { getAccessTokenSilently, user } = useAuth0();
@@ -49,47 +45,23 @@ export default function ChatSession() {
 
   //-- Click Handlers --//
   const submitPromptHandler = async () => {
+    const accessToken = await getAccessTokenSilently();
+    // TODO - implement ability to add message to existing chatson object
+
     //-- Send prompt as chat message --//
     if (user?.sub) {
-      chatson.send_message(
-        null,
+      // setLLMLoading to true here??
+      await chatson.send_message(
+        accessToken,
+        null, //-- chatson_object --//
         [user.sub],
         ChatContext.model,
         prompt,
-        ChatContext.setChatson
+        ChatContext.setChatson,
+        ChatContext.setLLMLoading
       );
+      // setLLMLoading to false here??
     }
-
-    setLLMLoading(true);
-    try {
-      //-- Get access token from memory or request new token --//
-      let accessToken = await getAccessTokenSilently();
-
-      //-- Make POST request --//
-      let res = await axios.post(
-        `${VITE_ALB_BASE_URL}/llm/gpt-3.5-turbo`,
-        //-- Body Content --//
-        {
-          prompt: prompt,
-        },
-        {
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      setChatResponse({
-        prompt: prompt,
-        response: res.data.choices[0].message.content,
-      }); // DEV
-      console.log(res.data.choices[0].message.content); // DEV
-
-      setPrompt("");
-      //----//
-    } catch (err) {
-      console.log(err);
-    }
-    setLLMLoading(false);
 
     //-- Refocus textarea after submitting a prompt --//
     if (textareaRef.current) {
@@ -110,7 +82,7 @@ export default function ChatSession() {
       </div>
 
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
-      {chatResponse.response ? (
+      {true ? (
         <div id="llm-current-chat" className="flex flex-grow justify-center">
           <ul role="list" className="divide-y divide-zinc-200">
             <article className="prose prose-zinc dark:prose-invert">
@@ -121,6 +93,7 @@ export default function ChatSession() {
                     <p>user: {message.user}</p>
                     <p>model: {message.model}</p>
                     <p>message: {message.message}</p>
+                    ---
                   </li>
                 ))}
               </li>
@@ -163,7 +136,9 @@ export default function ChatSession() {
             value={prompt}
             onChange={(event) => setPrompt(event.target.value)}
             className={classNames(
-              llmLoading ? "animate-pulse ring-2 ring-indigo-500" : "",
+              ChatContext.llmLoading
+                ? "animate-pulse ring-2 ring-indigo-500"
+                : "",
               "block w-full resize-none rounded-md border-0 py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:leading-6"
             )}
           />
@@ -171,16 +146,20 @@ export default function ChatSession() {
           <button
             id="submit-prompt-button"
             onClick={submitPromptHandler}
-            disabled={llmLoading || !prompt ? true : false}
+            disabled={ChatContext.llmLoading || !prompt ? true : false}
             className={classNames(
-              !prompt || llmLoading ? "cursor-not-allowed" : "cursor-pointer",
+              !prompt || ChatContext.llmLoading
+                ? "cursor-not-allowed"
+                : "cursor-pointer",
               "absolute right-0 bottom-0 flex items-center p-2 focus:outline-green-600"
             )}
           >
             <ArrowUpCircleIcon
               className={classNames(
                 prompt ? "text-green-600" : "text-zinc-300",
-                llmLoading ? "texgt- animate-spin text-indigo-500" : "",
+                ChatContext.llmLoading
+                  ? "texgt- animate-spin text-indigo-500"
+                  : "",
                 "h-5 w-5"
               )}
               aria-hidden="true"
