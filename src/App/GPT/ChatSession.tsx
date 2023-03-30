@@ -5,7 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { ChatContext as _ChatContext } from "./GPT";
 
 //-- TSX Components --//
-import ModelListbox from "./ModelListbox";
+import ModelSelector from "./ModelSelector";
 import * as chatson from "./chatson/chatson";
 
 //-- NPM Components --//
@@ -77,75 +77,29 @@ export default function ChatSession() {
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div className="flex min-h-full flex-col">
-      {/* MODEL LISTBOX */}
-      <div id="llm-model-listbox" className="flex justify-center">
-        <ModelListbox />
+      {/* MODEL SELECTOR */}
+      <div id="llm-model-selector" className="flex justify-center">
+        <ModelSelector />
       </div>
 
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
       {true ? (
         <div id="llm-current-chat" className="flex flex-grow justify-center">
-          <ul role="list" className="divide-y divide-zinc-200">
-            <article className="prose prose-zinc dark:prose-invert">
-              {/* from Context API */}
-              <li>
-                {ChatContext.chatson?.linear_message_history.map((message) => (
-                  // <li>
-                  //   <p>user: {message.user}</p>
-                  //   <p>model: {message.model}</p>
-                  //   <p>message: {message.message}</p>
-                  //   <p>timestamp: {message.timestamp}</p>
-                  //   <p>role: {message.role}</p>
-                  //   ---
-                  // </li>
-                  <li className="flex flex-col space-y-2 rounded-lg bg-white p-4 shadow-md">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-semibold text-gray-700">User:</span>
-                      <span className="font-normal text-gray-600">
-                        {message.user}
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="font-semibold text-gray-700">
-                        Model:
-                      </span>
-                      <span className="font-normal text-gray-600">
-                        {message.model}
-                      </span>
-                    </div>
-
-                    <div className="flex space-x-2 align-top">
-                      <div className="flex-col items-center">
-                        <span className="font-semibold text-gray-700">
-                          Message:
-                        </span>
-                      </div>
-
-                      <span className="font-normal text-gray-600">
-                        {message.message}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      <span className="font-semibold text-gray-700">
-                        Timestamp:
-                      </span>
-                      <span className="font-normal text-gray-600">
-                        {message.timestamp}
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="font-semibold text-gray-700">Role:</span>
-                      <span className="font-normal text-gray-600">
-                        {message.role}
-                      </span>
-                    </div>
+          <article className="prose prose-zinc dark:prose-invert">
+            <ul role="list" className="list-none divide-y divide-gray-200">
+              {ChatContext.chatson?.linear_message_history
+                .filter((message) => message.role !== "system")
+                .map((message) => (
+                  <li key={message.message_uuid} className="px-4 py-4 sm:px-0">
+                    <p>{message.model}</p>
+                    <p>{message.role}</p>
+                    <p>{message.timestamp}</p>
+                    <p>{message.user}</p>
+                    <p className="">{message.message}</p>
                   </li>
                 ))}
-              </li>
-              {/*  */}
-            </article>
-          </ul>
+            </ul>
+          </article>
         </div>
       ) : (
         <div
