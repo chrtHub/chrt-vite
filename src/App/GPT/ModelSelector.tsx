@@ -48,7 +48,7 @@ export default function ModelSelector() {
           <Listbox.Label className="sr-only">Change GPT Model</Listbox.Label>
 
           <div className="relative">
-            <Listbox.Button className="inline-flex w-32 justify-center rounded-md bg-green-600 p-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-50">
+            <Listbox.Button className="inline-flex w-24 justify-center rounded-md bg-green-600 p-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-50">
               <span className="sr-only">Change GPT model</span>
               <p className="text-sm font-semibold text-white">
                 {ChatContext.model.friendlyName}

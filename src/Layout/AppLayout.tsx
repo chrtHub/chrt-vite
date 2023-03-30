@@ -185,15 +185,16 @@ export default function AppLayout({ infoMode }: IProps) {
   return (
     <div
       id="app-layout-top-level-div"
+      //-- With use of 'overflow-hidden', scroll behavior is to be handles by Outlet components (?) --//
       // NOTE - how to prevent overscroll? use `fixed`? `overscroll-none`?
-      className="fixed h-full w-full overflow-auto overscroll-none bg-zinc-50 dark:bg-zinc-800"
+      className="fixed h-full w-full overflow-hidden overscroll-none bg-zinc-50 dark:bg-zinc-800"
     >
       {/* START OF MOBILE SIDEBAR */}
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog
           id="app-layout-mobile-sidebar"
           as="div"
-          className="relative z-40 md:hidden"
+          className="relative z-40 lg:hidden"
           onClose={setSidebarOpen}
         >
           <Transition.Child
@@ -218,7 +219,7 @@ export default function AppLayout({ infoMode }: IProps) {
               leaveFrom="translate-x-0"
               leaveTo="-translate-x-full"
             >
-              <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-zinc-50 pt-5 pb-4 dark:bg-zinc-800">
+              <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-zinc-50 pb-4 pt-5 dark:bg-zinc-800">
                 <Transition.Child
                   as={Fragment}
                   enter="ease-in-out duration-300"
@@ -228,7 +229,7 @@ export default function AppLayout({ infoMode }: IProps) {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <div className="absolute top-0 right-0 -mr-12 pt-2">
+                  <div className="absolute right-0 top-0 -mr-12 pt-2">
                     <button
                       type="button"
                       className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black dark:focus:ring-white"
@@ -293,7 +294,8 @@ export default function AppLayout({ infoMode }: IProps) {
       {/* START OF STATIC SIDEBAR */}
       <div
         id="app-layout-static-sidebar"
-        className="hidden md:fixed md:inset-y-0 md:flex md:w-48 md:flex-col"
+        // className="hidden md:fixed md:inset-y-0 md:flex md:w-48 md:flex-col"
+        className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-48 lg:flex-col"
       >
         <div className="flex flex-grow flex-col overflow-y-auto  bg-zinc-50 pt-5 dark:bg-zinc-800">
           <div className="flex flex-shrink-0 items-center px-6">
@@ -306,7 +308,7 @@ export default function AppLayout({ infoMode }: IProps) {
           </div>
           {/* START OF NAVIGATION ITEMS */}
           <div className="mt-5 flex flex-grow flex-col">
-            <nav className="flex-1 space-y-1 pl-4 pb-4">
+            <nav className="flex-1 space-y-1 pb-4 pl-4">
               {navigationItems.map((item) => (
                 <NavLink
                   key={item.name}
@@ -343,7 +345,7 @@ export default function AppLayout({ infoMode }: IProps) {
       {/* START OF RHS */}
       <div
         id="app-layout-rhs-div"
-        className="h-full overflow-x-hidden md:pl-48"
+        className="h-full overflow-y-auto overflow-x-hidden bg-blue-100 lg:pl-48"
       >
         <div className="mx-auto flex h-full max-w-screen-2xl flex-col px-4 xl:px-6">
           {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
@@ -351,7 +353,7 @@ export default function AppLayout({ infoMode }: IProps) {
             {/* START OF HAMBURGER BUTTON */}
             <button
               type="button"
-              className="pr-4 text-zinc-500 hover:text-green-600 hover:outline-none hover:ring-2 hover:ring-inset hover:ring-transparent md:hidden"
+              className="pr-4 text-zinc-500 hover:text-green-600 hover:outline-none hover:ring-2 hover:ring-inset hover:ring-transparent lg:hidden"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
@@ -363,12 +365,12 @@ export default function AppLayout({ infoMode }: IProps) {
             <div className="flex flex-1 justify-between">
               {/* START OF SEARCH BAR */}
               <div className="flex flex-1">
-                <form className="flex w-full md:ml-0" action="#" method="GET">
+                <form className="flex w-full lg:ml-0" action="#" method="GET">
                   <label htmlFor="search-field" className="sr-only">
                     Search
                   </label>
                   <div className="relative w-full text-zinc-600 focus-within:text-zinc-800 dark:text-zinc-400  dark:focus-within:text-white">
-                    {/* <div className="pointer-events-none absolute inset-y-0 left-0 ml-2 flex items-center md:ml-0">
+                    {/* <div className="pointer-events-none absolute inset-y-0 left-0 ml-2 flex items-center lg:ml-0">
                       <MagnifyingGlassIcon
                         className="h-5 w-5"
                         aria-hidden="true"
@@ -377,7 +379,7 @@ export default function AppLayout({ infoMode }: IProps) {
                     {/* <input
                       id="search-field"
                       disabled={showLockIcon}
-                      className="block h-full w-full border-transparent border-b-zinc-300 bg-zinc-50 py-2 pl-10 pr-3 text-zinc-900 placeholder-zinc-500 focus:border-transparent focus:border-b-zinc-400 focus:placeholder-zinc-400 focus:outline-none focus:ring-0 dark:border-b-zinc-500 dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-400 dark:focus:border-b-zinc-400 dark:focus:placeholder-zinc-500 md:pl-8"
+                      className="block h-full w-full border-transparent border-b-zinc-300 bg-zinc-50 py-2 pl-10 pr-3 text-zinc-900 placeholder-zinc-500 focus:border-transparent focus:border-b-zinc-400 focus:placeholder-zinc-400 focus:outline-none focus:ring-0 dark:border-b-zinc-500 dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-400 dark:focus:border-b-zinc-400 dark:focus:placeholder-zinc-500 lg:pl-8"
                       placeholder="Search"
                       type="search"
                       name="search"
@@ -388,7 +390,7 @@ export default function AppLayout({ infoMode }: IProps) {
               {/*END OF SEARCH BAR  */}
 
               {/* START OF DROPDOWN MENU + PROFILE PICTURE*/}
-              <div className="ml-4 flex items-center md:ml-6">
+              <div className="ml-4 flex items-center lg:ml-6">
                 {/* START OF DROPDOWN MENU */}
                 <Menu
                   id="app-layout-dropdown-menu"

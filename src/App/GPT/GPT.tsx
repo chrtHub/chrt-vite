@@ -24,7 +24,7 @@ import {
 const CurrentChatsonModels: Record<CurrentChatsonModelNames, IChatsonModel> = {
   "gpt-3.5-turbo": {
     apiName: "gpt-3.5-turbo",
-    friendlyName: "GPT-3.5 Turbo",
+    friendlyName: "GPT-3.5",
     description: "Power and Speed",
   },
   "gpt-4": {
@@ -93,7 +93,8 @@ export default function GPT() {
       <div id="gpt-grid-div" className="grid h-full grid-cols-12 gap-2">
         <div
           id="gpt-chat-current"
-          className="col-span-12 h-full overflow-y-auto"
+          // DEV - overflow-y-auto
+          className="col-span-12 h-full"
         >
           <ChatSession />
         </div>
