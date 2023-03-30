@@ -21,7 +21,11 @@ import {
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
 
 //-- Chat Context --//
-const CurrentChatsonModels: Record<CurrentChatsonModelNames, IChatsonModel> = {
+
+export const CurrentChatsonModels: Record<
+  CurrentChatsonModelNames,
+  IChatsonModel
+> = {
   "gpt-3.5-turbo": {
     apiName: "gpt-3.5-turbo",
     friendlyName: "GPT-3.5",

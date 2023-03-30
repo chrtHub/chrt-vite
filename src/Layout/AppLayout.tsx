@@ -186,7 +186,6 @@ export default function AppLayout({ infoMode }: IProps) {
     <div
       id="app-layout-top-level-div"
       //-- With use of 'overflow-hidden', scroll behavior is to be handles by Outlet components (?) --//
-      // NOTE - how to prevent overscroll? use `fixed`? `overscroll-none`?
       className="fixed h-full w-full overflow-hidden overscroll-none bg-zinc-50 dark:bg-zinc-800"
     >
       {/* START OF MOBILE SIDEBAR */}
@@ -344,9 +343,12 @@ export default function AppLayout({ infoMode }: IProps) {
       {/* START OF RHS */}
       <div
         id="app-layout-rhs-div"
-        className="h-full overflow-y-auto overflow-x-hidden bg-blue-100 lg:pl-48"
+        className="h-full overflow-y-auto overflow-x-hidden lg:pl-48"
       >
-        <div className="mx-auto flex h-full max-w-screen-2xl flex-col px-4 xl:px-6">
+        <div
+          id="app-layout-rhs-content"
+          className="mx-auto flex h-full max-w-screen-2xl flex-col px-4 xl:px-6"
+        >
           {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
           <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-zinc-50 dark:bg-zinc-800">
             {/* START OF HAMBURGER BUTTON */}
