@@ -113,7 +113,7 @@ export async function send_message(
   try {
     //-- Make POST request --//
     let res = await axios.post(
-      `${VITE_ALB_BASE_URL}/llm/gpt-3.5-turbo`,
+      `${VITE_ALB_BASE_URL}/llm/openai`,
       //-- Body Content --//
       {
         model: model.apiName,

@@ -1,5 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext, Fragment } from "react";
 import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 import { ChatContext as _ChatContext } from "./GPT";
@@ -10,6 +10,7 @@ import * as chatson from "./chatson/chatson";
 
 //-- NPM Components --//
 import TextareaAutosize from "react-textarea-autosize";
+import ReactMarkdown from "react-markdown";
 
 //-- Icons --//
 import { ArrowUpCircleIcon } from "@heroicons/react/20/solid";
@@ -17,10 +18,12 @@ import { ArrowUpCircleIcon } from "@heroicons/react/20/solid";
 //-- NPM Functions --//
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import { format } from "date-fns";
 
 //-- Utility Functions --//
 import classNames from "../../Util/classNames";
 import { IChatsonMessage } from "./chatson/types";
+import { CpuChipIcon } from "@heroicons/react/24/outline";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
@@ -75,6 +78,7 @@ export default function ChatSession() {
     console.log(ChatContext.chatson);
   }, [ChatContext.chatson]);
 
+  //-- Message Row LHS --//
   const LHS = (props: { message: IChatsonMessage }) => {
     let { message } = props;
 
@@ -85,7 +89,7 @@ export default function ChatSession() {
           <img
             src={user?.picture}
             alt={user?.name}
-            className="h-24 w-24 rounded-full"
+            className="h-10 w-10 rounded-full"
           />
         );
       } else {
@@ -95,13 +99,28 @@ export default function ChatSession() {
 
     //-- If author is a model, display name of the model --//
     if (message.author === message.model.apiName) {
-      return <div>{message.model.friendlyName}</div>;
+      return (
+        <div>
+          <CpuChipIcon className="h-10 w-10" />
+          <div>{message.model.friendlyName}</div>
+        </div>
+      );
     }
 
     return (
       // TODO - implement logic to show initials or perhaps photo in mulit-user chats(?)
       <div>who dis</div>
     );
+  };
+
+  //-- Message Row RHS --//
+  const RHS = (props: { message: IChatsonMessage }) => {
+    let { message } = props;
+
+    let date = new Date(parseInt(message.timestamp) * 1000);
+    let friendlyDate = format(date, "hh:mm:ss");
+
+    return <div>{friendlyDate}</div>;
   };
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
@@ -114,28 +133,37 @@ export default function ChatSession() {
           id="llm-current-chat"
           className="flex flex-grow justify-center overflow-y-auto"
         >
-          <div className="w-full list-none divide-y divide-gray-200 pl-0">
+          <div className="w-full list-none divide-y pl-0">
             {ChatContext.chatson?.linear_message_history
               .filter((message) => message.role !== "system")
               .map((message) => (
                 <div id="chat-row" className="justify-center lg:flex">
                   <div
                     id="chat-lhs-content"
-                    className="w-full bg-red-100 lg:w-24"
+                    className="flex w-full flex-col items-center justify-start pt-3 lg:w-24"
                   >
                     <LHS message={message} />
                   </div>
                   <article className="prose prose-zinc w-full max-w-prose dark:prose-invert">
                     <li key={message.message_uuid} className="sm:px-0">
-                      <p>role: {message.role}</p>
-                      <p className="">{message.message}</p>
+                      <p className="">
+                        {/* {message.message.split("\n").map((line, index) => (
+                          <Fragment key={index}>
+                            <span>{line}</span>
+                            {index < message.message.split("\n").length - 1 && (
+                              <br />
+                            )}
+                          </Fragment>
+                        ))} */}
+                        <ReactMarkdown children={message.message} />
+                      </p>
                     </li>
                   </article>
                   <div
                     id="chat-rhs-content"
-                    className="w-full bg-orange-100 lg:w-24"
+                    className="w-full flex-col items-center justify-start pt-3 lg:w-24"
                   >
-                    {message.timestamp}
+                    <RHS message={message} />
                   </div>
                 </div>
               ))}
