@@ -16,8 +16,8 @@ export interface IChatsonObject {
 
 //-- IChatsonMessage - used for both prompts and responses --//
 export interface IChatsonMessage {
-  user: string;
-  model: string;
+  author: string;
+  model: IChatsonModel;
   timestamp: string;
   message_uuid: string;
   role: ChatCompletionRequestMessageRoleEnum;

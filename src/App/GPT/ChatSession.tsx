@@ -1,15 +1,16 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext, Fragment } from "react";
 import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 import { ChatContext as _ChatContext } from "./GPT";
 
 //-- TSX Components --//
-import ModelListbox from "./ModelListbox";
+import ModelSelector from "./ModelSelector";
 import * as chatson from "./chatson/chatson";
 
 //-- NPM Components --//
 import TextareaAutosize from "react-textarea-autosize";
+import ReactMarkdown from "react-markdown";
 
 //-- Icons --//
 import { ArrowUpCircleIcon } from "@heroicons/react/20/solid";
@@ -17,9 +18,12 @@ import { ArrowUpCircleIcon } from "@heroicons/react/20/solid";
 //-- NPM Functions --//
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import { format } from "date-fns";
 
 //-- Utility Functions --//
 import classNames from "../../Util/classNames";
+import { IChatsonMessage } from "./chatson/types";
+import { CpuChipIcon } from "@heroicons/react/24/outline";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
@@ -74,78 +78,96 @@ export default function ChatSession() {
     console.log(ChatContext.chatson);
   }, [ChatContext.chatson]);
 
+  //-- Message Row LHS --//
+  const LHS = (props: { message: IChatsonMessage }) => {
+    let { message } = props;
+
+    //-- If author is the current user, display their profile photo --//
+    if (message.author === user?.sub) {
+      if (user?.picture) {
+        return (
+          <img
+            src={user?.picture}
+            alt={user?.name}
+            className="h-10 w-10 rounded-full"
+          />
+        );
+      } else {
+        <div>{user.name}</div>;
+      }
+    }
+
+    //-- If author is a model, display name of the model --//
+    if (message.author === message.model.apiName) {
+      return (
+        <div>
+          <CpuChipIcon className="h-10 w-10" />
+          <div>{message.model.friendlyName}</div>
+        </div>
+      );
+    }
+
+    return (
+      // TODO - implement logic to show initials or perhaps photo in mulit-user chats(?)
+      <div>who dis</div>
+    );
+  };
+
+  //-- Message Row RHS --//
+  const RHS = (props: { message: IChatsonMessage }) => {
+    let { message } = props;
+
+    let date = new Date(parseInt(message.timestamp) * 1000);
+    let friendlyDate = format(date, "hh:mm:ss");
+
+    return <div>{friendlyDate}</div>;
+  };
+
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <div className="flex min-h-full flex-col">
-      {/* MODEL LISTBOX */}
-      <div id="llm-model-listbox" className="flex justify-center">
-        <ModelListbox />
-      </div>
-
+    // <div className="flex max-h-full flex-col">
+    <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
       {true ? (
-        <div id="llm-current-chat" className="flex flex-grow justify-center">
-          <ul role="list" className="divide-y divide-zinc-200">
-            <article className="prose prose-zinc dark:prose-invert">
-              {/* from Context API */}
-              <li>
-                {ChatContext.chatson?.linear_message_history.map((message) => (
-                  // <li>
-                  //   <p>user: {message.user}</p>
-                  //   <p>model: {message.model}</p>
-                  //   <p>message: {message.message}</p>
-                  //   <p>timestamp: {message.timestamp}</p>
-                  //   <p>role: {message.role}</p>
-                  //   ---
-                  // </li>
-                  <li className="flex flex-col space-y-2 rounded-lg bg-white p-4 shadow-md">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-semibold text-gray-700">User:</span>
-                      <span className="font-normal text-gray-600">
-                        {message.user}
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="font-semibold text-gray-700">
-                        Model:
-                      </span>
-                      <span className="font-normal text-gray-600">
-                        {message.model}
-                      </span>
-                    </div>
-
-                    <div className="flex space-x-2 align-top">
-                      <div className="flex-col items-center">
-                        <span className="font-semibold text-gray-700">
-                          Message:
-                        </span>
-                      </div>
-
-                      <span className="font-normal text-gray-600">
-                        {message.message}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      <span className="font-semibold text-gray-700">
-                        Timestamp:
-                      </span>
-                      <span className="font-normal text-gray-600">
-                        {message.timestamp}
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="font-semibold text-gray-700">Role:</span>
-                      <span className="font-normal text-gray-600">
-                        {message.role}
-                      </span>
-                    </div>
-                  </li>
-                ))}
-              </li>
-              {/*  */}
-            </article>
-          </ul>
+        <div
+          id="llm-current-chat"
+          className="flex flex-grow justify-center overflow-y-auto"
+        >
+          <div className="w-full list-none divide-y pl-0">
+            {ChatContext.chatson?.linear_message_history
+              .filter((message) => message.role !== "system")
+              .map((message) => (
+                <div id="chat-row" className="justify-center lg:flex">
+                  <div
+                    id="chat-lhs-content"
+                    className="flex w-full flex-col items-center justify-start pt-3 lg:w-24"
+                  >
+                    <LHS message={message} />
+                  </div>
+                  <article className="prose prose-zinc w-full max-w-prose dark:prose-invert">
+                    <li key={message.message_uuid} className="sm:px-0">
+                      <p className="">
+                        {/* {message.message.split("\n").map((line, index) => (
+                          <Fragment key={index}>
+                            <span>{line}</span>
+                            {index < message.message.split("\n").length - 1 && (
+                              <br />
+                            )}
+                          </Fragment>
+                        ))} */}
+                        <ReactMarkdown children={message.message} />
+                      </p>
+                    </li>
+                  </article>
+                  <div
+                    id="chat-rhs-content"
+                    className="w-full flex-col items-center justify-start pt-3 lg:w-24"
+                  >
+                    <RHS message={message} />
+                  </div>
+                </div>
+              ))}
+          </div>
         </div>
       ) : (
         <div
@@ -165,52 +187,70 @@ export default function ChatSession() {
         </div>
       )}
 
-      {/* PROMPT INPUT */}
-      <div id="llm-prompt-input" className="flex justify-center pb-6 pt-3">
-        <label htmlFor="prompt-input" className="sr-only">
-          Prompt Input
-        </label>
-        <div className="relative mt-2 w-full max-w-prose rounded-md shadow-md">
-          <TextareaAutosize
-            autoFocus
-            ref={textareaRef}
-            maxRows={10}
-            id="prompt-input"
-            name="prompt-input"
-            placeholder="Input prompt"
-            wrap="hard"
-            value={prompt}
-            onChange={(event) => setPrompt(event.target.value)}
-            className={classNames(
-              ChatContext.llmLoading
-                ? "animate-pulse ring-2 ring-indigo-500"
-                : "",
-              "block w-full resize-none rounded-md border-0 py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:leading-6"
-            )}
-          />
-
-          <button
-            id="submit-prompt-button"
-            onClick={submitPromptHandler}
-            disabled={ChatContext.llmLoading || !prompt ? true : false}
-            className={classNames(
-              !prompt || ChatContext.llmLoading
-                ? "cursor-not-allowed"
-                : "cursor-pointer",
-              "absolute bottom-0 right-0 flex items-center p-2 focus:outline-green-600"
-            )}
+      {/* STICKY INPUT SECTION */}
+      <div className="sticky bottom-0 flex h-28 flex-col justify-center bg-zinc-50 pb-3 pt-1">
+        {/* MODEL SELECTOR */}
+        <div className="flex justify-center">
+          <div
+            id="llm-model-selector"
+            className="flex w-full max-w-prose justify-end"
           >
-            <ArrowUpCircleIcon
-              className={classNames(
-                prompt ? "text-green-600" : "text-zinc-300",
-                ChatContext.llmLoading
-                  ? "texgt- animate-spin text-indigo-500"
-                  : "",
-                "h-5 w-5"
-              )}
-              aria-hidden="true"
-            />
-          </button>
+            <ModelSelector />
+          </div>
+        </div>
+
+        {/* PROMPT INPUT */}
+        <div>
+          <div
+            id="llm-prompt-input"
+            className="flex justify-center align-bottom"
+          >
+            <label htmlFor="prompt-input" className="sr-only">
+              Prompt Input
+            </label>
+            <div className="relative mt-2 w-full max-w-prose rounded-md shadow-md">
+              <TextareaAutosize
+                autoFocus
+                ref={textareaRef}
+                maxRows={10}
+                id="prompt-input"
+                name="prompt-input"
+                placeholder="Input prompt"
+                wrap="hard"
+                value={prompt}
+                onChange={(event) => setPrompt(event.target.value)}
+                className={classNames(
+                  ChatContext.llmLoading
+                    ? "animate-pulse ring-2 ring-indigo-500"
+                    : "",
+                  "block w-full resize-none rounded-md border-0 py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:leading-6"
+                )}
+              />
+
+              <button
+                id="submit-prompt-button"
+                onClick={submitPromptHandler}
+                disabled={ChatContext.llmLoading || !prompt ? true : false}
+                className={classNames(
+                  !prompt || ChatContext.llmLoading
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer",
+                  "absolute bottom-0 right-0 flex items-center p-2 focus:outline-green-600"
+                )}
+              >
+                <ArrowUpCircleIcon
+                  className={classNames(
+                    prompt ? "text-green-600" : "text-zinc-300",
+                    ChatContext.llmLoading
+                      ? "texgt- animate-spin text-indigo-500"
+                      : "",
+                    "h-5 w-5"
+                  )}
+                  aria-hidden="true"
+                />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

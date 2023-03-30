@@ -50,7 +50,7 @@ export async function send_message(
     chatson_object.metadata.reference_timestamp_mutable = timestamp();
 
     //-- Set system message data --//
-    chatson_object.linear_message_history[0].model = model.apiName;
+    chatson_object.linear_message_history[0].model = model;
     chatson_object.linear_message_history[0].timestamp = timestamp();
     chatson_object.linear_message_history[0].message_uuid = uuidv4();
   }
@@ -58,8 +58,8 @@ export async function send_message(
   //-- Crete new chatson_message --//
   let chatson_message: IChatsonMessage = {
     role: "user",
-    user: user_ids[0],
-    model: model.apiName,
+    author: user_ids[0],
+    model: model,
     timestamp: timestamp(),
     message_uuid: uuidv4(),
     message: message,
@@ -113,7 +113,7 @@ export async function send_message(
   try {
     //-- Make POST request --//
     let res = await axios.post(
-      `${VITE_ALB_BASE_URL}/llm/gpt-3.5-turbo`,
+      `${VITE_ALB_BASE_URL}/llm/openai`,
       //-- Body Content --//
       {
         model: model.apiName,
@@ -132,8 +132,8 @@ export async function send_message(
 
       //-- Add response to chatson_object --//
       let chat_response: IChatsonMessage = {
-        user: model.apiName,
-        model: model.apiName,
+        author: model.apiName,
+        model: model,
         timestamp: timestamp(),
         message_uuid: uuidv4(),
         role: "assistant",
@@ -178,8 +178,12 @@ export const version_A: IChatsonObject = {
   },
   linear_message_history: [
     {
-      user: "chrt",
-      model: "",
+      author: "chrt",
+      model: {
+        apiName: "gpt-3.5-turbo", //-- to be overwritten upon chatson object initialization --//
+        friendlyName: "",
+        description: "",
+      },
       timestamp: "",
       message_uuid: "",
       role: "system",
