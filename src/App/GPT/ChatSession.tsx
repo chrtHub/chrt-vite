@@ -11,6 +11,7 @@ import * as chatson from "./chatson/chatson";
 //-- NPM Components --//
 import TextareaAutosize from "react-textarea-autosize";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 //-- Icons --//
 import { ArrowUpCircleIcon } from "@heroicons/react/20/solid";
@@ -100,9 +101,11 @@ export default function ChatSession() {
     //-- If author is a model, display name of the model --//
     if (message.author === message.model.apiName) {
       return (
-        <div>
-          <CpuChipIcon className="h-10 w-10" />
-          <div>{message.model.friendlyName}</div>
+        <div className="flex flex-col items-center">
+          <CpuChipIcon className="h-10 w-10 text-black dark:text-zinc-100" />
+          <div className="text-black dark:text-zinc-200">
+            {message.model.friendlyName}
+          </div>
         </div>
       );
     }
@@ -120,7 +123,7 @@ export default function ChatSession() {
     let date = new Date(parseInt(message.timestamp) * 1000);
     let friendlyDate = format(date, "hh:mm:ss");
 
-    return <div>{friendlyDate}</div>;
+    return <div className="text-black dark:text-zinc-200">{friendlyDate}</div>;
   };
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
@@ -133,32 +136,38 @@ export default function ChatSession() {
           id="llm-current-chat"
           className="flex flex-grow justify-center overflow-y-auto"
         >
-          <div className="w-full list-none divide-y pl-0">
+          <div className="w-full list-none pl-0">
             {ChatContext.chatson?.linear_message_history
               .filter((message) => message.role !== "system")
               .map((message) => (
-                <div id="chat-row" className="justify-center lg:flex">
+                <div
+                  id="chat-row"
+                  className={classNames(
+                    message.role === "user"
+                      ? "rounded-lg bg-zinc-100 dark:bg-zinc-900"
+                      : "",
+                    "justify-center lg:flex"
+                  )}
+                >
+                  {/* LHS */}
                   <div
                     id="chat-lhs-content"
                     className="flex w-full flex-col items-center justify-start pt-3 lg:w-24"
                   >
                     <LHS message={message} />
                   </div>
+
+                  {/* MESSAGE */}
                   <article className="prose prose-zinc w-full max-w-prose dark:prose-invert">
                     <li key={message.message_uuid} className="sm:px-0">
-                      <p className="">
-                        {/* {message.message.split("\n").map((line, index) => (
-                          <Fragment key={index}>
-                            <span>{line}</span>
-                            {index < message.message.split("\n").length - 1 && (
-                              <br />
-                            )}
-                          </Fragment>
-                        ))} */}
-                        <ReactMarkdown children={message.message} />
-                      </p>
+                      <ReactMarkdown
+                        children={message.message}
+                        remarkPlugins={[remarkGfm]}
+                      />
                     </li>
                   </article>
+
+                  {/* RHS */}
                   <div
                     id="chat-rhs-content"
                     className="w-full flex-col items-center justify-start pt-3 lg:w-24"
@@ -188,7 +197,12 @@ export default function ChatSession() {
       )}
 
       {/* STICKY INPUT SECTION */}
-      <div className="sticky bottom-0 flex h-28 flex-col justify-center bg-zinc-50 pb-3 pt-1">
+      <div className="sticky bottom-0 flex h-28 flex-col justify-center bg-zinc-50 pb-3 pt-1 dark:bg-zinc-800">
+        {/* DIVIDER */}
+        <div className="flex justify-center">
+          <div className="mb-2 w-full max-w-prose border-t-2 border-zinc-300 dark:border-zinc-600"></div>
+        </div>
+
         {/* MODEL SELECTOR */}
         <div className="flex justify-center">
           <div
