@@ -89,21 +89,35 @@ export default function ChatSession() {
           id="llm-current-chat"
           className="flex flex-grow justify-center overflow-y-auto bg-green-100"
         >
-          <article className="prose prose-zinc w-full max-w-prose dark:prose-invert">
-            <ul role="list" className="list-none divide-y divide-gray-200">
-              {ChatContext.chatson?.linear_message_history
-                .filter((message) => message.role !== "system")
-                .map((message) => (
-                  <li key={message.message_uuid} className="px-4 py-4 sm:px-0">
-                    <p>{message.model}</p>
-                    <p>{message.role}</p>
-                    <p>{message.timestamp}</p>
-                    <p>{message.user}</p>
-                    <p className="">{message.message}</p>
-                  </li>
-                ))}
-            </ul>
-          </article>
+          <ul role="list" className="list-none divide-y divide-gray-200 pl-0">
+            {ChatContext.chatson?.linear_message_history
+              .filter((message) => message.role !== "system")
+              .map((message) => (
+                <div className="lg:flex">
+                  <div
+                    id="chat-lhs-content"
+                    className="w-full bg-red-100 lg:w-24"
+                  >
+                    foo
+                  </div>
+                  <article className="prose prose-zinc w-full max-w-prose dark:prose-invert">
+                    <li key={message.message_uuid} className="sm:px-0">
+                      <p>model: {message.model}</p>
+                      <p>role: {message.role}</p>
+                      <p>timestamp: {message.timestamp}</p>
+                      <p className="">{message.message}</p>
+                      <p>user: {message.user}</p>
+                    </li>
+                  </article>
+                  <div
+                    id="chat-rhs-content"
+                    className="w-full bg-orange-100 lg:w-24"
+                  >
+                    bar
+                  </div>
+                </div>
+              ))}
+          </ul>
         </div>
       ) : (
         <div

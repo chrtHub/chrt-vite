@@ -294,7 +294,6 @@ export default function AppLayout({ infoMode }: IProps) {
       {/* START OF STATIC SIDEBAR */}
       <div
         id="app-layout-static-sidebar"
-        // className="hidden md:fixed md:inset-y-0 md:flex md:w-48 md:flex-col"
         className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-48 lg:flex-col"
       >
         <div className="flex flex-grow flex-col overflow-y-auto  bg-zinc-50 pt-5 dark:bg-zinc-800">
