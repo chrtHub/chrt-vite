@@ -24,10 +24,15 @@ import { format } from "date-fns";
 //-- Utility Functions --//
 import classNames from "../../Util/classNames";
 import { IChatsonMessage } from "./chatson/types";
-import { CpuChipIcon } from "@heroicons/react/24/outline";
+import {
+  ChevronDoubleDownIcon,
+  ChevronDoubleUpIcon,
+  CpuChipIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
+import useIsMobile from "../../Util/useIsMobile";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
-let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ChatSession() {
@@ -50,28 +55,28 @@ export default function ChatSession() {
 
   //-- Click Handlers --//
   const submitPromptHandler = async () => {
+    setPrompt("");
+
+    //-- Refocus textarea after submitting a prompt (unless on mobile) --//
+    let mobile = useIsMobile();
+    if (textareaRef.current && !mobile) {
+      textareaRef.current.focus();
+    }
+
     const accessToken = await getAccessTokenSilently();
-    // TODO - implement ability to add message to existing chatson object
 
     //-- Send prompt as chat message --//
     if (user?.sub) {
-      // setLLMLoading to true here??
+      ChatContext.setLLMLoading(true);
       await chatson.send_message(
         accessToken,
         null, //-- chatson_object --//
         [user.sub],
         ChatContext.model,
         prompt,
-        ChatContext.setChatson,
-        ChatContext.setLLMLoading
+        ChatContext.setChatson
       );
-      // setLLMLoading to false here??
-    }
-    setPrompt("");
-
-    //-- Refocus textarea after submitting a prompt --//
-    if (textareaRef.current) {
-      textareaRef.current.focus();
+      ChatContext.setLLMLoading(false);
     }
   };
 
@@ -102,8 +107,8 @@ export default function ChatSession() {
     if (message.author === message.model.apiName) {
       return (
         <div className="flex flex-col items-center">
-          <CpuChipIcon className="h-10 w-10 text-black dark:text-zinc-100" />
-          <div className="text-black dark:text-zinc-200">
+          <CpuChipIcon className="h-8 w-8 text-zinc-500 dark:text-zinc-400" />
+          <div className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
             {message.model.friendlyName}
           </div>
         </div>
@@ -121,22 +126,31 @@ export default function ChatSession() {
     let { message } = props;
 
     let date = new Date(parseInt(message.timestamp) * 1000);
-    let friendlyDate = format(date, "hh:mm:ss");
+    // let friendlyDate = format(date, "hh:mm:ss");
+    let friendlyDate = new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit",
+    }).format(date);
 
-    return <div className="text-black dark:text-zinc-200">{friendlyDate}</div>;
+    return (
+      <div className="text-sm text-zinc-500 dark:text-zinc-400">
+        {friendlyDate}
+      </div>
+    );
   };
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    // <div className="flex max-h-full flex-col">
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
+      {/* TODO - use logic below to render chat or sample propmts */}
       {true ? (
         <div
           id="llm-current-chat"
           className="flex flex-grow justify-center overflow-y-auto"
         >
-          <div className="w-full list-none pl-0">
+          <div id="chat-rows" className="w-full list-none justify-center pl-0">
             {ChatContext.chatson?.linear_message_history
               .filter((message) => message.role !== "system")
               .map((message) => (
@@ -144,35 +158,49 @@ export default function ChatSession() {
                   id="chat-row"
                   className={classNames(
                     message.role === "user"
-                      ? "rounded-lg bg-zinc-100 dark:bg-zinc-900"
+                      ? "rounded-lg bg-zinc-200 dark:bg-zinc-900"
                       : "",
-                    "justify-center lg:flex"
+                    "w-full justify-center lg:flex"
                   )}
                 >
-                  {/* LHS */}
+                  {/* Top - hidden after 'lg' breakpoint */}
+                  <div className="lg:hidden">
+                    <div className="flex flex-row items-center justify-center px-4 py-2">
+                      <RHS message={message} />
+                      <div className="ml-auto">
+                        <LHS message={message} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* LHS - hidden until 'lg' breakpoint */}
                   <div
                     id="chat-lhs-content"
-                    className="flex w-full flex-col items-center justify-start pt-3 lg:w-24"
+                    className="mt-3.5 hidden w-full flex-col items-center justify-start lg:flex lg:w-24"
                   >
                     <LHS message={message} />
                   </div>
 
                   {/* MESSAGE */}
-                  <article className="prose prose-zinc w-full max-w-prose dark:prose-invert">
-                    <li key={message.message_uuid} className="sm:px-0">
-                      <ReactMarkdown
-                        children={message.message}
-                        remarkPlugins={[remarkGfm]}
-                      />
-                    </li>
-                  </article>
+                  <div className="flex w-full max-w-prose justify-center">
+                    <article className="prose prose-zinc w-full max-w-prose px-4 pb-1 dark:prose-invert dark:text-white lg:px-0">
+                      <li key={message.message_uuid}>
+                        <ReactMarkdown
+                          children={message.message}
+                          remarkPlugins={[remarkGfm]}
+                        />
+                      </li>
+                    </article>
+                  </div>
 
-                  {/* RHS */}
+                  {/* RHS - hidden until 'lg' breakpoint */}
                   <div
-                    id="chat-rhs-content"
-                    className="w-full flex-col items-center justify-start pt-3 lg:w-24"
+                    id="chat-rhs-content-lg"
+                    className="mt-5 hidden w-full flex-col pr-2 lg:flex lg:w-24"
                   >
-                    <RHS message={message} />
+                    <div className="flex flex-row justify-end">
+                      <RHS message={message} />
+                    </div>
                   </div>
                 </div>
               ))}
@@ -197,19 +225,64 @@ export default function ChatSession() {
       )}
 
       {/* STICKY INPUT SECTION */}
-      <div className="sticky bottom-0 flex h-28 flex-col justify-center bg-zinc-50 pb-3 pt-1 dark:bg-zinc-800">
+      <div className="sticky bottom-0 flex h-auto flex-col justify-center bg-zinc-50 pb-3 pt-1 dark:bg-zinc-800">
         {/* DIVIDER */}
         <div className="flex justify-center">
+          {/* TODO - add a slight shadow/gradient above divider when !atBottom */}
           <div className="mb-2 w-full max-w-prose border-t-2 border-zinc-300 dark:border-zinc-600"></div>
         </div>
 
         {/* MODEL SELECTOR */}
         <div className="flex justify-center">
-          <div
-            id="llm-model-selector"
-            className="flex w-full max-w-prose justify-end"
-          >
-            <ModelSelector />
+          <div className="flex w-full max-w-prose flex-row">
+            {/*  */}
+
+            <div className="flex w-full flex-row items-center justify-end gap-4">
+              {/* {ChatContext.llmLoading && (
+                <>
+                  <p className="dark:text-white">stop</p>
+                  <XCircleIcon className="h-8 w-8 dark:text-white" />
+                </>
+              )} */}
+            </div>
+
+            {/*  */}
+            <div className="flex w-full justify-end">
+              <div className="flex flex-row items-center gap-6">
+                {/* <button
+                  disabled={true} // TODO - base on logic
+                  onClick={() => console.log("go to top")}
+                >
+                  <ChevronDoubleUpIcon
+                    className={classNames(
+                      // TODO - add logic that knows if the chat is scrolled to top/bottom
+                      // atTop
+                      false
+                        ? "cursor-not-allowed text-zinc-400 dark:text-zinc-500"
+                        : "cursor-pointer text-zinc-900 dark:text-zinc-100",
+                      "h-6 w-6"
+                    )}
+                  />
+                </button>
+                <button
+                  disabled={false} // TODO - base on logic
+                  onClick={() => console.log("go to bottom")}
+                >
+                  <ChevronDoubleDownIcon
+                    className={classNames(
+                      // TODO - add logic that knows if the chat is scrolled to top/bottom
+                      // atBottom
+                      true
+                        ? "cursor-not-allowed text-zinc-400 dark:text-zinc-500"
+                        : "cursor-pointer text-zinc-900 dark:text-zinc-100",
+                      "h-6 w-6"
+                    )}
+                  />
+                </button> */}
+                <ModelSelector />
+              </div>
+            </div>
+            {/*  */}
           </div>
         </div>
 
@@ -217,7 +290,7 @@ export default function ChatSession() {
         <div>
           <div
             id="llm-prompt-input"
-            className="flex justify-center align-bottom"
+            className="mb-2 flex justify-center align-bottom lg:mb-4"
           >
             <label htmlFor="prompt-input" className="sr-only">
               Prompt Input
@@ -234,35 +307,34 @@ export default function ChatSession() {
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
                 className={classNames(
-                  ChatContext.llmLoading
-                    ? "animate-pulse ring-2 ring-indigo-500"
-                    : "",
-                  "block w-full resize-none rounded-md border-0 py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:leading-6"
+                  ChatContext.llmLoading ? "bg-zinc-300 ring-2" : "",
+                  "block w-full resize-none rounded-md border-0 bg-white py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-zinc-700 dark:text-white sm:leading-6"
                 )}
               />
 
-              <button
-                id="submit-prompt-button"
-                onClick={submitPromptHandler}
-                disabled={ChatContext.llmLoading || !prompt ? true : false}
-                className={classNames(
-                  !prompt || ChatContext.llmLoading
-                    ? "cursor-not-allowed"
-                    : "cursor-pointer",
-                  "absolute bottom-0 right-0 flex items-center p-2 focus:outline-green-600"
-                )}
-              >
-                <ArrowUpCircleIcon
+              {ChatContext.llmLoading ? (
+                <button className="absolute bottom-0 right-0 flex cursor-wait items-center p-1.5 focus:outline-green-600">
+                  <CpuChipIcon className="text h-6 w-6 animate-spin text-green-500" />
+                </button>
+              ) : (
+                <button
+                  id="submit-prompt-button"
+                  onClick={submitPromptHandler}
+                  disabled={!prompt}
                   className={classNames(
-                    prompt ? "text-green-600" : "text-zinc-300",
-                    ChatContext.llmLoading
-                      ? "texgt- animate-spin text-indigo-500"
-                      : "",
-                    "h-5 w-5"
+                    !prompt ? "cursor-not-allowed" : "cursor-pointer",
+                    "absolute bottom-0 right-0 flex items-center p-1.5 focus:outline-green-600"
                   )}
-                  aria-hidden="true"
-                />
-              </button>
+                >
+                  <ArrowUpCircleIcon
+                    className={classNames(
+                      prompt ? "text-green-600" : "text-zinc-300",
+                      "h-6 w-6"
+                    )}
+                    aria-hidden="true"
+                  />
+                </button>
+              )}
             </div>
           </div>
         </div>

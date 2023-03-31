@@ -4,6 +4,7 @@ import { Auth0Provider, AppState, User } from "@auth0/auth0-react";
 import { RecoilRoot } from "recoil";
 
 //-- TSX Components --//
+import useIsMobile from "../Util/useIsMobile";
 
 //-- NPM Components --//
 
@@ -25,19 +26,7 @@ export default function AuthProviderWithNavigateAndRecoil() {
     navigate(appState?.returnTo || window.location.pathname);
   };
 
-  //-- For mobile clients, use 'localStorage' cache because sometimes the auth redirect hangs if using 'memory' --//
-  const parser = new UAParser();
-  const userAgent = parser.getResult();
-  const type = userAgent.device.type;
-  const mobileTypes = [
-    "console", //-- e.g. Xbox --//
-    "mobile", //-- e.g. iPhone --//
-    "tablet", //-- e.g. iPad --//
-    "smarttv", //-- e.g. Apple TV --//
-    "wearable", //-- e.g. Apple Watch --//
-    "embedded", //-- e.g. iot device --//
-  ];
-  const mobile = type && mobileTypes.includes(type);
+  let mobile = useIsMobile();
 
   return (
     <RecoilRoot>
