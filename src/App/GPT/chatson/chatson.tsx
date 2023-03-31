@@ -23,9 +23,11 @@ const timestamp = (): string => {
 /**
  * Causes an LLM API call after adding a propmt to a chatson object
  *
- * @param message user input to be added to the chat history and sent to the LLM
- * @param user_ids array of user ids. current user should be at index 0.
+ * @param accessToken user credential to be sent as Bearer token in 'authorization' header
  * @param chatson_object if null, a new chat is created. otherwise, the prompt is appended to the chatson_object
+ * @param user_ids array of user ids. current user should be at index 0.
+ * @param model model to use for API call
+ * @param message user input to be added to the chat history and sent to the LLM
  * @returns IChatsonObject updated with the new prompt
  */
 export async function send_message(
@@ -34,8 +36,7 @@ export async function send_message(
   user_ids: string[],
   model: IChatsonModel,
   message: string,
-  setChatson: React.Dispatch<React.SetStateAction<IChatsonObject | null>>,
-  setLLMLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setChatson: React.Dispatch<React.SetStateAction<IChatsonObject | null>>
 ) {
   //-- If chat object is null, create a new chat object --//
   if (!chatson_object) {
@@ -109,7 +110,7 @@ export async function send_message(
   console.log(chatRequestMessages); // DEV
 
   //-- Make API call - send chatRequestMessages --//
-  setLLMLoading(true);
+
   try {
     //-- Make POST request --//
     let res = await axios.post(
@@ -161,7 +162,6 @@ export async function send_message(
   } catch (err) {
     console.log(err);
   }
-  setLLMLoading(false);
 }
 
 //-- Chatson Templates --//

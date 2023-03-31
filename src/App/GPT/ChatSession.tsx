@@ -30,9 +30,9 @@ import {
   CpuChipIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
+import useIsMobile from "../../Util/useIsMobile";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
-let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ChatSession() {
@@ -55,28 +55,28 @@ export default function ChatSession() {
 
   //-- Click Handlers --//
   const submitPromptHandler = async () => {
+    setPrompt("");
+
+    //-- Refocus textarea after submitting a prompt (unless on mobile) --//
+    let mobile = useIsMobile();
+    if (textareaRef.current && !mobile) {
+      textareaRef.current.focus();
+    }
+
     const accessToken = await getAccessTokenSilently();
-    // TODO - implement ability to add message to existing chatson object
 
     //-- Send prompt as chat message --//
     if (user?.sub) {
-      // setLLMLoading to true here??
+      ChatContext.setLLMLoading(true);
       await chatson.send_message(
         accessToken,
         null, //-- chatson_object --//
         [user.sub],
         ChatContext.model,
         prompt,
-        ChatContext.setChatson,
-        ChatContext.setLLMLoading
+        ChatContext.setChatson
       );
-      // setLLMLoading to false here??
-    }
-    setPrompt("");
-
-    //-- Refocus textarea after submitting a prompt --//
-    if (textareaRef.current) {
-      textareaRef.current.focus();
+      ChatContext.setLLMLoading(false);
     }
   };
 
@@ -142,15 +142,15 @@ export default function ChatSession() {
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    // <div className="flex max-h-full flex-col">
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
+      {/* TODO - use logic below to render chat or sample propmts */}
       {true ? (
         <div
           id="llm-current-chat"
           className="flex flex-grow justify-center overflow-y-auto"
         >
-          <div className="w-full list-none pl-0">
+          <div id="chat-rows" className="w-full list-none justify-center pl-0">
             {ChatContext.chatson?.linear_message_history
               .filter((message) => message.role !== "system")
               .map((message) => (
@@ -160,14 +160,16 @@ export default function ChatSession() {
                     message.role === "user"
                       ? "rounded-lg bg-zinc-200 dark:bg-zinc-900"
                       : "",
-                    "justify-center lg:flex"
+                    "w-full justify-center lg:flex"
                   )}
                 >
                   {/* Top - hidden after 'lg' breakpoint */}
                   <div className="lg:hidden">
-                    <div className="flex flex-row justify-end">
+                    <div className="flex flex-row items-center justify-center px-4 py-2">
                       <RHS message={message} />
-                      <LHS message={message} />
+                      <div className="ml-auto">
+                        <LHS message={message} />
+                      </div>
                     </div>
                   </div>
 
@@ -180,19 +182,21 @@ export default function ChatSession() {
                   </div>
 
                   {/* MESSAGE */}
-                  <article className="prose prose-zinc w-full max-w-prose pl-3 dark:prose-invert dark:text-white lg:pl-0">
-                    <li key={message.message_uuid} className="sm:px-0">
-                      <ReactMarkdown
-                        children={message.message}
-                        remarkPlugins={[remarkGfm]}
-                      />
-                    </li>
-                  </article>
+                  <div className="flex w-full max-w-prose justify-center">
+                    <article className="prose prose-zinc w-full max-w-prose px-4 pb-1 dark:prose-invert dark:text-white lg:px-0">
+                      <li key={message.message_uuid}>
+                        <ReactMarkdown
+                          children={message.message}
+                          remarkPlugins={[remarkGfm]}
+                        />
+                      </li>
+                    </article>
+                  </div>
 
                   {/* RHS - hidden until 'lg' breakpoint */}
                   <div
                     id="chat-rhs-content-lg"
-                    className="mt-5 hidden w-full flex-col lg:flex lg:w-24"
+                    className="mt-5 hidden w-full flex-col pr-2 lg:flex lg:w-24"
                   >
                     <div className="flex flex-row justify-end">
                       <RHS message={message} />
@@ -303,27 +307,25 @@ export default function ChatSession() {
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
                 className={classNames(
-                  ChatContext.llmLoading
-                    ? "animate-pulse bg-zinc-300 ring-2 ring-indigo-500"
-                    : "",
+                  ChatContext.llmLoading ? "bg-zinc-300 ring-2" : "",
                   "block w-full resize-none rounded-md border-0 bg-white py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-zinc-700 dark:text-white sm:leading-6"
                 )}
               />
 
-              <button
-                id="submit-prompt-button"
-                onClick={submitPromptHandler}
-                disabled={ChatContext.llmLoading || !prompt ? true : false}
-                className={classNames(
-                  !prompt || ChatContext.llmLoading
-                    ? "cursor-not-allowed"
-                    : "cursor-pointer",
-                  "absolute bottom-0 right-0 flex items-center p-1.5 focus:outline-green-600"
-                )}
-              >
-                {ChatContext.llmLoading ? (
+              {ChatContext.llmLoading ? (
+                <button className="absolute bottom-0 right-0 flex cursor-wait items-center p-1.5 focus:outline-green-600">
                   <CpuChipIcon className="text h-6 w-6 animate-spin text-green-500" />
-                ) : (
+                </button>
+              ) : (
+                <button
+                  id="submit-prompt-button"
+                  onClick={submitPromptHandler}
+                  disabled={!prompt}
+                  className={classNames(
+                    !prompt ? "cursor-not-allowed" : "cursor-pointer",
+                    "absolute bottom-0 right-0 flex items-center p-1.5 focus:outline-green-600"
+                  )}
+                >
                   <ArrowUpCircleIcon
                     className={classNames(
                       prompt ? "text-green-600" : "text-zinc-300",
@@ -331,8 +333,8 @@ export default function ChatSession() {
                     )}
                     aria-hidden="true"
                   />
-                )}
-              </button>
+                </button>
+              )}
             </div>
           </div>
         </div>
