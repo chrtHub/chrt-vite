@@ -90,7 +90,7 @@ export default function ChatSession() {
           <img
             src={user?.picture}
             alt={user?.name}
-            className="h-10 w-10 rounded-full"
+            className="mt-3 h-10 w-10 rounded-full"
           />
         );
       } else {
@@ -102,8 +102,8 @@ export default function ChatSession() {
     if (message.author === message.model.apiName) {
       return (
         <div className="flex flex-col items-center">
-          <CpuChipIcon className="h-10 w-10 text-black dark:text-zinc-100" />
-          <div className="text-black dark:text-zinc-200">
+          <CpuChipIcon className="mt-4 h-8 w-8 text-zinc-500 dark:text-zinc-400" />
+          <div className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
             {message.model.friendlyName}
           </div>
         </div>
@@ -121,9 +121,18 @@ export default function ChatSession() {
     let { message } = props;
 
     let date = new Date(parseInt(message.timestamp) * 1000);
-    let friendlyDate = format(date, "hh:mm:ss");
+    // let friendlyDate = format(date, "hh:mm:ss");
+    let friendlyDate = new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit",
+    }).format(date);
 
-    return <div className="text-black dark:text-zinc-200">{friendlyDate}</div>;
+    return (
+      <div className="mt-5 text-sm text-zinc-500 dark:text-zinc-400">
+        {friendlyDate}
+      </div>
+    );
   };
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
@@ -152,13 +161,13 @@ export default function ChatSession() {
                   {/* LHS */}
                   <div
                     id="chat-lhs-content"
-                    className="flex w-full flex-col items-center justify-start pt-3 lg:w-24"
+                    className="flex w-full flex-col items-center justify-start bg-red-100 lg:w-24"
                   >
                     <LHS message={message} />
                   </div>
 
                   {/* MESSAGE */}
-                  <article className="prose prose-zinc w-full max-w-prose dark:prose-invert">
+                  <article className="prose prose-zinc w-full max-w-prose bg-blue-100 dark:prose-invert dark:text-white">
                     <li key={message.message_uuid} className="sm:px-0">
                       <ReactMarkdown
                         children={message.message}
@@ -170,9 +179,11 @@ export default function ChatSession() {
                   {/* RHS */}
                   <div
                     id="chat-rhs-content"
-                    className="w-full flex-col items-center justify-start pt-3 lg:w-24"
+                    className="flex w-full flex-col bg-green-100 lg:w-24"
                   >
-                    <RHS message={message} />
+                    <div className="flex flex-row justify-end">
+                      <RHS message={message} />
+                    </div>
                   </div>
                 </div>
               ))}
