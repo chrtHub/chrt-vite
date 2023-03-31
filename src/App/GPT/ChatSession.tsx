@@ -24,7 +24,12 @@ import { format } from "date-fns";
 //-- Utility Functions --//
 import classNames from "../../Util/classNames";
 import { IChatsonMessage } from "./chatson/types";
-import { CpuChipIcon } from "@heroicons/react/24/outline";
+import {
+  ChevronDoubleDownIcon,
+  ChevronDoubleUpIcon,
+  CpuChipIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
@@ -90,7 +95,7 @@ export default function ChatSession() {
           <img
             src={user?.picture}
             alt={user?.name}
-            className="mt-3 h-10 w-10 rounded-full"
+            className="h-10 w-10 rounded-full"
           />
         );
       } else {
@@ -102,7 +107,7 @@ export default function ChatSession() {
     if (message.author === message.model.apiName) {
       return (
         <div className="flex flex-col items-center">
-          <CpuChipIcon className="mt-4 h-8 w-8 text-zinc-500 dark:text-zinc-400" />
+          <CpuChipIcon className="h-8 w-8 text-zinc-500 dark:text-zinc-400" />
           <div className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
             {message.model.friendlyName}
           </div>
@@ -129,7 +134,7 @@ export default function ChatSession() {
     }).format(date);
 
     return (
-      <div className="mt-5 text-sm text-zinc-500 dark:text-zinc-400">
+      <div className="text-sm text-zinc-500 dark:text-zinc-400">
         {friendlyDate}
       </div>
     );
@@ -153,21 +158,29 @@ export default function ChatSession() {
                   id="chat-row"
                   className={classNames(
                     message.role === "user"
-                      ? "rounded-lg bg-zinc-100 dark:bg-zinc-900"
+                      ? "rounded-lg bg-zinc-200 dark:bg-zinc-900"
                       : "",
                     "justify-center lg:flex"
                   )}
                 >
-                  {/* LHS */}
+                  {/* Top - hidden after 'lg' breakpoint */}
+                  <div className="lg:hidden">
+                    <div className="flex flex-row justify-end">
+                      <RHS message={message} />
+                      <LHS message={message} />
+                    </div>
+                  </div>
+
+                  {/* LHS - hidden until 'lg' breakpoint */}
                   <div
                     id="chat-lhs-content"
-                    className="flex w-full flex-col items-center justify-start bg-red-100 lg:w-24"
+                    className="mt-3.5 hidden w-full flex-col items-center justify-start lg:flex lg:w-24"
                   >
                     <LHS message={message} />
                   </div>
 
                   {/* MESSAGE */}
-                  <article className="prose prose-zinc w-full max-w-prose bg-blue-100 dark:prose-invert dark:text-white">
+                  <article className="prose prose-zinc w-full max-w-prose pl-3 dark:prose-invert dark:text-white lg:pl-0">
                     <li key={message.message_uuid} className="sm:px-0">
                       <ReactMarkdown
                         children={message.message}
@@ -176,10 +189,10 @@ export default function ChatSession() {
                     </li>
                   </article>
 
-                  {/* RHS */}
+                  {/* RHS - hidden until 'lg' breakpoint */}
                   <div
-                    id="chat-rhs-content"
-                    className="flex w-full flex-col bg-green-100 lg:w-24"
+                    id="chat-rhs-content-lg"
+                    className="mt-5 hidden w-full flex-col lg:flex lg:w-24"
                   >
                     <div className="flex flex-row justify-end">
                       <RHS message={message} />
@@ -208,19 +221,64 @@ export default function ChatSession() {
       )}
 
       {/* STICKY INPUT SECTION */}
-      <div className="sticky bottom-0 flex h-28 flex-col justify-center bg-zinc-50 pb-3 pt-1 dark:bg-zinc-800">
+      <div className="sticky bottom-0 flex h-auto flex-col justify-center bg-zinc-50 pb-3 pt-1 dark:bg-zinc-800">
         {/* DIVIDER */}
         <div className="flex justify-center">
+          {/* TODO - add a slight shadow/gradient above divider when !atBottom */}
           <div className="mb-2 w-full max-w-prose border-t-2 border-zinc-300 dark:border-zinc-600"></div>
         </div>
 
         {/* MODEL SELECTOR */}
         <div className="flex justify-center">
-          <div
-            id="llm-model-selector"
-            className="flex w-full max-w-prose justify-end"
-          >
-            <ModelSelector />
+          <div className="flex w-full max-w-prose flex-row">
+            {/*  */}
+
+            <div className="flex w-full flex-row items-center justify-end gap-4">
+              {/* {ChatContext.llmLoading && (
+                <>
+                  <p className="dark:text-white">stop</p>
+                  <XCircleIcon className="h-8 w-8 dark:text-white" />
+                </>
+              )} */}
+            </div>
+
+            {/*  */}
+            <div className="flex w-full justify-end">
+              <div className="flex flex-row items-center gap-6">
+                {/* <button
+                  disabled={true} // TODO - base on logic
+                  onClick={() => console.log("go to top")}
+                >
+                  <ChevronDoubleUpIcon
+                    className={classNames(
+                      // TODO - add logic that knows if the chat is scrolled to top/bottom
+                      // atTop
+                      false
+                        ? "cursor-not-allowed text-zinc-400 dark:text-zinc-500"
+                        : "cursor-pointer text-zinc-900 dark:text-zinc-100",
+                      "h-6 w-6"
+                    )}
+                  />
+                </button>
+                <button
+                  disabled={false} // TODO - base on logic
+                  onClick={() => console.log("go to bottom")}
+                >
+                  <ChevronDoubleDownIcon
+                    className={classNames(
+                      // TODO - add logic that knows if the chat is scrolled to top/bottom
+                      // atBottom
+                      true
+                        ? "cursor-not-allowed text-zinc-400 dark:text-zinc-500"
+                        : "cursor-pointer text-zinc-900 dark:text-zinc-100",
+                      "h-6 w-6"
+                    )}
+                  />
+                </button> */}
+                <ModelSelector />
+              </div>
+            </div>
+            {/*  */}
           </div>
         </div>
 
@@ -228,7 +286,7 @@ export default function ChatSession() {
         <div>
           <div
             id="llm-prompt-input"
-            className="flex justify-center align-bottom"
+            className="mb-2 flex justify-center align-bottom lg:mb-4"
           >
             <label htmlFor="prompt-input" className="sr-only">
               Prompt Input
@@ -246,9 +304,9 @@ export default function ChatSession() {
                 onChange={(event) => setPrompt(event.target.value)}
                 className={classNames(
                   ChatContext.llmLoading
-                    ? "animate-pulse ring-2 ring-indigo-500"
+                    ? "animate-pulse bg-zinc-300 ring-2 ring-indigo-500"
                     : "",
-                  "block w-full resize-none rounded-md border-0 py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:leading-6"
+                  "block w-full resize-none rounded-md border-0 bg-white py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-zinc-700 dark:text-white sm:leading-6"
                 )}
               />
 
@@ -260,19 +318,20 @@ export default function ChatSession() {
                   !prompt || ChatContext.llmLoading
                     ? "cursor-not-allowed"
                     : "cursor-pointer",
-                  "absolute bottom-0 right-0 flex items-center p-2 focus:outline-green-600"
+                  "absolute bottom-0 right-0 flex items-center p-1.5 focus:outline-green-600"
                 )}
               >
-                <ArrowUpCircleIcon
-                  className={classNames(
-                    prompt ? "text-green-600" : "text-zinc-300",
-                    ChatContext.llmLoading
-                      ? "texgt- animate-spin text-indigo-500"
-                      : "",
-                    "h-5 w-5"
-                  )}
-                  aria-hidden="true"
-                />
+                {ChatContext.llmLoading ? (
+                  <CpuChipIcon className="text h-6 w-6 animate-spin text-green-500" />
+                ) : (
+                  <ArrowUpCircleIcon
+                    className={classNames(
+                      prompt ? "text-green-600" : "text-zinc-300",
+                      "h-6 w-6"
+                    )}
+                    aria-hidden="true"
+                  />
+                )}
               </button>
             </div>
           </div>
