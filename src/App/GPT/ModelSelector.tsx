@@ -48,11 +48,21 @@ export default function ModelSelector() {
           <Listbox.Label className="sr-only">Change GPT Model</Listbox.Label>
 
           <div className="relative">
-            <Listbox.Button className="inline-flex w-24 justify-center rounded-md bg-green-600 p-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-50">
+            <Listbox.Button className="relative flex w-28 flex-row rounded-md bg-zinc-600 py-1.5 pr-5 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:ring-offset-2 focus:ring-offset-zinc-50">
+              {/*  */}
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-white">
+                  {ChatContext.model.friendlyName}
+                </p>
+              </div>
+              <div className="absolute right-0 mr-1.5 ">
+                <ChevronDownIcon
+                  className="h-5 w-5 text-white"
+                  aria-hidden="true"
+                />
+              </div>
+              {/*  */}
               <span className="sr-only">Change GPT model</span>
-              <p className="text-sm font-semibold text-white">
-                {ChatContext.model.friendlyName}
-              </p>
             </Listbox.Button>
 
             <Transition
@@ -62,7 +72,7 @@ export default function ModelSelector() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute bottom-full right-0 z-10 mb-2 w-72 origin-top-right divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Listbox.Options className="absolute bottom-full left-0 z-10 mb-2 w-72 origin-top-right divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 {Object.values(ChatContext.CurrentChatsonModels).map(
                   (model) => (
                     <Listbox.Option

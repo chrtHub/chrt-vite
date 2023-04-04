@@ -302,14 +302,14 @@ export default function JournalFiles({}: IProps) {
     <div className="flex flex-col justify-center">
       {/* START OF FILE UPLOAD AREA */}
       <form className="mt-6">
-        <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
           <div className="sm:col-span-6">
             <div
               {...getRootProps()}
               className={classNames(
                 isDragAccept ? "bg-green-200" : "",
                 isDragReject ? "bg-orange-200" : "",
-                "flex cursor-pointer justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pt-5 pb-6 hover:bg-green-100 dark:hover:bg-green-900"
+                "flex cursor-pointer justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pb-6 pt-5 hover:bg-green-100 dark:hover:bg-green-900"
               )}
             >
               <input {...getInputProps()} />
@@ -524,9 +524,7 @@ export default function JournalFiles({}: IProps) {
                       <tr
                         key={file.id}
                         className={classNames(
-                          fileIdx % 2 === 0
-                            ? "bg-white dark:bg-zinc-700"
-                            : "bg-zinc-100 dark:bg-zinc-800", //-- Striped Rows --//
+                          "odd:bg-white even:bg-zinc-100 dark:odd:bg-zinc-700 dark:even:bg-zinc-800", //-- Striped Rows --//
                           tableSelectionFile?.file_uuid === file.file_uuid
                             ? "bg-green-100 dark:bg-green-900"
                             : "" //-- Selected Row --> Green --//
@@ -650,7 +648,7 @@ export default function JournalFiles({}: IProps) {
                   leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                   leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 >
-                  <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                  <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
                         <ExclamationTriangleIcon
@@ -658,7 +656,7 @@ export default function JournalFiles({}: IProps) {
                           aria-hidden="true"
                         />
                       </div>
-                      <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                      <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                         {/* <Dialog.Title
                           as="h3"
                           className="text-lg font-medium leading-6 text-zinc-900"
@@ -673,7 +671,7 @@ export default function JournalFiles({}: IProps) {
                         </div>
                       </div>
                     </div>
-                    <div className="mt-5 sm:mt-4 sm:ml-10 sm:flex sm:pl-4">
+                    <div className="mt-5 sm:ml-10 sm:mt-4 sm:flex sm:pl-4">
                       <button
                         type="button"
                         className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:w-auto sm:text-sm"
@@ -683,7 +681,7 @@ export default function JournalFiles({}: IProps) {
                       </button>
                       <button
                         type="button"
-                        className="mt-3 inline-flex w-full justify-center rounded-md border border-zinc-300 bg-white px-4 py-2 text-base font-medium text-zinc-700 shadow-sm hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                        className="mt-3 inline-flex w-full justify-center rounded-md border border-zinc-300 bg-white px-4 py-2 text-base font-medium text-zinc-700 shadow-sm hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm"
                         onClick={() => setDeleteModalOpen(false)}
                         ref={cancelButtonRef}
                       >

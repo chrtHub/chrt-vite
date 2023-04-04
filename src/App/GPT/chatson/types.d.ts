@@ -6,6 +6,7 @@ export interface IChatsonObject {
     chat_uuid: string;
     creation_timestamp_immutable: string;
     reference_timestamp_mutable: string;
+    most_recent_message_timestamp: string;
     user_tags: string[];
     chrt_tags: string[];
     opensearch_tags: string[];

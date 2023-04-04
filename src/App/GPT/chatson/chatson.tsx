@@ -49,6 +49,7 @@ export async function send_message(
     chatson_object.metadata.chat_uuid = uuidv4();
     chatson_object.metadata.creation_timestamp_immutable = timestamp();
     chatson_object.metadata.reference_timestamp_mutable = timestamp();
+    chatson_object.metadata.most_recent_message_timestamp = timestamp(); // TODO - update this upon receipt of response from LLM
 
     //-- Set system message data --//
     chatson_object.linear_message_history[0].model = model;
@@ -172,6 +173,7 @@ export const version_A: IChatsonObject = {
     chat_uuid: "",
     creation_timestamp_immutable: "",
     reference_timestamp_mutable: "",
+    most_recent_message_timestamp: "",
     user_tags: [],
     chrt_tags: [],
     opensearch_tags: [],

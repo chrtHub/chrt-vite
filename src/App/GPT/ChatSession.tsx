@@ -84,8 +84,8 @@ export default function ChatSession() {
     console.log(ChatContext.chatson);
   }, [ChatContext.chatson]);
 
-  //-- Message Row LHS --//
-  const LHS = (props: { message: IChatsonMessage }) => {
+  //-- Message Row Author --//
+  const Author = (props: { message: IChatsonMessage }) => {
     let { message } = props;
 
     //-- If author is the current user, display their profile photo --//
@@ -121,8 +121,8 @@ export default function ChatSession() {
     );
   };
 
-  //-- Message Row RHS --//
-  const RHS = (props: { message: IChatsonMessage }) => {
+  //-- Message Row MessageData --//
+  const MessageData = (props: { message: IChatsonMessage }) => {
     let { message } = props;
 
     let date = new Date(parseInt(message.timestamp) * 1000);
@@ -146,11 +146,8 @@ export default function ChatSession() {
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
       {/* TODO - use logic below to render chat or sample propmts */}
       {true ? (
-        <div
-          id="llm-current-chat"
-          className="flex flex-grow justify-center overflow-y-auto"
-        >
-          <div id="chat-rows" className="w-full list-none justify-center pl-0">
+        <div id="llm-current-chat" className="flex flex-grow overflow-y-auto">
+          <div id="chat-rows" className="w-full list-none">
             {ChatContext.chatson?.linear_message_history
               .filter((message) => message.role !== "system")
               .map((message) => (
@@ -166,24 +163,28 @@ export default function ChatSession() {
                   {/* Top - hidden after 'lg' breakpoint */}
                   <div className="lg:hidden">
                     <div className="flex flex-row items-center justify-center px-4 py-2">
-                      <RHS message={message} />
+                      <MessageData message={message} />
                       <div className="ml-auto">
-                        <LHS message={message} />
+                        <Author message={message} />
                       </div>
                     </div>
                   </div>
 
-                  {/* LHS - hidden until 'lg' breakpoint */}
+                  {/* Author - hidden until 'lg' breakpoint */}
                   <div
-                    id="chat-lhs-content"
+                    id="chat-author-content"
                     className="mt-3.5 hidden w-full flex-col items-center justify-start lg:flex lg:w-24"
                   >
-                    <LHS message={message} />
+                    <Author message={message} />
                   </div>
 
                   {/* MESSAGE */}
-                  <div className="flex w-full max-w-prose justify-center">
-                    <article className="prose prose-zinc w-full max-w-prose px-4 pb-1 dark:prose-invert dark:text-white lg:px-0">
+
+                  <div
+                    id="bar"
+                    className="mx-auto flex w-full max-w-prose lg:mx-0"
+                  >
+                    <article className="prose prose-zinc w-full max-w-prose px-2 pb-1 dark:prose-invert dark:text-white lg:px-0">
                       <li key={message.message_uuid}>
                         <ReactMarkdown
                           children={message.message}
@@ -193,13 +194,13 @@ export default function ChatSession() {
                     </article>
                   </div>
 
-                  {/* RHS - hidden until 'lg' breakpoint */}
+                  {/* MessageData - hidden until 'lg' breakpoint */}
                   <div
-                    id="chat-rhs-content-lg"
+                    id="chat-MessageData-content-lg"
                     className="mt-5 hidden w-full flex-col pr-2 lg:flex lg:w-24"
                   >
                     <div className="flex flex-row justify-end">
-                      <RHS message={message} />
+                      <MessageData message={message} />
                     </div>
                   </div>
                 </div>
@@ -232,56 +233,70 @@ export default function ChatSession() {
           <div className="mb-2 w-full max-w-prose border-t-2 border-zinc-300 dark:border-zinc-600"></div>
         </div>
 
-        {/* MODEL SELECTOR */}
+        {/* CONTROL BAR */}
         <div className="flex justify-center">
-          <div className="flex w-full max-w-prose flex-row">
-            {/*  */}
-
-            <div className="flex w-full flex-row items-center justify-end gap-4">
-              {/* {ChatContext.llmLoading && (
+          <div
+            id="chat-session-control-bar"
+            className="flex w-full max-w-prose flex-row"
+          >
+            {/* Stop Response Generation */}
+            <div className="flex w-full flex-row items-center justify-center">
+              {ChatContext.llmLoading && (
                 <>
-                  <p className="dark:text-white">stop</p>
-                  <XCircleIcon className="h-8 w-8 dark:text-white" />
+                  <button
+                    onClick={() => console.log("cancel")}
+                    type="button"
+                    className="inline-flex items-center gap-x-1.5 rounded-md bg-zinc-600 px-2.5 py-1.5 font-semibold text-white shadow-sm hover:bg-zinc-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
+                  >
+                    <XCircleIcon
+                      className="-ml-0.5 h-5 w-5"
+                      aria-hidden="true"
+                    />
+                    <p className="text-sm">Cancel</p>
+                  </button>
                 </>
-              )} */}
+              )}
             </div>
 
-            {/*  */}
-            <div className="flex w-full justify-end">
-              <div className="flex flex-row items-center gap-6">
-                {/* <button
-                  disabled={true} // TODO - base on logic
-                  onClick={() => console.log("go to top")}
-                >
-                  <ChevronDoubleUpIcon
-                    className={classNames(
-                      // TODO - add logic that knows if the chat is scrolled to top/bottom
-                      // atTop
-                      false
-                        ? "cursor-not-allowed text-zinc-400 dark:text-zinc-500"
-                        : "cursor-pointer text-zinc-900 dark:text-zinc-100",
-                      "h-6 w-6"
-                    )}
-                  />
-                </button>
-                <button
-                  disabled={false} // TODO - base on logic
-                  onClick={() => console.log("go to bottom")}
-                >
-                  <ChevronDoubleDownIcon
-                    className={classNames(
-                      // TODO - add logic that knows if the chat is scrolled to top/bottom
-                      // atBottom
-                      true
-                        ? "cursor-not-allowed text-zinc-400 dark:text-zinc-500"
-                        : "cursor-pointer text-zinc-900 dark:text-zinc-100",
-                      "h-6 w-6"
-                    )}
-                  />
-                </button> */}
-                <ModelSelector />
-              </div>
+            {/* Select LLM Model */}
+            <div className="flex w-full items-center justify-center">
+              <ModelSelector />
             </div>
+
+            {/* Scroll to Top or Bottom */}
+            <div className="flex w-full items-center justify-center gap-2">
+              <button
+                disabled={false} // TODO - base on logic
+                onClick={() => console.log("go to top")}
+              >
+                <ChevronDoubleUpIcon
+                  className={classNames(
+                    // TODO - add logic that knows if the chat is scrolled to top/bottom
+                    // atTop
+                    false
+                      ? "cursor-not-allowed text-zinc-400 dark:text-zinc-500"
+                      : "cursor-pointer text-zinc-900 dark:text-zinc-100",
+                    "h-6 w-6"
+                  )}
+                />
+              </button>
+              <button
+                disabled={true} // TODO - base on logic
+                onClick={() => console.log("go to bottom")}
+              >
+                <ChevronDoubleDownIcon
+                  className={classNames(
+                    // TODO - add logic that knows if the chat is scrolled to top/bottom
+                    // atBottom
+                    true
+                      ? "cursor-not-allowed text-zinc-400 dark:text-zinc-500"
+                      : "cursor-pointer text-zinc-900 dark:text-zinc-100",
+                    "h-6 w-6"
+                  )}
+                />
+              </button>
+            </div>
+
             {/*  */}
           </div>
         </div>
