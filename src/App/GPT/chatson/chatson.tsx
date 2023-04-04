@@ -92,7 +92,6 @@ export async function send_message(
 
     if (tokens + contentTokens < 3000) {
       tokens += contentTokens;
-      console.log("tokens: " + tokens); // DEV
       let chatRequestMessage: ChatCompletionRequestMessage = {
         role: chatson_object.linear_message_history[idx].role,
         content: content,
@@ -108,6 +107,7 @@ export async function send_message(
     idx--;
   }
 
+  console.log("tokens: " + tokens); // DEV
   console.log(chatRequestMessages); // DEV
 
   //-- Make API call - send chatRequestMessages --//

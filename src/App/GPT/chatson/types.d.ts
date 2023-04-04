@@ -46,6 +46,17 @@ export interface IChatsonAPIResponse {
   total_tokens: number;
 }
 
+//-- Context for useContext hook --//
+export interface IChatContext {
+  chatson: IChatsonObject | null;
+  setChatson: React.Dispatch<React.SetStateAction<IChatsonObject | null>>;
+  model: IChatsonModel;
+  setModel: React.Dispatch<React.SetStateAction<IChatsonModel>>;
+  CurrentChatsonModels: Record<CurrentChatsonModelNames, IChatsonModel>;
+  llmLoading: boolean;
+  setLLMLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 //-- (2023-03-28) Types copy-pasted from OpenAI Node SDK --//
 
 /**

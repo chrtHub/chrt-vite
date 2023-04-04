@@ -4,7 +4,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 
 //-- TSX Components --//
-import { ChatContext as _ChatContext } from "./GPT";
+import { ChatContext as _ChatContext } from "../../App";
 
 //-- NPM Components --//
 
@@ -42,7 +42,7 @@ export default function ModelSelector() {
   //-- Click Handlers --//
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <Listbox value={ChatContext.model} onChange={ChatContext.setModel}>
+    <Listbox value={ChatContext?.model} onChange={ChatContext?.setModel}>
       {({ open }) => (
         <>
           <Listbox.Label className="sr-only">Change GPT Model</Listbox.Label>
@@ -52,7 +52,7 @@ export default function ModelSelector() {
               {/*  */}
               <div className="flex-1">
                 <p className="text-sm font-semibold text-white">
-                  {ChatContext.model.friendlyName}
+                  {ChatContext?.model.friendlyName}
                 </p>
               </div>
               <div className="absolute right-0 mr-1.5 ">
@@ -73,7 +73,7 @@ export default function ModelSelector() {
               leaveTo="opacity-0"
             >
               <Listbox.Options className="absolute bottom-full left-0 z-10 mb-2 w-72 origin-top-right divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                {Object.values(ChatContext.CurrentChatsonModels).map(
+                {Object.values(ChatContext?.CurrentChatsonModels || {}).map(
                   (model) => (
                     <Listbox.Option
                       key={model.apiName}

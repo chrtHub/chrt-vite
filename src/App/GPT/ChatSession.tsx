@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useContext, Fragment } from "react";
 import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
-import { ChatContext as _ChatContext } from "./GPT";
+import { ChatContext as _ChatContext } from "../../App";
 
 //-- TSX Components --//
 import ModelSelector from "./ModelSelector";
@@ -37,7 +37,7 @@ import useIsMobile from "../../Util/useIsMobile";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ChatSession() {
   //-- React Context --//
-  const ChatContext = useContext(_ChatContext);
+  let ChatContext = useContext(_ChatContext);
 
   //-- React State --//
   const [promptInput, setPromptInput] = useState<string>("");
@@ -56,7 +56,6 @@ export default function ChatSession() {
   const newestMessageRef = useRef<HTMLDivElement>(null);
 
   const ScrollToOldestMessage = () => {
-    console.log(oldestMessageRef.current);
     // oldestMessageRef.current?.scrollTo({ top: 0, behavior: "auto" });
     oldestMessageRef.current?.scrollTo(
       0,
@@ -65,17 +64,8 @@ export default function ChatSession() {
   };
 
   //-- Side Effects --//
-
-  //-- Click Handlers --//
-  const submitPromptHandler = async () => {
-    //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
-    setPromptToSend(promptInput);
-    setPromptInput("");
-    ChatContext.setLLMLoading(true);
-    setPromptReady(true);
-  };
-
   useEffect(() => {
+    console.log("RUNNING EFFECT"); // DEV
     if (promptReady) {
       //-- Refocus textarea after submitting a prompt (unless on mobile) --//
       let mobile = useIsMobile();
@@ -87,10 +77,10 @@ export default function ChatSession() {
         const accessToken = await getAccessTokenSilently();
 
         //-- Send prompt as chat message --//
-        if (user?.sub) {
+        if (ChatContext && user?.sub) {
           await chatson.send_message(
             accessToken,
-            null, //-- chatson_object --//
+            ChatContext.chatson, //-- chatson_object --//
             [user.sub],
             ChatContext.model,
             promptToSend,
@@ -105,9 +95,14 @@ export default function ChatSession() {
     }
   }, [promptReady]);
 
-  useEffect(() => {
-    console.log(ChatContext.chatson);
-  }, [ChatContext.chatson]);
+  //-- Click Handlers --//
+  const submitPromptHandler = () => {
+    //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
+    setPromptToSend(promptInput);
+    setPromptInput("");
+    ChatContext?.setLLMLoading(true);
+    setPromptReady(true);
+  };
 
   //-- Message Row Author --//
   const Author = (props: { message: IChatsonMessage }) => {
@@ -142,7 +137,7 @@ export default function ChatSession() {
 
     return (
       // TODO - implement logic to show initials or perhaps photo in mulit-user chats(?)
-      <div>who dis</div>
+      <div>human</div>
     );
   };
 
@@ -169,16 +164,15 @@ export default function ChatSession() {
   return (
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
-      {/* TODO - use logic below to render chat or sample propmts */}
-      {true ? (
+      {ChatContext?.chatson?.linear_message_history[0].message ? (
         <div id="llm-current-chat" className="flex flex-grow overflow-y-auto">
           <div id="chat-rows" className="w-full list-none">
-            {ChatContext.chatson?.linear_message_history
+            {ChatContext.chatson.linear_message_history
               .filter((message) => message.role !== "system")
               .map((message, index) => {
                 //-- For scrolling to Top / Bottom, assign a ref to the newest and oldest message --//
                 let length =
-                  ChatContext.chatson?.linear_message_history?.length;
+                  ChatContext?.chatson?.linear_message_history?.length;
                 return (
                   <div
                     id="chat-row"
@@ -278,10 +272,10 @@ export default function ChatSession() {
           >
             {/* Stop Response Generation */}
             <div className="flex w-full flex-row items-center justify-center">
-              {ChatContext.llmLoading && (
+              {ChatContext?.llmLoading && (
                 <>
                   <button
-                    onClick={() => console.log("cancel")}
+                    onClick={() => console.log("cancel")} // TODO - add logic
                     type="button"
                     className="inline-flex items-center gap-x-1.5 rounded-md bg-zinc-600 px-2.5 py-1.5 font-semibold text-white shadow-sm hover:bg-zinc-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
                   >
@@ -319,7 +313,7 @@ export default function ChatSession() {
               </button>
               <button
                 disabled={true} // TODO - base on logic
-                onClick={() => console.log("go to bottom")}
+                onClick={() => console.log("go to bottom")} // TODO - add logic
               >
                 <ChevronDoubleDownIcon
                   className={classNames(
@@ -359,12 +353,12 @@ export default function ChatSession() {
                 value={promptInput}
                 onChange={(event) => setPromptInput(event.target.value)}
                 className={classNames(
-                  ChatContext.llmLoading ? "bg-zinc-300 ring-2" : "",
+                  ChatContext?.llmLoading ? "bg-zinc-300 ring-2" : "",
                   "block w-full resize-none rounded-md border-0 bg-white py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-zinc-700 dark:text-white sm:leading-6"
                 )}
               />
 
-              {ChatContext.llmLoading ? (
+              {ChatContext?.llmLoading ? (
                 <button className="absolute bottom-0 right-0 flex cursor-wait items-center p-1.5 focus:outline-green-600">
                   <CpuChipIcon className="text h-6 w-6 animate-spin text-green-500" />
                 </button>
@@ -372,9 +366,9 @@ export default function ChatSession() {
                 <button
                   id="submit-prompt-button"
                   onClick={submitPromptHandler}
-                  disabled={!prompt}
+                  disabled={!promptInput}
                   className={classNames(
-                    !prompt ? "cursor-not-allowed" : "cursor-pointer",
+                    !promptInput ? "cursor-not-allowed" : "cursor-pointer",
                     "absolute bottom-0 right-0 flex items-center p-1.5 focus:outline-green-600"
                   )}
                 >
