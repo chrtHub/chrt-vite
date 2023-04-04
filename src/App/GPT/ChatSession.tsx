@@ -40,7 +40,9 @@ export default function ChatSession() {
   const ChatContext = useContext(_ChatContext);
 
   //-- React State --//
-  const [prompt, setPrompt] = useState<string>("");
+  const [promptInput, setPromptInput] = useState<string>("");
+  const [promptToSend, setPromptToSend] = useState<string>("");
+  const [promptReady, setPromptReady] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   //-- Recoil State --//
@@ -50,35 +52,58 @@ export default function ChatSession() {
 
   //-- Other [] --//
   // TODO - watch the prompt length. based on the current model's limit, if the prompt is too long, warn the user
+  const oldestMessageRef = useRef<HTMLDivElement>(null);
+  const newestMessageRef = useRef<HTMLDivElement>(null);
+
+  const ScrollToOldestMessage = () => {
+    console.log(oldestMessageRef.current);
+    // oldestMessageRef.current?.scrollTo({ top: 0, behavior: "auto" });
+    oldestMessageRef.current?.scrollTo(
+      0,
+      oldestMessageRef.current.scrollHeight
+    );
+  };
 
   //-- Side Effects --//
 
   //-- Click Handlers --//
   const submitPromptHandler = async () => {
-    setPrompt("");
-
-    //-- Refocus textarea after submitting a prompt (unless on mobile) --//
-    let mobile = useIsMobile();
-    if (textareaRef.current && !mobile) {
-      textareaRef.current.focus();
-    }
-
-    const accessToken = await getAccessTokenSilently();
-
-    //-- Send prompt as chat message --//
-    if (user?.sub) {
-      ChatContext.setLLMLoading(true);
-      await chatson.send_message(
-        accessToken,
-        null, //-- chatson_object --//
-        [user.sub],
-        ChatContext.model,
-        prompt,
-        ChatContext.setChatson
-      );
-      ChatContext.setLLMLoading(false);
-    }
+    //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
+    setPromptToSend(promptInput);
+    setPromptInput("");
+    ChatContext.setLLMLoading(true);
+    setPromptReady(true);
   };
+
+  useEffect(() => {
+    if (promptReady) {
+      //-- Refocus textarea after submitting a prompt (unless on mobile) --//
+      let mobile = useIsMobile();
+      if (textareaRef.current && !mobile) {
+        textareaRef.current.focus();
+      }
+
+      const submitPrompt = async () => {
+        const accessToken = await getAccessTokenSilently();
+
+        //-- Send prompt as chat message --//
+        if (user?.sub) {
+          await chatson.send_message(
+            accessToken,
+            null, //-- chatson_object --//
+            [user.sub],
+            ChatContext.model,
+            promptToSend,
+            ChatContext.setChatson
+          );
+          ChatContext.setLLMLoading(false);
+        }
+      };
+      submitPrompt();
+
+      setPromptReady(false);
+    }
+  }, [promptReady]);
 
   useEffect(() => {
     console.log(ChatContext.chatson);
@@ -150,61 +175,73 @@ export default function ChatSession() {
           <div id="chat-rows" className="w-full list-none">
             {ChatContext.chatson?.linear_message_history
               .filter((message) => message.role !== "system")
-              .map((message) => (
-                <div
-                  id="chat-row"
-                  className={classNames(
-                    message.role === "user"
-                      ? "rounded-lg bg-zinc-200 dark:bg-zinc-900"
-                      : "",
-                    "w-full justify-center lg:flex"
-                  )}
-                >
-                  {/* Top - hidden after 'lg' breakpoint */}
-                  <div className="lg:hidden">
-                    <div className="flex flex-row items-center justify-center px-4 py-2">
-                      <MessageData message={message} />
-                      <div className="ml-auto">
-                        <Author message={message} />
+              .map((message, index) => {
+                //-- For scrolling to Top / Bottom, assign a ref to the newest and oldest message --//
+                let length =
+                  ChatContext.chatson?.linear_message_history?.length;
+                return (
+                  <div
+                    id="chat-row"
+                    ref={
+                      length && index === length - 1
+                        ? newestMessageRef //-- Used for scrolling to bottom --//
+                        : index === 0
+                        ? oldestMessageRef //-- Used for scrolling to top --//
+                        : null
+                    }
+                    className={classNames(
+                      message.role === "user"
+                        ? "rounded-lg bg-zinc-200 dark:bg-zinc-900"
+                        : "",
+                      "w-full justify-center lg:flex"
+                    )}
+                  >
+                    {/* Top - hidden after 'lg' breakpoint */}
+                    <div className="lg:hidden">
+                      <div className="flex flex-row items-center justify-center px-4 py-2">
+                        <MessageData message={message} />
+                        <div className="ml-auto">
+                          <Author message={message} />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Author - hidden until 'lg' breakpoint */}
+                    <div
+                      id="chat-author-content"
+                      className="mt-3.5 hidden w-full flex-col items-center justify-start lg:flex lg:w-24"
+                    >
+                      <Author message={message} />
+                    </div>
+
+                    {/* MESSAGE */}
+
+                    <div
+                      id="chat-message"
+                      className="mx-auto flex w-full max-w-prose lg:mx-0"
+                    >
+                      <article className="prose prose-zinc w-full max-w-prose px-2 pb-1 dark:prose-invert dark:text-white lg:px-0">
+                        <li key={message.message_uuid}>
+                          <ReactMarkdown
+                            children={message.message}
+                            remarkPlugins={[remarkGfm]}
+                          />
+                        </li>
+                      </article>
+                    </div>
+
+                    {/* MessageData - hidden until 'lg' breakpoint */}
+                    <div
+                      id="chat-MessageData-content-lg"
+                      className="mt-5 hidden w-full flex-col pr-2 lg:flex lg:w-24"
+                    >
+                      <div className="flex flex-row justify-end">
+                        <MessageData message={message} />
                       </div>
                     </div>
                   </div>
-
-                  {/* Author - hidden until 'lg' breakpoint */}
-                  <div
-                    id="chat-author-content"
-                    className="mt-3.5 hidden w-full flex-col items-center justify-start lg:flex lg:w-24"
-                  >
-                    <Author message={message} />
-                  </div>
-
-                  {/* MESSAGE */}
-
-                  <div
-                    id="bar"
-                    className="mx-auto flex w-full max-w-prose lg:mx-0"
-                  >
-                    <article className="prose prose-zinc w-full max-w-prose px-2 pb-1 dark:prose-invert dark:text-white lg:px-0">
-                      <li key={message.message_uuid}>
-                        <ReactMarkdown
-                          children={message.message}
-                          remarkPlugins={[remarkGfm]}
-                        />
-                      </li>
-                    </article>
-                  </div>
-
-                  {/* MessageData - hidden until 'lg' breakpoint */}
-                  <div
-                    id="chat-MessageData-content-lg"
-                    className="mt-5 hidden w-full flex-col pr-2 lg:flex lg:w-24"
-                  >
-                    <div className="flex flex-row justify-end">
-                      <MessageData message={message} />
-                    </div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
         </div>
       ) : (
@@ -267,7 +304,7 @@ export default function ChatSession() {
             <div className="flex w-full items-center justify-center gap-2">
               <button
                 disabled={false} // TODO - base on logic
-                onClick={() => console.log("go to top")}
+                onClick={ScrollToOldestMessage}
               >
                 <ChevronDoubleUpIcon
                   className={classNames(
@@ -319,8 +356,8 @@ export default function ChatSession() {
                 name="prompt-input"
                 placeholder="Input prompt"
                 wrap="hard"
-                value={prompt}
-                onChange={(event) => setPrompt(event.target.value)}
+                value={promptInput}
+                onChange={(event) => setPromptInput(event.target.value)}
                 className={classNames(
                   ChatContext.llmLoading ? "bg-zinc-300 ring-2" : "",
                   "block w-full resize-none rounded-md border-0 bg-white py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-zinc-700 dark:text-white sm:leading-6"
@@ -343,7 +380,7 @@ export default function ChatSession() {
                 >
                   <ArrowUpCircleIcon
                     className={classNames(
-                      prompt ? "text-green-600" : "text-zinc-300",
+                      promptInput ? "text-green-600" : "text-zinc-300",
                       "h-6 w-6"
                     )}
                     aria-hidden="true"
