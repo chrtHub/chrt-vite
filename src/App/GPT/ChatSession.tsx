@@ -42,7 +42,7 @@ export default function ChatSession() {
   //-- React State --//
   const [promptInput, setPromptInput] = useState<string>("");
   const [promptToSend, setPromptToSend] = useState<string>("");
-  const [promptReady, setPromptReady] = useState<boolean>(false);
+  const [promptReadyToSend, setPromptReadyToSend] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   //-- Recoil State --//
@@ -65,8 +65,7 @@ export default function ChatSession() {
 
   //-- Side Effects --//
   useEffect(() => {
-    console.log("RUNNING EFFECT"); // DEV
-    if (promptReady) {
+    if (promptReadyToSend) {
       //-- Refocus textarea after submitting a prompt (unless on mobile) --//
       let mobile = useIsMobile();
       if (textareaRef.current && !mobile) {
@@ -91,9 +90,9 @@ export default function ChatSession() {
       };
       submitPrompt();
 
-      setPromptReady(false);
+      setPromptReadyToSend(false);
     }
-  }, [promptReady]);
+  }, [promptReadyToSend]);
 
   //-- Click Handlers --//
   const submitPromptHandler = () => {
@@ -101,7 +100,7 @@ export default function ChatSession() {
     setPromptToSend(promptInput);
     setPromptInput("");
     ChatContext?.setLLMLoading(true);
-    setPromptReady(true);
+    setPromptReadyToSend(true);
   };
 
   //-- Message Row Author --//
