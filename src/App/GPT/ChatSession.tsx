@@ -166,6 +166,7 @@ export default function ChatSession() {
       {ChatContext?.chatson?.linear_message_history[0].message ? (
         <div id="llm-current-chat" className="flex flex-grow overflow-y-auto">
           <div id="chat-rows" className="w-full list-none">
+            {/* DEV - start of scroll container here?? */}
             {ChatContext.chatson.linear_message_history
               .filter((message) => message.role !== "system")
               .map((message, index) => {
@@ -208,7 +209,6 @@ export default function ChatSession() {
                     </div>
 
                     {/* MESSAGE */}
-
                     <div
                       id="chat-message"
                       className="mx-auto flex w-full max-w-prose lg:mx-0"
@@ -235,6 +235,7 @@ export default function ChatSession() {
                   </div>
                 );
               })}
+            {/* DEV - end of scroll container here?? */}
           </div>
         </div>
       ) : (
@@ -242,14 +243,20 @@ export default function ChatSession() {
           id="llm-sample-prompts"
           className="flex flex-grow flex-col items-center justify-center"
         >
-          <p className="text-4xl font-medium text-zinc-500 dark:text-zinc-400">
+          <p className="font-sans text-4xl font-semibold text-zinc-700 dark:text-zinc-200">
             ChrtGPT
           </p>
           <article className="prose prose-zinc dark:prose-invert">
-            <div className="">
-              <p className="italic">What is ChrtGPT?</p>
-              <p className="italic">How to be a good day trader?</p>
-              <p className="italic">What are some risks of day trading?</p>
+            <div className="mb-0 flex flex-col">
+              <p className="mb-0 mt-2.5 font-sans font-medium italic">
+                What is ChrtGPT?
+              </p>
+              <p className="mb-0 mt-1.5 font-sans font-medium italic">
+                How to be a good day trader?
+              </p>
+              <p className="mb-0 mt-1.5 font-sans font-medium italic">
+                What are some risks of day trading?
+              </p>
             </div>
           </article>
         </div>
