@@ -51,8 +51,8 @@ export interface IChatContext {
   chatson: IChatsonObject | null;
   setChatson: React.Dispatch<React.SetStateAction<IChatsonObject | null>>;
   model: IChatsonModel;
-  setModel: React.Dispatch<React.SetStateAction<IChatsonModel>>;
-  CurrentChatsonModels: Record<CurrentChatsonModelNames, IChatsonModel>;
+  setModel: React.Dispatch<React.SetStateAction<IChatsonModel | null>>;
+  CurrentChatsonModels: Record<CurrentChatsonModelNames, IChatsonModel | null>;
   llmLoading: boolean;
   setLLMLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }

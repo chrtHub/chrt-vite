@@ -17,13 +17,9 @@ export default function ComponentName() {
   //== React State ==//
   //== Recoil State ==//
   //== Auth ==//
-  //== Other [] ==//
+  //== Other ==//
   //== Side Effects ==//
   //== Click Handlers ==//
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
-  // return (
-  //   <div>
-  //     foo
-  //   </div>
-  // );
+  // return <div>foo</div>;
 }

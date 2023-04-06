@@ -1,5 +1,12 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { useState, useEffect, useRef, useContext, Fragment } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  useContext,
+  Fragment,
+} from "react";
 import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 import { ChatContext as _ChatContext } from "../../App";
@@ -9,6 +16,7 @@ import ModelSelector from "./ModelSelector";
 import * as chatson from "./chatson/chatson";
 
 //-- NPM Components --//
+import { Virtuoso } from "react-virtuoso";
 import TextareaAutosize from "react-textarea-autosize";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -20,7 +28,7 @@ import { ArrowUpCircleIcon } from "@heroicons/react/20/solid";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
-
+2;
 //-- Utility Functions --//
 import classNames from "../../Util/classNames";
 import { IChatsonMessage } from "./chatson/types";
@@ -51,17 +59,6 @@ export default function ChatSession() {
   const { getAccessTokenSilently, user } = useAuth0();
 
   //-- Other [] --//
-  // TODO - watch the prompt length. based on the current model's limit, if the prompt is too long, warn the user
-  const oldestMessageRef = useRef<HTMLDivElement>(null);
-  const newestMessageRef = useRef<HTMLDivElement>(null);
-
-  const ScrollToOldestMessage = () => {
-    // oldestMessageRef.current?.scrollTo({ top: 0, behavior: "auto" });
-    oldestMessageRef.current?.scrollTo(
-      0,
-      oldestMessageRef.current.scrollHeight
-    );
-  };
 
   //-- Side Effects --//
   useEffect(() => {
@@ -102,6 +99,30 @@ export default function ChatSession() {
     ChatContext?.setLLMLoading(true);
     setPromptReadyToSend(true);
   };
+
+  //-- Functions and Components for Message Rows --//
+  const virtuosoRef = useRef(null);
+  const [atBottom, setAtBottom] = useState(false);
+  const showButtonTimeoutRef = useRef(null);
+  const [showButton, setShowButton] = useState(false);
+  const filteredMessages = ChatContext.chatson?.linear_message_history.filter(
+    (message) => message.role !== "system"
+  );
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(showButtonTimeoutRef.current);
+    };
+  });
+
+  useEffect(() => {
+    clearTimeout(showButtonTimeoutRef.current);
+    if (!atBottom) {
+      showButtonTimeoutRef.current = setTimeout(() => setShowButton(true), 500);
+    } else {
+      setShowButton(false);
+    }
+  }, [atBottom, setShowButton]);
 
   //-- Message Row Author --//
   const Author = (props: { message: IChatsonMessage }) => {
@@ -159,84 +180,96 @@ export default function ChatSession() {
     );
   };
 
+  //-- Message Row Component --//
+  const Row = (props: { message: IChatsonMessage }) => {
+    const { message } = props;
+    return (
+      <div
+        id="chat-row"
+        className={classNames(
+          message.role === "user"
+            ? "rounded-lg bg-zinc-200 dark:bg-zinc-900"
+            : "",
+          "w-full justify-center lg:flex"
+        )}
+      >
+        {/* Top - hidden after 'lg' breakpoint */}
+        <div className="lg:hidden">
+          <div className="flex flex-row items-center justify-center px-4 py-2">
+            <MessageData message={message} />
+            <div className="ml-auto">
+              <Author message={message} />
+            </div>
+          </div>
+        </div>
+
+        {/* Author - hidden until 'lg' breakpoint */}
+        <div
+          id="chat-author-content"
+          className="mt-3.5 hidden w-full flex-col items-center justify-start lg:flex lg:w-24"
+        >
+          <Author message={message} />
+        </div>
+
+        {/* MESSAGE */}
+        <div
+          id="chat-message"
+          className="mx-auto flex w-full max-w-prose lg:mx-0"
+        >
+          <article className="prose prose-zinc w-full max-w-prose px-2 pb-1 dark:prose-invert dark:text-white lg:px-0">
+            <li key={message.message_uuid}>
+              <ReactMarkdown
+                children={message.message}
+                remarkPlugins={[remarkGfm]}
+              />
+            </li>
+          </article>
+        </div>
+
+        {/* MessageData - hidden until 'lg' breakpoint */}
+        <div
+          id="chat-MessageData-content-lg"
+          className="mt-5 hidden w-full flex-col pr-2 lg:flex lg:w-24"
+        >
+          <div className="flex flex-row justify-end">
+            <MessageData message={message} />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
       {ChatContext?.chatson?.linear_message_history[0].message ? (
-        <div id="llm-current-chat" className="flex flex-grow overflow-y-auto">
+        <div id="llm-current-chat" className="flex flex-grow">
           <div id="chat-rows" className="w-full list-none">
-            {/* DEV - start of scroll container here?? */}
-            {ChatContext.chatson.linear_message_history
-              .filter((message) => message.role !== "system")
-              .map((message, index) => {
-                //-- For scrolling to Top / Bottom, assign a ref to the newest and oldest message --//
-                let length =
-                  ChatContext?.chatson?.linear_message_history?.length;
-                return (
-                  <div
-                    id="chat-row"
-                    ref={
-                      length && index === length - 1
-                        ? newestMessageRef //-- Used for scrolling to bottom --//
-                        : index === 0
-                        ? oldestMessageRef //-- Used for scrolling to top --//
-                        : null
-                    }
-                    className={classNames(
-                      message.role === "user"
-                        ? "rounded-lg bg-zinc-200 dark:bg-zinc-900"
-                        : "",
-                      "w-full justify-center lg:flex"
-                    )}
-                  >
-                    {/* Top - hidden after 'lg' breakpoint */}
-                    <div className="lg:hidden">
-                      <div className="flex flex-row items-center justify-center px-4 py-2">
-                        <MessageData message={message} />
-                        <div className="ml-auto">
-                          <Author message={message} />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Author - hidden until 'lg' breakpoint */}
-                    <div
-                      id="chat-author-content"
-                      className="mt-3.5 hidden w-full flex-col items-center justify-start lg:flex lg:w-24"
-                    >
-                      <Author message={message} />
-                    </div>
-
-                    {/* MESSAGE */}
-                    <div
-                      id="chat-message"
-                      className="mx-auto flex w-full max-w-prose lg:mx-0"
-                    >
-                      <article className="prose prose-zinc w-full max-w-prose px-2 pb-1 dark:prose-invert dark:text-white lg:px-0">
-                        <li key={message.message_uuid}>
-                          <ReactMarkdown
-                            children={message.message}
-                            remarkPlugins={[remarkGfm]}
-                          />
-                        </li>
-                      </article>
-                    </div>
-
-                    {/* MessageData - hidden until 'lg' breakpoint */}
-                    <div
-                      id="chat-MessageData-content-lg"
-                      className="mt-5 hidden w-full flex-col pr-2 lg:flex lg:w-24"
-                    >
-                      <div className="flex flex-row justify-end">
-                        <MessageData message={message} />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            {/* DEV - end of scroll container here?? */}
+            <Virtuoso
+              ref={virtuosoRef}
+              data={filteredMessages}
+              itemContent={(index, message) => (
+                <Row key={message.message_uuid} message={message} />
+              )}
+              followOutput="auto" // DEV - or smooth??
+              atBottomStateChange={(isAtBottom) => {
+                setAtBottom(isAtBottom);
+              }}
+            />
           </div>
+          {showButton && (
+            <button
+              onClick={() =>
+                virtuosoRef.current.scrollToIndex({
+                  index: filteredMessages ? filteredMessages.length - 1 : 0,
+                  behavior: "smooth",
+                })
+              }
+            >
+              go to bottom
+            </button>
+          )}
         </div>
       ) : (
         <div
@@ -302,7 +335,7 @@ export default function ChatSession() {
 
             {/* Scroll to Top or Bottom */}
             <div className="flex w-full items-center justify-center gap-2">
-              <button
+              {/* <button
                 disabled={false} // TODO - base on logic
                 onClick={ScrollToOldestMessage}
               >
@@ -316,16 +349,16 @@ export default function ChatSession() {
                     "h-6 w-6"
                   )}
                 />
-              </button>
+              </button> */}
               <button
-                disabled={true} // TODO - base on logic
-                onClick={() => console.log("go to bottom")} // TODO - add logic
+                disabled={false} // TODO - base on logic
+                // onClick={} // TODO - add logic
               >
                 <ChevronDoubleDownIcon
                   className={classNames(
                     // TODO - add logic that knows if the chat is scrolled to top/bottom
                     // atBottom
-                    true
+                    false
                       ? "cursor-not-allowed text-zinc-400 dark:text-zinc-500"
                       : "cursor-pointer text-zinc-900 dark:text-zinc-100",
                     "h-6 w-6"

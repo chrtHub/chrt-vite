@@ -67,7 +67,17 @@ export const CurrentChatsonModels: Record<
     description: "For very large prompts",
   },
 };
-export const ChatContext = createContext<IChatContext | undefined>(undefined);
+// export const ChatContext = createContext<IChatContext | undefined>(undefined);
+const chatContextInitialValue: IChatContext = {
+  chatson: null,
+  setChatson: () => {},
+  model: CurrentChatsonModels["gpt-3.5-turbo"],
+  setModel: () => {},
+  CurrentChatsonModels: CurrentChatsonModels,
+  llmLoading: false,
+  setLLMLoading: () => {},
+};
+export const ChatContext = createContext<IChatContext>(chatContextInitialValue);
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 interface IProps {}
