@@ -112,6 +112,7 @@ export default function ChatSession() {
       virtuosoRef.current.scrollToIndex({
         index: filteredMessages.length - 1,
         behavior: "smooth",
+        align: "end",
       });
     }
   };
