@@ -5,6 +5,7 @@ import {
   CurrentChatsonModelNames,
 } from "../App/GPT/chatson/types";
 
+//-- Create interface and Context --//
 interface IChatContext {
   chatson: IChatsonObject | null;
   setChatson: React.Dispatch<React.SetStateAction<IChatsonObject | null>>;
