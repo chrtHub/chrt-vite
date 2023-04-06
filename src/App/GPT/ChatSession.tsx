@@ -16,7 +16,7 @@ import ModelSelector from "./ModelSelector";
 import * as chatson from "./chatson/chatson";
 
 //-- NPM Components --//
-import { Virtuoso } from "react-virtuoso";
+import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import TextareaAutosize from "react-textarea-autosize";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -101,28 +101,47 @@ export default function ChatSession() {
   };
 
   //-- Functions and Components for Message Rows --//
-  const virtuosoRef = useRef(null);
-  const [atBottom, setAtBottom] = useState(false);
-  const showButtonTimeoutRef = useRef(null);
-  const [showButton, setShowButton] = useState(false);
+  const virtuosoRef = useRef<VirtuosoHandle | null>(null);
+  const [atBottom, setAtBottom] = useState<boolean>(false);
+  const showButtonTimeoutRef = useRef<number | null>(null);
+  const [showButton, setShowButton] = useState<boolean>(false);
   const filteredMessages = ChatContext.chatson?.linear_message_history.filter(
     (message) => message.role !== "system"
   );
 
   useEffect(() => {
     return () => {
-      clearTimeout(showButtonTimeoutRef.current);
+      if (showButtonTimeoutRef.current !== null) {
+        clearTimeout(showButtonTimeoutRef.current);
+      }
     };
-  });
+  }, []);
 
   useEffect(() => {
-    clearTimeout(showButtonTimeoutRef.current);
+    if (showButtonTimeoutRef.current !== null) {
+      clearTimeout(showButtonTimeoutRef.current);
+    }
+
     if (!atBottom) {
-      showButtonTimeoutRef.current = setTimeout(() => setShowButton(true), 500);
+      showButtonTimeoutRef.current = setTimeout(() => setShowButton(true), 0);
     } else {
       setShowButton(false);
+      showButtonTimeoutRef.current = null; // DEV - why?
     }
   }, [atBottom, setShowButton]);
+
+  const scrollToBottomHandler = () => {
+    if (
+      virtuosoRef.current &&
+      filteredMessages &&
+      filteredMessages.length > 0
+    ) {
+      virtuosoRef.current.scrollToIndex({
+        index: filteredMessages.length - 1,
+        behavior: "smooth",
+      });
+    }
+  };
 
   //-- Message Row Author --//
   const Author = (props: { message: IChatsonMessage }) => {
@@ -258,18 +277,6 @@ export default function ChatSession() {
               }}
             />
           </div>
-          {showButton && (
-            <button
-              onClick={() =>
-                virtuosoRef.current.scrollToIndex({
-                  index: filteredMessages ? filteredMessages.length - 1 : 0,
-                  behavior: "smooth",
-                })
-              }
-            >
-              go to bottom
-            </button>
-          )}
         </div>
       ) : (
         <div
@@ -333,32 +340,16 @@ export default function ChatSession() {
               <ModelSelector />
             </div>
 
-            {/* Scroll to Top or Bottom */}
-            <div className="flex w-full items-center justify-center gap-2">
-              {/* <button
-                disabled={false} // TODO - base on logic
-                onClick={ScrollToOldestMessage}
-              >
-                <ChevronDoubleUpIcon
-                  className={classNames(
-                    // TODO - add logic that knows if the chat is scrolled to top/bottom
-                    // atTop
-                    false
-                      ? "cursor-not-allowed text-zinc-400 dark:text-zinc-500"
-                      : "cursor-pointer text-zinc-900 dark:text-zinc-100",
-                    "h-6 w-6"
-                  )}
-                />
-              </button> */}
+            {/* Scroll to Bottom */}
+            <div className="flex w-full items-center justify-end">
               <button
-                disabled={false} // TODO - base on logic
-                // onClick={} // TODO - add logic
+                className="pr-1.5"
+                disabled={!showButton}
+                onClick={scrollToBottomHandler}
               >
                 <ChevronDoubleDownIcon
                   className={classNames(
-                    // TODO - add logic that knows if the chat is scrolled to top/bottom
-                    // atBottom
-                    false
+                    !showButton
                       ? "cursor-not-allowed text-zinc-400 dark:text-zinc-500"
                       : "cursor-pointer text-zinc-900 dark:text-zinc-100",
                     "h-6 w-6"

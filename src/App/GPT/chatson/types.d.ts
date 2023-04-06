@@ -50,7 +50,7 @@ export interface IChatsonAPIResponse {
 export interface IChatContext {
   chatson: IChatsonObject | null;
   setChatson: React.Dispatch<React.SetStateAction<IChatsonObject | null>>;
-  model: IChatsonModel;
+  model: IChatsonModel | null;
   setModel: React.Dispatch<React.SetStateAction<IChatsonModel | null>>;
   CurrentChatsonModels: Record<CurrentChatsonModelNames, IChatsonModel | null>;
   llmLoading: boolean;

@@ -71,7 +71,7 @@ export const CurrentChatsonModels: Record<
 const chatContextInitialValue: IChatContext = {
   chatson: null,
   setChatson: () => {},
-  model: CurrentChatsonModels["gpt-3.5-turbo"],
+  model: null,
   setModel: () => {},
   CurrentChatsonModels: CurrentChatsonModels,
   llmLoading: false,
@@ -121,7 +121,7 @@ export default function App({}: IProps) {
 
   //-- Context providers for global use (for authenticated users) within App --//
   const [chatson, setChatson] = useState<IChatsonObject | null>(null);
-  const [model, setModel] = useState<IChatsonModel>(
+  const [model, setModel] = useState<IChatsonModel | null>(
     CurrentChatsonModels["gpt-3.5-turbo"]
   );
   const [llmLoading, setLLMLoading] = useState<boolean>(false);
