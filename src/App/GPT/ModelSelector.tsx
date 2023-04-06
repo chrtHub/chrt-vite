@@ -1,5 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { Fragment, useState, useContext } from "react";
+import { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 
@@ -48,7 +48,6 @@ export default function ModelSelector() {
                   aria-hidden="true"
                 />
               </div>
-              {/*  */}
               <span className="sr-only">Change GPT model</span>
             </Listbox.Button>
 
