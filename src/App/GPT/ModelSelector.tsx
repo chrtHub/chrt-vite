@@ -52,7 +52,7 @@ export default function ModelSelector() {
               {/*  */}
               <div className="flex-1">
                 <p className="text-sm font-semibold text-white">
-                  {ChatContext?.model.friendlyName}
+                  {ChatContext?.model?.friendlyName}
                 </p>
               </div>
               <div className="absolute right-0 mr-1.5 ">
@@ -76,7 +76,7 @@ export default function ModelSelector() {
                 {Object.values(ChatContext?.CurrentChatsonModels || {}).map(
                   (model) => (
                     <Listbox.Option
-                      key={model.apiName}
+                      key={model?.apiName}
                       className={({ active }) =>
                         classNames(
                           active ? "bg-green-600 text-white" : "text-zinc-900",
@@ -91,7 +91,7 @@ export default function ModelSelector() {
                             <p
                               className={selected ? "font-bold" : "font-normal"}
                             >
-                              {model.friendlyName}
+                              {model?.friendlyName}
                             </p>
                           </div>
                           <p
@@ -100,7 +100,7 @@ export default function ModelSelector() {
                               "mt-2"
                             )}
                           >
-                            {model.description}
+                            {model?.description}
                           </p>
                         </div>
                       )}
