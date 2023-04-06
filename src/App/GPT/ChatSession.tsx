@@ -1,55 +1,52 @@
-//-- react, react-router-dom, recoil, Auth0 --//
+//== react, react-router-dom, recoil, Auth0 ==//
 import { useState, useEffect, useRef } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useChatContext } from "../../ChatContext";
+import { useChatContext } from "../../Context/ChatContext";
 
-//-- TSX Components --//
+//== TSX Components ==//
 import ModelSelector from "./ModelSelector";
 import * as chatson from "./chatson/chatson";
 
-//-- NPM Components --//
+//== NPM Components ==//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import TextareaAutosize from "react-textarea-autosize";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-//-- Icons --//
+//== Icons ==//
 import { ArrowUpCircleIcon } from "@heroicons/react/20/solid";
 
-//-- NPM Functions --//
+//== NPM Functions ==//
 
-//-- Utility Functions --//
+//== Utility Functions ==//
 import classNames from "../../Util/classNames";
 import { IChatsonMessage } from "./chatson/types";
 import {
   ChevronDoubleDownIcon,
-  ChevronDoubleUpIcon,
   CpuChipIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 import useIsMobile from "../../Util/useIsMobile";
 
-//-- Environment Variables, TypeScript Interfaces, Data Objects --//
+//== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
-//-- ***** ***** ***** Exported Component ***** ***** ***** --//
+//== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
-  //-- React Context --//
+  //== React State ==//
   let ChatContext = useChatContext();
-
-  //-- React State --//
   const [promptInput, setPromptInput] = useState<string>("");
   const [promptToSend, setPromptToSend] = useState<string>("");
   const [promptReadyToSend, setPromptReadyToSend] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  //-- Recoil State --//
+  //== Recoil State ==//
 
-  //-- Auth --//
+  //== Auth ==//
   const { getAccessTokenSilently, user } = useAuth0();
 
-  //-- Other [] --//
+  //== Other ==//
 
-  //-- Side Effects --//
+  //== Side Effects ==//
   useEffect(() => {
     if (promptReadyToSend) {
       //-- Refocus textarea after submitting a prompt (unless on mobile) --//
@@ -80,7 +77,7 @@ export default function ChatSession() {
     }
   }, [promptReadyToSend]);
 
-  //-- Click Handlers --//
+  //== Click Handlers ==//
   const submitPromptHandler = () => {
     //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
     setPromptToSend(promptInput);
@@ -89,33 +86,20 @@ export default function ChatSession() {
     setPromptReadyToSend(true);
   };
 
-  //-- Functions and Components for Message Rows --//
+  //-- ***** ***** ***** Start of Functions and Components for Message Rows **** ***** ***** --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
-  const [atBottom, setAtBottom] = useState<boolean>(false);
-  const showButtonTimeoutRef = useRef<number | null>(null);
+  const [atBottom, setAtBottom] = useState<boolean>(true);
   const [showButton, setShowButton] = useState<boolean>(false);
   const filteredMessages = ChatContext.chatson?.linear_message_history.filter(
     (message) => message.role !== "system"
   );
 
+  //-- When 'atBottom' changes - if at bottom don't show button, else show button --//
   useEffect(() => {
-    return () => {
-      if (showButtonTimeoutRef.current !== null) {
-        clearTimeout(showButtonTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (showButtonTimeoutRef.current !== null) {
-      clearTimeout(showButtonTimeoutRef.current);
-    }
-
-    if (!atBottom) {
-      showButtonTimeoutRef.current = setTimeout(() => setShowButton(true), 0);
-    } else {
+    if (atBottom) {
       setShowButton(false);
-      showButtonTimeoutRef.current = null; // DEV - why?
+    } else {
+      setShowButton(true);
     }
   }, [atBottom, setShowButton]);
 
@@ -246,6 +230,7 @@ export default function ChatSession() {
       </div>
     );
   };
+  //-- ***** ***** ***** End of Functions and Components for Message Rows **** ***** ***** --//
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
@@ -254,13 +239,14 @@ export default function ChatSession() {
       {ChatContext.chatson?.linear_message_history[0].message ? (
         <div id="llm-current-chat" className="flex flex-grow">
           <div id="chat-rows" className="w-full list-none">
+            {/* Similar implemenatation to https://virtuoso.dev/stick-to-bottom/ */}
             <Virtuoso
               ref={virtuosoRef}
               data={filteredMessages}
               itemContent={(index, message) => (
                 <Row key={message.message_uuid} message={message} />
               )}
-              followOutput="auto" // DEV - or smooth??
+              followOutput="smooth"
               atBottomStateChange={(isAtBottom) => {
                 setAtBottom(isAtBottom);
               }}
@@ -295,7 +281,6 @@ export default function ChatSession() {
       <div className="sticky bottom-0 flex h-auto flex-col justify-center bg-zinc-50 pb-3 pt-1 dark:bg-zinc-800">
         {/* DIVIDER */}
         <div className="flex justify-center">
-          {/* TODO - add a slight shadow/gradient above divider when !atBottom */}
           <div className="mb-2 w-full max-w-prose border-t-2 border-zinc-300 dark:border-zinc-600"></div>
         </div>
 
@@ -339,16 +324,14 @@ export default function ChatSession() {
               >
                 <ChevronDoubleDownIcon
                   className={classNames(
-                    !showButton
-                      ? "cursor-not-allowed text-zinc-400 dark:text-zinc-500"
-                      : "cursor-pointer text-zinc-900 dark:text-zinc-100",
+                    showButton
+                      ? "cursor-pointer text-zinc-900 dark:text-zinc-100"
+                      : "cursor-not-allowed text-zinc-400 dark:text-zinc-500",
                     "h-6 w-6"
                   )}
                 />
               </button>
             </div>
-
-            {/*  */}
           </div>
         </div>
 

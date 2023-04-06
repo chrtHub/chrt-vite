@@ -4,7 +4,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 
 //-- TSX Components --//
-import { useChatContext } from "../../ChatContext";
+import { useChatContext } from "../../Context/ChatContext";
 
 //-- NPM Components --//
 

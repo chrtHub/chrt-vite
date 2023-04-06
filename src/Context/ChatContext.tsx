@@ -3,8 +3,9 @@ import {
   IChatsonObject,
   IChatsonModel,
   CurrentChatsonModelNames,
-} from "./App/GPT/chatson/types";
+} from "../App/GPT/chatson/types";
 
+//-- Create interface and Context --//
 interface IChatContext {
   chatson: IChatsonObject | null;
   setChatson: React.Dispatch<React.SetStateAction<IChatsonObject | null>>;
@@ -17,7 +18,7 @@ interface IChatContext {
 const ChatContext = createContext<IChatContext | undefined>(undefined);
 
 //-- Custom Provider Component --//
-export function ChatContextProvider({ children }: PropsWithChildren) {
+function ChatContextProvider({ children }: PropsWithChildren) {
   //-- Values to be included in the Chat Context --//
   const CurrentChatsonModels: Record<CurrentChatsonModelNames, IChatsonModel> =
     {
@@ -43,6 +44,7 @@ export function ChatContextProvider({ children }: PropsWithChildren) {
   );
   const [llmLoading, setLLMLoading] = useState<boolean>(false);
 
+  //-- Bundle values --//
   const chatContextValue = {
     chatson,
     setChatson,
@@ -61,7 +63,7 @@ export function ChatContextProvider({ children }: PropsWithChildren) {
 }
 
 //-- Custom Consumer Hook --//
-export function useChatContext() {
+function useChatContext() {
   const context = useContext(ChatContext);
 
   if (context === undefined) {
@@ -69,3 +71,6 @@ export function useChatContext() {
   }
   return context;
 }
+
+//-- Export Provider Component and Consumer Hook ---//
+export { ChatContextProvider, useChatContext };
