@@ -9,7 +9,7 @@ import {
 } from "react";
 import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
-import { ChatContext as _ChatContext } from "../../App";
+import { useChatContext } from "../../ChatContext";
 
 //-- TSX Components --//
 import ModelSelector from "./ModelSelector";
@@ -45,7 +45,7 @@ import useIsMobile from "../../Util/useIsMobile";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ChatSession() {
   //-- React Context --//
-  let ChatContext = useContext(_ChatContext);
+  let ChatContext = useChatContext();
 
   //-- React State --//
   const [promptInput, setPromptInput] = useState<string>("");
@@ -73,7 +73,7 @@ export default function ChatSession() {
         const accessToken = await getAccessTokenSilently();
 
         //-- Send prompt as chat message --//
-        if (ChatContext && user?.sub) {
+        if (user?.sub) {
           await chatson.send_message(
             accessToken,
             ChatContext.chatson, //-- chatson_object --//
@@ -96,7 +96,7 @@ export default function ChatSession() {
     //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
     setPromptToSend(promptInput);
     setPromptInput("");
-    ChatContext?.setLLMLoading(true);
+    ChatContext.setLLMLoading(true);
     setPromptReadyToSend(true);
   };
 
@@ -262,7 +262,7 @@ export default function ChatSession() {
   return (
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
-      {ChatContext?.chatson?.linear_message_history[0].message ? (
+      {ChatContext.chatson?.linear_message_history[0].message ? (
         <div id="llm-current-chat" className="flex flex-grow">
           <div id="chat-rows" className="w-full list-none">
             <Virtuoso
@@ -318,7 +318,7 @@ export default function ChatSession() {
           >
             {/* Stop Response Generation */}
             <div className="flex w-full flex-row items-center justify-center">
-              {ChatContext?.llmLoading && (
+              {ChatContext.llmLoading && (
                 <>
                   <button
                     onClick={() => console.log("cancel")} // TODO - add logic
@@ -383,12 +383,12 @@ export default function ChatSession() {
                 value={promptInput}
                 onChange={(event) => setPromptInput(event.target.value)}
                 className={classNames(
-                  ChatContext?.llmLoading ? "bg-zinc-300 ring-2" : "",
+                  ChatContext.llmLoading ? "bg-zinc-300 ring-2" : "",
                   "block w-full resize-none rounded-md border-0 bg-white py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-zinc-700 dark:text-white sm:leading-6"
                 )}
               />
 
-              {ChatContext?.llmLoading ? (
+              {ChatContext.llmLoading ? (
                 <button className="absolute bottom-0 right-0 flex cursor-wait items-center p-1.5 focus:outline-green-600">
                   <CpuChipIcon className="text h-6 w-6 animate-spin text-green-500" />
                 </button>

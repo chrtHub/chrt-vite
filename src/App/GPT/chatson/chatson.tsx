@@ -3,9 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 import { getUnixTime } from "date-fns";
 import axios from "axios";
 
-import { CurrentChatsonModels } from "../../../App";
-const DEFAULT_MODEL = CurrentChatsonModels["gpt-3.5-turbo"];
-
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 import {
@@ -31,13 +28,14 @@ const timestamp = (): string => {
  * @param user_ids array of user ids. current user should be at index 0.
  * @param model model to use for API call
  * @param message user input to be added to the chat history and sent to the LLM
+ * @param setChatson state setter for the chatson_object
  * @returns IChatsonObject updated with the new prompt
  */
 export async function send_message(
   accessToken: string,
   chatson_object: IChatsonObject | null,
   user_ids: string[],
-  model: IChatsonModel | null,
+  model: IChatsonModel,
   message: string,
   setChatson: React.Dispatch<React.SetStateAction<IChatsonObject | null>>
 ) {
@@ -55,7 +53,7 @@ export async function send_message(
     chatson_object.metadata.most_recent_message_timestamp = timestamp(); // TODO - update this upon receipt of response from LLM
 
     //-- Set system message data --//
-    chatson_object.linear_message_history[0].model = model || DEFAULT_MODEL;
+    chatson_object.linear_message_history[0].model = model;
     chatson_object.linear_message_history[0].timestamp = timestamp();
     chatson_object.linear_message_history[0].message_uuid = uuidv4();
   }
@@ -64,7 +62,7 @@ export async function send_message(
   let chatson_message: IChatsonMessage = {
     role: "user",
     author: user_ids[0],
-    model: model || DEFAULT_MODEL,
+    model: model,
     timestamp: timestamp(),
     message_uuid: uuidv4(),
     message: message,
@@ -121,7 +119,7 @@ export async function send_message(
       `${VITE_ALB_BASE_URL}/llm/openai`,
       //-- Body Content --//
       {
-        model: model?.apiName || DEFAULT_MODEL.apiName,
+        model: model.apiName,
         chatRequestMessages: chatRequestMessages,
       },
       {
@@ -137,8 +135,8 @@ export async function send_message(
 
       //-- Add response to chatson_object --//
       let chat_response: IChatsonMessage = {
-        author: model?.apiName || DEFAULT_MODEL.apiName,
-        model: model || DEFAULT_MODEL,
+        author: model.apiName,
+        model: model,
         timestamp: timestamp(),
         message_uuid: uuidv4(),
         role: "assistant",
@@ -149,7 +147,7 @@ export async function send_message(
       //-- Add API Call to chatson_object --//
       let api_call_data: IChatsonAPIResponse = {
         user: user_ids[0],
-        model: model?.apiName || DEFAULT_MODEL.apiName,
+        model: model.apiName,
         response_id: chatCompletionsResponse.id,
         object: chatCompletionsResponse.object,
         created: chatCompletionsResponse.created,

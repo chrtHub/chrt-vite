@@ -4,7 +4,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 
 //-- TSX Components --//
-import { ChatContext as _ChatContext } from "../../App";
+import { useChatContext } from "../../ChatContext";
 
 //-- NPM Components --//
 
@@ -17,23 +17,10 @@ import classNames from "../../Util/classNames";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
 
-const publishingOptions = [
-  {
-    title: "Published",
-    description: "This job posting can be viewed by anyone who has the link.",
-    current: true,
-  },
-  {
-    title: "Draft",
-    description: "This job posting will no longer be publicly accessible.",
-    current: false,
-  },
-];
-
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ModelSelector() {
   //-- React State --//
-  const ChatContext = useContext(_ChatContext);
+  const ChatContext = useChatContext();
 
   //-- Recoil State --//
   //-- Auth --//
@@ -42,7 +29,7 @@ export default function ModelSelector() {
   //-- Click Handlers --//
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <Listbox value={ChatContext?.model} onChange={ChatContext?.setModel}>
+    <Listbox value={ChatContext.model} onChange={ChatContext.setModel}>
       {({ open }) => (
         <>
           <Listbox.Label className="sr-only">Change GPT Model</Listbox.Label>
@@ -52,7 +39,7 @@ export default function ModelSelector() {
               {/*  */}
               <div className="flex-1">
                 <p className="text-sm font-semibold text-white">
-                  {ChatContext?.model?.friendlyName}
+                  {ChatContext.model.friendlyName}
                 </p>
               </div>
               <div className="absolute right-0 mr-1.5 ">
@@ -73,10 +60,10 @@ export default function ModelSelector() {
               leaveTo="opacity-0"
             >
               <Listbox.Options className="absolute bottom-full left-0 z-10 mb-2 w-72 origin-top-right divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                {Object.values(ChatContext?.CurrentChatsonModels || {}).map(
+                {Object.values(ChatContext.CurrentChatsonModels).map(
                   (model) => (
                     <Listbox.Option
-                      key={model?.apiName}
+                      key={model.apiName}
                       className={({ active }) =>
                         classNames(
                           active ? "bg-green-600 text-white" : "text-zinc-900",
@@ -91,7 +78,7 @@ export default function ModelSelector() {
                             <p
                               className={selected ? "font-bold" : "font-normal"}
                             >
-                              {model?.friendlyName}
+                              {model.friendlyName}
                             </p>
                           </div>
                           <p
@@ -100,7 +87,7 @@ export default function ModelSelector() {
                               "mt-2"
                             )}
                           >
-                            {model?.description}
+                            {model.description}
                           </p>
                         </div>
                       )}
