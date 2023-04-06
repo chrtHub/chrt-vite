@@ -6,6 +6,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 //-- TSX Components --//
 import AppLayout from "./Layout/AppLayout";
 import LandingPage from "./LandingPage/LandingPage";
+import { ChatContextProvider } from "./ChatContext";
 
 //-- NPM Components --//
 
@@ -16,12 +17,6 @@ import LandingPage from "./LandingPage/LandingPage";
 //-- Utility Functions --//
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
-import {
-  IChatsonObject,
-  IChatsonModel,
-  CurrentChatsonModelNames,
-  IChatContext,
-} from "./App/GPT/chatson/types";
 
 const infoRoutes: string[] = [
   "/info",
@@ -45,39 +40,6 @@ const ScrollToTop = () => {
 
   return null;
 };
-
-//-- Context providers for global use (for authenticated users) within App --//
-export const CurrentChatsonModels: Record<
-  CurrentChatsonModelNames,
-  IChatsonModel
-> = {
-  "gpt-3.5-turbo": {
-    apiName: "gpt-3.5-turbo",
-    friendlyName: "GPT-3.5",
-    description: "Power and Speed",
-  },
-  "gpt-4": {
-    apiName: "gpt-4",
-    friendlyName: "GPT-4",
-    description: "Extra Power (Slower)",
-  },
-  "gpt-4-32k": {
-    apiName: "gpt-4-32k",
-    friendlyName: "GPT-4-32k",
-    description: "For very large prompts",
-  },
-};
-// export const ChatContext = createContext<IChatContext | undefined>(undefined);
-const chatContextInitialValue: IChatContext = {
-  chatson: null,
-  setChatson: () => {},
-  model: null,
-  setModel: () => {},
-  CurrentChatsonModels: CurrentChatsonModels,
-  llmLoading: false,
-  setLLMLoading: () => {},
-};
-export const ChatContext = createContext<IChatContext>(chatContextInitialValue);
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 interface IProps {}
@@ -119,28 +81,12 @@ export default function App({}: IProps) {
     console.log(e);
   }
 
-  //-- Context providers for global use (for authenticated users) within App --//
-  const [chatson, setChatson] = useState<IChatsonObject | null>(null);
-  const [model, setModel] = useState<IChatsonModel | null>(
-    CurrentChatsonModels["gpt-3.5-turbo"]
-  );
-  const [llmLoading, setLLMLoading] = useState<boolean>(false);
-  const chatContextValue = {
-    chatson,
-    setChatson,
-    model,
-    setModel,
-    CurrentChatsonModels,
-    llmLoading,
-    setLLMLoading,
-  };
-
   //-- Loading is complete, user is authenticated --> show the app --//
   if (isAuthenticated) {
     return (
-      <ChatContext.Provider value={chatContextValue}>
+      <ChatContextProvider>
         <AppLayout infoMode={false} />
-      </ChatContext.Provider>
+      </ChatContextProvider>
     );
   }
   //-- ***** ***** *****  ***** ***** ***** --//
