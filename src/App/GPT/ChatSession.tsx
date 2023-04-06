@@ -239,13 +239,14 @@ export default function ChatSession() {
       {ChatContext.chatson?.linear_message_history[0].message ? (
         <div id="llm-current-chat" className="flex flex-grow">
           <div id="chat-rows" className="w-full list-none">
+            {/* Similar implemenatation to https://virtuoso.dev/stick-to-bottom/ */}
             <Virtuoso
               ref={virtuosoRef}
               data={filteredMessages}
               itemContent={(index, message) => (
                 <Row key={message.message_uuid} message={message} />
               )}
-              followOutput="auto"
+              followOutput="smooth"
               atBottomStateChange={(isAtBottom) => {
                 setAtBottom(isAtBottom);
               }}
