@@ -89,34 +89,19 @@ export default function ChatSession() {
   //-- ***** ***** ***** Start of Functions and Components for Message Rows **** ***** ***** --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
   const [atBottom, setAtBottom] = useState<boolean>(true);
-  const showButtonTimeoutRef = useRef<number | null>(null);
   const [showButton, setShowButton] = useState<boolean>(false);
   const filteredMessages = ChatContext.chatson?.linear_message_history.filter(
     (message) => message.role !== "system"
   );
 
-  //-- When 'atBottom' changes, clear timeout. If at bottom, show button.   --//
+  //-- When 'atBottom' changes - if at bottom don't show button, else show button --//
   useEffect(() => {
-    if (showButtonTimeoutRef.current !== null) {
-      clearTimeout(showButtonTimeoutRef.current);
-    }
-
-    if (!atBottom) {
-      showButtonTimeoutRef.current = setTimeout(() => setShowButton(true), 0);
-    } else {
+    if (atBottom) {
       setShowButton(false);
-      showButtonTimeoutRef.current = null; // DEV - why?
+    } else {
+      setShowButton(true);
     }
   }, [atBottom, setShowButton]);
-
-  //-- Cleanup any pending timeout when component unmounts --//
-  useEffect(() => {
-    return () => {
-      if (showButtonTimeoutRef.current !== null) {
-        clearTimeout(showButtonTimeoutRef.current);
-      }
-    };
-  }, []);
 
   const scrollToBottomHandler = () => {
     if (
