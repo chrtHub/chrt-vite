@@ -1,29 +1,25 @@
-//-- react, react-router-dom, recoil, Auth0 --//
+//== react, react-router-dom, recoil, Auth0 ==//
 
-//-- TSX Components --//
+//== TSX Components ==//
 
-//-- NPM Components --//
+//== NPM Components ==//
 
-//-- Icons --//
+//== Icons ==//
 
-//-- NPM Functions --//
+//== NPM Functions ==//
 
-//-- Utility Functions --//
+//== Utility Functions ==//
 
-//-- Environment Variables, TypeScript Interfaces, Data Objects --//
+//== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
-//-- ***** ***** ***** Exported Component ***** ***** ***** --//
+//== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ComponentName() {
-  //-- React State --//
-  //-- Recoil State --//
-  //-- Auth --//
-  //-- Other [] --//
-  //-- Side Effects --//
-  //-- Click Handlers --//
-  //-- ***** ***** ***** Component Return ***** ***** ***** --//
-  // return (
-  //   <div>
-  //     foo
-  //   </div>
-  // );
+  //== React State ==//
+  //== Recoil State ==//
+  //== Auth ==//
+  //== Other ==//
+  //== Side Effects ==//
+  //== Click Handlers ==//
+  //== ***** ***** ***** Component Return ***** ***** ***** ==//
+  // return <div>foo</div>;
 }

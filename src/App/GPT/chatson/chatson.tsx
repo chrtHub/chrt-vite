@@ -3,6 +3,9 @@ import { v4 as uuidv4 } from "uuid";
 import { getUnixTime } from "date-fns";
 import axios from "axios";
 
+import { CurrentChatsonModels } from "../../../App";
+const DEFAULT_MODEL = CurrentChatsonModels["gpt-3.5-turbo"];
+
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 import {
@@ -34,7 +37,7 @@ export async function send_message(
   accessToken: string,
   chatson_object: IChatsonObject | null,
   user_ids: string[],
-  model: IChatsonModel,
+  model: IChatsonModel | null,
   message: string,
   setChatson: React.Dispatch<React.SetStateAction<IChatsonObject | null>>
 ) {
@@ -49,9 +52,10 @@ export async function send_message(
     chatson_object.metadata.chat_uuid = uuidv4();
     chatson_object.metadata.creation_timestamp_immutable = timestamp();
     chatson_object.metadata.reference_timestamp_mutable = timestamp();
+    chatson_object.metadata.most_recent_message_timestamp = timestamp(); // TODO - update this upon receipt of response from LLM
 
     //-- Set system message data --//
-    chatson_object.linear_message_history[0].model = model;
+    chatson_object.linear_message_history[0].model = model || DEFAULT_MODEL;
     chatson_object.linear_message_history[0].timestamp = timestamp();
     chatson_object.linear_message_history[0].message_uuid = uuidv4();
   }
@@ -60,7 +64,7 @@ export async function send_message(
   let chatson_message: IChatsonMessage = {
     role: "user",
     author: user_ids[0],
-    model: model,
+    model: model || DEFAULT_MODEL,
     timestamp: timestamp(),
     message_uuid: uuidv4(),
     message: message,
@@ -91,7 +95,6 @@ export async function send_message(
 
     if (tokens + contentTokens < 3000) {
       tokens += contentTokens;
-      console.log("tokens: " + tokens); // DEV
       let chatRequestMessage: ChatCompletionRequestMessage = {
         role: chatson_object.linear_message_history[idx].role,
         content: content,
@@ -107,6 +110,7 @@ export async function send_message(
     idx--;
   }
 
+  console.log("tokens: " + tokens); // DEV
   console.log(chatRequestMessages); // DEV
 
   //-- Make API call - send chatRequestMessages --//
@@ -117,7 +121,7 @@ export async function send_message(
       `${VITE_ALB_BASE_URL}/llm/openai`,
       //-- Body Content --//
       {
-        model: model.apiName,
+        model: model?.apiName || DEFAULT_MODEL.apiName,
         chatRequestMessages: chatRequestMessages,
       },
       {
@@ -133,8 +137,8 @@ export async function send_message(
 
       //-- Add response to chatson_object --//
       let chat_response: IChatsonMessage = {
-        author: model.apiName,
-        model: model,
+        author: model?.apiName || DEFAULT_MODEL.apiName,
+        model: model || DEFAULT_MODEL,
         timestamp: timestamp(),
         message_uuid: uuidv4(),
         role: "assistant",
@@ -145,7 +149,7 @@ export async function send_message(
       //-- Add API Call to chatson_object --//
       let api_call_data: IChatsonAPIResponse = {
         user: user_ids[0],
-        model: model.apiName,
+        model: model?.apiName || DEFAULT_MODEL.apiName,
         response_id: chatCompletionsResponse.id,
         object: chatCompletionsResponse.object,
         created: chatCompletionsResponse.created,
@@ -172,6 +176,7 @@ export const version_A: IChatsonObject = {
     chat_uuid: "",
     creation_timestamp_immutable: "",
     reference_timestamp_mutable: "",
+    most_recent_message_timestamp: "",
     user_tags: [],
     chrt_tags: [],
     opensearch_tags: [],

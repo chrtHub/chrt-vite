@@ -558,7 +558,10 @@ export default function AppLayout({ infoMode }: IProps) {
           {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
 
           {/* START OF MAIN */}
-          <main id="app-layout-react-router-Outlet" className="flex-1">
+          <main
+            id="app-layout-react-router-Outlet"
+            className="h-full" // NOTE - was "flex-1"
+          >
             <Outlet />
           </main>
           {/* END OF MAIN */}

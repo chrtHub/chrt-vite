@@ -6,6 +6,7 @@ export interface IChatsonObject {
     chat_uuid: string;
     creation_timestamp_immutable: string;
     reference_timestamp_mutable: string;
+    most_recent_message_timestamp: string;
     user_tags: string[];
     chrt_tags: string[];
     opensearch_tags: string[];
@@ -43,6 +44,17 @@ export interface IChatsonAPIResponse {
   prompt_tokens: number;
   completion_tokens: number;
   total_tokens: number;
+}
+
+//-- Context for useContext hook --//
+export interface IChatContext {
+  chatson: IChatsonObject | null;
+  setChatson: React.Dispatch<React.SetStateAction<IChatsonObject | null>>;
+  model: IChatsonModel | null;
+  setModel: React.Dispatch<React.SetStateAction<IChatsonModel | null>>;
+  CurrentChatsonModels: Record<CurrentChatsonModelNames, IChatsonModel | null>;
+  llmLoading: boolean;
+  setLLMLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 //-- (2023-03-28) Types copy-pasted from OpenAI Node SDK --//
