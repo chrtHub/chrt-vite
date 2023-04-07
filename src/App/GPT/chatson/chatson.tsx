@@ -112,101 +112,104 @@ export async function send_message(
   console.log("tokens: " + tokens); // DEV
   console.log(chatRequestMessages); // DEV
 
-  //-- Make API call (Causes Express to console.log response, but that's it) --//
-  try {
-    let res = await axios.post(
-      `${VITE_ALB_BASE_URL}/openai/v1/chat/completions`,
+  //-- Make API call (How to handle response??) --//
+  // try {
+  //   let res = await axios.post(
+  //     `${VITE_ALB_BASE_URL}/openai/v1/chat/completions`,
 
-      {
-        model: model.apiName,
-        chatRequestMessages: chatRequestMessages,
-      },
-      {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    console.log(res);
+  //     {
+  //       model: model.apiName,
+  //       chatRequestMessages: chatRequestMessages,
+  //     },
+  //     {
+  //       headers: {
+  //         authorization: `Bearer ${accessToken}`,
+  //       },
+  //     }
+  //   );
+  //   console.log(res);
 
-    let chatCompletionsResponse: CreateChatCompletionResponse = res.data;
+  //   let chatCompletionsResponse: CreateChatCompletionResponse = res.data;
 
-    if (chatCompletionsResponse.choices[0].message) {
-      console.log(chatCompletionsResponse.choices[0].message.content); // DEV
+  //   if (chatCompletionsResponse.choices[0].message) {
+  //     console.log(chatCompletionsResponse.choices[0].message.content); // DEV
 
-      //-- Add response to chatson_object --//
-      let chat_response: IChatsonMessage = {
-        author: model.apiName,
-        model: model,
-        timestamp: timestamp(),
-        message_uuid: uuidv4(),
-        role: "assistant",
-        message: res.data.choices[0].message.content,
-      };
-      chatson_object.linear_message_history.push(chat_response);
+  //     //-- Add response to chatson_object --//
+  //     let chat_response: IChatsonMessage = {
+  //       author: model.apiName,
+  //       model: model,
+  //       timestamp: timestamp(),
+  //       message_uuid: uuidv4(),
+  //       role: "assistant",
+  //       message: res.data.choices[0].message.content,
+  //     };
+  //     chatson_object.linear_message_history.push(chat_response);
 
-      //-- Add API Call to chatson_object --//
-      let api_call_data: IChatsonAPIResponse = {
-        user: user_ids[0],
-        model: model.apiName,
-        response_id: chatCompletionsResponse.id,
-        object: chatCompletionsResponse.object,
-        created: chatCompletionsResponse.created,
-        prompt_tokens: chatCompletionsResponse.usage?.prompt_tokens || 0,
-        completion_tokens:
-          chatCompletionsResponse.usage?.completion_tokens || 0,
-        total_tokens: chatCompletionsResponse.usage?.total_tokens || 0,
-      };
-      chatson_object.api_response_history.push(api_call_data);
-    }
+  //     //-- Add API Call to chatson_object --//
+  //     let api_call_data: IChatsonAPIResponse = {
+  //       user: user_ids[0],
+  //       model: model.apiName,
+  //       response_id: chatCompletionsResponse.id,
+  //       object: chatCompletionsResponse.object,
+  //       created: chatCompletionsResponse.created,
+  //       prompt_tokens: chatCompletionsResponse.usage?.prompt_tokens || 0,
+  //       completion_tokens:
+  //         chatCompletionsResponse.usage?.completion_tokens || 0,
+  //       total_tokens: chatCompletionsResponse.usage?.total_tokens || 0,
+  //     };
+  //     chatson_object.api_response_history.push(api_call_data);
+  //   }
 
-    setChatson(chatson_object);
-  } catch (error) {
-    console.log(error);
-  }
+  //   setChatson(chatson_object);
+  // } catch (error) {
+  //   console.log(error);
+  // }
+
+  //-- Prep request --//
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
+  };
+  const body = JSON.stringify({
+    model: model.apiName,
+    chatRequestMessages: chatRequestMessages,
+  });
 
   //-- Fetch Event Source (NOT WORKING) --//
-  //   try {
-  //     const ctrl = new AbortController();
-  //     fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
-  //       method: "POST",
-  //       headers: {
-  //         Accept: "text/event-stream",
-  //         Authorization: `Bearer ${accessToken}`,
-  //       },
-  //       body: JSON.stringify({
-  //         model: model.apiName,
-  //         chatRequestMessages: chatRequestMessages,
-  //       }),
-  //       signal: ctrl.signal,
-  //       onopen(res) {
-  //         if (res.ok && res.status === 200) {
-  //           console.log("Connection made ", res);
-  //         } else if (
-  //           res.status >= 400 &&
-  //           res.status < 500 &&
-  //           res.status !== 429
-  //         ) {
-  //           console.log("Client side error ", res);
-  //         }
-  //         return Promise.resolve(); // necessary?
-  //       },
-  //       onmessage(event) {
-  //         console.log(event.data); // DEV
-  //         // const parsedData = JSON.parse(event.data);
-  //         // setData((data) => [...data, parsedData]);
-  //       },
-  //       onclose() {
-  //         console.log("Connection closed by the server");
-  //       },
-  //       onerror(err) {
-  //         console.log("There was an error from server", err);
-  //       },
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
+  try {
+    // const ctrl = new AbortController();
+    await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
+      method: "POST",
+      headers: headers,
+      body: body,
+      // signal: ctrl.signal,
+      // onopen(res) {
+      //   if (res.ok && res.status === 200) {
+      //     console.log("Connection made ", res);
+      //   } else if (
+      //     res.status >= 400 &&
+      //     res.status < 500 &&
+      //     res.status !== 429
+      //   ) {
+      //     console.log("Client side error ", res);
+      //   }
+      //   return Promise.resolve(); // necessary?
+      // },
+      onmessage(event) {
+        console.log(event.data); // DEV
+        // const parsedData = JSON.parse(event.data);
+        // setData((data) => [...data, parsedData]);
+      },
+      // onclose() {
+      //   console.log("Connection closed by the server");
+      // },
+      onerror(err) {
+        console.log("There was an error from server", err);
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
 
   //-- Parser (NOT WORKING) --//
   // function onParse(event: any) {
@@ -224,17 +227,20 @@ export async function send_message(
   // const parser = createParser(onParse);
 
   // try {
-  //   let response = await fetch(`${VITE_ALB_BASE_URL}openai/v1/chat/completions`, {
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${accessToken}`,
-  //     },
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       model: model.apiName,
+  //   let response = await fetch(
+  //     `${VITE_ALB_BASE_URL}openai/v1/chat/completions`,
+  //     {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //       method: "POST",
+  //       body: JSON.stringify({
+  //         model: model.apiName,
   //         chatRequestMessages: chatRequestMessages,
-  //     }),
-  //   });
+  //       }),
+  //     }
+  //   );
 
   //   //-- Async iterator - decode response and feed each value to the parser --//
   //   for await (const value of response.body?.pipeThrough(
@@ -244,6 +250,8 @@ export async function send_message(
   //   }
   // } catch (err) {
   //   console.log(err);
+  // }
+  //----//
 }
 
 //-- Chatson Templates --//
