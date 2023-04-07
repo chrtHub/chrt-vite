@@ -175,34 +175,33 @@ export async function send_message(
     chatRequestMessages: chatRequestMessages,
   });
 
-  //-- Fetch Event Source (NOT WORKING) --//
+  //-- Fetch Event Source --//
   try {
-    // const ctrl = new AbortController();
     await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
       method: "POST",
       headers: headers,
       body: body,
-      // signal: ctrl.signal,
-      // onopen(res) {
-      //   if (res.ok && res.status === 200) {
-      //     console.log("Connection made ", res);
-      //   } else if (
-      //     res.status >= 400 &&
-      //     res.status < 500 &&
-      //     res.status !== 429
-      //   ) {
-      //     console.log("Client side error ", res);
-      //   }
-      //   return Promise.resolve(); // necessary?
-      // },
+      onopen(res) {
+        if (res.ok && res.status === 200) {
+          console.log("Connection made ", res);
+        } else if (
+          res.status >= 400 &&
+          res.status < 500 &&
+          res.status !== 429
+        ) {
+          console.log("Client side error ", res);
+        }
+        return Promise.resolve();
+      },
       onmessage(event) {
         console.log(event.data); // DEV
+        // TODO - add response data to chatson object
         // const parsedData = JSON.parse(event.data);
         // setData((data) => [...data, parsedData]);
       },
-      // onclose() {
-      //   console.log("Connection closed by the server");
-      // },
+      onclose() {
+        console.log("Connection closed by the server");
+      },
       onerror(err) {
         console.log("There was an error from server", err);
       },
@@ -210,48 +209,6 @@ export async function send_message(
   } catch (err) {
     console.log(err);
   }
-
-  //-- Parser (NOT WORKING) --//
-  // function onParse(event: any) {
-  //   if (event.type === "event") {
-  //     if (event.data !== "[DONE]") {
-  //       console.log(JSON.parse(event.data).choices[0].delta?.content || "");
-  //     }
-  //   } else if (event.type === "reconnect-interval") {
-  //     console.log(
-  //       "We should set reconnect interval to %d milliseconds",
-  //       event.value
-  //     );
-  //   }
-  // }
-  // const parser = createParser(onParse);
-
-  // try {
-  //   let response = await fetch(
-  //     `${VITE_ALB_BASE_URL}openai/v1/chat/completions`,
-  //     {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${accessToken}`,
-  //       },
-  //       method: "POST",
-  //       body: JSON.stringify({
-  //         model: model.apiName,
-  //         chatRequestMessages: chatRequestMessages,
-  //       }),
-  //     }
-  //   );
-
-  //   //-- Async iterator - decode response and feed each value to the parser --//
-  //   for await (const value of response.body?.pipeThrough(
-  //     new TextDecoderStream()
-  //   )) {
-  //     parser.feed(value);
-  //   }
-  // } catch (err) {
-  //   console.log(err);
-  // }
-  //----//
 }
 
 //-- Chatson Templates --//
