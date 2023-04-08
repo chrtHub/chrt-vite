@@ -1,5 +1,6 @@
 import { defineConfig, type PluginOption } from "vite";
 import react from "@vitejs/plugin-react-swc";
+import mdx from "@mdx-js/rollup";
 import { visualizer } from "rollup-plugin-visualizer";
 import Inspect from "vite-plugin-inspect";
 import topLevelAwait from "vite-plugin-top-level-await";
@@ -9,6 +10,7 @@ import wasm from "vite-plugin-wasm";
 export default defineConfig({
   plugins: [
     [react() as PluginOption],
+    [mdx() as PluginOption],
     [visualizer() as PluginOption],
     [Inspect() as PluginOption],
     [wasm() as PluginOption],

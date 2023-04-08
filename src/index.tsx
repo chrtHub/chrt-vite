@@ -31,6 +31,7 @@ import OAuth2Google from "./Info/OAuth2Google/OAuth2Google";
 import Privacy from "./Info/Privacy/Privacy";
 import SystemRequirements from "./Info/SystemRequirements/SystemRequirements";
 import Terms from "./Info/Terms/Terms";
+import Updates from "./Info/Updates/Updates";
 
 //-- JSX Components: Navigation --//
 import NotFoundPage from "./Navigation/NotFoundPage";
@@ -63,6 +64,7 @@ const router = createBrowserRouter(
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/system_requirements" element={<SystemRequirements />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/updates" element={<Updates />} />
       </Route>
 
       {/* Navigation */}

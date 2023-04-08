@@ -1,0 +1,13 @@
+## April 3rd - 9th, 2023 (Monday-Sunday)
+
+### ChrtGPT
+
+- Chat automatically scrolls-to-bottom when new messages are added
+  - The DOM-based chat components were replaced by virtualized chat components and scrolling logic was set up
+- Chats persist within a single session after navigating to another route and back
+  - A custom React Context API provider component and consumer hook were created. With this approach, a React Context can be created with no default value while preventing nullish type reference errors in TypeScript context consumers - without the need for optional chaining.
+  - The context provider was mounted higher up in the component tree to make it accessible throughout the application.
+
+### //-- In progress --//
+
+- **ChrtGPT** - chat response streaming via SSE (Server-Sent Events)
