@@ -116,7 +116,6 @@ export async function send_message(
   // try {
   //   let res = await axios.post(
   //     `${VITE_ALB_BASE_URL}/openai/v1/chat/completions`,
-
   //     {
   //       model: model.apiName,
   //       chatRequestMessages: chatRequestMessages,
@@ -165,7 +164,7 @@ export async function send_message(
   //   console.log(error);
   // }
 
-  //-- Prep request --//
+  //-- Fetch Event Source request --//
   const headers = {
     Authorization: `Bearer ${accessToken}`,
     "Content-Type": "application/json",
@@ -175,15 +174,15 @@ export async function send_message(
     chatRequestMessages: chatRequestMessages,
   });
 
-  //-- Fetch Event Source --//
   try {
     await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
       method: "POST",
       headers: headers,
       body: body,
       onopen(res) {
+        console.log(res.headers);
         if (res.ok && res.status === 200) {
-          console.log("Connection made ", res);
+          console.log("Connection made ", res); // DEV
         } else if (
           res.status >= 400 &&
           res.status < 500 &&
@@ -195,12 +194,11 @@ export async function send_message(
       },
       onmessage(event) {
         console.log(event.data); // DEV
-        // TODO - add response data to chatson object
-        // const parsedData = JSON.parse(event.data);
-        // setData((data) => [...data, parsedData]);
+        // TODO - add response message to chatson object
+        // TODO - add response metadata to chatson object
       },
       onclose() {
-        console.log("Connection closed by the server");
+        console.log("Connection closed by the server"); // DEV
       },
       onerror(err) {
         console.log("There was an error from server", err);
