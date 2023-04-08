@@ -7,7 +7,6 @@ import {
 } from "@microsoft/fetch-event-source";
 
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
-import { createParser } from "eventsource-parser";
 
 import {
   IChatsonObject,
@@ -115,7 +114,7 @@ export async function send_message(
   console.log("tokens: " + tokens); // DEV
   console.log(chatRequestMessages); // DEV
 
-  //-- Make API call (How to handle response??) --//
+  //-- Axios POST for Chat Completions Request (non-SSE) --//
   // try {
   //   let res = await axios.post(
   //     `${VITE_ALB_BASE_URL}/openai/v1/chat/completions`,
@@ -167,7 +166,7 @@ export async function send_message(
   //   console.log(error);
   // }
 
-  //-- Fetch Event Source request --//
+  //-- Fetch Event Source for Chat Completions Request --//
   const headers = {
     Authorization: `Bearer ${accessToken}`,
     "Content-Type": "application/json",
