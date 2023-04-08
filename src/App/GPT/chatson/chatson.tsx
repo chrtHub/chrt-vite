@@ -1,7 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 import { getUnixTime } from "date-fns";
 import axios from "axios";
-import { fetchEventSource } from "@microsoft/fetch-event-source";
+import {
+  EventStreamContentType,
+  fetchEventSource,
+} from "@microsoft/fetch-event-source";
 
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 import { createParser } from "eventsource-parser";
@@ -174,31 +177,39 @@ export async function send_message(
     chatRequestMessages: chatRequestMessages,
   });
 
+  //-- Define errors --//
   try {
     await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
       method: "POST",
       headers: headers,
       body: body,
       onopen(res) {
-        console.log(res.headers);
-        if (res.ok && res.status === 200) {
-          console.log("Connection made ", res); // DEV
+        if (
+          res.ok &&
+          res.headers.get("content-type") === EventStreamContentType
+        ) {
+          console.log("Connection made ", res);
         } else if (
           res.status >= 400 &&
           res.status < 500 &&
           res.status !== 429
         ) {
-          console.log("Client side error ", res);
+          console.log("Client side error", res);
         }
         return Promise.resolve();
       },
       onmessage(event) {
-        console.log(event.data); // DEV
-        // TODO - add response message to chatson object
-        // TODO - add response metadata to chatson object
+        if (event.id && event.id === "CHRT_METADATA") {
+          // TODO - add response metadata to chatson object
+          console.log("timestamp: ", JSON.parse(event.data).timestamp);
+          console.log("tokens: ", JSON.parse(event.data).tokens);
+        } else {
+          // TODO - add response message to chatson object
+          console.log(event.data); // DEV
+        }
       },
       onclose() {
-        console.log("Connection closed by the server"); // DEV
+        // console.log("Connection closed by the server"); // DEV
       },
       onerror(err) {
         console.log("There was an error from server", err);
