@@ -251,9 +251,7 @@ export const version_A: IChatsonObject = {
 };
 
 //----//
-// if linear message history if just a big array, then when using setState, does that require a search of objects by some property such as uuid?
-// if using an object, then using using setState, just tell setState which object to overwrite? can that be done?
-// // and for displaying the object
+// setState() - overwrite message with matching uuid as SSE received(?)
 
 // In EFS, store as filename of '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d.json'
 const conversation = {
@@ -280,7 +278,7 @@ const conversation = {
     {
       user: "",
       model: "",
-      created: "",
+      completed_timestamp: "",
       prompt_tokens: 20,
       completion_tokens: 20,
       total_tokens: 40,
