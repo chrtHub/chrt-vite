@@ -251,34 +251,40 @@ export const version_A: IChatsonObject = {
 };
 
 //----//
-const foo = {
-  "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d": {
-    author: "chrt",
-    model: {
-      apiName: "gpt-3.5-turbo",
-      friendlyName: "",
-      description: "",
-    },
-    timestamp: "",
-    message_uuid: "",
-    role: "system",
-    message:
-      "Your name is ChrtGPT. Refer to yourself as ChrtGPT. You are ChrtGPT, a helpful assistant that helps power a day trading performance journal. You sometimes make jokes and say silly things on purpose.",
-  },
-  "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed": {
-    author: "chrt",
-    model: {
-      apiName: "gpt-3.5-turbo",
-      friendlyName: "",
-      description: "",
-    },
-    timestamp: "",
-    message_uuid: "",
-    role: "user",
-    message: "Tell a joke",
-  },
-};
-
 // if linear message history if just a big array, then when using setState, does that require a search of objects by some property such as uuid?
 // if using an object, then using using setState, just tell setState which object to overwrite? can that be done?
 // // and for displaying the object
+
+// In EFS, store as filename of '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d.json'
+const conversation = {
+  conversation_uuid: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+  messages: {
+    "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed": {
+      message_uuid: "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed",
+      order: 1, // will this work?
+      version: 1, // will this work?
+      author: "chrt",
+      model: {
+        apiName: "gpt-3.5-turbo",
+        friendlyName: "",
+        description: "",
+      },
+      timestamp: "",
+      role: "system",
+      message:
+        "Your name is ChrtGPT. Refer to yourself as ChrtGPT. You are ChrtGPT, a helpful assistant that helps power a day trading performance journal. You sometimes make jokes and say silly things on purpose.",
+    },
+  },
+  // Array of apiResponseMetatdata objects
+  apiResponses: [
+    {
+      user: "",
+      model: "",
+      created: "",
+      prompt_tokens: 20,
+      completion_tokens: 20,
+      total_tokens: 40,
+      message_uuids: [],
+    },
+  ],
+};
