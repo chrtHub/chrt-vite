@@ -198,13 +198,13 @@ export async function send_message(
         return Promise.resolve();
       },
       onmessage(event) {
-        if (event.id && event.id === "CHRT_METADATA") {
+        if (event.id && event.id === "apiResponseMetadata") {
           // TODO - add response metadata to chatson object
-          console.log("timestamp: ", JSON.parse(event.data).timestamp);
-          console.log("tokens: ", JSON.parse(event.data).tokens);
+          console.log("apiResponseMetadata: ", JSON.parse(event.data));
         } else {
           // TODO - add response message to chatson object
           console.log(event.data); // DEV
+          // setChatson() // overwrite just the particular message...
         }
       },
       onclose() {
@@ -236,7 +236,7 @@ export const version_A: IChatsonObject = {
     {
       author: "chrt",
       model: {
-        apiName: "gpt-3.5-turbo", //-- to be overwritten upon chatson object initialization --//
+        apiName: "gpt-3.5-turbo", // TODO - make this optional
         friendlyName: "",
         description: "",
       },
@@ -249,3 +249,36 @@ export const version_A: IChatsonObject = {
   ],
   api_response_history: [],
 };
+
+//----//
+const foo = {
+  "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d": {
+    author: "chrt",
+    model: {
+      apiName: "gpt-3.5-turbo",
+      friendlyName: "",
+      description: "",
+    },
+    timestamp: "",
+    message_uuid: "",
+    role: "system",
+    message:
+      "Your name is ChrtGPT. Refer to yourself as ChrtGPT. You are ChrtGPT, a helpful assistant that helps power a day trading performance journal. You sometimes make jokes and say silly things on purpose.",
+  },
+  "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed": {
+    author: "chrt",
+    model: {
+      apiName: "gpt-3.5-turbo",
+      friendlyName: "",
+      description: "",
+    },
+    timestamp: "",
+    message_uuid: "",
+    role: "user",
+    message: "Tell a joke",
+  },
+};
+
+// if linear message history if just a big array, then when using setState, does that require a search of objects by some property such as uuid?
+// if using an object, then using using setState, just tell setState which object to overwrite? can that be done?
+// // and for displaying the object

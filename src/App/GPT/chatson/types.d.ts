@@ -39,7 +39,6 @@ export interface IChatsonAPIResponse {
   user: string;
   model: string;
   response_id: string;
-  object: string;
   created: number;
   prompt_tokens: number;
   completion_tokens: number;

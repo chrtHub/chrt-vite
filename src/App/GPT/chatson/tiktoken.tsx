@@ -6,13 +6,9 @@ import { get_encoding } from "@dqbd/tiktoken";
 
 export function tiktoken(message: string): number {
   const encoder = get_encoding("cl100k_base");
-
-  let system_message = message;
-
-  let encoded = encoder.encode(system_message);
+  let encoded = encoder.encode(message);
 
   //-- Add 10 for cushion because some stuff gets added to messages(?) --//
   let tokens = encoded.length + 10;
-
   return tokens;
 }
