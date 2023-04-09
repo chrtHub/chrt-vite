@@ -26,16 +26,16 @@ const timestamp = (): string => {
 /**
  * Causes an LLM API call after adding a propmt to a chatson object
  *
- * @param accessToken user credential to be sent as Bearer token in 'authorization' header
+ * @param access_token user credential to be sent as Bearer token in 'authorization' header
  * @param chatson_object if null, a new chat is created. otherwise, the prompt is appended to the chatson_object
  * @param user_ids array of user ids. current user should be at index 0.
  * @param model model to use for API call
- * @param message user input to be added to the chat history and sent to the LLM
+ * @param prompt user input to be added to the chat history and sent to the LLM
  * @param setChatson state setter for the chatson_object
  * @returns IChatsonObject updated with the new prompt
  */
 export async function send_message(
-  accessToken: string,
+  access_token: string,
   chatson_object: IChatsonObject | null,
   user_ids: string[],
   model: IChatsonModel,
@@ -55,7 +55,7 @@ export async function send_message(
     chatson_object.metadata.reference_timestamp_mutable = timestamp();
     chatson_object.metadata.most_recent_message_timestamp = timestamp(); // TODO - update this upon receipt of response from LLM
 
-    //-- Set system message data --//
+    //-- Set system prompt data --//
     chatson_object.linear_message_history[0].model = model;
     chatson_object.linear_message_history[0].timestamp = timestamp();
     chatson_object.linear_message_history[0].message_uuid = uuidv4();
@@ -77,9 +77,10 @@ export async function send_message(
 
   //-- Start with "system" message and add up to 3,000 tokens worth of messages --//
   let system_message = chatson_object.linear_message_history[0];
-  let tokens = tiktoken(system_message.message);
+  let token_sum = 0;
+  token_sum += tiktoken(system_message.message);
 
-  let chatRequestMessages: Array<ChatCompletionRequestMessage> = [
+  let chat_request_messages: Array<ChatCompletionRequestMessage> = [
     {
       role: system_message.role,
       content: system_message.message,
@@ -92,17 +93,17 @@ export async function send_message(
   //-- Add messages until token limit hit or all non-system messages added --//
   while (!tokenLimitHit && idx > 0) {
     let content = chatson_object.linear_message_history[idx].message;
-    let contentTokens = tiktoken(content);
+    let content_tokens = tiktoken(content);
 
-    if (tokens + contentTokens < 3000) {
-      tokens += contentTokens;
-      let chatRequestMessage: ChatCompletionRequestMessage = {
+    if (token_sum + content_tokens < 3000) {
+      token_sum += content_tokens;
+      let chat_request_message: ChatCompletionRequestMessage = {
         role: chatson_object.linear_message_history[idx].role,
         content: content,
       };
 
       //-- Insert after system message, shifting any other messages --//
-      chatRequestMessages.splice(1, 0, chatRequestMessage);
+      chat_request_messages.splice(1, 0, chat_request_message);
     } else {
       tokenLimitHit = true;
       console.log("token limit hit!"); // DEV
@@ -111,8 +112,8 @@ export async function send_message(
     idx--;
   }
 
-  console.log("tokens: " + tokens); // DEV
-  console.log(chatRequestMessages); // DEV
+  console.log("token_sum: " + token_sum); // DEV
+  console.log(chat_request_messages); // DEV
 
   //-- Axios POST for Chat Completions Request (non-SSE) --//
   // try {
@@ -120,7 +121,7 @@ export async function send_message(
   //     `${VITE_ALB_BASE_URL}/openai/v1/chat/completions`,
   //     {
   //       model: model.apiName,
-  //       chatRequestMessages: chatRequestMessages,
+  //       chat_request_messages: chat_request_messages,
   //     },
   //     {
   //       headers: {
@@ -168,12 +169,12 @@ export async function send_message(
 
   //-- Fetch Event Source for Chat Completions Request --//
   const headers = {
-    Authorization: `Bearer ${accessToken}`,
+    Authorization: `Bearer ${access_token}`,
     "Content-Type": "application/json",
   };
   const body = JSON.stringify({
     model: model.apiName,
-    chatRequestMessages: chatRequestMessages,
+    chat_request_messages: chat_request_messages,
   });
 
   //-- Define errors --//
@@ -256,17 +257,21 @@ export const version_A: IChatsonObject = {
 // In EFS, store as filename of '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d.json'
 const conversation = {
   conversation_uuid: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
-  // is a message order like this useful??
   message_order: {
     1: {
       1: "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed",
+    },
+    3: {
+      1: "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed",
+    },
+    2: {
+      1: "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed",
+      2: "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed",
     },
   },
   messages: {
     "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed": {
       message_uuid: "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed",
-      order: 1, // will this work?
-      version: 1, // will this work?
       author: "chrt",
       model: {
         apiName: "gpt-3.5-turbo",

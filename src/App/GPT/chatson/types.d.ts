@@ -1,3 +1,53 @@
+//-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//
+//-- New type interfaces --//
+
+export interface IConversation {
+  conversation_uuid: string;
+  message_order: IMessageOrder;
+  messages: IMessages;
+  apiResponses: IAPIResponse[];
+}
+
+export interface IMessageOrder {
+  [order: number]: {
+    [version: number]: string;
+  };
+}
+
+export interface IMessages {
+  [uuid: string]: IMessage;
+}
+
+export interface IMessage {
+  message_uuid: string;
+  author: string;
+  model: IModel;
+  timestamp: string;
+  role: string;
+  message: string;
+}
+
+export interface IModel {
+  apiName: ModelAPINames;
+  friendlyName: string;
+  description: string;
+}
+
+export type ModelAPINames = "gpt-3.5-turbo" | "gpt-4" | "gpt-4-32k";
+
+export interface IAPIResponse {
+  user: string;
+  model: string;
+  completed_timestamp: string;
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+  message_uuids: string[];
+}
+
+//-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//
+//-- Old type interfaces --//
+
 //-- IChatsonObject - represents one entire chat --//
 export interface IChatsonObject {
   metadata: {
@@ -45,8 +95,8 @@ export interface IChatsonAPIResponse {
   total_tokens: number;
 }
 
+//-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//
 //-- (2023-03-28) Types copy-pasted from OpenAI Node SDK --//
-
 /**
  *
  * @export
