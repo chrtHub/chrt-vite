@@ -256,6 +256,12 @@ export const version_A: IChatsonObject = {
 // In EFS, store as filename of '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d.json'
 const conversation = {
   conversation_uuid: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+  // is a message order like this useful??
+  message_order: {
+    1: {
+      1: "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed",
+    },
+  },
   messages: {
     "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed": {
       message_uuid: "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed",
