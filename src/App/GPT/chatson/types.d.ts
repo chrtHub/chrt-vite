@@ -23,7 +23,7 @@ export interface IMessage {
   author: string;
   model: IModel;
   timestamp: string;
-  role: string;
+  role: ChatCompletionResponseMessageRoleEnum;
   message: string;
 }
 

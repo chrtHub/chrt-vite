@@ -62,10 +62,10 @@ export default function ChatSession() {
         if (user?.sub) {
           await chatson.send_message(
             accessToken,
-            ChatContext.conversation, //-- chatson_object --//
             [user.sub],
             ChatContext.model,
             promptToSend,
+            ChatContext.conversation, //-- chatson_object --//
             ChatContext.setConversation
           );
           ChatContext.setCompletionLoading(false);

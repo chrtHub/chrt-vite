@@ -1,10 +1,13 @@
 import { useState, createContext, useContext, PropsWithChildren } from "react";
 import { IConversation, IModel, ModelAPINames } from "../App/GPT/chatson/types";
 
+import { v4 as uuidv4 } from "uuid";
+import { getUnixTime } from "date-fns";
+
 //-- Create interface and Context --//
 interface IChatContext {
   conversation: IConversation | null;
-  setConversation: React.Dispatch<React.SetStateAction<IConversation | null>>;
+  setConversation: React.Dispatch<React.SetStateAction<IConversation>>;
   model: IModel;
   setModel: React.Dispatch<React.SetStateAction<IModel>>;
   ModelOptions: Record<ModelAPINames, IModel>;
@@ -34,7 +37,38 @@ function ChatContextProvider({ children }: PropsWithChildren) {
       description: "For very large prompts",
     },
   };
-  const [conversation, setConversation] = useState<IConversation | null>(null);
+
+  //-- New conversation --//
+  const conversation_uuid = uuidv4();
+  const system_message_uuid = uuidv4();
+  const timestamp = getUnixTime(new Date()).toString();
+
+  const newConversation: IConversation = {
+    conversation_uuid: conversation_uuid,
+    message_order: {
+      1: {
+        1: system_message_uuid,
+      },
+    },
+    messages: {
+      system_message_uuid: {
+        message_uuid: system_message_uuid,
+        author: "chrt",
+        model: {
+          api_name: "gpt-3.5-turbo",
+          friendly_name: "GPT-3.5",
+          description: "Power and Speed",
+        },
+        timestamp: timestamp,
+        role: "system",
+        message:
+          "Your name is ChrtGPT. Refer to yourself as ChrtGPT. You are ChrtGPT, a helpful assistant that helps power a day trading performance journal. You sometimes make jokes and say silly things on purpose.",
+      },
+    },
+    apiResponses: [],
+  };
+  const [conversation, setConversation] =
+    useState<IConversation>(newConversation);
   const [model, setModel] = useState<IModel>(ModelOptions["gpt-3.5-turbo"]);
   const [completionLoading, setCompletionLoading] = useState<boolean>(false);
 

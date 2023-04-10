@@ -6,15 +6,17 @@ import {
   fetchEventSource,
 } from "@microsoft/fetch-event-source";
 
+import sortBy from "lodash/sortBy";
+import reverse from "lodash/reverse";
+
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 import {
-  IChatsonObject,
-  IChatsonMessage,
-  IChatsonModel,
-  IChatsonAPIResponse,
   ChatCompletionRequestMessage,
   CreateChatCompletionResponse,
+  IConversation,
+  IMessage,
+  IModel,
 } from "./types";
 import { tiktoken } from "./tiktoken";
 
@@ -27,93 +29,99 @@ const timestamp = (): string => {
  * Causes an LLM API call after adding a propmt to a chatson object
  *
  * @param access_token user credential to be sent as Bearer token in 'authorization' header
- * @param chatson_object if null, a new chat is created. otherwise, the prompt is appended to the chatson_object
+ * @param conversation if null, a new chat is created. otherwise, the prompt is appended to the conversation
  * @param user_ids array of user ids. current user should be at index 0.
  * @param model model to use for API call
  * @param prompt user input to be added to the chat history and sent to the LLM
- * @param setChatson state setter for the chatson_object
+ * @param setChatson state setter for the conversation
  * @returns IChatsonObject updated with the new prompt
  */
 export async function send_message(
   access_token: string,
-  chatson_object: IChatsonObject | null,
   user_ids: string[],
-  model: IChatsonModel,
+  model: IModel,
   message: string,
-  setChatson: React.Dispatch<React.SetStateAction<IChatsonObject | null>>
+  conversation: IConversation,
+  setConversation: React.Dispatch<React.SetStateAction<IConversation>>
 ) {
-  //-- If chat object is null, create a new chat object --//
-  if (!chatson_object) {
-    //-- Instantiate new object from template --//
-    chatson_object = version_A;
-
-    //-- Set metadata --//
-    chatson_object.metadata["single-or-multi-user"] = "single";
-    chatson_object.metadata.user_ids = user_ids;
-    chatson_object.metadata.chat_uuid = uuidv4();
-    chatson_object.metadata.creation_timestamp_immutable = timestamp();
-    chatson_object.metadata.reference_timestamp_mutable = timestamp();
-    chatson_object.metadata.most_recent_message_timestamp = timestamp(); // TODO - update this upon receipt of response from LLM
-
-    //-- Set system prompt data --//
-    chatson_object.linear_message_history[0].model = model;
-    chatson_object.linear_message_history[0].timestamp = timestamp();
-    chatson_object.linear_message_history[0].message_uuid = uuidv4();
-  }
-
-  //-- Crete new chatson_message --//
-  let chatson_message: IChatsonMessage = {
-    role: "user",
+  //-- Crete new message object --//
+  let newMessage: IMessage = {
+    message_uuid: uuidv4(),
     author: user_ids[0],
     model: model,
     timestamp: timestamp(),
-    message_uuid: uuidv4(),
+    role: "user",
     message: message,
   };
 
-  //-- Append chatson_message to chatson_object and update state --//
-  chatson_object.linear_message_history.push(chatson_message);
-  setChatson(chatson_object);
+  //-- Add newMessage object to messages in conversation in state --//
+  const updatedMessages = { ...conversation.messages };
+  updatedMessages[newMessage.message_uuid] = newMessage;
+  setConversation({ ...conversation, messages: updatedMessages });
 
-  //-- Start with "system" message and add up to 3,000 tokens worth of messages --//
-  let system_message = chatson_object.linear_message_history[0];
-  let token_sum = 0;
-  token_sum += tiktoken(system_message.message);
-
-  let chat_request_messages: Array<ChatCompletionRequestMessage> = [
+  //-- Create request_messages array and add system_message --//
+  let system_message_uuid = conversation.message_order[1][1];
+  let system_message = conversation.messages[system_message_uuid];
+  let request_messages: Array<ChatCompletionRequestMessage> = [
     {
       role: system_message.role,
       content: system_message.message,
     },
   ];
 
+  //-- Count tokens and add messages to request_messages array --//
+  let token_sum = 0;
   let tokenLimitHit = false;
-  let idx = chatson_object.linear_message_history.length - 1;
+  token_sum += tiktoken(system_message.message);
+
+  //-- Add to request_messages starting from highest message 'order' --//
+  const message_order_keys = Object.keys(conversation.message_order).map(
+    Number
+  );
+  const message_order_keys_descending = reverse(sortBy(message_order_keys));
+  let order = message_order_keys_descending[0];
 
   //-- Add messages until token limit hit or all non-system messages added --//
-  while (!tokenLimitHit && idx > 0) {
-    let content = chatson_object.linear_message_history[idx].message;
-    let content_tokens = tiktoken(content);
+  while (!tokenLimitHit && order > 1) {
+    //-- Get the versions object by order number --//
+    let versions_object = conversation.message_order[order];
 
-    if (token_sum + content_tokens < 3000) {
-      token_sum += content_tokens;
+    //-- If multiple versions, use the latest --//
+    let message_uuid;
+    if (Object.keys(versions_object).length > 1) {
+      const version_order_keys_descending = reverse(
+        sortBy(Object.keys(versions_object))
+      );
+      message_uuid = version_order_keys_descending[0];
+    } //-- Else use version '1' --//
+    else {
+      message_uuid = versions_object[1];
+    }
+
+    //-- Get the message_content --//
+    let message_object = conversation.messages[message_uuid];
+    let message_tokens = tiktoken(message_object.message);
+
+    if (token_sum + message_tokens < 3000) {
+      token_sum += message_tokens;
+      //-- Add message to request_messages --//
       let chat_request_message: ChatCompletionRequestMessage = {
-        role: chatson_object.linear_message_history[idx].role,
-        content: content,
+        role: message_object.role,
+        content: message_object.message,
       };
 
       //-- Insert after system message, shifting any other messages --//
-      chat_request_messages.splice(1, 0, chat_request_message);
+      request_messages.splice(1, 0, chat_request_message);
     } else {
       tokenLimitHit = true;
       console.log("token limit hit!"); // DEV
     }
 
-    idx--;
+    order--;
   }
 
   console.log("token_sum: " + token_sum); // DEV
-  console.log(chat_request_messages); // DEV
+  console.log(request_messages); // DEV
 
   //-- Axios POST for Chat Completions Request (non-SSE) --//
   // try {
@@ -173,8 +181,8 @@ export async function send_message(
     "Content-Type": "application/json",
   };
   const body = JSON.stringify({
-    model: model.apiName,
-    chat_request_messages: chat_request_messages,
+    model: model.api_name,
+    request_messages: request_messages,
   });
 
   //-- Define errors --//
