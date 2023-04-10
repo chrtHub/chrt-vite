@@ -45,6 +45,16 @@ export async function send_message(
   conversation: IConversation,
   setConversation: React.Dispatch<React.SetStateAction<IConversation>>
 ) {
+  console.log("SEND MESSAGE");
+  console.log("conversation: ", conversation);
+  //-- Create token signal and counter --//
+  let tokenLimitHit = false;
+  let token_sum = 0;
+
+  //-- Get system message from conversation --//
+  let system_message_uuid = conversation.message_order[1][1];
+  let system_message = conversation.messages[system_message_uuid];
+
   //-- Crete new message object --//
   let newMessage: IMessage = {
     message_uuid: uuidv4(),
@@ -55,33 +65,21 @@ export async function send_message(
     message: message,
   };
 
-  //-- Add newMessage object to messages in conversation in state --//
-  setConversation((prevConversation) => {
-    return {
-      ...prevConversation,
-      messages: {
-        ...prevConversation.messages,
-        [newMessage.message_uuid]: newMessage,
-      },
-    };
-  });
-
-  //-- Create request_messages array and add system_message --//
-  let system_message_uuid = conversation.message_order[1][1];
-  let system_message = conversation.messages[system_message_uuid];
+  //-- Add system_message and new_message to request_messages. Count tokens --//
   let request_messages: Array<ChatCompletionRequestMessage> = [
     {
       role: system_message.role,
       content: system_message.message,
     },
+    {
+      role: "user",
+      content: newMessage.message,
+    },
   ];
-
-  //-- Count tokens and add messages to request_messages array --//
-  let token_sum = 0;
-  let tokenLimitHit = false;
   token_sum += tiktoken(system_message.message);
+  token_sum += tiktoken(newMessage.message);
 
-  //-- Add to request_messages starting from highest message 'order' --//
+  //-- Add messages to request_messages by descending 'order' --//
   const message_order_keys = Object.keys(conversation.message_order).map(
     Number
   );
@@ -90,6 +88,7 @@ export async function send_message(
 
   //-- Add messages until token limit hit or all non-system messages added --//
   while (!tokenLimitHit && order > 1) {
+    console.log("TODO - add message");
     //-- Get the versions object by order number --//
     let versions_object = conversation.message_order[order];
 
@@ -126,6 +125,18 @@ export async function send_message(
 
     order--;
   }
+  console.log("request_messages: ", request_messages); // DEV
+
+  //-- Add newMessage object to messages in conversation in state --//
+  setConversation((prevConversation) => {
+    return {
+      ...prevConversation,
+      messages: {
+        ...prevConversation.messages,
+        [newMessage.message_uuid]: newMessage,
+      },
+    };
+  });
 
   //-- Fetch Event Source for Chat Completions Request --//
   const headers = {
@@ -235,8 +246,6 @@ export async function send_message(
         }
         //-- SSE message chunks --//
         else {
-          console.log(event.data); // DEV
-
           //-- Update message content (IMessage.message) in conversation --//
           setConversation((prevConversation) => {
             const prevCompletionMessage = prevConversation.messages[res_uuid];
@@ -257,7 +266,7 @@ export async function send_message(
         }
       },
       onclose() {
-        // console.log("Connection closed by the server"); // DEV
+        console.log("Connection closed by the server"); // DEV
       },
       onerror(err) {
         if (err instanceof CustomFatalError) {
