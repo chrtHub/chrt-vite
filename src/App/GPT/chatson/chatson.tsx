@@ -45,8 +45,8 @@ export async function send_message(
   conversation: IConversation,
   setConversation: React.Dispatch<React.SetStateAction<IConversation>>
 ) {
-  console.log("SEND MESSAGE");
-  console.log("conversation: ", conversation);
+  console.log("SEND MESSAGE"); // DEV
+  console.log("conversation: ", conversation); // DEV
   //-- Create token signal and counter --//
   let tokenLimitHit = false;
   let token_sum = 0;
@@ -84,6 +84,7 @@ export async function send_message(
     Number
   );
   const message_order_keys_descending = reverse(sortBy(message_order_keys));
+  let maxOrder = message_order_keys_descending[0];
   let order = message_order_keys_descending[0];
 
   //-- Add messages until token limit hit or all non-system messages added --//
@@ -127,13 +128,19 @@ export async function send_message(
   }
   console.log("request_messages: ", request_messages); // DEV
 
-  //-- Add newMessage object to messages in conversation in state --//
+  //-- Add newMessage object to conversation --//
   setConversation((prevConversation) => {
     return {
       ...prevConversation,
       messages: {
         ...prevConversation.messages,
         [newMessage.message_uuid]: newMessage,
+      },
+      message_order: {
+        ...prevConversation.message_order,
+        [maxOrder + 1]: {
+          1: newMessage.message_uuid,
+        },
       },
     };
   });
@@ -185,6 +192,12 @@ export async function send_message(
               ...prevConversation.messages,
               [initial_completion_message.message_uuid]:
                 initial_completion_message,
+            },
+            message_order: {
+              ...prevConversation.message_order,
+              [maxOrder + 2]: {
+                1: initial_completion_message.message_uuid,
+              },
             },
           };
         });
