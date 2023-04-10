@@ -5,7 +5,7 @@ export interface IConversation {
   conversation_uuid: string;
   message_order: IMessageOrder;
   messages: IMessages;
-  apiResponses: IAPIResponse[];
+  api_responses: IAPIResponse[];
 }
 
 export interface IMessageOrder {
@@ -33,16 +33,17 @@ export interface IModel {
   description: string;
 }
 
-/** This list is to be append-only. To prevent the use of a model, limit the models included in the ModelOptions object created in the file where ChatContext is created. */
+/** This list is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */
 export type ModelAPINames = "gpt-3.5-turbo" | "gpt-4" | "gpt-4-32k";
 
 export interface IAPIResponse {
   user: string;
-  model: string;
-  completed_timestamp: string;
+  model_api_name: string;
+  completion_timestamp: string;
   prompt_tokens: number;
   completion_tokens: number;
   total_tokens: number;
+  completion_message_uuid: string;
   message_uuids: string[];
 }
 

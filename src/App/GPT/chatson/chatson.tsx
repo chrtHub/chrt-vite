@@ -14,6 +14,7 @@ let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 import {
   ChatCompletionRequestMessage,
   CreateChatCompletionResponse,
+  IAPIResponse,
   IConversation,
   IMessage,
   IModel,
@@ -55,9 +56,15 @@ export async function send_message(
   };
 
   //-- Add newMessage object to messages in conversation in state --//
-  const updatedMessages = { ...conversation.messages };
-  updatedMessages[newMessage.message_uuid] = newMessage;
-  setConversation({ ...conversation, messages: updatedMessages });
+  setConversation((prevConversation) => {
+    return {
+      ...prevConversation,
+      messages: {
+        ...prevConversation.messages,
+        [newMessage.message_uuid]: newMessage,
+      },
+    };
+  });
 
   //-- Create request_messages array and add system_message --//
   let system_message_uuid = conversation.message_order[1][1];
@@ -126,22 +133,57 @@ export async function send_message(
     "Content-Type": "application/json",
   };
   const body = JSON.stringify({
-    model: model.api_name,
+    model: model,
     request_messages: request_messages,
   });
+  let res_uuid: string;
+  let res_timestamp: string;
 
-  //-- Define errors --//
+  class CustomFatalError extends Error {}
+
   try {
     await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
       method: "POST",
       headers: headers,
       body: body,
-      onopen(res) {
+      async onopen(res) {
+        res_uuid = res.headers.get("CHRT-completion-message-uuid") || "";
+        res_timestamp = res.headers.get("CHRT-timestamp") || "";
+
+        //-- If uuid or timestamp not found, throw error to terminate request --//
+        if (res_uuid === "" || res_timestamp === "") {
+          throw new CustomFatalError(
+            "CHRT-completion-message-uuid or CHRT-timestamp header null"
+          );
+        }
+
+        let initial_completion_message: IMessage = {
+          message_uuid: res_uuid,
+          author: model.api_name,
+          model: model,
+          timestamp: res_timestamp,
+          role: "assistant",
+          message: "",
+        };
+
+        //-- Add initial_completion_message (IMessage) to conversation --//
+        setConversation((prevConversation) => {
+          return {
+            ...prevConversation,
+            messages: {
+              ...prevConversation.messages,
+              [initial_completion_message.message_uuid]:
+                initial_completion_message,
+            },
+          };
+        });
+
+        //-- TODO - implement onopen logic, error handling --//
         if (
           res.ok &&
           res.headers.get("content-type") === EventStreamContentType
         ) {
-          console.log("Connection made ", res);
+          console.log("Connection made:", res); // DEV
         } else if (
           res.status >= 400 &&
           res.status < 500 &&
@@ -152,20 +194,78 @@ export async function send_message(
         return Promise.resolve();
       },
       onmessage(event) {
-        if (event.id && event.id === "apiResponseMetadata") {
-          // TODO - add response metadata to chatson object
-          console.log("apiResponseMetadata: ", JSON.parse(event.data));
-        } else {
-          // TODO - add response message to chatson object
+        //-- Error --//
+        if (event.id && event.id === "error") {
+          console.log("error", event.data); // DEV
+
+          // TODO - implement error handling
+          // <<>>
+        }
+        //-- After SSE message chunks, receive completion message object --//
+        else if (event.id && event.id === "completion_message") {
+          console.log("completion_message: ", JSON.parse(event.data)); // DEV
+
+          //-- Add completion_message (IMessage) to conversation --//
+          let completion_message: IMessage = JSON.parse(event.data);
+          setConversation((prevConversation) => {
+            return {
+              ...prevConversation,
+              messages: {
+                ...prevConversation.messages,
+                [completion_message.message_uuid]: completion_message,
+              },
+            };
+          });
+        }
+        //-- After SSE message chunks, receive api_response_metatdata object --//
+        else if (event.id && event.id === "api_response_metadata") {
+          console.log("api_response_metadata: ", JSON.parse(event.data)); // DEV
+
+          //-- Add api_responses (IAPIResponse) conversation in state --//
+          let api_response_metadata: IAPIResponse = JSON.parse(event.data);
+          setConversation((prevConversation) => {
+            return {
+              ...prevConversation,
+              api_responses: [
+                ...prevConversation.api_responses,
+                api_response_metadata,
+              ],
+            };
+          });
+        }
+        //-- SSE message chunks --//
+        else {
           console.log(event.data); // DEV
-          // setChatson() // overwrite just the particular message...
+
+          //-- Update message content (IMessage.message) in conversation --//
+          setConversation((prevConversation) => {
+            const prevCompletionMessage = prevConversation.messages[res_uuid];
+            const prevCompletionMessageContent =
+              prevConversation.messages[res_uuid].message;
+
+            return {
+              ...prevConversation,
+              messages: {
+                ...prevConversation.messages,
+                [res_uuid]: {
+                  ...prevCompletionMessage,
+                  message: (prevCompletionMessageContent || "") + event.data,
+                },
+              },
+            };
+          });
         }
       },
       onclose() {
         // console.log("Connection closed by the server"); // DEV
       },
       onerror(err) {
-        console.log("There was an error from server", err);
+        if (err instanceof CustomFatalError) {
+          console.error(err.message);
+          throw err; //-- Rethrow error to end request --//
+        } else {
+          console.log("There was an error from server", err);
+        }
       },
     });
   } catch (err) {

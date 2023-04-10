@@ -10,7 +10,7 @@ interface IChatContext {
   setConversation: React.Dispatch<React.SetStateAction<IConversation>>;
   model: IModel;
   setModel: React.Dispatch<React.SetStateAction<IModel>>;
-  ModelOptions: Record<ModelAPINames, IModel>;
+  model_options: Record<ModelAPINames, IModel>;
   completionLoading: boolean;
   setCompletionLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -19,8 +19,8 @@ const ChatContext = createContext<IChatContext | undefined>(undefined);
 
 //-- Custom Provider Component --//
 function ChatContextProvider({ children }: PropsWithChildren) {
-  //-- Values to be included in the Chat Context --//
-  const ModelOptions: Record<ModelAPINames, IModel> = {
+  //-- Enumerate current model options --//
+  const model_options: Record<ModelAPINames, IModel> = {
     "gpt-3.5-turbo": {
       api_name: "gpt-3.5-turbo",
       friendly_name: "GPT-3.5",
@@ -38,7 +38,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     },
   };
 
-  //-- New conversation --//
+  //-- Create new conversation --//
   const conversation_uuid = uuidv4();
   const system_message_uuid = uuidv4();
   const timestamp = getUnixTime(new Date()).toString();
@@ -65,20 +65,20 @@ function ChatContextProvider({ children }: PropsWithChildren) {
           "Your name is ChrtGPT. Refer to yourself as ChrtGPT. You are ChrtGPT, a helpful assistant that helps power a day trading performance journal. You sometimes make jokes and say silly things on purpose.",
       },
     },
-    apiResponses: [],
+    api_responses: [],
   };
   const [conversation, setConversation] =
     useState<IConversation>(newConversation);
-  const [model, setModel] = useState<IModel>(ModelOptions["gpt-3.5-turbo"]);
+  const [model, setModel] = useState<IModel>(model_options["gpt-3.5-turbo"]);
   const [completionLoading, setCompletionLoading] = useState<boolean>(false);
 
-  //-- Bundle values --//
+  //-- Bundle values into chatContextValue --//
   const chatContextValue = {
     conversation,
     setConversation,
     model,
     setModel,
-    ModelOptions,
+    model_options,
     completionLoading,
     setCompletionLoading,
   };
