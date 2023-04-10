@@ -65,7 +65,7 @@ export default function ChatSession() {
             [user.sub],
             ChatContext.model,
             promptToSend,
-            ChatContext.conversation, //-- chatson_object --//
+            ChatContext.conversation,
             ChatContext.setConversation
           );
           ChatContext.setCompletionLoading(false);

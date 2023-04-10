@@ -6,7 +6,7 @@ import { getUnixTime } from "date-fns";
 
 //-- Create interface and Context --//
 interface IChatContext {
-  conversation: IConversation | null;
+  conversation: IConversation;
   setConversation: React.Dispatch<React.SetStateAction<IConversation>>;
   model: IModel;
   setModel: React.Dispatch<React.SetStateAction<IModel>>;
@@ -51,7 +51,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
       },
     },
     messages: {
-      system_message_uuid: {
+      [system_message_uuid]: {
         message_uuid: system_message_uuid,
         author: "chrt",
         model: {
