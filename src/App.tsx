@@ -27,6 +27,7 @@ const infoRoutes: string[] = [
   "/product_specific_terms",
   "/system_requirements",
   "/terms",
+  "/updates",
 ];
 
 //-- Scroll to top of page whenever pathname changes --//

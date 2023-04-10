@@ -1,58 +1,86 @@
 import { useState, createContext, useContext, PropsWithChildren } from "react";
-import {
-  IChatsonObject,
-  IChatsonModel,
-  CurrentChatsonModelNames,
-} from "../App/GPT/chatson/types";
+import { IConversation, IModel, ModelAPINames } from "../App/GPT/chatson/types";
+
+import { v4 as uuidv4 } from "uuid";
+import { getUnixTime } from "date-fns";
 
 //-- Create interface and Context --//
 interface IChatContext {
-  chatson: IChatsonObject | null;
-  setChatson: React.Dispatch<React.SetStateAction<IChatsonObject | null>>;
-  model: IChatsonModel;
-  setModel: React.Dispatch<React.SetStateAction<IChatsonModel>>;
-  CurrentChatsonModels: Record<CurrentChatsonModelNames, IChatsonModel>;
-  llmLoading: boolean;
-  setLLMLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  conversation: IConversation;
+  setConversation: React.Dispatch<React.SetStateAction<IConversation>>;
+  model: IModel;
+  setModel: React.Dispatch<React.SetStateAction<IModel>>;
+  model_options: Record<ModelAPINames, IModel>;
+  completionLoading: boolean;
+  setCompletionLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
 const ChatContext = createContext<IChatContext | undefined>(undefined);
 
 //-- Custom Provider Component --//
 function ChatContextProvider({ children }: PropsWithChildren) {
-  //-- Values to be included in the Chat Context --//
-  const CurrentChatsonModels: Record<CurrentChatsonModelNames, IChatsonModel> =
-    {
-      "gpt-3.5-turbo": {
-        apiName: "gpt-3.5-turbo",
-        friendlyName: "GPT-3.5",
-        description: "Power and Speed",
-      },
-      "gpt-4": {
-        apiName: "gpt-4",
-        friendlyName: "GPT-4",
-        description: "Extra Power (Slower)",
-      },
-      "gpt-4-32k": {
-        apiName: "gpt-4-32k",
-        friendlyName: "GPT-4-32k",
-        description: "For very large prompts",
-      },
-    };
-  const [chatson, setChatson] = useState<IChatsonObject | null>(null);
-  const [model, setModel] = useState<IChatsonModel>(
-    CurrentChatsonModels["gpt-3.5-turbo"]
-  );
-  const [llmLoading, setLLMLoading] = useState<boolean>(false);
+  //-- Enumerate current model options --//
+  const model_options: Record<ModelAPINames, IModel> = {
+    "gpt-3.5-turbo": {
+      api_name: "gpt-3.5-turbo",
+      friendly_name: "GPT-3.5",
+      description: "Power and Speed",
+    },
+    "gpt-4": {
+      api_name: "gpt-4",
+      friendly_name: "GPT-4",
+      description: "Extra Power (Slower)",
+    },
+    "gpt-4-32k": {
+      api_name: "gpt-4-32k",
+      friendly_name: "GPT-4-32k",
+      description: "For very large prompts",
+    },
+  };
 
-  //-- Bundle values --//
+  //-- Create new conversation --//
+  const conversation_uuid = uuidv4();
+  const system_message_uuid = uuidv4();
+  const timestamp = getUnixTime(new Date()).toString();
+
+  const newConversation: IConversation = {
+    conversation_uuid: conversation_uuid,
+    message_order: {
+      1: {
+        1: system_message_uuid,
+      },
+    },
+    messages: {
+      [system_message_uuid]: {
+        message_uuid: system_message_uuid,
+        author: "chrt",
+        model: {
+          api_name: "gpt-3.5-turbo",
+          friendly_name: "GPT-3.5",
+          description: "Power and Speed",
+        },
+        timestamp: timestamp,
+        role: "system",
+        message:
+          "Your name is ChrtGPT. Refer to yourself as ChrtGPT. You are ChrtGPT, a helpful assistant that helps power a day trading performance journal. You sometimes make jokes and say silly things on purpose.",
+      },
+    },
+    api_responses: [],
+  };
+  const [conversation, setConversation] =
+    useState<IConversation>(newConversation);
+  const [model, setModel] = useState<IModel>(model_options["gpt-3.5-turbo"]);
+  const [completionLoading, setCompletionLoading] = useState<boolean>(false);
+
+  //-- Bundle values into chatContextValue --//
   const chatContextValue = {
-    chatson,
-    setChatson,
+    conversation,
+    setConversation,
     model,
     setModel,
-    CurrentChatsonModels,
-    llmLoading,
-    setLLMLoading,
+    model_options,
+    completionLoading,
+    setCompletionLoading,
   };
 
   return (

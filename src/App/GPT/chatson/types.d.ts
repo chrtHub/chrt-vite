@@ -1,53 +1,54 @@
-//-- IChatsonObject - represents one entire chat --//
-export interface IChatsonObject {
-  metadata: {
-    "single-or-multi-user": string;
-    user_ids: string[];
-    chat_uuid: string;
-    creation_timestamp_immutable: string;
-    reference_timestamp_mutable: string;
-    most_recent_message_timestamp: string;
-    user_tags: string[];
-    chrt_tags: string[];
-    opensearch_tags: string[];
-  };
-  linear_message_history: IChatsonMessage[];
-  api_response_history: IChatsonAPIResponse[];
+//-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//
+//-- New type interfaces --//
+
+export interface IConversation {
+  conversation_uuid: string;
+  message_order: IMessageOrder;
+  messages: IMessages;
+  api_responses: IAPIResponse[];
 }
 
-//-- IChatsonMessage - used for both prompts and responses --//
-export interface IChatsonMessage {
-  author: string;
-  model: IChatsonModel;
-  timestamp: string;
+export interface IMessageOrder {
+  [order: number]: {
+    [version: number]: string;
+  };
+}
+
+export interface IMessages {
+  [uuid: string]: IMessage;
+}
+
+export interface IMessage {
   message_uuid: string;
-  role: ChatCompletionRequestMessageRoleEnum;
+  author: string;
+  model: IModel;
+  timestamp: string;
+  role: ChatCompletionResponseMessageRoleEnum;
   message: string;
 }
 
-//-- List of LLM models --//
-export type CurrentChatsonModelNames = "gpt-3.5-turbo" | "gpt-4" | "gpt-4-32k";
-
-export interface IChatsonModel {
-  apiName: CurrentChatsonModelNames;
-  friendlyName: string;
+export interface IModel {
+  api_name: ModelAPINames;
+  friendly_name: string;
   description: string;
 }
 
-//-- Information about API Responses --//
-export interface IChatsonAPIResponse {
+/** This list is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */
+export type ModelAPINames = "gpt-3.5-turbo" | "gpt-4" | "gpt-4-32k";
+
+export interface IAPIResponse {
   user: string;
-  model: string;
-  response_id: string;
-  object: string;
-  created: number;
+  model_api_name: string;
+  completion_timestamp: string;
   prompt_tokens: number;
   completion_tokens: number;
   total_tokens: number;
+  completion_message_uuid: string;
+  message_uuids: string[];
 }
 
+//-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//
 //-- (2023-03-28) Types copy-pasted from OpenAI Node SDK --//
-
 /**
  *
  * @export

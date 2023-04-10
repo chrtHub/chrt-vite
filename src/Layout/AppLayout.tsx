@@ -25,9 +25,9 @@ import {
   HomeIcon,
   LockClosedIcon,
   QuestionMarkCircleIcon,
-  ShieldCheckIcon,
   SunIcon,
   XMarkIcon,
+  CodeBracketIcon,
 } from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
@@ -62,19 +62,20 @@ export default function AppLayout({ infoMode }: IProps) {
     infoMode
       ? (navigationItems = [
           // { name: "Info", to: "/info", icon: InformationCircleIcon },
+          { name: "Product Updates", to: "/updates", icon: CodeBracketIcon },
+          { name: "FAQ", to: "/faq", icon: QuestionMarkCircleIcon },
           { name: "Terms of Service", to: "/terms", icon: DocumentTextIcon },
           {
             name: "Privacy Statement",
             to: "/privacy",
             icon: DocumentTextIcon,
           },
-          { name: "FAQ", to: "/faq", icon: QuestionMarkCircleIcon },
+          { name: "Cookies Policy", to: "/cookies", icon: DocumentTextIcon },
           {
             name: "System Requirements",
             to: "/system_requirements",
             icon: ComputerDesktopIcon,
           },
-          { name: "Cookies Policy", to: "/cookies", icon: ShieldCheckIcon },
           {
             name: "OAuth 2 - Google Accounts",
             to: "/oauth2_google",
@@ -510,7 +511,7 @@ export default function AppLayout({ infoMode }: IProps) {
 
                       {/* Terms, Privacy, & More */}
                       {!infoMode && (
-                        <Menu.Item key={"sign-out-button"}>
+                        <Menu.Item key={"terms-privacy-faq"}>
                           {({ active }) => (
                             <a
                               href={`${window.location.origin}/terms`}
@@ -520,6 +521,23 @@ export default function AppLayout({ infoMode }: IProps) {
                               )}
                             >
                               Terms, Privacy, FAQ, etc.
+                            </a>
+                          )}
+                        </Menu.Item>
+                      )}
+
+                      {/* Home */}
+                      {infoMode && (
+                        <Menu.Item key={"home"}>
+                          {({ active }) => (
+                            <a
+                              href={`${window.location.origin}/`}
+                              className={classNames(
+                                active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                                "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                              )}
+                            >
+                              Home
                             </a>
                           )}
                         </Menu.Item>

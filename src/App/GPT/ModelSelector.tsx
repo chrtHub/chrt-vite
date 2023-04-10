@@ -39,7 +39,7 @@ export default function ModelSelector() {
               {/*  */}
               <div className="flex-1">
                 <p className="text-sm font-semibold text-white">
-                  {ChatContext.model.friendlyName}
+                  {ChatContext.model.friendly_name}
                 </p>
               </div>
               <div className="absolute right-0 mr-1.5 ">
@@ -59,40 +59,36 @@ export default function ModelSelector() {
               leaveTo="opacity-0"
             >
               <Listbox.Options className="absolute bottom-full left-0 z-10 mb-2 w-72 origin-top-right divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                {Object.values(ChatContext.CurrentChatsonModels).map(
-                  (model) => (
-                    <Listbox.Option
-                      key={model.apiName}
-                      className={({ active }) =>
-                        classNames(
-                          active ? "bg-green-600 text-white" : "text-zinc-900",
-                          "cursor-default select-none p-4 text-sm"
-                        )
-                      }
-                      value={model}
-                    >
-                      {({ selected, active }) => (
-                        <div className="flex flex-col">
-                          <div className="flex justify-between">
-                            <p
-                              className={selected ? "font-bold" : "font-normal"}
-                            >
-                              {model.friendlyName}
-                            </p>
-                          </div>
-                          <p
-                            className={classNames(
-                              active ? "text-green-200" : "text-zinc-500",
-                              "mt-2"
-                            )}
-                          >
-                            {model.description}
+                {Object.values(ChatContext.model_options).map((model) => (
+                  <Listbox.Option
+                    key={model.api_name}
+                    className={({ active }) =>
+                      classNames(
+                        active ? "bg-green-600 text-white" : "text-zinc-900",
+                        "cursor-default select-none p-4 text-sm"
+                      )
+                    }
+                    value={model}
+                  >
+                    {({ selected, active }) => (
+                      <div className="flex flex-col">
+                        <div className="flex justify-between">
+                          <p className={selected ? "font-bold" : "font-normal"}>
+                            {model.friendly_name}
                           </p>
                         </div>
-                      )}
-                    </Listbox.Option>
-                  )
-                )}
+                        <p
+                          className={classNames(
+                            active ? "text-green-200" : "text-zinc-500",
+                            "mt-2"
+                          )}
+                        >
+                          {model.description}
+                        </p>
+                      </div>
+                    )}
+                  </Listbox.Option>
+                ))}
               </Listbox.Options>
             </Transition>
           </div>
