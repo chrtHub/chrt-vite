@@ -19,7 +19,7 @@ import axios from "axios";
 import { fooState } from "./atoms";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
-import { data } from "./foo"; // DEV
+import { data } from "./dummy_history"; // DEV
 import logo from "../../Assets/chrt-logo/2023-02-04-chrt-logo-310-310.png";
 
 //-- Types --//
@@ -54,7 +54,7 @@ export default function ChatHistory() {
     <nav className="h-full overflow-y-auto" aria-label="Directory">
       {Object.keys(data).map((date) => (
         <div key={date} className="relative">
-          <div className="sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
+          <div className="sticky top-0 border-b border-t border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
             <h3>{date}</h3>
           </div>
           <ul role="list" className="relative -z-10 divide-y divide-gray-200">

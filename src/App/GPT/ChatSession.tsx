@@ -20,7 +20,6 @@ import { ArrowUpCircleIcon } from "@heroicons/react/20/solid";
 
 //== Utility Functions ==//
 import classNames from "../../Util/classNames";
-import { IChatsonMessage } from "./chatson/types";
 import {
   ChevronDoubleDownIcon,
   CpuChipIcon,
@@ -29,10 +28,11 @@ import {
 import useIsMobile from "../../Util/useIsMobile";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
+import { IMessage, IMessages } from "./chatson/types";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
-  //== React State ==//
+  //== React State (+ Context, Refs) ==//
   let ChatContext = useChatContext();
   const [promptInput, setPromptInput] = useState<string>("");
   const [promptToSend, setPromptToSend] = useState<string>("");
@@ -62,13 +62,13 @@ export default function ChatSession() {
         if (user?.sub) {
           await chatson.send_message(
             accessToken,
-            ChatContext.chatson, //-- chatson_object --//
+            ChatContext.conversation, //-- chatson_object --//
             [user.sub],
             ChatContext.model,
             promptToSend,
-            ChatContext.setChatson
+            ChatContext.setConversation
           );
-          ChatContext.setLLMLoading(false);
+          ChatContext.setCompletionLoading(false);
         }
       };
       submitPrompt();
@@ -82,7 +82,7 @@ export default function ChatSession() {
     //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
     setPromptToSend(promptInput);
     setPromptInput("");
-    ChatContext.setLLMLoading(true);
+    ChatContext.setCompletionLoading(true);
     setPromptReadyToSend(true);
   };
 
@@ -90,9 +90,14 @@ export default function ChatSession() {
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
   const [atBottom, setAtBottom] = useState<boolean>(true);
   const [showButton, setShowButton] = useState<boolean>(false);
-  const filteredMessages = ChatContext.chatson?.linear_message_history.filter(
-    (message) => message.role !== "system"
-  );
+
+  let filteredMessages: IMessage[] | [] = [];
+  const allMessages = ChatContext?.conversation?.messages;
+  if (allMessages) {
+    filteredMessages = Object.values(allMessages).filter(
+      (message) => message.role !== "system"
+    );
+  }
 
   //-- When 'atBottom' changes - if at bottom don't show button, else show button --//
   useEffect(() => {
@@ -104,11 +109,7 @@ export default function ChatSession() {
   }, [atBottom, setShowButton]);
 
   const scrollToBottomHandler = () => {
-    if (
-      virtuosoRef.current &&
-      filteredMessages &&
-      filteredMessages.length > 0
-    ) {
+    if (virtuosoRef.current && filteredMessages.length > 0) {
       virtuosoRef.current.scrollToIndex({
         index: filteredMessages.length - 1,
         behavior: "smooth",
@@ -118,7 +119,7 @@ export default function ChatSession() {
   };
 
   //-- Message Row Author --//
-  const Author = (props: { message: IChatsonMessage }) => {
+  const Author = (props: { message: IMessage }) => {
     let { message } = props;
 
     //-- If author is the current user, display their profile photo --//
@@ -137,12 +138,12 @@ export default function ChatSession() {
     }
 
     //-- If author is a model, display name of the model --//
-    if (message.author === message.model.apiName) {
+    if (message.author === message.model.api_name) {
       return (
         <div className="flex flex-col items-center">
           <CpuChipIcon className="h-8 w-8 text-zinc-500 dark:text-zinc-400" />
           <div className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-            {message.model.friendlyName}
+            {message.model.friendly_name}
           </div>
         </div>
       );
@@ -155,7 +156,7 @@ export default function ChatSession() {
   };
 
   //-- Message Row MessageData --//
-  const MessageData = (props: { message: IChatsonMessage }) => {
+  const MessageData = (props: { message: IMessage }) => {
     let { message } = props;
 
     let date = new Date(parseInt(message.timestamp) * 1000);
@@ -174,7 +175,7 @@ export default function ChatSession() {
   };
 
   //-- Message Row Component --//
-  const Row = (props: { message: IChatsonMessage }) => {
+  const Row = (props: { message: IMessage }) => {
     const { message } = props;
     return (
       <div
@@ -237,7 +238,7 @@ export default function ChatSession() {
   return (
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
-      {ChatContext.chatson?.linear_message_history[0].message ? (
+      {filteredMessages.length > 0 ? (
         <div id="llm-current-chat" className="flex flex-grow">
           <div id="chat-rows" className="w-full list-none">
             {/* Similar implemenatation to https://virtuoso.dev/stick-to-bottom/ */}
@@ -294,7 +295,7 @@ export default function ChatSession() {
             {/* Stop Response Generation */}
             <div className="flex w-full flex-row items-center justify-center">
               {/* DEV - always 'false' for now, when streaming in use, add logic here */}
-              {false && ChatContext.llmLoading && (
+              {false && ChatContext.completionLoading && (
                 <>
                   <button
                     onClick={() => console.log("cancel")} // TODO - add logic
@@ -357,12 +358,12 @@ export default function ChatSession() {
                 value={promptInput}
                 onChange={(event) => setPromptInput(event.target.value)}
                 className={classNames(
-                  ChatContext.llmLoading ? "bg-zinc-300 ring-2" : "",
+                  ChatContext.completionLoading ? "bg-zinc-300 ring-2" : "",
                   "block w-full resize-none rounded-md border-0 bg-white py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-zinc-700 dark:text-white sm:leading-6"
                 )}
               />
 
-              {ChatContext.llmLoading ? (
+              {ChatContext.completionLoading ? (
                 <button className="absolute bottom-0 right-0 flex cursor-wait items-center p-1.5 focus:outline-green-600">
                   <CpuChipIcon className="text h-6 w-6 animate-spin text-green-500" />
                 </button>

@@ -28,11 +28,12 @@ export interface IMessage {
 }
 
 export interface IModel {
-  apiName: ModelAPINames;
-  friendlyName: string;
+  api_name: ModelAPINames;
+  friendly_name: string;
   description: string;
 }
 
+/** This list is to be append-only. To prevent the use of a model, limit the models included in the ModelOptions object created in the file where ChatContext is created. */
 export type ModelAPINames = "gpt-3.5-turbo" | "gpt-4" | "gpt-4-32k";
 
 export interface IAPIResponse {
@@ -43,56 +44,6 @@ export interface IAPIResponse {
   completion_tokens: number;
   total_tokens: number;
   message_uuids: string[];
-}
-
-//-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//
-//-- Old type interfaces --//
-
-//-- IChatsonObject - represents one entire chat --//
-export interface IChatsonObject {
-  metadata: {
-    "single-or-multi-user": string;
-    user_ids: string[];
-    chat_uuid: string;
-    creation_timestamp_immutable: string;
-    reference_timestamp_mutable: string;
-    most_recent_message_timestamp: string;
-    user_tags: string[];
-    chrt_tags: string[];
-    opensearch_tags: string[];
-  };
-  linear_message_history: IChatsonMessage[];
-  api_response_history: IChatsonAPIResponse[];
-}
-
-//-- IChatsonMessage - used for both prompts and responses --//
-export interface IChatsonMessage {
-  author: string;
-  model: IChatsonModel;
-  timestamp: string;
-  message_uuid: string;
-  role: ChatCompletionRequestMessageRoleEnum;
-  message: string;
-}
-
-//-- List of LLM models --//
-export type CurrentChatsonModelNames = "gpt-3.5-turbo" | "gpt-4" | "gpt-4-32k";
-
-export interface IChatsonModel {
-  apiName: CurrentChatsonModelNames;
-  friendlyName: string;
-  description: string;
-}
-
-//-- Information about API Responses --//
-export interface IChatsonAPIResponse {
-  user: string;
-  model: string;
-  response_id: string;
-  created: number;
-  prompt_tokens: number;
-  completion_tokens: number;
-  total_tokens: number;
 }
 
 //-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//
