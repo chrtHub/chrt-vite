@@ -223,7 +223,6 @@ export async function send_message(
           console.log("error", event.data); // DEV
 
           // TODO - implement error handling
-          // <<>>
         }
         //-- After SSE message chunks, receive completion message object --//
         else if (event.id && event.id === "completion_message") {
@@ -259,6 +258,8 @@ export async function send_message(
         }
         //-- SSE message chunks --//
         else {
+          const uriDecodedData = decodeURIComponent(event.data);
+
           //-- Update message content (IMessage.message) in conversation --//
           setConversation((prevConversation) => {
             const prevCompletionMessage = prevConversation.messages[res_uuid];
@@ -271,7 +272,8 @@ export async function send_message(
                 ...prevConversation.messages,
                 [res_uuid]: {
                   ...prevCompletionMessage,
-                  message: (prevCompletionMessageContent || "") + event.data,
+                  message:
+                    (prevCompletionMessageContent || "") + uriDecodedData,
                 },
               },
             };
