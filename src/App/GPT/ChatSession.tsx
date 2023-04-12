@@ -25,7 +25,7 @@ import {
   CpuChipIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
-import useIsMobile from "../../Util/useIsMobile";
+import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { IMessage, IMessages } from "./chatson/types";
@@ -38,6 +38,7 @@ export default function ChatSession() {
   const [promptToSend, setPromptToSend] = useState<string>("");
   const [promptReadyToSend, setPromptReadyToSend] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [textAreaFocus, setTextAreaFocus] = useState<boolean>(true);
 
   //== Recoil State ==//
 
@@ -45,6 +46,7 @@ export default function ChatSession() {
   const { getAccessTokenSilently, user } = useAuth0();
 
   //== Other ==//
+  const OS_NAME = useOSName();
 
   //== Side Effects ==//
   useEffect(() => {
@@ -86,6 +88,7 @@ export default function ChatSession() {
     setPromptReadyToSend(true);
   };
 
+  //-- 'Enter' to submit prompt, 'Shift + Enter' for newline --//
   const keyDownHandler = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault(); //-- Prevent default behavior (newline insertion) --//
@@ -93,21 +96,41 @@ export default function ChatSession() {
     } //-- else "Enter" with shift will just insert a newline --//
   };
 
+  //-- Keyboard shortcut to focus prompt input textarea --//
   const globalKeyDownHandler = (event: KeyboardEvent) => {
-    if (event.ctrlKey && event.key === "g") {
-      event.preventDefault();
-      if (textareaRef.current) {
-        textareaRef.current.focus();
+    //-- Focus prompt input textarea (`metakey` = ⌘ on MacOS) --//
+    if (OS_NAME === "Mac OS") {
+      if (event.metaKey && event.key === "/") {
+        event.preventDefault();
+        if (textareaRef.current) {
+          textareaRef.current.focus();
+        }
       }
     }
   };
-
   useEffect(() => {
     document.addEventListener("keydown", globalKeyDownHandler);
     return () => {
       document.removeEventListener("keydown", globalKeyDownHandler);
     };
   }, []);
+
+  //-- Text area placeholder --//
+  const textareaFocusHandler = () => {
+    setTextAreaFocus(true);
+  };
+  const textareaBlurHandler = () => {
+    setTextAreaFocus(false);
+  };
+  const textareaPlaceholder = () => {
+    let placeholder = "Input prompt...";
+
+    if (!textAreaFocus && OS_NAME === "Mac OS") {
+      placeholder = "⌘ +  /  to input prompt...";
+    }
+
+    return placeholder;
+  };
 
   //-- ***** ***** ***** Start of Functions and Components for Message Rows **** ***** ***** --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
@@ -376,7 +399,9 @@ export default function ChatSession() {
                 maxRows={10}
                 id="prompt-input"
                 name="prompt-input"
-                placeholder="Input prompt"
+                placeholder={textareaPlaceholder()}
+                onFocus={textareaFocusHandler}
+                onBlur={textareaBlurHandler}
                 wrap="hard"
                 value={promptInput}
                 onKeyDown={keyDownHandler}
