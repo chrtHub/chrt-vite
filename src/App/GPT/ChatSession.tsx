@@ -86,6 +86,13 @@ export default function ChatSession() {
     setPromptReadyToSend(true);
   };
 
+  const keyDownHandler = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); //-- Prevent default behavior (newline insertion) --//
+      submitPromptHandler();
+    } //-- else "Enter" with shift will just insert a newline --//
+  };
+
   //-- ***** ***** ***** Start of Functions and Components for Message Rows **** ***** ***** --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
   const [atBottom, setAtBottom] = useState<boolean>(true);
@@ -356,6 +363,7 @@ export default function ChatSession() {
                 placeholder="Input prompt"
                 wrap="hard"
                 value={promptInput}
+                onKeyDown={keyDownHandler}
                 onChange={(event) => setPromptInput(event.target.value)}
                 className={classNames(
                   ChatContext.completionLoading ? "bg-zinc-300 ring-2" : "",
