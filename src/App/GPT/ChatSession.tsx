@@ -93,6 +93,22 @@ export default function ChatSession() {
     } //-- else "Enter" with shift will just insert a newline --//
   };
 
+  const globalKeyDownHandler = (event: KeyboardEvent) => {
+    if (event.ctrlKey && event.key === "g") {
+      event.preventDefault();
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", globalKeyDownHandler);
+    return () => {
+      document.removeEventListener("keydown", globalKeyDownHandler);
+    };
+  }, []);
+
   //-- ***** ***** ***** Start of Functions and Components for Message Rows **** ***** ***** --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
   const [atBottom, setAtBottom] = useState<boolean>(true);
@@ -176,7 +192,7 @@ export default function ChatSession() {
 
     return (
       <div className="text-sm text-zinc-500 dark:text-zinc-400">
-        {friendlyDate}
+        {/* {friendlyDate} */}
       </div>
     );
   };
@@ -207,7 +223,7 @@ export default function ChatSession() {
         {/* Author - hidden until 'lg' breakpoint */}
         <div
           id="chat-author-content"
-          className="mt-3.5 hidden w-full flex-col items-center justify-start lg:flex lg:w-24"
+          className="my-3.5 hidden w-full flex-col items-center justify-start lg:flex lg:w-24"
         >
           <Author message={message} />
         </div>
