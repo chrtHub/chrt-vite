@@ -58,7 +58,7 @@ export default function ModelSelector() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute bottom-full left-0 z-10 mb-2 w-72 origin-top-right divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Listbox.Options className="absolute bottom-full left-0 z-10 mb-2 w-48 origin-top-right divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 {Object.values(ChatContext.model_options).map((model) => (
                   <Listbox.Option
                     key={model.api_name}

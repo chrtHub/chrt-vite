@@ -4,7 +4,7 @@ import { Auth0Provider, AppState, User } from "@auth0/auth0-react";
 import { RecoilRoot } from "recoil";
 
 //-- TSX Components --//
-import useIsMobile from "../Util/useIsMobile";
+import { useIsMobile } from "../Util/useUserAgent";
 
 //-- NPM Components --//
 

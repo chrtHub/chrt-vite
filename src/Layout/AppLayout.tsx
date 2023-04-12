@@ -95,19 +95,11 @@ export default function AppLayout({ infoMode }: IProps) {
     name: string;
     to: string;
   }
-  let userNavigationItems: IUserNavigationItem[];
-  {
-    infoMode
-      ? (userNavigationItems = [])
-      : (userNavigationItems = [
-          { name: "Profile", to: "/profile" },
-          { name: "Settings", to: "/settings" },
-          //-- Items using 'onClick' method, not NavLink with 'to' prop
-          //-- Light/Dark Mode buttons --//
-          //-- Terms, Privacy, & More --//
-          //-- Sign out button - also uses onClick --//
-        ]);
-  }
+  let userNavigationItems: IUserNavigationItem[] = [
+    { name: "Profile", to: "/profile" },
+    { name: "Settings", to: "/settings" },
+  ];
+
   //-- Theming - Light Mode, Dark Mode, Match OS Mode --//
   let theme: string | null = localStorage.getItem("theme");
   const [themeButtonSelection, setThemeButtonSelection] = useState<
@@ -490,8 +482,8 @@ export default function AppLayout({ infoMode }: IProps) {
                         )}
                       </Menu.Item>
 
-                      {/* Buttons mapped from user navigationItems array */}
-                      {userNavigationItems &&
+                      {/* !infomode to use NavLink (react router links) */}
+                      {!infoMode &&
                         userNavigationItems.map((item) => (
                           <Menu.Item key={item.name}>
                             {({ active }) => (
@@ -509,39 +501,38 @@ export default function AppLayout({ infoMode }: IProps) {
                           </Menu.Item>
                         ))}
 
-                      {/* Terms, Privacy, & More */}
-                      {!infoMode && (
-                        <Menu.Item key={"terms-privacy-faq"}>
-                          {({ active }) => (
-                            <a
-                              href={`${window.location.origin}/terms`}
-                              className={classNames(
-                                active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                                "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
-                              )}
-                            >
-                              Terms, Privacy, FAQ, etc.
-                            </a>
-                          )}
-                        </Menu.Item>
-                      )}
+                      {/* infomode to use a + href (to cause browser to reload) */}
+                      {infoMode &&
+                        userNavigationItems.map((item) => (
+                          <Menu.Item key={item.name}>
+                            {({ active }) => (
+                              <a
+                                href={`${window.location.origin}${item.to}`}
+                                className={classNames(
+                                  active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                                  "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                                )}
+                              >
+                                {item.name}
+                              </a>
+                            )}
+                          </Menu.Item>
+                        ))}
 
-                      {/* Home */}
-                      {infoMode && (
-                        <Menu.Item key={"home"}>
-                          {({ active }) => (
-                            <a
-                              href={`${window.location.origin}/`}
-                              className={classNames(
-                                active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                                "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
-                              )}
-                            >
-                              Home
-                            </a>
-                          )}
-                        </Menu.Item>
-                      )}
+                      {/* Terms, Privacy, & More */}
+                      <Menu.Item key={"terms-privacy-faq"}>
+                        {({ active }) => (
+                          <a
+                            href={`${window.location.origin}/terms`}
+                            className={classNames(
+                              active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                              "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                            )}
+                          >
+                            Terms, Privacy, FAQ, etc.
+                          </a>
+                        )}
+                      </Menu.Item>
 
                       {/* Sign Out Button  */}
                       <Menu.Item key={"sign-out-button"}>
