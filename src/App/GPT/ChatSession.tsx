@@ -79,7 +79,15 @@ export default function ChatSession() {
     }
   }, [promptReadyToSend]);
 
-  //== Click Handlers ==//
+  useEffect(() => {
+    document.addEventListener("keydown", globalKeyDownHandler);
+    return () => {
+      document.removeEventListener("keydown", globalKeyDownHandler);
+    };
+  }, []);
+
+  //== Event Handlers ==//
+  //-- Submit prompt from textarea --//
   const submitPromptHandler = () => {
     //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
     setPromptToSend(promptInput);
@@ -108,14 +116,8 @@ export default function ChatSession() {
       }
     }
   };
-  useEffect(() => {
-    document.addEventListener("keydown", globalKeyDownHandler);
-    return () => {
-      document.removeEventListener("keydown", globalKeyDownHandler);
-    };
-  }, []);
 
-  //-- Text area placeholder --//
+  //-- Text area placeholder handlers and string --//
   const textareaFocusHandler = () => {
     setTextAreaFocus(true);
   };
@@ -215,6 +217,7 @@ export default function ChatSession() {
 
     return (
       <div className="text-sm text-zinc-500 dark:text-zinc-400">
+        {/* TODO - implement new metatdata ui for rows */}
         {/* {friendlyDate} */}
       </div>
     );
@@ -233,9 +236,9 @@ export default function ChatSession() {
           "w-full justify-center lg:flex"
         )}
       >
-        {/* Top - hidden after 'lg' breakpoint */}
+        {/* Mobile Row Top - visible until 'lg' */}
         <div className="lg:hidden">
-          <div className="flex flex-row items-center justify-center px-4 py-2">
+          <div className="flex flex-row items-center justify-center py-2 pl-2 pr-2">
             <MessageData message={message} />
             <div className="ml-auto">
               <Author message={message} />
@@ -243,7 +246,7 @@ export default function ChatSession() {
           </div>
         </div>
 
-        {/* Author - hidden until 'lg' breakpoint */}
+        {/* Author - visible for 'lg' and larger */}
         <div
           id="chat-author-content"
           className="my-3.5 hidden w-full flex-col items-center justify-start lg:flex lg:w-24"
@@ -251,22 +254,29 @@ export default function ChatSession() {
           <Author message={message} />
         </div>
 
-        {/* MESSAGE */}
+        {/* MESSAGE - always visible */}
         <div
           id="chat-message"
           className="mx-auto flex w-full max-w-prose lg:mx-0"
         >
-          <article className="prose prose-zinc w-full max-w-prose px-2 pb-1 dark:prose-invert dark:text-white lg:px-0">
+          <article className="prose prose-zinc w-full max-w-prose dark:prose-invert dark:text-white max-lg:pl-2.5">
             <li key={message.message_uuid}>
               <ReactMarkdown
                 children={message.message}
                 remarkPlugins={[remarkGfm]}
+                components={{
+                  p: ({ node, children }) => (
+                    <p className="max-lg:m-0 max-lg:p-0 max-lg:pb-2">
+                      {children}
+                    </p>
+                  ),
+                }}
               />
             </li>
           </article>
         </div>
 
-        {/* MessageData - hidden until 'lg' breakpoint */}
+        {/* MessageData - visible for 'lg' and larger */}
         <div
           id="chat-MessageData-content-lg"
           className="mt-5 hidden w-full flex-col pr-2 lg:flex lg:w-24"
