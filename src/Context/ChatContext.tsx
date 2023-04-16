@@ -10,7 +10,7 @@ interface IChatContext {
   setConversation: React.Dispatch<React.SetStateAction<IConversation>>;
   model: IModel;
   setModel: React.Dispatch<React.SetStateAction<IModel>>;
-  model_options: Record<ModelAPINames, IModel>;
+  model_options: Partial<Record<ModelAPINames, IModel>>;
   completionLoading: boolean;
   setCompletionLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -20,7 +20,7 @@ const ChatContext = createContext<IChatContext | undefined>(undefined);
 //-- Custom Provider Component --//
 function ChatContextProvider({ children }: PropsWithChildren) {
   //-- Enumerate current model options --//
-  const model_options: Record<ModelAPINames, IModel> = {
+  const model_options: Partial<Record<ModelAPINames, IModel>> = {
     "gpt-3.5-turbo": {
       api_name: "gpt-3.5-turbo",
       friendly_name: "GPT-3.5",
@@ -30,11 +30,6 @@ function ChatContextProvider({ children }: PropsWithChildren) {
       api_name: "gpt-4",
       friendly_name: "GPT-4",
       description: "Extra Power (Slower)",
-    },
-    "gpt-4-32k": {
-      api_name: "gpt-4-32k",
-      friendly_name: "GPT-4-32k",
-      description: "For very large prompts",
     },
   };
 
@@ -69,7 +64,9 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   };
   const [conversation, setConversation] =
     useState<IConversation>(newConversation);
-  const [model, setModel] = useState<IModel>(model_options["gpt-3.5-turbo"]);
+  const [model, setModel] = useState<IModel>(
+    model_options["gpt-3.5-turbo"] as IModel
+  );
   const [completionLoading, setCompletionLoading] = useState<boolean>(false);
 
   //-- Bundle values into chatContextValue --//
