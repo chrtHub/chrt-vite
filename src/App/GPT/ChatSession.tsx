@@ -64,10 +64,9 @@ export default function ChatSession() {
         if (user?.sub) {
           await chatson.send_message(
             accessToken,
-            [user.sub],
             ChatContext.model,
             promptToSend,
-            ChatContext.conversation,
+            ChatContext.conversation, // what if conversation is empty?
             ChatContext.setConversation
           );
           ChatContext.setCompletionLoading(false);
@@ -146,6 +145,8 @@ export default function ChatSession() {
       (message) => message.role !== "system"
     );
   }
+
+  // TODO - order filtered messages by increasing order?
 
   //-- When 'atBottom' changes - if at bottom don't show button, else show button --//
   useEffect(() => {

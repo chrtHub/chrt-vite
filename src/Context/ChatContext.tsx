@@ -34,34 +34,34 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   };
 
   //-- Create new conversation --//
-  const conversation_uuid = uuidv4();
-  const system_message_uuid = uuidv4();
-  const timestamp = getUnixTime(new Date()).toString();
+  const dummy_uuid = "00000000-0000-0000-0000-000000000000";
+  const dummy_timestamp = "0";
 
   const newConversation: IConversation = {
-    conversation_uuid: conversation_uuid,
+    conversation_uuid: dummy_uuid,
     message_order: {
       1: {
-        1: system_message_uuid,
+        1: dummy_uuid,
       },
     },
     messages: {
-      [system_message_uuid]: {
-        message_uuid: system_message_uuid,
+      [dummy_uuid]: {
+        message_uuid: dummy_uuid,
         author: "chrt",
         model: {
           api_name: "gpt-3.5-turbo",
           friendly_name: "GPT-3.5",
           description: "Power and Speed",
         },
-        timestamp: timestamp,
+        timestamp: dummy_timestamp,
         role: "system",
         message:
-          "Your name is ChrtGPT. Refer to yourself as ChrtGPT. You are ChrtGPT, a helpful assistant that helps power a day trading performance journal. You sometimes make jokes and say silly things on purpose.",
+          "This is a dummy object that declares the default model and satisfies the shape of the interface 'IConversation'. New conversations are initialized on the server.",
       },
     },
     api_responses: [],
   };
+
   const [conversation, setConversation] =
     useState<IConversation>(newConversation);
   const [model, setModel] = useState<IModel>(

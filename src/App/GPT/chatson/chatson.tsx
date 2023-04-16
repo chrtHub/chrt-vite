@@ -9,6 +9,8 @@ import {
 import sortBy from "lodash/sortBy";
 import reverse from "lodash/reverse";
 
+import { getUserDbId } from "../../../Util/getUserDbId";
+
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 import {
@@ -39,7 +41,6 @@ const timestamp = (): string => {
  */
 export async function send_message(
   access_token: string,
-  user_ids: string[],
   model: IModel,
   message: string,
   conversation: IConversation,
@@ -47,6 +48,10 @@ export async function send_message(
 ) {
   console.log("SEND MESSAGE"); // DEV
   console.log("conversation: ", conversation); // DEV
+
+  //-- Get user_db_id from access token --//
+  let user_db_id = getUserDbId(access_token);
+
   //-- Create token signal and counter --//
   let tokenLimitHit = false;
   let token_sum = 0;
@@ -56,9 +61,9 @@ export async function send_message(
   let system_message = conversation.messages[system_message_uuid];
 
   //-- Crete new message object --//
-  let newMessage: IMessage = {
+  let new_message: IMessage = {
     message_uuid: uuidv4(),
-    author: user_ids[0],
+    author: user_db_id,
     model: model,
     timestamp: timestamp(),
     role: "user",
@@ -73,11 +78,11 @@ export async function send_message(
     },
     {
       role: "user",
-      content: newMessage.message,
+      content: new_message.message,
     },
   ];
   token_sum += tiktoken(system_message.message);
-  token_sum += tiktoken(newMessage.message);
+  token_sum += tiktoken(new_message.message);
 
   //-- Add messages to request_messages by descending 'order' --//
   const message_order_keys = Object.keys(conversation.message_order).map(
@@ -85,13 +90,13 @@ export async function send_message(
   );
   const message_order_keys_descending = reverse(sortBy(message_order_keys));
   let maxOrder = message_order_keys_descending[0];
-  let order = message_order_keys_descending[0];
+  let order_counter = message_order_keys_descending[0];
 
   //-- Add messages until token limit hit or all non-system messages added --//
-  while (!tokenLimitHit && order > 1) {
+  while (!tokenLimitHit && order_counter > 1) {
     console.log("TODO - add message");
-    //-- Get the versions object by order number --//
-    let versions_object = conversation.message_order[order];
+    //-- Get the versions object by order_counter number --//
+    let versions_object = conversation.message_order[order_counter];
 
     //-- If multiple versions, use the latest --//
     let message_uuid;
@@ -124,22 +129,22 @@ export async function send_message(
       console.log("token limit hit!"); // DEV
     }
 
-    order--;
+    order_counter--;
   }
   console.log("request_messages: ", request_messages); // DEV
 
-  //-- Add newMessage object to conversation --//
+  //-- Add new_message object to conversation --//
   setConversation((prevConversation) => {
     return {
       ...prevConversation,
       messages: {
         ...prevConversation.messages,
-        [newMessage.message_uuid]: newMessage,
+        [new_message.message_uuid]: new_message,
       },
       message_order: {
         ...prevConversation.message_order,
         [maxOrder + 1]: {
-          1: newMessage.message_uuid,
+          1: new_message.message_uuid,
         },
       },
     };
@@ -152,8 +157,12 @@ export async function send_message(
   };
   const body = JSON.stringify({
     model: model,
-    request_messages: request_messages,
+    request_messages: request_messages, // TO BE DEPRACATED
+    new_message: new_message,
+    // order: new_message_order, // TO ADD - if order specified, message will become the next version (possibly 1) for that order
+    conversation_uuid: conversation.conversation_uuid,
   });
+
   let res_uuid: string;
   let res_timestamp: string;
 
@@ -163,7 +172,7 @@ export async function send_message(
     await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
       method: "POST",
       headers: headers,
-      body: body,
+      body: body, // TODO - write type interface for fetchEventSource req.body
       async onopen(res) {
         res_uuid = res.headers.get("CHRT-completion-message-uuid") || "";
         res_timestamp = res.headers.get("CHRT-timestamp") || "";
