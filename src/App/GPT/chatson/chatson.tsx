@@ -20,6 +20,7 @@ import {
   IConversation,
   IMessage,
   IModel,
+  IChatCompletionRequestBody,
 } from "./types";
 import { tiktoken } from "./tiktoken";
 
@@ -71,7 +72,7 @@ export async function send_message(
   };
 
   //-- Add system_message and new_message to request_messages. Count tokens --//
-  let request_messages: Array<ChatCompletionRequestMessage> = [
+  let request_messages: ChatCompletionRequestMessage[] = [
     {
       role: system_message.role,
       content: system_message.message,
@@ -155,13 +156,13 @@ export async function send_message(
     Authorization: `Bearer ${access_token}`,
     "Content-Type": "application/json",
   };
-  const body = JSON.stringify({
+  const body: IChatCompletionRequestBody = {
     model: model,
     request_messages: request_messages, // TO BE DEPRACATED
     new_message: new_message,
     // order: new_message_order, // TO ADD - if order specified, message will become the next version (possibly 1) for that order
     conversation_uuid: conversation.conversation_uuid,
-  });
+  };
 
   let res_uuid: string;
   let res_timestamp: string;
@@ -172,7 +173,7 @@ export async function send_message(
     await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
       method: "POST",
       headers: headers,
-      body: body, // TODO - write type interface for fetchEventSource req.body
+      body: JSON.stringify(body), // TODO - write type interface for fetchEventSource req.body
       async onopen(res) {
         res_uuid = res.headers.get("CHRT-completion-message-uuid") || "";
         res_timestamp = res.headers.get("CHRT-timestamp") || "";

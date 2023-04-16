@@ -33,6 +33,13 @@ export interface IModel {
   description: string;
 }
 
+export interface IChatCompletionRequestBody {
+  model: IModel;
+  request_messages: ChatCompletionRequestMessage[];
+  new_message: IMessage;
+  conversation_uuid: string;
+}
+
 /** This list is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */
 export type ModelAPINames = "gpt-3.5-turbo" | "gpt-4" | "gpt-4-32k";
 
