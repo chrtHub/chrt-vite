@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import { getUnixTime } from "date-fns";
 import axios from "axios";
 import {
@@ -10,6 +9,7 @@ import sortBy from "lodash/sortBy";
 import reverse from "lodash/reverse";
 
 import { getUserDbId } from "../../../Util/getUserDbId";
+import { isValidUUIDV4, getUUIDV4 } from "../../../Util/getUUIDV4";
 
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
@@ -21,6 +21,7 @@ import {
   IMessage,
   IModel,
   IChatCompletionRequestBody,
+  UUIDV4,
 } from "./types";
 import { tiktoken } from "./tiktoken";
 
@@ -63,7 +64,7 @@ export async function send_message(
 
   //-- Crete new message object --//
   let new_message: IMessage = {
-    message_uuid: uuidv4(),
+    message_uuid: getUUIDV4(),
     author: user_db_id,
     model: model,
     timestamp: timestamp(),
@@ -100,16 +101,8 @@ export async function send_message(
     let versions_object = conversation.message_order[order_counter];
 
     //-- If multiple versions, use the latest --//
-    let message_uuid;
-    if (Object.keys(versions_object).length > 1) {
-      const version_order_keys_descending = reverse(
-        sortBy(Object.keys(versions_object))
-      );
-      message_uuid = version_order_keys_descending[0];
-    } //-- Else use version '1' --//
-    else {
-      message_uuid = versions_object[1];
-    }
+    // TODO - implement versions
+    let message_uuid = versions_object[1];
 
     //-- Get the message_content --//
     let message_object = conversation.messages[message_uuid];
@@ -157,14 +150,15 @@ export async function send_message(
     "Content-Type": "application/json",
   };
   const body: IChatCompletionRequestBody = {
-    model: model,
+    conversation_uuid: conversation.conversation_uuid,
     request_messages: request_messages, // TO BE DEPRACATED
     new_message: new_message,
-    // order: new_message_order, // TO ADD - if order specified, message will become the next version (possibly 1) for that order
-    conversation_uuid: conversation.conversation_uuid,
+    new_message_order: null, // TO ADD - if order specified, message will become the next version (possibly 1) for that order
+    model: model,
   };
 
-  let res_uuid: string;
+  let res_uuid_to_validate: string;
+  let valid_res_uuid: UUIDV4;
   let res_timestamp: string;
 
   class CustomFatalError extends Error {}
@@ -175,18 +169,20 @@ export async function send_message(
       headers: headers,
       body: JSON.stringify(body), // TODO - write type interface for fetchEventSource req.body
       async onopen(res) {
-        res_uuid = res.headers.get("CHRT-completion-message-uuid") || "";
+        res_uuid_to_validate =
+          res.headers.get("CHRT-completion-message-uuid") || "";
         res_timestamp = res.headers.get("CHRT-timestamp") || "";
 
-        //-- If uuid or timestamp not found, throw error to terminate request --//
-        if (res_uuid === "" || res_timestamp === "") {
+        //-- Validate uuid and timestamp, else throw error to terminate request --//
+        if (res_uuid_to_validate === "" || res_timestamp === "") {
           throw new CustomFatalError(
             "CHRT-completion-message-uuid or CHRT-timestamp header null"
           );
         }
+        valid_res_uuid = isValidUUIDV4(res_uuid_to_validate);
 
         let initial_completion_message: IMessage = {
-          message_uuid: res_uuid,
+          message_uuid: valid_res_uuid,
           author: model.api_name,
           model: model,
           timestamp: res_timestamp,
@@ -272,15 +268,16 @@ export async function send_message(
 
           //-- Update message content (IMessage.message) in conversation --//
           setConversation((prevConversation) => {
-            const prevCompletionMessage = prevConversation.messages[res_uuid];
+            const prevCompletionMessage =
+              prevConversation.messages[valid_res_uuid];
             const prevCompletionMessageContent =
-              prevConversation.messages[res_uuid].message;
+              prevConversation.messages[valid_res_uuid].message;
 
             return {
               ...prevConversation,
               messages: {
                 ...prevConversation.messages,
-                [res_uuid]: {
+                [valid_res_uuid]: {
                   ...prevCompletionMessage,
                   message:
                     (prevCompletionMessageContent || "") + uriDecodedData,

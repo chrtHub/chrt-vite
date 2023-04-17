@@ -2,24 +2,30 @@
 //-- New type interfaces --//
 
 export interface IConversation {
-  conversation_uuid: string;
+  conversation_uuid: UUIDV4;
   message_order: IMessageOrder;
   messages: IMessages;
   api_responses: IAPIResponse[];
 }
 
+type UUIDV4 = string & {
+  //-- UUIDv4 format: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx --//
+  //-- where x is any hexadecimal digit and y is one of 8, 9, A, or B --//
+  readonly _uuidBrand: unique symbol;
+};
+
 export interface IMessageOrder {
   [order: number]: {
-    [version: number]: string;
+    [version: number]: UUIDV4;
   };
 }
 
 export interface IMessages {
-  [uuid: string]: IMessage;
+  [uuid: UUIDV4]: IMessage;
 }
 
 export interface IMessage {
-  message_uuid: string;
+  message_uuid: UUIDV4;
   author: string;
   model: IModel;
   timestamp: string;
@@ -34,10 +40,11 @@ export interface IModel {
 }
 
 export interface IChatCompletionRequestBody {
-  model: IModel;
-  request_messages: ChatCompletionRequestMessage[];
+  conversation_uuid: UUIDV4;
+  request_messages: ChatCompletionRequestMessage[]; // TO BE DEPRACATED
   new_message: IMessage;
-  conversation_uuid: string;
+  new_message_order: number | null;
+  model: IModel;
 }
 
 /** This list is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */
@@ -50,8 +57,8 @@ export interface IAPIResponse {
   prompt_tokens: number;
   completion_tokens: number;
   total_tokens: number;
-  completion_message_uuid: string;
-  message_uuids: string[];
+  completion_message_uuid: UUIDV4;
+  message_uuids: UUIDV4[];
 }
 
 //-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//

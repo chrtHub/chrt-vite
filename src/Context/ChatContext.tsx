@@ -1,8 +1,11 @@
 import { useState, createContext, useContext, PropsWithChildren } from "react";
-import { IConversation, IModel, ModelAPINames } from "../App/GPT/chatson/types";
-
-import { v4 as uuidv4 } from "uuid";
-import { getUnixTime } from "date-fns";
+import {
+  IConversation,
+  IModel,
+  ModelAPINames,
+  UUIDV4,
+} from "../App/GPT/chatson/types";
+import { getUUIDV4 } from "../Util/getUUIDV4";
 
 //-- Create interface and Context --//
 interface IChatContext {
@@ -34,7 +37,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   };
 
   //-- Create new conversation --//
-  const dummy_uuid = "00000000-0000-0000-0000-000000000000";
+  const dummy_uuid: UUIDV4 = getUUIDV4("dummy");
   const dummy_timestamp = "0";
 
   const newConversation: IConversation = {
