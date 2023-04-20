@@ -6,6 +6,7 @@ export interface IConversation {
   message_order: IMessageOrder;
   messages: IMessages;
   api_responses: IAPIResponse[];
+  schema_version: number;
 }
 
 type UUIDV4 = string & {
