@@ -28,7 +28,7 @@ import {
 import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { IMessage, IMessages } from "./chatson/types";
+import { IMessage, IMessages } from "./chatson/chatson_types";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
@@ -148,7 +148,7 @@ export default function ChatSession() {
     );
   }
 
-  // TODO - order filtered messages by increasing order?
+  // TODO - order filtered messages by increasing order + version?
 
   //-- When 'atBottom' changes - if at bottom don't show button, else show button --//
   useEffect(() => {
@@ -210,13 +210,12 @@ export default function ChatSession() {
   const MessageData = (props: { message: IMessage }) => {
     let { message } = props;
 
-    let date = new Date(parseInt(message.timestamp) * 1000);
     // let friendlyDate = format(date, "hh:mm:ss");
     let friendlyDate = new Intl.DateTimeFormat("en-US", {
       hour: "numeric",
       minute: "2-digit",
       second: "2-digit",
-    }).format(date);
+    }).format(message.created_at);
 
     return (
       <div className="text-sm text-zinc-500 dark:text-zinc-400">

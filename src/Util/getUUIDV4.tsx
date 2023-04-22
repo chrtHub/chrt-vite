@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { UUIDV4 } from "../App/GPT/chatson/types";
+import { UUIDV4 } from "../App/GPT/chatson/chatson_types";
 
 //-- Regex test and format ---//
 function isUUIDV4(uuid: string): uuid is UUIDV4 {

@@ -1,12 +1,13 @@
-//-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//
-//-- New type interfaces --//
-
+//-- Chatson Type Interfaces --//
 export interface IConversation {
   conversation_uuid: UUIDV4;
+  schema_version: string;
+  created_at: Date;
   message_order: IMessageOrder;
   messages: IMessages;
   api_responses: IAPIResponse[];
-  schema_version: string;
+  chatson_tags: string[]; //-- predefined lists for favorites, etc. --//
+  user_tags: string[]; //-- user-defined tags --//
 }
 
 type UUIDV4 = string & {
@@ -29,7 +30,7 @@ export interface IMessage {
   message_uuid: UUIDV4;
   author: string;
   model: IModel;
-  timestamp: string;
+  created_at: Date;
   role: ChatCompletionResponseMessageRoleEnum;
   message: string;
 }
@@ -54,7 +55,7 @@ export type ModelAPINames = "gpt-3.5-turbo" | "gpt-4" | "gpt-4-32k";
 export interface IAPIResponse {
   user: string;
   model_api_name: string;
-  completion_timestamp: string;
+  created_at: Date;
   prompt_tokens: number;
   completion_tokens: number;
   total_tokens: number;

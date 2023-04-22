@@ -4,7 +4,7 @@ import {
   IModel,
   ModelAPINames,
   UUIDV4,
-} from "../App/GPT/chatson/types";
+} from "../App/GPT/chatson/chatson_types";
 import { getUUIDV4 } from "../Util/getUUIDV4";
 
 //-- Create interface and Context --//
@@ -38,10 +38,11 @@ function ChatContextProvider({ children }: PropsWithChildren) {
 
   //-- Create new conversation --//
   const dummy_uuid: UUIDV4 = getUUIDV4("dummy");
-  const dummy_timestamp = "0";
 
   const newConversation: IConversation = {
     conversation_uuid: dummy_uuid,
+    schema_version: "2023-04-20",
+    created_at: new Date(), //-- Overwritten by server --//
     message_order: {
       1: {
         1: dummy_uuid,
@@ -56,14 +57,15 @@ function ChatContextProvider({ children }: PropsWithChildren) {
           friendly_name: "GPT-3.5",
           description: "Power and Speed",
         },
-        timestamp: dummy_timestamp,
+        created_at: new Date(), //-- Overwritten by server --//
         role: "system",
         message:
           "This is a dummy object that declares the default model and satisfies the shape of the interface 'IConversation'. New conversations are initialized on the server.",
       },
     },
     api_responses: [],
-    schema_version: "2023-04-20",
+    chatson_tags: [],
+    user_tags: [],
   };
 
   const [conversation, setConversation] =

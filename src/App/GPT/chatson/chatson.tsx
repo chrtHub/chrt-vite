@@ -23,7 +23,7 @@ import {
   IModel,
   IChatCompletionRequestBody,
   UUIDV4,
-} from "./types";
+} from "./chatson_types";
 import { tiktoken } from "./tiktoken";
 
 //-- Utility Function --//
@@ -69,7 +69,7 @@ export async function send_message(
     message_uuid: getUUIDV4(),
     author: user_db_id,
     model: model,
-    timestamp: timestamp(),
+    created_at: new Date(),
     role: "user",
     message: message,
   };
@@ -155,7 +155,6 @@ export async function send_message(
 
   let res_uuid_to_validate: string;
   let valid_res_uuid: UUIDV4;
-  let res_timestamp: string;
 
   class CustomFatalError extends Error {}
 
@@ -167,10 +166,9 @@ export async function send_message(
       async onopen(res) {
         res_uuid_to_validate =
           res.headers.get("CHRT-completion-message-uuid") || "";
-        res_timestamp = res.headers.get("CHRT-timestamp") || "";
 
         //-- Validate uuid and timestamp, else throw error to terminate request --//
-        if (res_uuid_to_validate === "" || res_timestamp === "") {
+        if (res_uuid_to_validate === "") {
           throw new CustomFatalError(
             "CHRT-completion-message-uuid or CHRT-timestamp header null"
           );
@@ -181,7 +179,7 @@ export async function send_message(
           message_uuid: valid_res_uuid,
           author: model.api_name,
           model: model,
-          timestamp: res_timestamp,
+          created_at: new Date(), //-- Overwritten upon receipt of api_response_metadata --//
           role: "assistant",
           message: "",
         };
@@ -243,6 +241,7 @@ export async function send_message(
             produce((draft) => {
               draft.api_responses.push(api_response_metadata);
             })
+            // TODO - update message_created_at
           );
         }
         //-- SSE message chunks --//
