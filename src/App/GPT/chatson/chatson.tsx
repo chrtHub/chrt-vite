@@ -1,5 +1,6 @@
 import { getUnixTime } from "date-fns";
 import axios from "axios";
+import { produce } from "immer";
 import {
   EventStreamContentType,
   fetchEventSource,
@@ -33,18 +34,19 @@ const timestamp = (): string => {
 /**
  * Causes an LLM API call after adding a propmt to a chatson object
  *
- * @param access_token user credential to be sent as Bearer token in 'authorization' header
- * @param conversation if null, a new chat is created. otherwise, the prompt is appended to the conversation
- * @param user_ids array of user ids. current user should be at index 0.
- * @param model model to use for API call
- * @param prompt user input to be added to the chat history and sent to the LLM
- * @param setChatson state setter for the conversation
+ * @param access_token (a) set as the author id, (b) sent as Bearer token in 'authorization' header
+ * @param message user input to be added to the conversation
+ * @param message_order When null, the message becomes the next message in the conversation. When specified, the message becomes the next version for the specified order.
+ * @param model LLM model to be used
+ * @param conversation When null, the server creates a new conversation. Otherwise, the message is added to the conversation.
+ * @param setConversation state setter for the conversation
  * @returns IChatsonObject updated with the new prompt
  */
 export async function send_message(
   access_token: string,
-  model: IModel,
   message: string,
+  message_order: number | null,
+  model: IModel,
   conversation: IConversation,
   setConversation: React.Dispatch<React.SetStateAction<IConversation>>
 ) {
@@ -127,22 +129,16 @@ export async function send_message(
   }
   console.log("request_messages: ", request_messages); // DEV
 
-  //-- Add new_message object to conversation --//
-  setConversation((prevConversation) => {
-    return {
-      ...prevConversation,
-      messages: {
-        ...prevConversation.messages,
-        [new_message.message_uuid]: new_message,
-      },
-      message_order: {
-        ...prevConversation.message_order,
-        [maxOrder + 1]: {
-          1: new_message.message_uuid,
-        },
-      },
-    };
-  });
+  //- Immer - add new_message and its order to conversation --//
+  // TODO - implement allowing version too
+  // // if message_order specified, use that order and increment max_version by 1
+  // // else increment maxOrder by one and set version to 1
+  setConversation(
+    produce((draft) => {
+      draft.messages[new_message.message_uuid] = new_message;
+      draft.message_order[maxOrder + 1] = { 1: new_message.message_uuid };
+    })
+  );
 
   //-- Fetch Event Source for Chat Completions Request --//
   const headers = {
@@ -191,22 +187,16 @@ export async function send_message(
         };
 
         //-- Add initial_completion_message (IMessage) to conversation --//
-        setConversation((prevConversation) => {
-          return {
-            ...prevConversation,
-            messages: {
-              ...prevConversation.messages,
-              [initial_completion_message.message_uuid]:
-                initial_completion_message,
-            },
-            message_order: {
-              ...prevConversation.message_order,
-              [maxOrder + 2]: {
-                1: initial_completion_message.message_uuid,
-              },
-            },
-          };
-        });
+        // TODO - implement specific order + version
+        setConversation(
+          produce((draft) => {
+            draft.messages[initial_completion_message.message_uuid] =
+              initial_completion_message;
+            draft.message_order[maxOrder + 2] = {
+              1: initial_completion_message.message_uuid,
+            };
+          })
+        );
 
         //-- TODO - implement onopen logic, error handling --//
         if (
@@ -236,15 +226,12 @@ export async function send_message(
 
           //-- Add completion_message (IMessage) to conversation --//
           let completion_message: IMessage = JSON.parse(event.data);
-          setConversation((prevConversation) => {
-            return {
-              ...prevConversation,
-              messages: {
-                ...prevConversation.messages,
-                [completion_message.message_uuid]: completion_message,
-              },
-            };
-          });
+          setConversation(
+            produce((draft) => {
+              draft.messages[completion_message.message_uuid] =
+                completion_message;
+            })
+          );
         }
         //-- After SSE message chunks, receive api_response_metatdata object --//
         else if (event.id && event.id === "api_response_metadata") {
@@ -252,39 +239,23 @@ export async function send_message(
 
           //-- Add api_responses (IAPIResponse) conversation in state --//
           let api_response_metadata: IAPIResponse = JSON.parse(event.data);
-          setConversation((prevConversation) => {
-            return {
-              ...prevConversation,
-              api_responses: [
-                ...prevConversation.api_responses,
-                api_response_metadata,
-              ],
-            };
-          });
+          setConversation(
+            produce((draft) => {
+              draft.api_responses.push(api_response_metadata);
+            })
+          );
         }
         //-- SSE message chunks --//
         else {
           const uriDecodedData = decodeURIComponent(event.data);
 
           //-- Update message content (IMessage.message) in conversation --//
-          setConversation((prevConversation) => {
-            const prevCompletionMessage =
-              prevConversation.messages[valid_res_uuid];
-            const prevCompletionMessageContent =
-              prevConversation.messages[valid_res_uuid].message;
-
-            return {
-              ...prevConversation,
-              messages: {
-                ...prevConversation.messages,
-                [valid_res_uuid]: {
-                  ...prevCompletionMessage,
-                  message:
-                    (prevCompletionMessageContent || "") + uriDecodedData,
-                },
-              },
-            };
-          });
+          setConversation(
+            produce((draft) => {
+              draft.messages[valid_res_uuid].message =
+                (draft.messages[valid_res_uuid].message || "") + uriDecodedData;
+            })
+          );
         }
       },
       onclose() {

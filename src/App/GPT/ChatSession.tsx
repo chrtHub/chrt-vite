@@ -35,6 +35,7 @@ export default function ChatSession() {
   //== React State (+ Context, Refs) ==//
   let ChatContext = useChatContext();
   const [promptInput, setPromptInput] = useState<string>("");
+  const [promptOrder, setPromptOrder] = useState<number | null>(null);
   const [promptToSend, setPromptToSend] = useState<string>("");
   const [promptReadyToSend, setPromptReadyToSend] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -64,9 +65,10 @@ export default function ChatSession() {
         if (user?.sub) {
           await chatson.send_message(
             accessToken,
-            ChatContext.model,
             promptToSend,
-            ChatContext.conversation, // what if conversation is empty?
+            promptOrder,
+            ChatContext.model,
+            ChatContext.conversation,
             ChatContext.setConversation
           );
           ChatContext.setCompletionLoading(false);
@@ -298,7 +300,7 @@ export default function ChatSession() {
       {filteredMessages.length > 0 ? (
         <div id="llm-current-chat" className="flex flex-grow">
           <div id="chat-rows" className="w-full list-none">
-            {/* Similar implemenatation to https://virtuoso.dev/stick-to-bottom/ */}
+            {/*-- Similar implemenatation to https://virtuoso.dev/stick-to-bottom/ --*/}
             <Virtuoso
               ref={virtuosoRef}
               data={filteredMessages}
@@ -351,7 +353,7 @@ export default function ChatSession() {
           >
             {/* Stop Response Generation */}
             <div className="flex w-full flex-row items-center justify-center">
-              {/* DEV - always 'false' for now, when streaming in use, add logic here */}
+              {/* DEV - always 'false' for now, when streaming in use, add logic here to allow user to stop response generation */}
               {false && ChatContext.completionLoading && (
                 <>
                   <button

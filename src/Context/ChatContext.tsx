@@ -63,7 +63,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
       },
     },
     api_responses: [],
-    schema_version: 1,
+    schema_version: "2023-04-20",
   };
 
   const [conversation, setConversation] =
