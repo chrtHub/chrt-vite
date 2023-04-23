@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { ObjectId } from "bson";
 
 //-- Chatson Type Interfaces --//
 export interface IConversation {
@@ -66,6 +66,8 @@ export interface IAPIResponse {
   message_uuids: UUIDV4[];
 }
 
+//-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//
+//-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//
 //-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//
 //-- (2023-03-28) Types copy-pasted from OpenAI Node SDK --//
 /**
@@ -226,3 +228,6 @@ export interface CreateCompletionResponseUsage {
    */
   total_tokens: number;
 }
+//-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//
+//-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//
+//-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//
