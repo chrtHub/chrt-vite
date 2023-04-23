@@ -148,7 +148,8 @@ export default function ChatSession() {
     );
   }
 
-  // TODO - order filtered messages by increasing order + version?
+  // TODO - order the  filtered messages by increasing order + version?
+  // // how to handle sparse order? Show a blank...
 
   //-- When 'atBottom' changes - if at bottom don't show button, else show button --//
   useEffect(() => {
