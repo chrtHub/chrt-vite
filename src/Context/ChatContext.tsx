@@ -38,12 +38,11 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   };
 
   //-- Create new conversation --//
+  const dummy_ObjectId = new ObjectId("000000000000000000000000");
   const dummy_uuid: UUIDV4 = getUUIDV4("dummy");
-  const dummy_id = new ObjectId("000000000000000000000000");
 
   const newConversation: IConversation = {
-    _id: dummy_id,
-    conversation_uuid: dummy_uuid,
+    _id: dummy_ObjectId,
     schema_version: "2023-04-20",
     created_at: new Date(), //-- Overwritten by server --//
     message_order: {

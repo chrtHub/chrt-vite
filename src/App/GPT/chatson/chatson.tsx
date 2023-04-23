@@ -141,7 +141,7 @@ export async function send_message(
     "Content-Type": "application/json",
   };
   const body: IChatCompletionRequestBody = {
-    conversation_uuid: conversation.conversation_uuid,
+    _id: conversation._id,
     request_messages: request_messages, // TO BE DEPRACATED
     new_message: new_message,
     new_message_order: null, // TO ADD - if order specified, message will become the next version (possibly 1) for that order

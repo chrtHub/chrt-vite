@@ -3,7 +3,6 @@ import { ObjectId } from "bson";
 //-- Chatson Type Interfaces --//
 export interface IConversation {
   _id: ObjectId;
-  conversation_uuid: UUIDV4;
   schema_version: string;
   created_at: Date;
   message_order: IMessageOrder;
@@ -45,7 +44,7 @@ export interface IModel {
 }
 
 export interface IChatCompletionRequestBody {
-  conversation_uuid: UUIDV4;
+  _id: ObjectId;
   request_messages: ChatCompletionRequestMessage[]; // TO BE DEPRACATED
   new_message: IMessage;
   new_message_order: number | null;
