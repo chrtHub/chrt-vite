@@ -5,6 +5,7 @@ import {
   ModelAPINames,
   UUIDV4,
 } from "../App/GPT/chatson/chatson_types";
+import { ObjectId } from "mongodb";
 import { getUUIDV4 } from "../Util/getUUIDV4";
 
 //-- Create interface and Context --//
@@ -38,8 +39,10 @@ function ChatContextProvider({ children }: PropsWithChildren) {
 
   //-- Create new conversation --//
   const dummy_uuid: UUIDV4 = getUUIDV4("dummy");
+  const dummy_id: ObjectId = new ObjectId("000000000000000000000000");
 
   const newConversation: IConversation = {
+    _id: dummy_id,
     conversation_uuid: dummy_uuid,
     schema_version: "2023-04-20",
     created_at: new Date(), //-- Overwritten by server --//

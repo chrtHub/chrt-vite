@@ -1,5 +1,8 @@
+import { ObjectId } from "mongodb";
+
 //-- Chatson Type Interfaces --//
 export interface IConversation {
+  _id: ObjectId;
   conversation_uuid: UUIDV4;
   schema_version: string;
   created_at: Date;

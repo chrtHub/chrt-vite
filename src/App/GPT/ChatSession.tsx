@@ -211,11 +211,11 @@ export default function ChatSession() {
     let { message } = props;
 
     // let friendlyDate = format(date, "hh:mm:ss");
-    let friendlyDate = new Intl.DateTimeFormat("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      second: "2-digit",
-    }).format(message.created_at);
+    // let friendlyDate = new Intl.DateTimeFormat("en-US", {
+    //   hour: "numeric",
+    //   minute: "2-digit",
+    //   second: "2-digit",
+    // }).format(message.created_at);
 
     return (
       <div className="text-sm text-zinc-500 dark:text-zinc-400">

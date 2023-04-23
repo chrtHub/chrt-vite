@@ -26,11 +26,6 @@ import {
 } from "./chatson_types";
 import { tiktoken } from "./tiktoken";
 
-//-- Utility Function --//
-const timestamp = (): string => {
-  return getUnixTime(new Date()).toString();
-};
-
 /**
  * Causes an LLM API call after adding a propmt to a chatson object
  *
