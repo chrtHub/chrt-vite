@@ -8,7 +8,7 @@ export interface IConversation {
   created_at: Date;
   message_order: IMessageOrder;
   messages: IMessages;
-  api_responses: IAPIResponse[];
+  api_req_res_metadata: IAPIReqResMetadata[];
   chatson_tags: string[]; //-- predefined lists for favorites, etc. --//
   user_tags: string[]; //-- user-defined tags --//
 }
@@ -45,7 +45,7 @@ export interface IModel {
 }
 
 export interface IChatCompletionRequestBody {
-  _id: ObjectId;
+  _id_string: string;
   new_message: IMessage;
   version_of: number | null; //-- if message is a new version of order_timestamp_unix_ms--//
   model: IModel;
@@ -54,7 +54,7 @@ export interface IChatCompletionRequestBody {
 /** This list is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */
 export type ModelAPINames = "gpt-3.5-turbo" | "gpt-4" | "gpt-4-32k";
 
-export interface IAPIResponse {
+export interface IAPIReqResMetadata {
   user: string;
   model_api_name: string;
   created_at: Date;

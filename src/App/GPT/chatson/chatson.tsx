@@ -1,5 +1,3 @@
-import { getUnixTime } from "date-fns";
-import axios from "axios";
 import { produce } from "immer";
 import {
   EventStreamContentType,
@@ -12,7 +10,7 @@ import { validUUIDV4orDummy, getUUIDV4 } from "../../../Util/getUUIDV4";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 import {
-  IAPIResponse,
+  IAPIReqResMetadata,
   IConversation,
   IMessage,
   IModel,
@@ -84,7 +82,7 @@ export async function send_message(
     "Content-Type": "application/json",
   };
   const body: IChatCompletionRequestBody = {
-    _id: conversation._id,
+    _id_string: conversation._id.toString(),
     new_message: new_message,
     version_of: version_of, // TODO - implement a way to set version_of for new_message
     model: model,
@@ -100,6 +98,21 @@ export async function send_message(
       headers: headers,
       body: JSON.stringify(body), // TODO - write type interface for fetchEventSource req.body
       async onopen(res) {
+        //-- If no conversation._id set, set it --//
+        const conversation_id_string =
+          res.headers.get("CHRT-conversation-id-string") || "";
+        const conversation_id = ObjectId.createFromHexString(
+          conversation_id_string
+        );
+
+        if (conversation._id.equals(new ObjectId("000000000000000000000000"))) {
+          setConversation(
+            produce((draft) => {
+              draft._id = conversation_id;
+            })
+          );
+        }
+
         //- Overwrite temporary message_order timestamps --//
         let new_message_order_timestamp: number = parseInt(
           res.headers.get("CHRT-new-message-order-timestamp") || "0"
@@ -107,7 +120,6 @@ export async function send_message(
         let new_message_version_timestamp: number = parseInt(
           res.headers.get("CHRT-new-message-version-timestamp") || "0"
         );
-
         setConversation(
           produce((draft) => {
             draft.message_order[new_message_order_timestamp] = {
@@ -116,13 +128,12 @@ export async function send_message(
           })
         );
 
-        //-- Add initial_completion_message to conversation --//
+        //-- Add initial_completion_message to `messages` and `message_order` --//
         let completion_message_uuid_string =
           res.headers.get("CHRT-completion-message-uuid") || "";
         completion_message_uuid = validUUIDV4orDummy(
           completion_message_uuid_string
         );
-
         const initial_completion_message: IMessage = {
           message_uuid: completion_message_uuid,
           author: model.api_name,
@@ -135,22 +146,13 @@ export async function send_message(
         const completion_pseudo_timestamp: number = parseInt(
           res.headers.get("CHRT-completion-pseudo-timestamp") || "0"
         );
-        const conversation_id_string =
-          res.headers.get("CHRT-conversation-id-string") || "";
-        const conversation_id = new ObjectId(conversation_id_string);
 
-        //-- Add initial_completion_message (IMessage) to conversation --//
         // TODO - implement specific order + version
         setConversation(
           produce((draft) => {
             //-- Update `messages` --//
             draft.messages[initial_completion_message.message_uuid] =
               initial_completion_message;
-
-            //-- Update `message_order` for new_message --//
-            // draft.message_order[new_message_version_timestamp] = {
-            //   new_message_version_timestamp = new_message.message_uuid
-            // };
 
             //-- Update `message_order` for completion_message --//
             draft.message_order[completion_pseudo_timestamp] = {
@@ -159,15 +161,6 @@ export async function send_message(
             };
           })
         );
-
-        // If no conversation._id set, set it --//
-        if (conversation._id.equals(new ObjectId("000000000000000000000000"))) {
-          setConversation(
-            produce((draft) => {
-              draft._id = conversation_id;
-            })
-          );
-        }
 
         // TODO - what to do for error handling here?
         //-- onopen logic, error handling --//
@@ -192,11 +185,8 @@ export async function send_message(
 
           // TODO - implement error handling
         }
-        //-- After SSE message chunks, receive completion message object --//
+        //-- After SSE message chunks, add completion_message to conversation --//
         else if (event.id && event.id === "completion_message") {
-          console.log("completion_message: ", JSON.parse(event.data)); // DEV
-
-          //-- Add completion_message (IMessage) to conversation --//
           let completion_message: IMessage = JSON.parse(event.data);
           setConversation(
             produce((draft) => {
@@ -205,15 +195,12 @@ export async function send_message(
             })
           );
         }
-        //-- After SSE message chunks, receive api_response_metatdata object --//
-        else if (event.id && event.id === "api_response_metadata") {
-          console.log("api_response_metadata: ", JSON.parse(event.data)); // DEV
-
-          //-- Add api_responses (IAPIResponse) conversation in state --//
-          let api_response_metadata: IAPIResponse = JSON.parse(event.data);
+        //-- After SSE message chunks add api_response conversation --//
+        else if (event.id && event.id === "api_req_res_metadata") {
+          let api_req_res_metadata: IAPIReqResMetadata = JSON.parse(event.data);
           setConversation(
             produce((draft) => {
-              draft.api_responses.push(api_response_metadata);
+              draft.api_req_res_metadata.push(api_req_res_metadata);
             })
             // TODO - update message_created_at
           );

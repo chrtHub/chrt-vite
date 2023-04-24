@@ -66,7 +66,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
           "This is a dummy object that declares the default model and satisfies the shape of the interface 'IConversation'. New conversations are initialized on the server.",
       },
     },
-    api_responses: [],
+    api_req_res_metadata: [],
     chatson_tags: [],
     user_tags: [],
   };
