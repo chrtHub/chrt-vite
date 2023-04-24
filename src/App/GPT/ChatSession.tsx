@@ -6,6 +6,7 @@ import { useChatContext } from "../../Context/ChatContext";
 //== TSX Components ==//
 import ModelSelector from "./ModelSelector";
 import * as chatson from "./chatson/chatson";
+import Pagination from "./Pagination";
 
 //== NPM Components ==//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
@@ -14,7 +15,11 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 //== Icons ==//
-import { ArrowUpCircleIcon } from "@heroicons/react/20/solid";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ArrowUpCircleIcon,
+} from "@heroicons/react/20/solid";
 
 //== NPM Functions ==//
 
@@ -140,6 +145,18 @@ export default function ChatSession() {
   const [atBottom, setAtBottom] = useState<boolean>(true);
   const [showButton, setShowButton] = useState<boolean>(false);
 
+  // TODO - Filtered and Ordered Messages
+  // walk through the message order
+  // for each message (if not system message)
+  // //
+
+  // ACTIVE VERSION - default to latest, but allow user to set state
+  // // perhaps include sparse list of active versions in state
+  // // how to use the list to check which version to render??
+
+  // count versions per order. use that number to determine what pagination view to show, if any.
+  // state with [{ order_1: active_version_uuid }, { order_4: active version_uuid }, ... ]
+
   let filteredMessages: IMessage[] | [] = [];
   const allMessages = ChatContext?.conversation?.messages;
   if (allMessages) {
@@ -147,9 +164,6 @@ export default function ChatSession() {
       (message) => message.role !== "system"
     );
   }
-
-  // TODO - order the  filtered messages by increasing order + version?
-  // // how to handle sparse order? Show a blank...
 
   //-- When 'atBottom' changes - if at bottom don't show button, else show button --//
   useEffect(() => {
@@ -226,6 +240,21 @@ export default function ChatSession() {
     );
   };
 
+  const VersionToggle = (props: { message: IMessage }) => {
+    let { message } = props;
+
+    return (
+      <div className="flex flex-row">
+        <ChevronLeftIcon className="h-5 w-5 text-zinc-400" aria-hidden="true" />
+        <p className="text-zinc-400">1/2</p>
+        <ChevronRightIcon
+          className="h-5 w-5 text-zinc-400"
+          aria-hidden="true"
+        />
+      </div>
+    );
+  };
+
   //-- Message Row Component --//
   const Row = (props: { message: IMessage }) => {
     const { message } = props;
@@ -286,6 +315,7 @@ export default function ChatSession() {
         >
           <div className="flex flex-row justify-end">
             <MessageData message={message} />
+            <VersionToggle message={message} />
           </div>
         </div>
       </div>
@@ -297,6 +327,7 @@ export default function ChatSession() {
   return (
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
+      {/* TODO - instead of mapping each message to a row, map each order to a row */}
       {filteredMessages.length > 0 ? (
         <div id="llm-current-chat" className="flex flex-grow">
           <div id="chat-rows" className="w-full list-none">
