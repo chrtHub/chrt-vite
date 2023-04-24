@@ -12,11 +12,12 @@ const uuidv4Regex =
   /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
 
 //-- Validate uuidv4 --//
-export function isValidUUIDV4(uuid: string): UUIDV4 {
+export function validUUIDV4orDummy(uuid: string): UUIDV4 {
   if (uuidv4Regex.test(uuid)) {
     return uuid as UUIDV4;
+  } else {
+    return getUUIDV4("dummy");
   }
-  throw new Error("invalid uuidv4");
 }
 
 //-- Generate uuidv4 --//

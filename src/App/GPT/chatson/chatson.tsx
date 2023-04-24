@@ -6,17 +6,12 @@ import {
   fetchEventSource,
 } from "@microsoft/fetch-event-source";
 
-import sortBy from "lodash/sortBy";
-import reverse from "lodash/reverse";
-
 import { getUserDbId } from "../../../Util/getUserDbId";
-import { isValidUUIDV4, getUUIDV4 } from "../../../Util/getUUIDV4";
+import { validUUIDV4orDummy, getUUIDV4 } from "../../../Util/getUUIDV4";
 
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 import {
-  ChatCompletionRequestMessage,
-  CreateChatCompletionResponse,
   IAPIResponse,
   IConversation,
   IMessage,
@@ -24,7 +19,6 @@ import {
   IChatCompletionRequestBody,
   UUIDV4,
 } from "./chatson_types";
-import { tiktoken } from "./tiktoken";
 import { ObjectId } from "bson";
 
 /**
@@ -74,8 +68,13 @@ export async function send_message(
   //- Immer - add new_message and its order to conversation --//
   setConversation(
     produce((draft) => {
+      //-- Update message --//
       draft.messages[new_message.message_uuid] = new_message;
-      draft.message_order[maxOrder + 1] = { 1: new_message.message_uuid };
+
+      //- temporary message_order timestamps, overwritten by values in response headers --//
+      draft.message_order[Date.now()] = {
+        [Date.now()]: new_message.message_uuid,
+      };
     })
   );
 
@@ -87,14 +86,11 @@ export async function send_message(
   const body: IChatCompletionRequestBody = {
     _id: conversation._id,
     new_message: new_message,
-    version_of: version_of, // TO ADD - if order specified, message will become the next version (possibly 1) for that order
+    version_of: version_of, // TODO - implement a way to set version_of for new_message
     model: model,
   };
 
-  let res_uuid_to_validate: string;
-  let valid_res_uuid: UUIDV4;
-  let conversation_id_string: string;
-  let conversation_id: ObjectId;
+  let completion_message_uuid: UUIDV4;
 
   class CustomFatalError extends Error {}
 
@@ -104,38 +100,31 @@ export async function send_message(
       headers: headers,
       body: JSON.stringify(body), // TODO - write type interface for fetchEventSource req.body
       async onopen(res) {
-        //-- Get values from headers --//
+        //- Overwrite temporary message_order timestamps --//
+        let new_message_order_timestamp: number = parseInt(
+          res.headers.get("CHRT-new-message-order-timestamp") || "0"
+        );
         let new_message_version_timestamp: number = parseInt(
           res.headers.get("CHRT-new-message-version-timestamp") || "0"
         );
-        let completion_pseudo_timestamp: number = parseInt(
-          res.headers.get("CHRT-completion-pseudo-timestamp") || "0"
+
+        setConversation(
+          produce((draft) => {
+            draft.message_order[new_message_order_timestamp] = {
+              [new_message_version_timestamp]: new_message.message_uuid,
+            };
+          })
         );
-        conversation_id_string =
-          res.headers.get("CHRT-conversation-id-string") || "";
-        res_uuid_to_validate =
+
+        //-- Add initial_completion_message to conversation --//
+        let completion_message_uuid_string =
           res.headers.get("CHRT-completion-message-uuid") || "";
+        completion_message_uuid = validUUIDV4orDummy(
+          completion_message_uuid_string
+        );
 
-        //-- Validate uuid and timestamp, else throw error to terminate request --//
-        if (
-          conversation_id_string === "" ||
-          res_uuid_to_validate === "" ||
-          new_message_version_timestamp === 0 ||
-          completion_pseudo_timestamp === 0
-        ) {
-          throw new CustomFatalError(
-            "Error in one of the headers: CHRT-new-message-version-timestamp, CHRT-completion-pseudo-timestamp, CHRT-conversation-id-string, CHRT-completion-message-uuid"
-          );
-        }
-        if (ObjectId.isValid(conversation_id_string)) {
-          conversation_id = new ObjectId(conversation_id_string);
-        } else {
-          throw new CustomFatalError("invalid conversation._id");
-        }
-        valid_res_uuid = isValidUUIDV4(res_uuid_to_validate);
-
-        let initial_completion_message: IMessage = {
-          message_uuid: valid_res_uuid,
+        const initial_completion_message: IMessage = {
+          message_uuid: completion_message_uuid,
           author: model.api_name,
           model: model,
           created_at: new Date(), //-- Overwritten upon receipt of api_response_metadata --//
@@ -143,14 +132,12 @@ export async function send_message(
           message: "",
         };
 
-        // If no conversation._id set, set it --//
-        if (conversation._id.equals(new ObjectId("000000000000000000000000"))) {
-          setConversation(
-            produce((draft) => {
-              draft._id = conversation_id;
-            })
-          );
-        }
+        const completion_pseudo_timestamp: number = parseInt(
+          res.headers.get("CHRT-completion-pseudo-timestamp") || "0"
+        );
+        const conversation_id_string =
+          res.headers.get("CHRT-conversation-id-string") || "";
+        const conversation_id = new ObjectId(conversation_id_string);
 
         //-- Add initial_completion_message (IMessage) to conversation --//
         // TODO - implement specific order + version
@@ -173,7 +160,17 @@ export async function send_message(
           })
         );
 
-        //-- TODO - implement onopen logic, error handling --//
+        // If no conversation._id set, set it --//
+        if (conversation._id.equals(new ObjectId("000000000000000000000000"))) {
+          setConversation(
+            produce((draft) => {
+              draft._id = conversation_id;
+            })
+          );
+        }
+
+        // TODO - what to do for error handling here?
+        //-- onopen logic, error handling --//
         if (
           res.ok &&
           res.headers.get("content-type") === EventStreamContentType
@@ -228,8 +225,9 @@ export async function send_message(
           //-- Update message content (IMessage.message) in conversation --//
           setConversation(
             produce((draft) => {
-              draft.messages[valid_res_uuid].message =
-                (draft.messages[valid_res_uuid].message || "") + uriDecodedData;
+              draft.messages[completion_message_uuid].message =
+                (draft.messages[completion_message_uuid].message || "") +
+                uriDecodedData;
             })
           );
         }
