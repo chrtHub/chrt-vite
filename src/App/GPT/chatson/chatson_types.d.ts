@@ -46,7 +46,6 @@ export interface IModel {
 
 export interface IChatCompletionRequestBody {
   _id: ObjectId;
-  request_messages: ChatCompletionRequestMessage[]; // TO BE DEPRACATED
   new_message: IMessage;
   version_of: number | null; //-- if message is a new version of order_timestamp_unix_ms--//
   model: IModel;
@@ -63,7 +62,8 @@ export interface IAPIResponse {
   completion_tokens: number;
   total_tokens: number;
   completion_message_uuid: UUIDV4;
-  prompt_message_uuids: UUIDV4[];
+  prompt_message_uuid: UUIDV4;
+  request_messages_uuids: UUIDV4[];
 }
 
 //-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//

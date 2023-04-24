@@ -35,7 +35,7 @@ export default function ChatSession() {
   //== React State (+ Context, Refs) ==//
   let ChatContext = useChatContext();
   const [promptInput, setPromptInput] = useState<string>("");
-  const [promptOrder, setPromptOrder] = useState<number | null>(null);
+  const [versionOf, setVersionOf] = useState<number | null>(null);
   const [promptToSend, setPromptToSend] = useState<string>("");
   const [promptReadyToSend, setPromptReadyToSend] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -66,7 +66,7 @@ export default function ChatSession() {
           await chatson.send_message(
             accessToken,
             promptToSend,
-            promptOrder,
+            versionOf,
             ChatContext.model,
             ChatContext.conversation,
             ChatContext.setConversation

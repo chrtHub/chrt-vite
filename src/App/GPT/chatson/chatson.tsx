@@ -32,7 +32,7 @@ import { ObjectId } from "bson";
  *
  * @param access_token (a) set as the author id, (b) sent as Bearer token in 'authorization' header
  * @param message user input to be added to the conversation
- * @param message_order When null, the message becomes the next message in the conversation. When specified, the message becomes the next version for the specified order.
+ * @param version_of When null, the message becomes the next message in the conversation. When specified, the message becomes the next version for the specified order.
  * @param model LLM model to be used
  * @param conversation When null, the server creates a new conversation. Otherwise, the message is added to the conversation.
  * @param setConversation state setter for the conversation
@@ -41,17 +41,18 @@ import { ObjectId } from "bson";
 export async function send_message(
   access_token: string,
   message: string,
-  message_order: number | null,
+  version_of: number | null,
   model: IModel,
   conversation: IConversation,
   setConversation: React.Dispatch<React.SetStateAction<IConversation>>
 ) {
-  console.log("SEND MESSAGE"); // DEV
+  console.log(" ----- SEND MESSAGE ----- "); // DEV
   console.log("conversation: ", conversation); // DEV
 
   //-- Get user_db_id from access token --//
   let user_db_id = getUserDbId(access_token);
 
+  //-- If conversation.user_db_id unset, set it --//
   if (conversation.user_db_id === "dummy_user_db_id") {
     setConversation(
       produce((draft) => {
@@ -59,14 +60,6 @@ export async function send_message(
       })
     );
   }
-
-  //-- Create token signal and counter --//
-  let tokenLimitHit = false;
-  let token_sum = 0;
-
-  //-- Get system message from conversation --//
-  let system_message_uuid = conversation.message_order[1][1];
-  let system_message = conversation.messages[system_message_uuid];
 
   //-- Crete new message object --//
   let new_message: IMessage = {
@@ -78,65 +71,7 @@ export async function send_message(
     message: message,
   };
 
-  //-- Add system_message and new_message to request_messages. Count tokens --//
-  let request_messages: ChatCompletionRequestMessage[] = [
-    {
-      role: system_message.role,
-      content: system_message.message,
-    },
-    {
-      role: "user",
-      content: new_message.message,
-    },
-  ];
-  token_sum += tiktoken(system_message.message);
-  token_sum += tiktoken(new_message.message);
-
-  //-- Add messages to request_messages by descending 'order' --//
-  const message_order_keys = Object.keys(conversation.message_order).map(
-    Number
-  );
-  const message_order_keys_descending = reverse(sortBy(message_order_keys));
-  let maxOrder = message_order_keys_descending[0];
-  let order_counter = message_order_keys_descending[0];
-
-  //-- Add messages until token limit hit or all non-system messages added --//
-  while (!tokenLimitHit && order_counter > 1) {
-    console.log("TODO - add message");
-    //-- Get the versions object by order_counter number --//
-    let versions_object = conversation.message_order[order_counter];
-
-    //-- If multiple versions, use the latest --//
-    // TODO - implement versions
-    let message_uuid = versions_object[1];
-
-    //-- Get the message_content --//
-    let message_object = conversation.messages[message_uuid];
-    let message_tokens = tiktoken(message_object.message);
-
-    if (token_sum + message_tokens < 3000) {
-      token_sum += message_tokens;
-      //-- Add message to request_messages --//
-      let chat_request_message: ChatCompletionRequestMessage = {
-        role: message_object.role,
-        content: message_object.message,
-      };
-
-      //-- Insert after system message, shifting any other messages --//
-      request_messages.splice(1, 0, chat_request_message);
-    } else {
-      tokenLimitHit = true;
-      console.log("token limit hit!"); // DEV
-    }
-
-    order_counter--;
-  }
-  console.log("request_messages: ", request_messages); // DEV
-
   //- Immer - add new_message and its order to conversation --//
-  // TODO - implement allowing version too
-  // // if message_order specified, use that order and increment max_version by 1
-  // // else increment maxOrder by one and set version to 1
   setConversation(
     produce((draft) => {
       draft.messages[new_message.message_uuid] = new_message;
@@ -151,9 +86,8 @@ export async function send_message(
   };
   const body: IChatCompletionRequestBody = {
     _id: conversation._id,
-    request_messages: request_messages, // TO BE DEPRACATED
     new_message: new_message,
-    version_of: null, // TO ADD - if order specified, message will become the next version (possibly 1) for that order
+    version_of: version_of, // TO ADD - if order specified, message will become the next version (possibly 1) for that order
     model: model,
   };
 
@@ -171,15 +105,26 @@ export async function send_message(
       body: JSON.stringify(body), // TODO - write type interface for fetchEventSource req.body
       async onopen(res) {
         //-- Get values from headers --//
+        let new_message_version_timestamp: number = parseInt(
+          res.headers.get("CHRT-new-message-version-timestamp") || "0"
+        );
+        let completion_pseudo_timestamp: number = parseInt(
+          res.headers.get("CHRT-completion-pseudo-timestamp") || "0"
+        );
         conversation_id_string =
           res.headers.get("CHRT-conversation-id-string") || "";
         res_uuid_to_validate =
           res.headers.get("CHRT-completion-message-uuid") || "";
 
         //-- Validate uuid and timestamp, else throw error to terminate request --//
-        if (conversation_id_string === "" || res_uuid_to_validate === "") {
+        if (
+          conversation_id_string === "" ||
+          res_uuid_to_validate === "" ||
+          new_message_version_timestamp === 0 ||
+          completion_pseudo_timestamp === 0
+        ) {
           throw new CustomFatalError(
-            "CHRT-conversation-id-string or CHRT-completion-message-uuid header null"
+            "Error in one of the headers: CHRT-new-message-version-timestamp, CHRT-completion-pseudo-timestamp, CHRT-conversation-id-string, CHRT-completion-message-uuid"
           );
         }
         if (ObjectId.isValid(conversation_id_string)) {
@@ -211,10 +156,19 @@ export async function send_message(
         // TODO - implement specific order + version
         setConversation(
           produce((draft) => {
+            //-- Update `messages` --//
             draft.messages[initial_completion_message.message_uuid] =
               initial_completion_message;
-            draft.message_order[maxOrder + 2] = {
-              1: initial_completion_message.message_uuid,
+
+            //-- Update `message_order` for new_message --//
+            // draft.message_order[new_message_version_timestamp] = {
+            //   new_message_version_timestamp = new_message.message_uuid
+            // };
+
+            //-- Update `message_order` for completion_message --//
+            draft.message_order[completion_pseudo_timestamp] = {
+              [completion_pseudo_timestamp]:
+                initial_completion_message.message_uuid,
             };
           })
         );
