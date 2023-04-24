@@ -3,6 +3,7 @@ import { ObjectId } from "bson";
 //-- Chatson Type Interfaces --//
 export interface IConversation {
   _id: ObjectId;
+  user_db_id: string;
   schema_version: string;
   created_at: Date;
   message_order: IMessageOrder;
@@ -19,8 +20,8 @@ type UUIDV4 = string & {
 };
 
 export interface IMessageOrder {
-  [order: number]: {
-    [version: number]: UUIDV4;
+  [order_timestamp_unix_ms: number]: {
+    [version_timestamp_unix_ms: number]: UUIDV4;
   };
 }
 
@@ -47,7 +48,7 @@ export interface IChatCompletionRequestBody {
   _id: ObjectId;
   request_messages: ChatCompletionRequestMessage[]; // TO BE DEPRACATED
   new_message: IMessage;
-  new_message_order: number | null;
+  version_of: number | null; //-- if message is a new version of order_timestamp_unix_ms--//
   model: IModel;
 }
 
@@ -62,7 +63,7 @@ export interface IAPIResponse {
   completion_tokens: number;
   total_tokens: number;
   completion_message_uuid: UUIDV4;
-  message_uuids: UUIDV4[];
+  prompt_message_uuids: UUIDV4[];
 }
 
 //-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//

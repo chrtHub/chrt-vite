@@ -43,6 +43,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
 
   const newConversation: IConversation = {
     _id: dummy_ObjectId,
+    user_db_id: "dummy_user_db_id",
     schema_version: "2023-04-20",
     created_at: new Date(), //-- Overwritten by server --//
     message_order: {

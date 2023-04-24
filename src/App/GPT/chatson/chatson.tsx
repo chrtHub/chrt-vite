@@ -25,6 +25,7 @@ import {
   UUIDV4,
 } from "./chatson_types";
 import { tiktoken } from "./tiktoken";
+import { ObjectId } from "bson";
 
 /**
  * Causes an LLM API call after adding a propmt to a chatson object
@@ -50,6 +51,14 @@ export async function send_message(
 
   //-- Get user_db_id from access token --//
   let user_db_id = getUserDbId(access_token);
+
+  if (conversation.user_db_id === "dummy_user_db_id") {
+    setConversation(
+      produce((draft) => {
+        draft.user_db_id = user_db_id;
+      })
+    );
+  }
 
   //-- Create token signal and counter --//
   let tokenLimitHit = false;
@@ -144,12 +153,14 @@ export async function send_message(
     _id: conversation._id,
     request_messages: request_messages, // TO BE DEPRACATED
     new_message: new_message,
-    new_message_order: null, // TO ADD - if order specified, message will become the next version (possibly 1) for that order
+    version_of: null, // TO ADD - if order specified, message will become the next version (possibly 1) for that order
     model: model,
   };
 
   let res_uuid_to_validate: string;
   let valid_res_uuid: UUIDV4;
+  let conversation_id_string: string;
+  let conversation_id: ObjectId;
 
   class CustomFatalError extends Error {}
 
@@ -159,14 +170,22 @@ export async function send_message(
       headers: headers,
       body: JSON.stringify(body), // TODO - write type interface for fetchEventSource req.body
       async onopen(res) {
+        //-- Get values from headers --//
+        conversation_id_string =
+          res.headers.get("CHRT-conversation-id-string") || "";
         res_uuid_to_validate =
           res.headers.get("CHRT-completion-message-uuid") || "";
 
         //-- Validate uuid and timestamp, else throw error to terminate request --//
-        if (res_uuid_to_validate === "") {
+        if (conversation_id_string === "" || res_uuid_to_validate === "") {
           throw new CustomFatalError(
-            "CHRT-completion-message-uuid or CHRT-timestamp header null"
+            "CHRT-conversation-id-string or CHRT-completion-message-uuid header null"
           );
+        }
+        if (ObjectId.isValid(conversation_id_string)) {
+          conversation_id = new ObjectId(conversation_id_string);
+        } else {
+          throw new CustomFatalError("invalid conversation._id");
         }
         valid_res_uuid = isValidUUIDV4(res_uuid_to_validate);
 
@@ -178,6 +197,15 @@ export async function send_message(
           role: "assistant",
           message: "",
         };
+
+        // If no conversation._id set, set it --//
+        if (conversation._id.equals(new ObjectId("000000000000000000000000"))) {
+          setConversation(
+            produce((draft) => {
+              draft._id = conversation_id;
+            })
+          );
+        }
 
         //-- Add initial_completion_message (IMessage) to conversation --//
         // TODO - implement specific order + version
