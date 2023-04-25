@@ -32,7 +32,7 @@ export interface IMessage {
   model: IModel;
   created_at: Date;
   role: ChatCompletionResponseMessageRoleEnum;
-  message: string;
+  content: string;
 }
 
 export interface IModel {
