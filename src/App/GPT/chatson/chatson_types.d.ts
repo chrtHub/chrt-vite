@@ -1,4 +1,4 @@
-import { ObjectId } from "bson";
+import { ObjectId, UUID } from "bson";
 
 //-- Chatson Type Interfaces --//
 export interface IConversation {
@@ -6,23 +6,32 @@ export interface IConversation {
   user_db_id: string;
   schema_version: string;
   created_at: Date;
-  message_order: IMessageOrder;
+  message_tree: IMessageTree;
   messages: IMessages;
   api_req_res_metadata: IAPIReqResMetadata[];
   chatson_tags: string[]; //-- predefined lists for favorites, etc. --//
   user_tags: string[]; //-- user-defined tags --//
 }
 
-type UUIDV4 = string & {
+export type UUIDV4 = string & {
   //-- UUIDv4 format: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx --//
   //-- where x is any hexadecimal digit and y is one of 8, 9, A, or B --//
   readonly _uuidBrand: unique symbol;
 };
 
-export interface IMessageOrder {
-  [order_timestamp_unix_ms: number]: {
-    [version_timestamp_unix_ms: number]: UUIDV4;
-  };
+export interface IMessageTreeNode {
+  system_message?: boolean;
+  node_uuid: UUIDV4;
+  prompt_message_uuid: UUIDV4;
+  completion_message_uuid: UUIDV4;
+  parent_node_uuid: UUIDV4;
+  children: { number: IMessageTreeNode } | {};
+}
+
+export interface IIsolatedNode {
+  node_uuid: UUIDV4;
+  prompt_message_uuid: UUIDV4;
+  completion_message_uuid: UUIDV4;
 }
 
 export interface IMessages {
@@ -47,7 +56,7 @@ export interface IModel {
 export interface IChatCompletionRequestBody {
   _id_string: string;
   new_message: IMessage;
-  version_of: number | null; //-- if message is a new version of order_timestamp_unix_ms--//
+  parentNodeUUID: UUIDV4;
   model: IModel;
 }
 

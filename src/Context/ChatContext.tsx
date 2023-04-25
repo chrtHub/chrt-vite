@@ -46,10 +46,13 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     user_db_id: "dummy_user_db_id",
     schema_version: "2023-04-20",
     created_at: new Date(), //-- Overwritten by server --//
-    message_order: {
-      1: {
-        1: dummy_uuid,
-      },
+    message_tree: {
+      system_message: true,
+      node_uuid: dummy_uuid,
+      prompt_message_uuid: dummy_uuid,
+      completion_message_uuid: dummy_uuid,
+      parent_node_uuid: dummy_uuid,
+      children: {},
     },
     messages: {
       [dummy_uuid]: {

@@ -6,7 +6,6 @@ import { useChatContext } from "../../Context/ChatContext";
 //== TSX Components ==//
 import ModelSelector from "./ModelSelector";
 import * as chatson from "./chatson/chatson";
-import Pagination from "./Pagination";
 
 //== NPM Components ==//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
@@ -20,10 +19,10 @@ import {
   ChevronRightIcon,
   ArrowUpCircleIcon,
 } from "@heroicons/react/20/solid";
-
 //== NPM Functions ==//
 
 //== Utility Functions ==//
+import { getUUIDV4 } from "../../Util/getUUIDV4";
 import classNames from "../../Util/classNames";
 import {
   ChevronDoubleDownIcon,
@@ -33,14 +32,22 @@ import {
 import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { IMessage, IMessages } from "./chatson/chatson_types";
+import {
+  IIsolatedNode,
+  IMessage,
+  IMessages,
+  IMessageTreeNode,
+  UUIDV4,
+} from "./chatson/chatson_types";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
   //== React State (+ Context, Refs) ==//
   let ChatContext = useChatContext();
   const [promptInput, setPromptInput] = useState<string>("");
-  const [versionOf, setVersionOf] = useState<number | null>(null);
+  const [parentNodeUUID, setParentNodeUUID] = useState<UUIDV4>(
+    getUUIDV4("dummy")
+  );
   const [promptToSend, setPromptToSend] = useState<string>("");
   const [promptReadyToSend, setPromptReadyToSend] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -71,7 +78,7 @@ export default function ChatSession() {
           await chatson.send_message(
             accessToken,
             promptToSend,
-            versionOf,
+            parentNodeUUID,
             ChatContext.model,
             ChatContext.conversation,
             ChatContext.setConversation
@@ -93,6 +100,13 @@ export default function ChatSession() {
   }, []);
 
   //== Event Handlers ==//
+  const changeParentNodeHandler = () => {
+    // TODO
+    // setParentNodeUUID()
+    // if the user is continuing a conversation - leaf node of current history being rendered
+    // if a message if being edited - the parent node of the message being edited
+  };
+
   //-- Submit prompt from textarea --//
   const submitPromptHandler = () => {
     //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
@@ -140,30 +154,38 @@ export default function ChatSession() {
     return placeholder;
   };
 
+  //----//
+  //----//
+  // TODO - use messages and message_tree to render messages
+  const getIsolatedNode = (node: IMessageTreeNode): IIsolatedNode => {
+    const isolatedNode: IIsolatedNode = {
+      node_uuid: node.node_uuid,
+      prompt_message_uuid: node.prompt_message_uuid,
+      completion_message_uuid: node.completion_message_uuid,
+    };
+    return isolatedNode;
+  };
+
+  // visibleNodes can change when:
+  // // a new propmt is created, thus a new node is created
+  // // a propmt is edited, thus a new branch is created with a new node
+  // // the user requests to be shown a sibling node, thus the sibling and the descendants will change
+  // // a prompt is deleted, thus a node is removed and its children (if any) are adopted by their grandparents
+
+  // visibleNodes content updated during SSE
+
+  let isolated_system_message = getIsolatedNode(
+    ChatContext.conversation.message_tree
+  );
+  let visibleNodes: IIsolatedNode[] = [isolated_system_message];
+
+  //----//
+  //----//
+
   //-- ***** ***** ***** Start of Functions and Components for Message Rows **** ***** ***** --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
   const [atBottom, setAtBottom] = useState<boolean>(true);
   const [showButton, setShowButton] = useState<boolean>(false);
-
-  // TODO - Filtered and Ordered Messages
-  // walk through the message order
-  // for each message (if not system message)
-  // //
-
-  // ACTIVE VERSION - default to latest, but allow user to set state
-  // // perhaps include sparse list of active versions in state
-  // // how to use the list to check which version to render??
-
-  // count versions per order. use that number to determine what pagination view to show, if any.
-  // state with [{ order_1: active_version_uuid }, { order_4: active version_uuid }, ... ]
-
-  let filteredMessages: IMessage[] | [] = [];
-  const allMessages = ChatContext?.conversation?.messages;
-  if (allMessages) {
-    filteredMessages = Object.values(allMessages).filter(
-      (message) => message.role !== "system"
-    );
-  }
 
   //-- When 'atBottom' changes - if at bottom don't show button, else show button --//
   useEffect(() => {
@@ -174,15 +196,16 @@ export default function ChatSession() {
     }
   }, [atBottom, setShowButton]);
 
-  const scrollToBottomHandler = () => {
-    if (virtuosoRef.current && filteredMessages.length > 0) {
-      virtuosoRef.current.scrollToIndex({
-        index: filteredMessages.length - 1,
-        behavior: "smooth",
-        align: "end",
-      });
-    }
-  };
+  // const scrollToBottomHandler = () => {
+  //   // visibleThread.length > 0
+  //   if (virtuosoRef.current && filteredMessages.length > 0) {
+  //     virtuosoRef.current.scrollToIndex({
+  //       index: filteredMessages.length - 1, // visibleThread.length
+  //       behavior: "smooth",
+  //       align: "end",
+  //     });
+  //   }
+  // };
 
   //-- Message Row Author --//
   const Author = (props: { message: IMessage }) => {
@@ -256,8 +279,8 @@ export default function ChatSession() {
   };
 
   //-- Message Row Component --//
-  const Row = (props: { message: IMessage }) => {
-    const { message } = props;
+  const Row = (props: { node: IIsolatedNode }) => {
+    const { node } = props;
     return (
       <div
         id="chat-row"
@@ -328,15 +351,15 @@ export default function ChatSession() {
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
       {/* TODO - instead of mapping each message to a row, map each order to a row */}
-      {filteredMessages.length > 0 ? (
+      {visibleNodes.length > 0 ? (
         <div id="llm-current-chat" className="flex flex-grow">
           <div id="chat-rows" className="w-full list-none">
             {/*-- Similar implemenatation to https://virtuoso.dev/stick-to-bottom/ --*/}
             <Virtuoso
               ref={virtuosoRef}
-              data={filteredMessages}
-              itemContent={(index, message) => (
-                <Row key={message.message_uuid} message={message} />
+              data={visibleNodes}
+              itemContent={(index, node) => (
+                <Row key={node.node_uuid} node={node} />
               )}
               followOutput="smooth"
               atBottomStateChange={(isAtBottom) => {
@@ -412,7 +435,7 @@ export default function ChatSession() {
               <button
                 className="pr-1.5"
                 disabled={!showButton}
-                onClick={scrollToBottomHandler}
+                // onClick={scrollToBottomHandler}
               >
                 <ChevronDoubleDownIcon
                   className={classNames(

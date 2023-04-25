@@ -24,7 +24,7 @@ import { ObjectId } from "bson";
  *
  * @param access_token (a) set as the author id, (b) sent as Bearer token in 'authorization' header
  * @param message user input to be added to the conversation
- * @param version_of When null, the message becomes the next message in the conversation. When specified, the message becomes the next version for the specified order.
+ * @param parentNodeUUID parent node's uuid from the message_tree
  * @param model LLM model to be used
  * @param conversation When null, the server creates a new conversation. Otherwise, the message is added to the conversation.
  * @param setConversation state setter for the conversation
@@ -33,7 +33,7 @@ import { ObjectId } from "bson";
 export async function send_message(
   access_token: string,
   message: string,
-  version_of: number | null,
+  parentNodeUUID: UUIDV4,
   model: IModel,
   conversation: IConversation,
   setConversation: React.Dispatch<React.SetStateAction<IConversation>>
@@ -69,10 +69,11 @@ export async function send_message(
       //-- Update message --//
       draft.messages[new_message.message_uuid] = new_message;
 
-      //- temporary message_order timestamps, overwritten by values in response headers --//
-      draft.message_order[Date.now()] = {
-        [Date.now()]: new_message.message_uuid,
-      };
+      // TODO
+      // based on the parentNodeUUID, add new_message.message_uuid to the message_tree
+      // produce((draft) => {
+      //   draft.message_tree
+      // })
     })
   );
 
@@ -84,7 +85,7 @@ export async function send_message(
   const body: IChatCompletionRequestBody = {
     _id_string: conversation._id.toString(),
     new_message: new_message,
-    version_of: version_of, // TODO - implement a way to set version_of for new_message
+    parentNodeUUID: parentNodeUUID, // TODO - implement a way to set version_of for new_message
     model: model,
   };
 
@@ -113,21 +114,6 @@ export async function send_message(
           );
         }
 
-        //- Overwrite temporary message_order timestamps --//
-        let new_message_order_timestamp: number = parseInt(
-          res.headers.get("CHRT-new-message-order-timestamp") || "0"
-        );
-        let new_message_version_timestamp: number = parseInt(
-          res.headers.get("CHRT-new-message-version-timestamp") || "0"
-        );
-        setConversation(
-          produce((draft) => {
-            draft.message_order[new_message_order_timestamp] = {
-              [new_message_version_timestamp]: new_message.message_uuid,
-            };
-          })
-        );
-
         //-- Add initial_completion_message to `messages` and `message_order` --//
         let completion_message_uuid_string =
           res.headers.get("CHRT-completion-message-uuid") || "";
@@ -154,11 +140,11 @@ export async function send_message(
             draft.messages[initial_completion_message.message_uuid] =
               initial_completion_message;
 
-            //-- Update `message_order` for completion_message --//
-            draft.message_order[completion_pseudo_timestamp] = {
-              [completion_pseudo_timestamp]:
-                initial_completion_message.message_uuid,
-            };
+            // TODO
+            // update message_tree - add completion_message_uuid
+            // produce((draft) => {
+            //   draft.message_tree
+            // })
           })
         );
 
