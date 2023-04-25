@@ -1,45 +1,33 @@
 import { ObjectId, UUID } from "bson";
 
-//-- Chatson Type Interfaces --//
+//-- Type Interfaces --//
 export interface IConversation {
   _id: ObjectId;
+  llm_provider: LLMProvider;
   user_db_id: string;
+  title: string;
+  root_node_id: ObjectId;
   schema_version: string;
   created_at: Date;
-  message_tree: IMessageTree;
-  messages: IMessages;
   api_req_res_metadata: IAPIReqResMetadata[];
-  chatson_tags: string[]; //-- predefined lists for favorites, etc. --//
+  system_tags: string[]; //-- predefined lists for favorites, etc. --//
   user_tags: string[]; //-- user-defined tags --//
 }
+//-- `conversations` collection --> index on user_db_id --//
 
-export type UUIDV4 = string & {
-  //-- UUIDv4 format: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx --//
-  //-- where x is any hexadecimal digit and y is one of 8, 9, A, or B --//
-  readonly _uuidBrand: unique symbol;
-};
-
-export interface IMessageTreeNode {
-  system_message?: boolean;
-  node_uuid: UUIDV4;
-  prompt_message_uuid: UUIDV4;
-  completion_message_uuid: UUIDV4;
-  parent_node_uuid: UUIDV4;
-  children: { number: IMessageTreeNode } | {};
+export interface IMessageNode {
+  _id: ObjectId;
+  user_db_id: string;
+  created_at: Date;
+  conversation_id: ObjectId;
+  parent_node_id: ObjectId | null;
+  children_node_ids: ObjectId[];
+  prompt: IMessage;
+  completion: IMessage | null;
 }
-
-export interface IIsolatedNode {
-  node_uuid: UUIDV4;
-  prompt_message_uuid: UUIDV4;
-  completion_message_uuid: UUIDV4;
-}
-
-export interface IMessages {
-  [uuid: UUIDV4]: IMessage;
-}
+//-- `message_nodes` collection --> index on conversation_id --//
 
 export interface IMessage {
-  message_uuid: UUIDV4;
   author: string;
   model: IModel;
   created_at: Date;
@@ -54,14 +42,15 @@ export interface IModel {
 }
 
 export interface IChatCompletionRequestBody {
-  _id_string: string;
-  new_message: IMessage;
-  parentNodeUUID: UUIDV4;
   model: IModel;
+  prompt: IMessage;
+  conversation_id: ObjectId | null;
+  parent_node_id: ObjectId | null;
 }
 
 /** This list is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */
 export type ModelAPINames = "gpt-3.5-turbo" | "gpt-4" | "gpt-4-32k";
+export type LLMProvider = "openai" | "amazon-bedrock";
 
 export interface IAPIReqResMetadata {
   user: string;
@@ -70,9 +59,8 @@ export interface IAPIReqResMetadata {
   prompt_tokens: number;
   completion_tokens: number;
   total_tokens: number;
-  completion_message_uuid: UUIDV4;
-  prompt_message_uuid: UUIDV4;
-  request_messages_uuids: UUIDV4[];
+  node_id: ObjectId;
+  request_messages_node_ids: ObjectId[];
 }
 
 //-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//

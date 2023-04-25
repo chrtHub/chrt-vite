@@ -263,7 +263,8 @@ export default function ChatSession() {
     );
   };
 
-  const VersionToggle = (props: { message: IMessage }) => {
+  //-- Version Selector --//
+  const VersionSelector = (props: { message: IMessage }) => {
     let { message } = props;
 
     return (
@@ -338,7 +339,7 @@ export default function ChatSession() {
         >
           <div className="flex flex-row justify-end">
             <MessageData message={message} />
-            <VersionToggle message={message} />
+            <VersionSelector message={message} />
           </div>
         </div>
       </div>

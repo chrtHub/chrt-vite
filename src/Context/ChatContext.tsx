@@ -1,9 +1,9 @@
 import { useState, createContext, useContext, PropsWithChildren } from "react";
 import {
   IConversation,
+  IMessageNode,
   IModel,
   ModelAPINames,
-  UUIDV4,
 } from "../App/GPT/chatson/chatson_types";
 import { ObjectId } from "bson";
 import { getUUIDV4 } from "../Util/getUUIDV4";
@@ -41,19 +41,23 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   const dummy_ObjectId = new ObjectId("000000000000000000000000");
   const dummy_uuid: UUIDV4 = getUUIDV4("dummy");
 
+  const systemMessage: IMessageNode = {
+    _id: dummy_ObjectId,
+user_db_id: "dummy_user_db_id",
+conversation_id: ,
+parent_node_id: ,
+children_nodes: ,
+prompt: ,
+completion: ,
+  }
+
   const newConversation: IConversation = {
     _id: dummy_ObjectId,
     user_db_id: "dummy_user_db_id",
+    root_node: dummy_ObjectId,
     schema_version: "2023-04-20",
     created_at: new Date(), //-- Overwritten by server --//
-    message_tree: {
-      system_message: true,
-      node_uuid: dummy_uuid,
-      prompt_message_uuid: dummy_uuid,
-      completion_message_uuid: dummy_uuid,
-      parent_node_uuid: dummy_uuid,
-      children: {},
-    },
+    
     messages: {
       [dummy_uuid]: {
         message_uuid: dummy_uuid,

@@ -66,11 +66,8 @@ export async function send_message(
   //- Immer - add new_message and its order to conversation --//
   setConversation(
     produce((draft) => {
-      //-- Update message --//
-      draft.messages[new_message.message_uuid] = new_message;
-
       // TODO
-      // based on the parentNodeUUID, add new_message.message_uuid to the message_tree
+      // add new_message to message_tree
       // produce((draft) => {
       //   draft.message_tree
       // })
