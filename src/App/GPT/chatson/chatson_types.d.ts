@@ -41,17 +41,6 @@ export interface IModel {
   description: string;
 }
 
-export interface IChatCompletionRequestBody {
-  model: IModel;
-  prompt: IMessage;
-  conversation_id: ObjectId | null;
-  parent_node_id: ObjectId | null;
-}
-
-/** This list is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */
-export type ModelAPINames = "gpt-3.5-turbo" | "gpt-4" | "gpt-4-32k";
-export type LLMProvider = "openai" | "amazon-bedrock";
-
 export interface IAPIReqResMetadata {
   user: string;
   model_api_name: string;
@@ -61,6 +50,22 @@ export interface IAPIReqResMetadata {
   total_tokens: number;
   node_id: ObjectId;
   request_messages_node_ids: ObjectId[];
+}
+
+export interface IChatCompletionRequestBody {
+  prompt: IMessage;
+  conversation_id: ObjectId | null;
+  parent_node_id: ObjectId | null;
+}
+
+/** This list is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */
+export type ModelAPINames = "gpt-3.5-turbo" | "gpt-4" | "gpt-4-32k";
+export type LLMProvider = "openai" | "amazon-bedrock";
+
+export interface IOpenAIChatCompletionsRequestBody {
+  model: ModelAPINames;
+  messages: ChatCompletionRequestMessage[];
+  stream: boolean;
 }
 
 //-- ***** ***** ***** ***** ***** ***** ***** ***** ***** --//
