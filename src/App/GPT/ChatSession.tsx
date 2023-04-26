@@ -32,22 +32,13 @@ import {
 import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import {
-  IIsolatedNode,
-  IMessage,
-  IMessages,
-  IMessageTreeNode,
-  UUIDV4,
-} from "./chatson/chatson_types";
+import { IMessage } from "./chatson/chatson_types";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
   //== React State (+ Context, Refs) ==//
   let ChatContext = useChatContext();
   const [promptInput, setPromptInput] = useState<string>("");
-  const [parentNodeUUID, setParentNodeUUID] = useState<UUIDV4>(
-    getUUIDV4("dummy")
-  );
   const [promptToSend, setPromptToSend] = useState<string>("");
   const [promptReadyToSend, setPromptReadyToSend] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -75,14 +66,7 @@ export default function ChatSession() {
 
         //-- Send prompt as chat message --//
         if (user?.sub) {
-          await chatson.send_message(
-            accessToken,
-            promptToSend,
-            parentNodeUUID,
-            ChatContext.model,
-            ChatContext.conversation,
-            ChatContext.setConversation
-          );
+          await chatson.send_message(accessToken, promptToSend);
           ChatContext.setCompletionLoading(false);
         }
       };
@@ -100,12 +84,6 @@ export default function ChatSession() {
   }, []);
 
   //== Event Handlers ==//
-  const changeParentNodeHandler = () => {
-    // TODO
-    // setParentNodeUUID()
-    // if the user is continuing a conversation - leaf node of current history being rendered
-    // if a message if being edited - the parent node of the message being edited
-  };
 
   //-- Submit prompt from textarea --//
   const submitPromptHandler = () => {

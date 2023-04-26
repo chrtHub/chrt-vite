@@ -1,16 +1,28 @@
+//== react, react-router-dom, recoil, Auth0 ==//
+
+//== TSX Components ==//
+
+//== NPM Components ==//
+
+//== Icons ==//
+
+//== NPM Functions ==//
 import { produce } from "immer";
 import {
   EventStreamContentType,
   fetchEventSource,
 } from "@microsoft/fetch-event-source";
 
+//== Utility Functions ==//
 import { getUserDbId } from "../../../Util/getUserDbId";
+import { useChatContext } from "../../../Context/ChatContext";
 
+//== Environment Variables, TypeScript Interfaces, Data Objects ==//
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
-
 import {
   IAPIReqResMetadata,
   IConversation,
+  IMessageNode,
   IMessage,
   IModel,
   IChatCompletionRequestBody,
@@ -22,21 +34,16 @@ import { ObjectId } from "bson";
  *
  * @param access_token (a) set as the author id, (b) sent as Bearer token in 'authorization' header
  * @param prompt_content user input to be added to the conversation
- * @param parentNodeUUID parent node's uuid from the message_tree
- * @param model LLM model to be used
- * @param conversation When null, the server creates a new conversation. Otherwise, the prompt is added to the conversation.
- * @param setConversation state setter for the conversation
  * @returns IChatsonObject updated with the new prompt
  */
 export async function send_message(
   access_token: string,
-  prompt_content: string,
-  parent_node_id: ObjectId,
-  model: IModel,
-  conversation: IConversation | null,
-  setConversation: React.Dispatch<React.SetStateAction<IConversation>>
+  prompt_content: string
 ) {
   console.log(" ----- SEND MESSAGE ----- "); // DEV
+
+  //-- Access ChatContext --//
+  let CC = useChatContext();
 
   //-- Get user_db_id from access token --//
   let user_db_id = getUserDbId(access_token);
@@ -44,17 +51,23 @@ export async function send_message(
   //-- Build prompt --//
   let prompt: IMessage = {
     author: user_db_id,
-    model: model,
+    model: CC.model,
     created_at: new Date(),
     role: "user",
     content: prompt_content,
   };
 
+  //-- Existing conversation --//
+  let parent_node_id: ObjectId | null = null;
+  if (CC.nodeArray && CC.nodeMap && CC.leafNodeIdString && CC.conversation) {
+    parent_node_id = CC.nodeMap[CC.leafNodeIdString].parent_node_id;
+  }
+
   //-- Build request_body --//
   let request_body: IChatCompletionRequestBody = {
     prompt: prompt,
-    conversation_id: conversation?._id || null,
-    parent_node_id: parent_node_id || null,
+    conversation_id: CC.conversation?._id || null,
+    parent_node_id: parent_node_id, //-- Is null for new conversations --//
   };
 
   //-- Headers --//
@@ -75,12 +88,8 @@ export async function send_message(
         let new_node_id = res.headers.get("CHRT-new-node-id");
         let new_node_created_at = res.headers.get("CHRT-new-node-created-at");
         let parent_node_id = res.headers.get("CHRT-parent-node-id");
-        // update message node?
 
-        // if new conversation
-        //
-        // if continuing conversation
-        //
+        // TODO - update message node in context
       },
       onmessage(event) {
         //-- Error --//
@@ -92,7 +101,7 @@ export async function send_message(
         //-- Note - this is only sent for new conversations --//
         else if (event.id && event.id === "conversation") {
           let data: IConversation = JSON.parse(event.data);
-          setConversation(data);
+          CC.setConversation(data);
         }
         //-- Completion object (IMessage) --//
         else if (event.id && event.id === "completion") {
