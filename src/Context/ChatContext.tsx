@@ -1,17 +1,14 @@
 import { useState, createContext, useContext, PropsWithChildren } from "react";
 import {
   IConversation,
-  IMessageNode,
   IModel,
   ModelAPINames,
 } from "../App/GPT/chatson/chatson_types";
-import { ObjectId } from "bson";
-import { getUUIDV4 } from "../Util/getUUIDV4";
 
 //-- Create interface and Context --//
 interface IChatContext {
-  conversation: IConversation;
-  setConversation: React.Dispatch<React.SetStateAction<IConversation>>;
+  conversation: IConversation | null;
+  setConversation: React.Dispatch<React.SetStateAction<IConversation | null>>;
   model: IModel;
   setModel: React.Dispatch<React.SetStateAction<IModel>>;
   model_options: Partial<Record<ModelAPINames, IModel>>;
@@ -37,49 +34,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     },
   };
 
-  //-- Create new conversation --//
-  const dummy_ObjectId = new ObjectId("000000000000000000000000");
-  const dummy_uuid: UUIDV4 = getUUIDV4("dummy");
-
-  const systemMessage: IMessageNode = {
-    _id: dummy_ObjectId,
-user_db_id: "dummy_user_db_id",
-conversation_id: ,
-parent_node_id: ,
-children_nodes: ,
-prompt: ,
-completion: ,
-  }
-
-  const newConversation: IConversation = {
-    _id: dummy_ObjectId,
-    user_db_id: "dummy_user_db_id",
-    root_node: dummy_ObjectId,
-    schema_version: "2023-04-20",
-    created_at: new Date(), //-- Overwritten by server --//
-    
-    messages: {
-      [dummy_uuid]: {
-        message_uuid: dummy_uuid,
-        author: "chrt",
-        model: {
-          api_name: "gpt-3.5-turbo",
-          friendly_name: "GPT-3.5",
-          description: "Power and Speed",
-        },
-        created_at: new Date(), //-- Overwritten by server --//
-        role: "system",
-        message:
-          "This is a dummy object that declares the default model and satisfies the shape of the interface 'IConversation'. New conversations are initialized on the server.",
-      },
-    },
-    api_req_res_metadata: [],
-    chatson_tags: [],
-    user_tags: [],
-  };
-
-  const [conversation, setConversation] =
-    useState<IConversation>(newConversation);
+  const [conversation, setConversation] = useState<IConversation | null>(null);
   const [model, setModel] = useState<IModel>(
     model_options["gpt-3.5-turbo"] as IModel
   );

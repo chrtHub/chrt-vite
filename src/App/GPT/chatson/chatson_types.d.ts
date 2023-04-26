@@ -56,7 +56,7 @@ export interface IAPIReqResMetadata {
   user: string;
   model_api_name: string;
   created_at: Date;
-  prompt_tokens: number;
+  request_tokens: number;
   completion_tokens: number;
   total_tokens: number;
   node_id: ObjectId;
