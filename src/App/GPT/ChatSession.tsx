@@ -37,7 +37,7 @@ import { IMessage } from "./chatson/chatson_types";
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
   //== React State (+ Context, Refs) ==//
-  let ChatContext = useChatContext();
+  let CC = useChatContext();
   const [promptInput, setPromptInput] = useState<string>("");
   const [promptToSend, setPromptToSend] = useState<string>("");
   const [promptReadyToSend, setPromptReadyToSend] = useState<boolean>(false);
@@ -67,7 +67,7 @@ export default function ChatSession() {
         //-- Send prompt as chat message --//
         if (user?.sub) {
           await chatson.send_message(accessToken, promptToSend);
-          ChatContext.setCompletionLoading(false);
+          CC.setCompletionLoading(false);
         }
       };
       submitPrompt();
@@ -90,7 +90,7 @@ export default function ChatSession() {
     //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
     setPromptToSend(promptInput);
     setPromptInput("");
-    ChatContext.setCompletionLoading(true);
+    CC.setCompletionLoading(true);
     setPromptReadyToSend(true);
   };
 
@@ -132,9 +132,37 @@ export default function ChatSession() {
     return placeholder;
   };
 
-  // TODO - traverse node_array using node_map and leaf_node to build rows_array
+  //-- Build message_rows array --//
+  // (1) Updates to leaf node
+  // new node received --> update node_array --> update node_map --> update leaf_node
+  // version change --> traverse children to find final descendant --> update leaf node
 
-  //-- ***** ***** ***** Start of Functions and Components for Message Rows **** ***** ***** --//
+  // (2) Updates to rows rendered
+  // Leaf Node: traverse all parents --> update rows_array --> re-render rows
+  // // when updating rows array, give each row:
+  // // // its own node_id
+  // // // its sibling_node_ids array in timestamp ascending order
+
+  //-- New message node is available --//
+  useEffect(() => {
+    // if nodeArray changes, rebuild nodeMap
+  }, [CC.nodeArray]);
+
+  //-- User directly requests display of new version / thread of history --//
+  const versionChangeHandler = () => {
+    // for a given row, display "sibling_node_ids.indexOf(node_id) + 1 / sibling_node_ids.length", i.e. "1 / 3"
+    // when user requests a sibling, set sibling_node_ids[node_id+1] as new version node
+    // traverse node_map to get the children nodes. set final descendant (now w/o children) as the new leaf node
+  };
+
+  //-- When leaf node is updated, rebuild rows_array --//
+  useEffect(() => {
+    // TODO
+  }, [CC.leafNodeIdString]);
+
+  let rows_array: IMessageRow[] = [];
+
+  //-- ***** ***** ***** Start of Message Rows Component **** ***** ***** --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
   const [atBottom, setAtBottom] = useState<boolean>(true);
   const [showButton, setShowButton] = useState<boolean>(false);
@@ -232,7 +260,7 @@ export default function ChatSession() {
   };
 
   //-- Message Row Component --//
-  const Row = (props: { node: IIsolatedNode }) => {
+  const Row = (props: { row: IMessageRow }) => {
     const { node } = props;
     return (
       <div
@@ -297,23 +325,20 @@ export default function ChatSession() {
       </div>
     );
   };
-  //-- ***** ***** ***** End of Functions and Components for Message Rows **** ***** ***** --//
+  //-- ***** ***** ***** End of Message Rows Component **** ***** ***** --//
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
-      {/* TODO - instead of mapping each message to a row, map each order to a row */}
-      {visibleNodes.length > 0 ? (
+      {rows_array.length > 0 ? (
         <div id="llm-current-chat" className="flex flex-grow">
           <div id="chat-rows" className="w-full list-none">
             {/*-- Similar implemenatation to https://virtuoso.dev/stick-to-bottom/ --*/}
             <Virtuoso
               ref={virtuosoRef}
-              data={visibleNodes}
-              itemContent={(index, node) => (
-                <Row key={node.node_uuid} node={node} />
-              )}
+              data={rows_array}
+              itemContent={(index, row) => <Row key={row.TODO} row={row} />}
               followOutput="smooth"
               atBottomStateChange={(isAtBottom) => {
                 setAtBottom(isAtBottom);
@@ -322,6 +347,7 @@ export default function ChatSession() {
           </div>
         </div>
       ) : (
+        //-- Landing view for null conversation --//
         <div
           id="llm-sample-prompts"
           className="flex flex-grow flex-col items-center justify-center"
@@ -361,7 +387,7 @@ export default function ChatSession() {
             {/* Stop Response Generation */}
             <div className="flex w-full flex-row items-center justify-center">
               {/* DEV - always 'false' for now, when streaming in use, add logic here to allow user to stop response generation */}
-              {false && ChatContext.completionLoading && (
+              {false && CC.completionLoading && (
                 <>
                   <button
                     onClick={() => console.log("cancel")} // TODO - add logic
@@ -427,12 +453,12 @@ export default function ChatSession() {
                 onKeyDown={keyDownHandler}
                 onChange={(event) => setPromptInput(event.target.value)}
                 className={classNames(
-                  ChatContext.completionLoading ? "bg-zinc-300 ring-2" : "",
+                  CC.completionLoading ? "bg-zinc-300 ring-2" : "",
                   "block w-full resize-none rounded-md border-0 bg-white py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-zinc-700 dark:text-white sm:leading-6"
                 )}
               />
 
-              {ChatContext.completionLoading ? (
+              {CC.completionLoading ? (
                 <button className="absolute bottom-0 right-0 flex cursor-wait items-center p-1.5 focus:outline-green-600">
                   <CpuChipIcon className="text h-6 w-6 animate-spin text-green-500" />
                 </button>

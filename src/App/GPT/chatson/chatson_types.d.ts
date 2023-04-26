@@ -35,6 +35,11 @@ export interface IMessage {
   content: string;
 }
 
+export interface IMessageRow extends IMessage {
+  node_id: ObjectId;
+  sibling_node_ids: ObjdctId[];
+}
+
 export interface IModel {
   api_name: ModelAPINames;
   friendly_name: string;
