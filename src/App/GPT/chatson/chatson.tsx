@@ -70,10 +70,17 @@ export async function send_message(
       headers: headers,
       body: JSON.stringify(request_body),
       async onopen(res) {
-        // TODO
+        //-- Use headers to update message node --//
+        let conversation_id = res.headers.get("CHRT-conversation-id");
+        let new_node_id = res.headers.get("CHRT-new-node-id");
+        let new_node_created_at = res.headers.get("CHRT-new-node-created-at");
+        let parent_node_id = res.headers.get("CHRT-parent-node-id");
+        // update message node?
+
         // if new conversation
-        // build conversation object, store in ChatContext?
+        //
         // if continuing conversation
+        //
       },
       onmessage(event) {
         //-- Error --//
@@ -82,19 +89,20 @@ export async function send_message(
           // TODO - implement error handling
         }
         //-- Conversation object (IConversation) --//
+        //-- Note - this is only sent for new conversations --//
         else if (event.id && event.id === "conversation") {
-          let res: IConversation = JSON.parse(event.data);
-          setConversation(res);
+          let data: IConversation = JSON.parse(event.data);
+          setConversation(data);
         }
         //-- Completion object (IMessage) --//
         else if (event.id && event.id === "completion") {
-          let res: IMessage = JSON.parse(event.data);
+          let data: IMessage = JSON.parse(event.data);
           // TODO - update completion
         }
         //-- API Req/Res Metadata (IAPIReqResMetadata)
         else if (event.id && event.id === "api_req_res_metadata") {
-          let res: IAPIReqResMetadata = JSON.parse(event.data);
-          // TODO - update api_req_res_metadata
+          let data: IAPIReqResMetadata = JSON.parse(event.data);
+          // TODO - add to conversation.api_req_res_metadata?
         }
         //-- SSE completion content chunks --//
         else {
