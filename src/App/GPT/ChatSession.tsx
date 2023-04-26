@@ -132,33 +132,7 @@ export default function ChatSession() {
     return placeholder;
   };
 
-  //----//
-  //----//
-  // TODO - use messages and message_tree to render messages
-  const getIsolatedNode = (node: IMessageTreeNode): IIsolatedNode => {
-    const isolatedNode: IIsolatedNode = {
-      node_uuid: node.node_uuid,
-      prompt_message_uuid: node.prompt_message_uuid,
-      completion_message_uuid: node.completion_message_uuid,
-    };
-    return isolatedNode;
-  };
-
-  // visibleNodes can change when:
-  // // a new propmt is created, thus a new node is created
-  // // a propmt is edited, thus a new branch is created with a new node
-  // // the user requests to be shown a sibling node, thus the sibling and the descendants will change
-  // // a prompt is deleted, thus a node is removed and its children (if any) are adopted by their grandparents
-
-  // visibleNodes content updated during SSE
-
-  let isolated_system_message = getIsolatedNode(
-    ChatContext.conversation.message_tree
-  );
-  let visibleNodes: IIsolatedNode[] = [isolated_system_message];
-
-  //----//
-  //----//
+  // TODO - traverse node_array using node_map and leaf_node to build rows_array
 
   //-- ***** ***** ***** Start of Functions and Components for Message Rows **** ***** ***** --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
