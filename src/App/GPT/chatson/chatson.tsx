@@ -153,12 +153,12 @@ export async function send_message(
           completion: null,
         };
 
-        //-- Update leaf node --//
+        //-- Update leaf node (do before node array update) --//
         CC.setLeafNodeIdString((prevState) => {
           return new_node._id.toString();
         });
 
-        //-- Node array updates --//
+        //-- Node array updates (do after leaf node update) --//
         CC.setNodeArray((prevNodeArray) => {
           return produce(prevNodeArray, (draft) => {
             if (draft) {

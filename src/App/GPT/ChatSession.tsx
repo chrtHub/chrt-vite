@@ -20,6 +20,7 @@ import {
   ArrowUpCircleIcon,
 } from "@heroicons/react/20/solid";
 //== NPM Functions ==//
+import { produce } from "immer";
 
 //== Utility Functions ==//
 import { getUUIDV4 } from "../../Util/getUUIDV4";
@@ -33,6 +34,7 @@ import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { IMessage, IMessageNode, IMessageRow } from "./chatson/chatson_types";
+import { ObjectId } from "bson";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
@@ -143,15 +145,24 @@ export default function ChatSession() {
   // // // its own node_id
   // // // its sibling_node_ids array in timestamp ascending order
 
-  //-- New message node is available --//
+  //-- On updates to node array. Leaf node to have been updated too. --//
   useEffect(() => {
-    // rebuild nodeMap
-    // call updateRowsArray()
+    //-- Create node_map for O(1) lookups inside the while loop --//
+    let new_node_map: Record<string, IMessageNode> = {};
+    if (CC.nodeArray) {
+      CC.nodeArray.forEach((node) => {
+        new_node_map[node._id.toString()] = node;
+      });
+    }
+
+    //-- Call updateRowsArray --//
+    CC.leafNodeIdString && updateRowsArray(CC.leafNodeIdString);
   }, [CC.nodeArray]);
 
-  //-- User directly requests display of new version / thread of history --//
+  //-- On updates to leaf node - via user selecting new conversation branch --//
+  // TODO - what will this handler receive?
   const versionChangeHandler = () => {
-    // for a given row, display "sibling_node_ids.indexOf(node_id) + 1 / sibling_node_ids.length", i.e. "1 / 3"
+    // for a prompt row, display prompt's "sibling_node_ids.indexOf(node_id) + 1 / sibling_node_ids.length", i.e. "1 / 3"
     // when user requests a sibling, set sibling_node_ids[node_id+1] as new version node
     // traverse node_array using node_map to get the children nodes. set final descendant (node w/o children) will be the new leaf node
     //
@@ -162,17 +173,10 @@ export default function ChatSession() {
   const [rowsArray, setRowsArray] = useState<IMessageRow[] | null>(null);
 
   //-- When leaf node is updated, rebuild rows_array --//
-  const updateRowsArray = (newLeafNodeIdString?: string) => {
-    if (!newLeafNodeIdString && CC.leafNodeIdString) {
-      newLeafNodeIdString = CC.leafNodeIdString;
-    }
-
-    // traverse node_array using node_map and leaf_node to build rows_array
-    // start with leaf node. add completion and prompt to rows
-    // get it's parent node id
-    // use node_map to get parent node
-
+  const updateRowsArray = (newLeafNodeIdString: string) => {
+    //-- node and new rows array --//
     let node: IMessageNode;
+    let parent_node: IMessageNode;
     let new_rows_array: IMessageRow[] = [];
 
     //-- Start with new leaf node --//
@@ -181,37 +185,44 @@ export default function ChatSession() {
 
       //-- Loop until reaching the root node where parent_node_id is null --//
       while (node.parent_node_id) {
-        let parent_node_id = node.parent_node_id;
+        parent_node = CC.nodeMap[node.parent_node_id.toString()];
 
-        if (CC.nodeMap && CC.nodeArray && newLeafNodeIdString) {
-          node = CC.nodeMap[newLeafNodeIdString];
-          let parent_node = CC.nodeMap[parent_node_id.toString()];
+        //-- Sort parent's children by timestamp ascending --//
+        let sibling_ids_timestamp_asc: ObjectId[] = [
+          ...parent_node.children_node_ids.sort(
+            (a, b) => a.getTimestamp().getTime() - b.getTimestamp().getTime()
+          ),
+        ];
 
-          let completion_row: IMessageRow;
-          if (node.completion) {
-            completion_row = {
-              ...node.completion,
-              node_id: node._id,
-              sibling_node_ids: [],
-            };
-            new_rows_array.push(completion_row);
-          }
-
-          let prompt_row: IMessageRow = {
-            ...node.prompt,
+        //-- Build completion row, add to new_rows_array --//
+        let completion_row: IMessageRow;
+        if (node.completion) {
+          completion_row = {
+            ...node.completion,
             node_id: node._id,
-            sibling_node_ids: [],
+            sibling_node_ids: [], //-- Use prompt_row for this --//
           };
-          new_rows_array.push(prompt_row);
-
-          //-- Update node --//
-          node = parent_node;
+          new_rows_array.push(completion_row);
         }
+
+        //-- Build prompt row, add to new_rows_array --//
+        let prompt_row: IMessageRow = {
+          ...node.prompt,
+          node_id: node._id,
+          sibling_node_ids: [...sibling_ids_timestamp_asc],
+        };
+        new_rows_array.push(prompt_row);
+
+        //-- Update node --//
+        node = parent_node;
       }
     }
 
-    setRowsArray((prevState) => {
-      return prevState; // TODO - use immer to update state to new_rows_array
+    //-- Update state --//
+    setRowsArray((rowsArray) => {
+      return produce(rowsArray, (draft) => {
+        draft = new_rows_array;
+      });
     });
   };
 
