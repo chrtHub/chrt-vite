@@ -6,44 +6,49 @@ import { useChatContext } from "../../Context/ChatContext";
 //== TSX Components ==//
 import ModelSelector from "./ModelSelector";
 import * as chatson from "./chatson/chatson";
+import ChatRow from "./ChatRow";
+import ChatLanding from "./ChatLanding";
 
 //== NPM Components ==//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import TextareaAutosize from "react-textarea-autosize";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
 //== Icons ==//
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ArrowUpCircleIcon,
-} from "@heroicons/react/20/solid";
-//== NPM Functions ==//
-import { produce } from "immer";
-
-//== Utility Functions ==//
-import classNames from "../../Util/classNames";
+import { ArrowUpCircleIcon } from "@heroicons/react/20/solid";
 import {
   ChevronDoubleDownIcon,
   CpuChipIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
+
+//== NPM Functions ==//
+import { produce } from "immer";
+
+//== Utility Functions ==//
+import classNames from "../../Util/classNames";
 import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { IMessage, IMessageNode, IMessageRow } from "./chatson/chatson_types";
+import { IMessageNode, IMessageRow } from "./chatson/chatson_types";
 import { ObjectId } from "bson";
+let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
   //== React State (+ Context, Refs) ==//
   let CC = useChatContext();
+
+  //-- Prompt stuff --//
   const [promptInput, setPromptInput] = useState<string>("");
   const [promptToSend, setPromptToSend] = useState<string>("");
   const [promptReadyToSend, setPromptReadyToSend] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [textAreaFocus, setTextAreaFocus] = useState<boolean>(true);
+
+  //-- Virtualized rows stuff --//
+  const virtuosoRef = useRef<VirtuosoHandle | null>(null);
+  const [atBottom, setAtBottom] = useState<boolean>(true);
+  const [showButton, setShowButton] = useState<boolean>(false);
 
   //== Recoil State ==//
 
@@ -54,6 +59,7 @@ export default function ChatSession() {
   const OS_NAME = useOSName();
 
   //== Side Effects ==//
+  //-- Prompt status checker and submitter --//
   useEffect(() => {
     if (promptReadyToSend) {
       //-- Refocus textarea after submitting a prompt (unless on mobile) --//
@@ -67,7 +73,7 @@ export default function ChatSession() {
 
         //-- Send prompt as chat message --//
         if (user?.sub) {
-          await chatson.send_message(accessToken, promptToSend, node_map);
+          await chatson.send_message(accessToken, promptToSend, node_map, CC);
           CC.setCompletionLoading(false);
         }
       };
@@ -77,6 +83,7 @@ export default function ChatSession() {
     }
   }, [promptReadyToSend]);
 
+  //-- Listener for keyboard shortcuts --//
   useEffect(() => {
     document.addEventListener("keydown", globalKeyDownHandler);
     return () => {
@@ -84,8 +91,16 @@ export default function ChatSession() {
     };
   }, []);
 
-  //== Event Handlers ==//
+  //-- Virtuosos - when 'atBottom' changes - if at bottom don't show button, else show button --//
+  useEffect(() => {
+    if (atBottom) {
+      setShowButton(false);
+    } else {
+      setShowButton(true);
+    }
+  }, [atBottom, setShowButton]);
 
+  //== Event Handlers ==//
   //-- Submit prompt from textarea --//
   const submitPromptHandler = () => {
     //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
@@ -133,8 +148,22 @@ export default function ChatSession() {
     return placeholder;
   };
 
-  //-- ***** ***** ***** ***** ***** --//
-  //-- NOTES: Message node handlers upates waterfall --//
+  //-- Virtuoso --//
+  // const scrollToBottomHandler = () => {
+  //   // visibleThread.length > 0
+  //   if (virtuosoRef.current && filteredMessages.length > 0) {
+  //     virtuosoRef.current.scrollToIndex({
+  //       index: filteredMessages.length - 1, // visibleThread.length
+  //       behavior: "smooth",
+  //       align: "end",
+  //     });
+  //   }
+  // };
+
+  //-- ***** ***** ***** ***** ***** ***** ***** ***** --//
+  //-- Message node handlers --//
+
+  // Updates waterfall notes:
 
   // // (A) User submits a prompt.
   // (1) Upon receipt of response headers:
@@ -158,8 +187,6 @@ export default function ChatSession() {
   // // values of an IMessage - `author`, `model`, `created_at`, `role`, `content`
   // Each row does not know:
   // // its 1 parent and n children
-
-  //----//
 
   let node_map: Record<string, IMessageNode> = {};
 
@@ -273,169 +300,6 @@ export default function ChatSession() {
     });
   };
 
-  //-- ***** ***** ***** Start of Message Rows Component **** ***** ***** --//
-  const virtuosoRef = useRef<VirtuosoHandle | null>(null);
-  const [atBottom, setAtBottom] = useState<boolean>(true);
-  const [showButton, setShowButton] = useState<boolean>(false);
-
-  //-- When 'atBottom' changes - if at bottom don't show button, else show button --//
-  useEffect(() => {
-    if (atBottom) {
-      setShowButton(false);
-    } else {
-      setShowButton(true);
-    }
-  }, [atBottom, setShowButton]);
-
-  // const scrollToBottomHandler = () => {
-  //   // visibleThread.length > 0
-  //   if (virtuosoRef.current && filteredMessages.length > 0) {
-  //     virtuosoRef.current.scrollToIndex({
-  //       index: filteredMessages.length - 1, // visibleThread.length
-  //       behavior: "smooth",
-  //       align: "end",
-  //     });
-  //   }
-  // };
-
-  //-- Message Row Author --//
-  const Author = (props: { row: IMessageRow }) => {
-    let { row } = props;
-
-    //-- If author is the current user, display their profile photo --//
-    if (row.author === user?.sub) {
-      if (user?.picture) {
-        return (
-          <img
-            src={user?.picture}
-            alt={user?.name}
-            className="h-10 w-10 rounded-full"
-          />
-        );
-      } else {
-        <div>{user.name}</div>;
-      }
-    }
-
-    //-- If author is a model, display name of the model --//
-    if (row.author === row.model.api_name) {
-      return (
-        <div className="flex flex-col items-center">
-          <CpuChipIcon className="h-8 w-8 text-zinc-500 dark:text-zinc-400" />
-          <div className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-            {row.model.friendly_name}
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      // TODO - implement logic to show initials or perhaps photo in mulit-user chats(?)
-      <div>human</div>
-    );
-  };
-
-  //-- Message Row MessageData --//
-  const RowData = (props: { row: IMessageRow }) => {
-    let { row } = props;
-
-    // let friendlyDate = format(date, "hh:mm:ss");
-    // let friendlyDate = new Intl.DateTimeFormat("en-US", {
-    //   hour: "numeric",
-    //   minute: "2-digit",
-    //   second: "2-digit",
-    // }).format(message.created_at);
-
-    return (
-      <div className="text-sm text-zinc-500 dark:text-zinc-400">
-        {/* TODO - implement new metatdata ui for rows */}
-        {/* {friendlyDate} */}
-      </div>
-    );
-  };
-
-  //-- Version Selector --//
-  const VersionSelector = (props: { row: IMessageRow }) => {
-    let { row } = props;
-
-    return (
-      <div className="flex flex-row">
-        <ChevronLeftIcon className="h-5 w-5 text-zinc-400" aria-hidden="true" />
-        <p className="text-zinc-400">1/2</p>
-        <ChevronRightIcon
-          className="h-5 w-5 text-zinc-400"
-          aria-hidden="true"
-        />
-      </div>
-    );
-  };
-
-  //-- Message Row Component --//
-  const Row = (props: { row: IMessageRow }) => {
-    const { row } = props;
-    return (
-      <div
-        id="chat-row"
-        className={classNames(
-          row.role === "user" ? "rounded-lg bg-zinc-200 dark:bg-zinc-900" : "",
-          "w-full justify-center lg:flex"
-        )}
-      >
-        {/* Mobile Row Top - visible until 'lg' */}
-        <div className="lg:hidden">
-          <div className="flex flex-row items-center justify-center py-2 pl-2 pr-2">
-            <RowData row={row} />
-            <div className="ml-auto">
-              <Author row={row} />
-            </div>
-          </div>
-        </div>
-
-        {/* Author - visible for 'lg' and larger */}
-        <div
-          id="chat-author-content"
-          className="my-3.5 hidden w-full flex-col items-center justify-start lg:flex lg:w-24"
-        >
-          <Author row={row} />
-        </div>
-
-        {/* MESSAGE - always visible */}
-        <div
-          id="chat-message"
-          className="mx-auto flex w-full max-w-prose lg:mx-0"
-        >
-          <article className="prose prose-zinc w-full max-w-prose dark:prose-invert dark:text-white max-lg:pl-2.5">
-            <li key={row.role}>
-              <ReactMarkdown
-                children={row.content}
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  p: ({ node, children }) => (
-                    <p className="max-lg:m-0 max-lg:p-0 max-lg:pb-2">
-                      {children}
-                    </p>
-                  ),
-                }}
-              />
-            </li>
-          </article>
-        </div>
-
-        {/* MessageData - visible for 'lg' and larger */}
-        <div
-          id="chat-MessageData-content-lg"
-          className="mt-5 hidden w-full flex-col pr-2 lg:flex lg:w-24"
-        >
-          <div className="flex flex-row justify-end">
-            <RowData row={row} />
-            <VersionSelector row={row} />
-          </div>
-        </div>
-      </div>
-    );
-  };
-  //-- ***** ***** ***** End of Message Rows Component **** ***** ***** --//
-
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
@@ -448,7 +312,7 @@ export default function ChatSession() {
               ref={virtuosoRef}
               data={rowsArray}
               itemContent={(index, row) => (
-                <Row key={`${row.node_id}-${row.role}`} row={row} />
+                <ChatRow key={`${row.node_id}-${row.role}`} row={row} />
               )}
               followOutput="smooth"
               atBottomStateChange={(isAtBottom) => {
@@ -459,27 +323,7 @@ export default function ChatSession() {
         </div>
       ) : (
         //-- Landing view for null conversation --//
-        <div
-          id="llm-sample-prompts"
-          className="flex flex-grow flex-col items-center justify-center"
-        >
-          <p className="font-sans text-4xl font-semibold text-zinc-700 dark:text-zinc-200">
-            ChrtGPT
-          </p>
-          <article className="prose prose-zinc dark:prose-invert">
-            <div className="mb-0 flex flex-col">
-              <p className="mb-0 mt-2.5 font-sans font-medium italic">
-                What is ChrtGPT?
-              </p>
-              <p className="mb-0 mt-1.5 font-sans font-medium italic">
-                How to be a good day trader?
-              </p>
-              <p className="mb-0 mt-1.5 font-sans font-medium italic">
-                What are some risks of day trading?
-              </p>
-            </div>
-          </article>
-        </div>
+        <ChatLanding />
       )}
 
       {/* STICKY INPUT SECTION */}

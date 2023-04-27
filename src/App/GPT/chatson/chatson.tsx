@@ -8,44 +8,38 @@
 
 //== NPM Functions ==//
 import { produce } from "immer";
-import {
-  EventStreamContentType,
-  fetchEventSource,
-} from "@microsoft/fetch-event-source";
+import { fetchEventSource } from "@microsoft/fetch-event-source";
 
 //== Utility Functions ==//
 import { getUserDbId } from "../../../Util/getUserDbId";
-import { useChatContext } from "../../../Context/ChatContext";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 import {
   IAPIReqResMetadata,
   IConversation,
   IMessageNode,
   IMessage,
-  IModel,
   IChatCompletionRequestBody,
 } from "./chatson_types";
+import { IChatContext } from "../../../Context/ChatContext";
 import { ObjectId } from "bson";
-
+let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 /**
  * Causes an LLM API call after adding a propmt to a chatson object
  *
  * @param access_token (a) set as the author id, (b) sent as Bearer token in 'authorization' header
  * @param prompt_content user input to be added to the conversation
  * @param node_map
+ * @param CC chat context
  * @returns IChatsonObject updated with the new prompt
  */
-export async function send_message(
+export function send_message(
   access_token: string,
   prompt_content: string,
-  node_map: Record<string, IMessageNode>
+  node_map: Record<string, IMessageNode>,
+  CC: IChatContext
 ) {
   console.log(" ----- SEND MESSAGE ----- "); // DEV
-
-  //-- Access ChatContext --//
-  let CC = useChatContext();
 
   //-- Get user_db_id from access token --//
   let user_db_id = getUserDbId(access_token);
@@ -84,7 +78,8 @@ export async function send_message(
 
   class CustomFatalError extends Error {} // TODO - build as needed
   try {
-    await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
+    // DEV - removed await before fetchEventSource
+    fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
       method: "POST",
       headers: headers,
       body: JSON.stringify(request_body),

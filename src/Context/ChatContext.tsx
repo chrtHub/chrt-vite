@@ -7,7 +7,7 @@ import {
 } from "../App/GPT/chatson/chatson_types";
 
 //-- Create interface and Context --//
-interface IChatContext {
+export interface IChatContext {
   nodeArray: IMessageNode[] | null;
   setNodeArray: React.Dispatch<React.SetStateAction<IMessageNode[] | null>>;
   leafNodeIdString: string | null; //-- string is ObjectId.toString() --//
