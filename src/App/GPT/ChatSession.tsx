@@ -146,19 +146,26 @@ export default function ChatSession() {
   //-- New message node is available --//
   useEffect(() => {
     // if nodeArray changes, rebuild nodeMap
+    // leaf node will be updated too, but we need this effect to run before the leaf node one...
+    // // use a function instead of an effect?
+    updateRowsArray(); // how to know the current leaf node value here?? does setState guarantee ordering?? functional state update?
   }, [CC.nodeArray]);
 
   //-- User directly requests display of new version / thread of history --//
   const versionChangeHandler = () => {
     // for a given row, display "sibling_node_ids.indexOf(node_id) + 1 / sibling_node_ids.length", i.e. "1 / 3"
     // when user requests a sibling, set sibling_node_ids[node_id+1] as new version node
-    // traverse node_map to get the children nodes. set final descendant (now w/o children) as the new leaf node
+    // traverse node_array using node_map to get the children nodes. set final descendant (now w/o children) as the new leaf node
+    // updateRowsArray()
   };
 
   //-- When leaf node is updated, rebuild rows_array --//
-  useEffect(() => {
-    // TODO
-  }, [CC.leafNodeIdString]);
+  const updateRowsArray = (leafNode) => {
+    // traverse node_array using node_map and leaf_node to build rows_array
+    // const row: IMessageRow = {}
+    // rows_array.push()
+    // CC.setLeafNodeIdString()
+  };
 
   let rows_array: IMessageRow[] = [];
 

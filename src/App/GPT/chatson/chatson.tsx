@@ -57,7 +57,7 @@ export async function send_message(
     content: prompt_content,
   };
 
-  //-- Existing conversation --//
+  //-- Get parent_node_id if existing conversation --//
   let parent_node_id: ObjectId | null = null;
   if (CC.nodeArray && CC.nodeMap && CC.leafNodeIdString && CC.conversation) {
     parent_node_id = CC.nodeMap[CC.leafNodeIdString].parent_node_id;
@@ -83,13 +83,107 @@ export async function send_message(
       headers: headers,
       body: JSON.stringify(request_body),
       async onopen(res) {
-        //-- Use headers to update message node --//
-        let conversation_id = res.headers.get("CHRT-conversation-id");
-        let new_node_id = res.headers.get("CHRT-new-node-id");
-        let new_node_created_at = res.headers.get("CHRT-new-node-created-at");
-        let parent_node_id = res.headers.get("CHRT-parent-node-id");
+        //-- Conversation id --//
+        let conversation_id: ObjectId;
+        let a = res.headers.get("CHRT-conversation-id");
+        if (a) {
+          conversation_id = ObjectId.createFromHexString(a);
+        } else {
+          throw new CustomFatalError("missing conversation_id");
+        }
 
-        // TODO - update message node in context
+        //-- Root node (new conversations only) --//
+        let b = res.headers.get("CHRT-root-node-id");
+        let c = res.headers.get("CHRT-root-node-created-at");
+        if (b && c) {
+          let root_node_id: ObjectId = ObjectId.createFromHexString(b);
+          let root_node_created_at: Date = new Date(c);
+
+          //-- Root node --//
+          let root_node: IMessageNode = {
+            _id: root_node_id,
+            user_db_id: user_db_id,
+            created_at: root_node_created_at,
+            conversation_id: conversation_id,
+            parent_node_id: null,
+            children_node_ids: [],
+            prompt: {
+              author: "chrt",
+              model: CC.model,
+              created_at: root_node_created_at,
+              role: "system",
+              content: "(server-side only)",
+            },
+            completion: null,
+          };
+
+          //-- Add root node to node array --//
+          CC.setNodeArray((prevNodeArray) => {
+            //-- Continuing conversation --//
+            if (prevNodeArray) {
+              return [...prevNodeArray, root_node];
+            }
+            //-- New conversation --//
+            else {
+              return [root_node];
+            }
+          });
+        }
+
+        //-- Headers for new node --//
+        let d = res.headers.get("CHRT-new-node-id");
+        let e = res.headers.get("CHRT-new-node-created-at");
+        let f = res.headers.get("CHRT-parent-node-id");
+        if (!d || !e || !f) {
+          throw new CustomFatalError("missing header(s)");
+        }
+        let new_node_id: ObjectId = ObjectId.createFromHexString(d);
+        let new_node_created_at: Date = new Date(e); // TODO - VERIFY THIS
+        let parent_node_id: ObjectId = ObjectId.createFromHexString(f);
+
+        //-- New node --//
+        let new_node: IMessageNode = {
+          _id: new_node_id,
+          user_db_id: user_db_id,
+          created_at: new_node_created_at,
+          conversation_id: conversation_id,
+          parent_node_id: parent_node_id,
+          children_node_ids: [],
+          prompt: prompt,
+          completion: null,
+        };
+
+        //-- Add new node's id to parent's children array in node array  --//
+        CC.setNodeArray((prevNodeArray) => {
+          if (!prevNodeArray) {
+            return prevNodeArray;
+          }
+
+          return produce(prevNodeArray, (draft) => {
+            const parentNode = draft.find((node) =>
+              node._id.equals(parent_node_id)
+            );
+
+            if (parentNode) {
+              parentNode.children_node_ids.push(new_node._id);
+            }
+          });
+        });
+
+        //-- Add new node to node array --//
+        CC.setNodeArray((prevNodeArray) => {
+          //-- Continuing conversation --//
+          if (prevNodeArray) {
+            return [...prevNodeArray, new_node];
+          }
+          //-- New conversation --//
+          else {
+            return [new_node];
+          }
+        });
+
+        // update leaf_node in
+        CC.setLeafNodeIdString();
       },
       onmessage(event) {
         //-- Error --//
