@@ -130,7 +130,7 @@ export async function send_message(
           });
         }
 
-        //-- Headers for new node --//
+        //-- New node --//
         let d = res.headers.get("CHRT-new-node-id");
         let e = res.headers.get("CHRT-new-node-created-at");
         let f = res.headers.get("CHRT-parent-node-id");
@@ -141,7 +141,7 @@ export async function send_message(
         let new_node_created_at: Date = new Date(e); // TODO - VERIFY THIS
         let parent_node_id: ObjectId = ObjectId.createFromHexString(f);
 
-        //-- New node --//
+        //-- Build new node --//
         let new_node: IMessageNode = {
           _id: new_node_id,
           user_db_id: user_db_id,
@@ -152,6 +152,11 @@ export async function send_message(
           prompt: prompt,
           completion: null,
         };
+
+        //-- Update leaf node --//
+        CC.setLeafNodeIdString((prevState) => {
+          return new_node._id.toString();
+        });
 
         //-- Node array updates --//
         CC.setNodeArray((prevNodeArray) => {
@@ -171,9 +176,6 @@ export async function send_message(
             }
           });
         });
-
-        // update leaf_node in
-        CC.setLeafNodeIdString();
       },
       onmessage(event) {
         //-- Error --//

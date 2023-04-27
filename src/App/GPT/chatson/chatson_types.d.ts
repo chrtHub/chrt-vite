@@ -37,7 +37,7 @@ export interface IMessage {
 
 export interface IMessageRow extends IMessage {
   node_id: ObjectId;
-  sibling_node_ids: ObjdctId[];
+  sibling_node_ids: ObjectId[];
 }
 
 export interface IModel {

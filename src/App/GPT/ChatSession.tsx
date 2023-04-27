@@ -32,7 +32,7 @@ import {
 import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { IMessage } from "./chatson/chatson_types";
+import { IMessage, IMessageNode, IMessageRow } from "./chatson/chatson_types";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
@@ -137,7 +137,7 @@ export default function ChatSession() {
   // new node received --> update node_array --> update node_map --> update leaf_node
   // version change --> traverse children to find final descendant --> update leaf node
 
-  // (2) Updates to rows rendered
+  // (2) When leaf node updates, update rows_array
   // Leaf Node: traverse all parents --> update rows_array --> re-render rows
   // // when updating rows array, give each row:
   // // // its own node_id
@@ -146,25 +146,74 @@ export default function ChatSession() {
   //-- New message node is available --//
   useEffect(() => {
     // rebuild nodeMap
+    // call updateRowsArray()
   }, [CC.nodeArray]);
 
   //-- User directly requests display of new version / thread of history --//
   const versionChangeHandler = () => {
     // for a given row, display "sibling_node_ids.indexOf(node_id) + 1 / sibling_node_ids.length", i.e. "1 / 3"
     // when user requests a sibling, set sibling_node_ids[node_id+1] as new version node
-    // traverse node_array using node_map to get the children nodes. set final descendant (now w/o children) as the new leaf node
-    // updateRowsArray()
+    // traverse node_array using node_map to get the children nodes. set final descendant (node w/o children) will be the new leaf node
+    //
+    // CC.setLeafNodeIdString(newLeafNodeIdString)
+    // call updateRowsArray(newLeafNodeIdString)
   };
+
+  const [rowsArray, setRowsArray] = useState<IMessageRow[] | null>(null);
 
   //-- When leaf node is updated, rebuild rows_array --//
-  const updateRowsArray = (leafNode) => {
-    // traverse node_array using node_map and leaf_node to build rows_array
-    // const row: IMessageRow = {}
-    // rows_array.push()
-    // CC.setLeafNodeIdString()
-  };
+  const updateRowsArray = (newLeafNodeIdString?: string) => {
+    if (!newLeafNodeIdString && CC.leafNodeIdString) {
+      newLeafNodeIdString = CC.leafNodeIdString;
+    }
 
-  let rows_array: IMessageRow[] = [];
+    // traverse node_array using node_map and leaf_node to build rows_array
+    // start with leaf node. add completion and prompt to rows
+    // get it's parent node id
+    // use node_map to get parent node
+
+    let node: IMessageNode;
+    let new_rows_array: IMessageRow[] = [];
+
+    //-- Start with new leaf node --//
+    if (CC.nodeMap && newLeafNodeIdString) {
+      node = CC.nodeMap[newLeafNodeIdString];
+
+      //-- Loop until reaching the root node where parent_node_id is null --//
+      while (node.parent_node_id) {
+        let parent_node_id = node.parent_node_id;
+
+        if (CC.nodeMap && CC.nodeArray && newLeafNodeIdString) {
+          node = CC.nodeMap[newLeafNodeIdString];
+          let parent_node = CC.nodeMap[parent_node_id.toString()];
+
+          let completion_row: IMessageRow;
+          if (node.completion) {
+            completion_row = {
+              ...node.completion,
+              node_id: node._id,
+              sibling_node_ids: [],
+            };
+            new_rows_array.push(completion_row);
+          }
+
+          let prompt_row: IMessageRow = {
+            ...node.prompt,
+            node_id: node._id,
+            sibling_node_ids: [],
+          };
+          new_rows_array.push(prompt_row);
+
+          //-- Update node --//
+          node = parent_node;
+        }
+      }
+    }
+
+    setRowsArray((prevState) => {
+      return prevState; // TODO - use immer to update state to new_rows_array
+    });
+  };
 
   //-- ***** ***** ***** Start of Message Rows Component **** ***** ***** --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
