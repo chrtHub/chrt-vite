@@ -134,24 +134,19 @@ export default function ChatSession() {
     return placeholder;
   };
 
-  //-- Build message_rows array --//
-  // (1) Updates to leaf node
-  // new node received --> update node_array --> update node_map --> update leaf_node
-  // version change --> traverse children to find final descendant --> update leaf node
+  //-- ********************* --//
+  //-- Message Node handlers --//
+  let node_map: Record<string, IMessageNode> = {};
 
-  // (2) When leaf node updates, update rows_array
-  // Leaf Node: traverse all parents --> update rows_array --> re-render rows
-  // // when updating rows array, give each row:
-  // // // its own node_id
-  // // // its sibling_node_ids array in timestamp ascending order
-
-  //-- On updates to node array. Leaf node to have been updated too. --//
+  //-- On updates to node array + leaf node (inside chatson.tsx) --//
   useEffect(() => {
-    //-- Create node_map for O(1) lookups inside the while loop --//
-    let new_node_map: Record<string, IMessageNode> = {};
+    //-- Reset node_map --//
+    node_map = {};
+
+    //-- Build node_map --//
     if (CC.nodeArray) {
       CC.nodeArray.forEach((node) => {
-        new_node_map[node._id.toString()] = node;
+        node_map[node._id.toString()] = node;
       });
     }
 
@@ -159,67 +154,66 @@ export default function ChatSession() {
     CC.leafNodeIdString && updateRowsArray(CC.leafNodeIdString);
   }, [CC.nodeArray]);
 
-  //-- On updates to leaf node - via user selecting new conversation branch --//
-  // TODO - what will this handler receive?
+  //-- On 'direct' updates to leaf node - via user selecting new conversation branch --//
   const versionChangeHandler = () => {
+    // TODO - what will this handler receive?
     // for a prompt row, display prompt's "sibling_node_ids.indexOf(node_id) + 1 / sibling_node_ids.length", i.e. "1 / 3"
     // when user requests a sibling, set sibling_node_ids[node_id+1] as new version node
     // traverse node_array using node_map to get the children nodes. set final descendant (node w/o children) will be the new leaf node
     //
-    // CC.setLeafNodeIdString(newLeafNodeIdString)
-    // call updateRowsArray(newLeafNodeIdString)
+    // CC.setLeafNodeIdString(newLeafNodeIdString) // use functional form
+    // updateRowsArray(newLeafNodeIdString)
   };
 
   const [rowsArray, setRowsArray] = useState<IMessageRow[] | null>(null);
 
-  //-- When leaf node is updated, rebuild rows_array --//
+  //-- All leaf node updates lead to rebuilding rows_array --//
   const updateRowsArray = (newLeafNodeIdString: string) => {
-    //-- node and new rows array --//
+    //-- initialize stuff --//
     let node: IMessageNode;
     let parent_node: IMessageNode;
     let new_rows_array: IMessageRow[] = [];
 
     //-- Start with new leaf node --//
-    if (CC.nodeMap && newLeafNodeIdString) {
-      node = CC.nodeMap[newLeafNodeIdString];
+    node = node_map[newLeafNodeIdString];
 
-      //-- Loop until reaching the root node where parent_node_id is null --//
-      while (node.parent_node_id) {
-        parent_node = CC.nodeMap[node.parent_node_id.toString()];
+    //-- Loop until reaching the root node where parent_node_id is null --//
+    while (node.parent_node_id) {
+      parent_node = node_map[node.parent_node_id.toString()];
 
-        //-- Sort parent's children by timestamp ascending --//
-        let sibling_ids_timestamp_asc: ObjectId[] = [
-          ...parent_node.children_node_ids.sort(
-            (a, b) => a.getTimestamp().getTime() - b.getTimestamp().getTime()
-          ),
-        ];
+      //-- Sort parent's children by timestamp ascending --//
+      let sibling_ids_timestamp_asc: ObjectId[] = [
+        ...parent_node.children_node_ids.sort(
+          (a, b) => a.getTimestamp().getTime() - b.getTimestamp().getTime()
+        ),
+      ];
 
-        //-- Build completion row, add to new_rows_array --//
-        let completion_row: IMessageRow;
-        if (node.completion) {
-          completion_row = {
-            ...node.completion,
-            node_id: node._id,
-            sibling_node_ids: [], //-- Use prompt_row for this --//
-          };
-          new_rows_array.push(completion_row);
-        }
-
-        //-- Build prompt row, add to new_rows_array --//
-        let prompt_row: IMessageRow = {
-          ...node.prompt,
+      //-- Build completion row, add to new_rows_array --//
+      let completion_row: IMessageRow;
+      if (node.completion) {
+        completion_row = {
+          ...node.completion,
           node_id: node._id,
-          sibling_node_ids: [...sibling_ids_timestamp_asc],
+          sibling_node_ids: [], //-- Use prompt_row for this --//
         };
-        new_rows_array.push(prompt_row);
-
-        //-- Update node --//
-        node = parent_node;
+        new_rows_array.push(completion_row);
       }
+
+      //-- Build prompt row, add to new_rows_array --//
+      let prompt_row: IMessageRow = {
+        ...node.prompt,
+        node_id: node._id,
+        sibling_node_ids: [...sibling_ids_timestamp_asc],
+      };
+      new_rows_array.push(prompt_row);
+
+      //-- Update node --//
+      node = parent_node;
     }
 
     //-- Update state --//
     setRowsArray((rowsArray) => {
+      new_rows_array = new_rows_array.reverse(); //-- push + reverse --//
       return produce(rowsArray, (draft) => {
         draft = new_rows_array;
       });

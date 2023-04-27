@@ -10,10 +10,6 @@ import {
 interface IChatContext {
   nodeArray: IMessageNode[] | null;
   setNodeArray: React.Dispatch<React.SetStateAction<IMessageNode[] | null>>;
-  nodeMap: Record<string, IMessageNode> | null; //-- string is ObjectId.toString() --//
-  setNodeMap: React.Dispatch<
-    React.SetStateAction<Record<string, IMessageNode> | null>
-  >;
   leafNodeIdString: string | null; //-- string is ObjectId.toString() --//
   setLeafNodeIdString: React.Dispatch<React.SetStateAction<string | null>>;
   conversation: IConversation | null;
@@ -45,9 +41,6 @@ function ChatContextProvider({ children }: PropsWithChildren) {
 
   //-- State values --//
   const [nodeArray, setNodeArray] = useState<IMessageNode[] | null>(null);
-  const [nodeMap, setNodeMap] = useState<Record<string, IMessageNode> | null>(
-    null
-  );
   const [leafNodeIdString, setLeafNodeIdString] = useState<string | null>(null);
   const [conversation, setConversation] = useState<IConversation | null>(null);
   const [model, setModel] = useState<IModel>(
@@ -59,8 +52,6 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   const chatContextValue: IChatContext = {
     nodeArray,
     setNodeArray,
-    nodeMap,
-    setNodeMap,
     leafNodeIdString,
     setLeafNodeIdString,
     conversation,
