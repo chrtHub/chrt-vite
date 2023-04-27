@@ -23,7 +23,6 @@ import {
 import { produce } from "immer";
 
 //== Utility Functions ==//
-import { getUUIDV4 } from "../../Util/getUUIDV4";
 import classNames from "../../Util/classNames";
 import {
   ChevronDoubleDownIcon,
@@ -68,7 +67,7 @@ export default function ChatSession() {
 
         //-- Send prompt as chat message --//
         if (user?.sub) {
-          await chatson.send_message(accessToken, promptToSend);
+          await chatson.send_message(accessToken, promptToSend, node_map);
           CC.setCompletionLoading(false);
         }
       };
@@ -134,8 +133,34 @@ export default function ChatSession() {
     return placeholder;
   };
 
-  //-- ********************* --//
-  //-- Message Node handlers --//
+  //-- ***** ***** ***** ***** ***** --//
+  //-- NOTES: Message node handlers upates waterfall --//
+
+  // // (A) User submits a prompt.
+  // (1) Upon receipt of response headers:
+  // // new conversations have root_node:
+  // // // not set as CC.leafNodeIdString
+  // // // added to CC.nodeArray
+  // // all conversations have the new_node:
+  // // // set as CC.leafNodeIdString
+  // // // added to CC.nodeArray
+  // (2) The update to CC.nodeArray causes the node_map to be rebuilt via useEffect
+  // (3) When more than just the root node exists (thus leafNodeIdString != null), updateRowsArray is called to rebuild the rows array
+  // (4) new rows are rendered
+
+  // // (B) User requests display of different branch of history.
+  // (1) branchChangeHandler finds sibling node, then traverses branch's first children to find the new leaf node
+  // (2) updateRowsArray rebuilds the rows array
+  // (3) new rows are rendered
+
+  // Each row knows:
+  // // its siblings' ids and its birth order (via ObjectId timestamp)
+  // // values of an IMessage - `author`, `model`, `created_at`, `role`, `content`
+  // Each row does not know:
+  // // its 1 parent and n children
+
+  //----//
+
   let node_map: Record<string, IMessageNode> = {};
 
   //-- On updates to node array + leaf node (inside chatson.tsx) --//
@@ -150,12 +175,12 @@ export default function ChatSession() {
       });
     }
 
-    //-- Call updateRowsArray --//
+    //-- Call updateRowsArray. Is skipped when just the root_node is available --//
     CC.leafNodeIdString && updateRowsArray(CC.leafNodeIdString);
   }, [CC.nodeArray]);
 
   //-- On 'direct' updates to leaf node - via user selecting new conversation branch --//
-  const versionChangeHandler = (
+  const branchChangeHandler = (
     node_id: ObjectId,
     sibling_node_ids: ObjectId[],
     increment: 1 | -1
@@ -172,12 +197,13 @@ export default function ChatSession() {
     //-- Find leaf node --//
     let new_leaf_node_id = findLeafNodeId(new_version_node);
     //-- Update leaf node state --//
+    // DEV - this state never consumed before updated inside chatson?
     CC.setLeafNodeIdString((prevState) =>
       produce(prevState, (draft) => {
         draft = new_leaf_node_id.toString();
       })
     );
-    //-- Call updateRowsArray --//
+    //-- Call updateRowsArray (not relying on ChatContext state here) --//
     updateRowsArray(new_leaf_node_id.toString());
   };
 
@@ -193,9 +219,8 @@ export default function ChatSession() {
     }
   }
 
+  //-- All leaf node updates to lead to rebuilding rows_array --//
   const [rowsArray, setRowsArray] = useState<IMessageRow[] | null>(null);
-
-  //-- All leaf node updates lead to rebuilding rows_array --//
   const updateRowsArray = (newLeafNodeIdString: string) => {
     //-- initialize stuff --//
     let node: IMessageNode;
@@ -274,11 +299,11 @@ export default function ChatSession() {
   // };
 
   //-- Message Row Author --//
-  const Author = (props: { message: IMessage }) => {
-    let { message } = props;
+  const Author = (props: { row: IMessageRow }) => {
+    let { row } = props;
 
     //-- If author is the current user, display their profile photo --//
-    if (message.author === user?.sub) {
+    if (row.author === user?.sub) {
       if (user?.picture) {
         return (
           <img
@@ -293,12 +318,12 @@ export default function ChatSession() {
     }
 
     //-- If author is a model, display name of the model --//
-    if (message.author === message.model.api_name) {
+    if (row.author === row.model.api_name) {
       return (
         <div className="flex flex-col items-center">
           <CpuChipIcon className="h-8 w-8 text-zinc-500 dark:text-zinc-400" />
           <div className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-            {message.model.friendly_name}
+            {row.model.friendly_name}
           </div>
         </div>
       );
@@ -311,8 +336,8 @@ export default function ChatSession() {
   };
 
   //-- Message Row MessageData --//
-  const MessageData = (props: { message: IMessage }) => {
-    let { message } = props;
+  const RowData = (props: { row: IMessageRow }) => {
+    let { row } = props;
 
     // let friendlyDate = format(date, "hh:mm:ss");
     // let friendlyDate = new Intl.DateTimeFormat("en-US", {
@@ -330,8 +355,8 @@ export default function ChatSession() {
   };
 
   //-- Version Selector --//
-  const VersionSelector = (props: { message: IMessage }) => {
-    let { message } = props;
+  const VersionSelector = (props: { row: IMessageRow }) => {
+    let { row } = props;
 
     return (
       <div className="flex flex-row">
@@ -347,23 +372,21 @@ export default function ChatSession() {
 
   //-- Message Row Component --//
   const Row = (props: { row: IMessageRow }) => {
-    const { node } = props;
+    const { row } = props;
     return (
       <div
         id="chat-row"
         className={classNames(
-          message.role === "user"
-            ? "rounded-lg bg-zinc-200 dark:bg-zinc-900"
-            : "",
+          row.role === "user" ? "rounded-lg bg-zinc-200 dark:bg-zinc-900" : "",
           "w-full justify-center lg:flex"
         )}
       >
         {/* Mobile Row Top - visible until 'lg' */}
         <div className="lg:hidden">
           <div className="flex flex-row items-center justify-center py-2 pl-2 pr-2">
-            <MessageData message={message} />
+            <RowData row={row} />
             <div className="ml-auto">
-              <Author message={message} />
+              <Author row={row} />
             </div>
           </div>
         </div>
@@ -373,7 +396,7 @@ export default function ChatSession() {
           id="chat-author-content"
           className="my-3.5 hidden w-full flex-col items-center justify-start lg:flex lg:w-24"
         >
-          <Author message={message} />
+          <Author row={row} />
         </div>
 
         {/* MESSAGE - always visible */}
@@ -382,9 +405,9 @@ export default function ChatSession() {
           className="mx-auto flex w-full max-w-prose lg:mx-0"
         >
           <article className="prose prose-zinc w-full max-w-prose dark:prose-invert dark:text-white max-lg:pl-2.5">
-            <li key={message.message_uuid}>
+            <li key={row.role}>
               <ReactMarkdown
-                children={message.message}
+                children={row.content}
                 remarkPlugins={[remarkGfm]}
                 components={{
                   p: ({ node, children }) => (
@@ -404,8 +427,8 @@ export default function ChatSession() {
           className="mt-5 hidden w-full flex-col pr-2 lg:flex lg:w-24"
         >
           <div className="flex flex-row justify-end">
-            <MessageData message={message} />
-            <VersionSelector message={message} />
+            <RowData row={row} />
+            <VersionSelector row={row} />
           </div>
         </div>
       </div>
@@ -417,14 +440,16 @@ export default function ChatSession() {
   return (
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
-      {rows_array.length > 0 ? (
+      {rowsArray && rowsArray.length > 0 ? (
         <div id="llm-current-chat" className="flex flex-grow">
           <div id="chat-rows" className="w-full list-none">
             {/*-- Similar implemenatation to https://virtuoso.dev/stick-to-bottom/ --*/}
             <Virtuoso
               ref={virtuosoRef}
-              data={rows_array}
-              itemContent={(index, row) => <Row key={row.TODO} row={row} />}
+              data={rowsArray}
+              itemContent={(index, row) => (
+                <Row key={`${row.node_id}-${row.role}`} row={row} />
+              )}
               followOutput="smooth"
               atBottomStateChange={(isAtBottom) => {
                 setAtBottom(isAtBottom);

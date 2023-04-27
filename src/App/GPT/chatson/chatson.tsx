@@ -34,11 +34,13 @@ import { ObjectId } from "bson";
  *
  * @param access_token (a) set as the author id, (b) sent as Bearer token in 'authorization' header
  * @param prompt_content user input to be added to the conversation
+ * @param node_map
  * @returns IChatsonObject updated with the new prompt
  */
 export async function send_message(
   access_token: string,
-  prompt_content: string
+  prompt_content: string,
+  node_map: Record<string, IMessageNode>
 ) {
   console.log(" ----- SEND MESSAGE ----- "); // DEV
 
@@ -59,8 +61,12 @@ export async function send_message(
 
   //-- Get parent_node_id if existing conversation --//
   let parent_node_id: ObjectId | null = null;
-  if (CC.nodeArray && CC.nodeMap && CC.leafNodeIdString && CC.conversation) {
-    parent_node_id = CC.nodeMap[CC.leafNodeIdString].parent_node_id;
+  if (
+    CC.conversation &&
+    Object.keys(node_map).length > 0 &&
+    CC.leafNodeIdString
+  ) {
+    parent_node_id = node_map[CC.leafNodeIdString].parent_node_id;
   }
 
   //-- Build request_body --//

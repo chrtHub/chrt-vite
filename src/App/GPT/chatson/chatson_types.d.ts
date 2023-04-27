@@ -38,6 +38,11 @@ export interface IMessage {
 export interface IMessageRow extends IMessage {
   node_id: ObjectId;
   sibling_node_ids: ObjectId[];
+  // author: string;
+  // model: IModel;
+  // created_at: Date;
+  // role: ChatCompletionResponseMessageRoleEnum;
+  // content: string;
 }
 
 export interface IModel {
