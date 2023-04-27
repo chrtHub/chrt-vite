@@ -145,10 +145,7 @@ export default function ChatSession() {
 
   //-- New message node is available --//
   useEffect(() => {
-    // if nodeArray changes, rebuild nodeMap
-    // leaf node will be updated too, but we need this effect to run before the leaf node one...
-    // // use a function instead of an effect?
-    updateRowsArray(); // how to know the current leaf node value here?? does setState guarantee ordering?? functional state update?
+    // rebuild nodeMap
   }, [CC.nodeArray]);
 
   //-- User directly requests display of new version / thread of history --//

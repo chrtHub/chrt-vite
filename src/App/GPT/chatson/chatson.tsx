@@ -99,7 +99,7 @@ export async function send_message(
           let root_node_id: ObjectId = ObjectId.createFromHexString(b);
           let root_node_created_at: Date = new Date(c);
 
-          //-- Root node --//
+          //-- Build root node --//
           let root_node: IMessageNode = {
             _id: root_node_id,
             user_db_id: user_db_id,
@@ -153,33 +153,23 @@ export async function send_message(
           completion: null,
         };
 
-        //-- Add new node's id to parent's children array in node array  --//
+        //-- Node array updates --//
         CC.setNodeArray((prevNodeArray) => {
-          if (!prevNodeArray) {
-            return prevNodeArray;
-          }
-
           return produce(prevNodeArray, (draft) => {
-            const parentNode = draft.find((node) =>
-              node._id.equals(parent_node_id)
-            );
+            if (draft) {
+              //-- Find parent node --//
+              const parentNode = draft.find((node) =>
+                node._id.equals(parent_node_id)
+              );
+              //-- Add new node's id to children array --//
+              if (parentNode) {
+                parentNode.children_node_ids.push(new_node._id);
+              }
 
-            if (parentNode) {
-              parentNode.children_node_ids.push(new_node._id);
+              //-- Add new node --//
+              draft.push(new_node);
             }
           });
-        });
-
-        //-- Add new node to node array --//
-        CC.setNodeArray((prevNodeArray) => {
-          //-- Continuing conversation --//
-          if (prevNodeArray) {
-            return [...prevNodeArray, new_node];
-          }
-          //-- New conversation --//
-          else {
-            return [new_node];
-          }
         });
 
         // update leaf_node in
