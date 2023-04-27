@@ -155,15 +155,43 @@ export default function ChatSession() {
   }, [CC.nodeArray]);
 
   //-- On 'direct' updates to leaf node - via user selecting new conversation branch --//
-  const versionChangeHandler = () => {
-    // TODO - what will this handler receive?
+  const versionChangeHandler = (
+    node_id: ObjectId,
+    sibling_node_ids: ObjectId[],
+    increment: 1 | -1
+  ) => {
     // for a prompt row, display prompt's "sibling_node_ids.indexOf(node_id) + 1 / sibling_node_ids.length", i.e. "1 / 3"
-    // when user requests a sibling, set sibling_node_ids[node_id+1] as new version node
-    // traverse node_array using node_map to get the children nodes. set final descendant (node w/o children) will be the new leaf node
-    //
-    // CC.setLeafNodeIdString(newLeafNodeIdString) // use functional form
-    // updateRowsArray(newLeafNodeIdString)
+
+    //-- Current node --//
+    let node_id_idx: number = sibling_node_ids.indexOf(node_id);
+    //-- New version node --//
+    let new_version_node_id: ObjectId =
+      sibling_node_ids[node_id_idx + increment];
+    let new_version_node: IMessageNode =
+      node_map[new_version_node_id.toString()];
+    //-- Find leaf node --//
+    let new_leaf_node_id = findLeafNodeId(new_version_node);
+    //-- Update leaf node state --//
+    CC.setLeafNodeIdString((prevState) =>
+      produce(prevState, (draft) => {
+        draft = new_leaf_node_id.toString();
+      })
+    );
+    //-- Call updateRowsArray --//
+    updateRowsArray(new_leaf_node_id.toString());
   };
+
+  function findLeafNodeId(node: IMessageNode): ObjectId {
+    //-- Leaf node (only searching "1st child history") --//
+    if (node.children_node_ids.length === 0) {
+      return node._id;
+    }
+    //-- Not leaf node --//
+    else {
+      const first_child_node = node_map[node.children_node_ids[0].toString()];
+      return findLeafNodeId(first_child_node);
+    }
+  }
 
   const [rowsArray, setRowsArray] = useState<IMessageRow[] | null>(null);
 
