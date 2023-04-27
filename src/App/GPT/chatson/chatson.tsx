@@ -163,7 +163,7 @@ export function send_message(
         CC.setNodeArray((prevNodeArray) => {
           return produce(prevNodeArray, (draft) => {
             if (draft) {
-              //-- Find parent node --//
+              //-- Find parent node - can't use node map here because the actual node inside the array is to be updated via immer --//
               const parentNode = draft.find((node) =>
                 node._id.equals(parent_node_id)
               );
@@ -195,7 +195,7 @@ export function send_message(
           let data: IMessage = JSON.parse(event.data);
           // TODO - update completion
         }
-        //-- API Req/Res Metadata (IAPIReqResMetadata)
+        //-- API Req/Res Metadata (<IAPIReq></IAPIReq>ResMetadata)
         else if (event.id && event.id === "api_req_res_metadata") {
           let data: IAPIReqResMetadata = JSON.parse(event.data);
           // TODO - add to conversation.api_req_res_metadata?
@@ -203,7 +203,16 @@ export function send_message(
         //-- SSE completion content chunks --//
         else {
           const uriDecodedData = decodeURIComponent(event.data);
-          // TODO - update completion.content
+          // TODO - update completion.content.
+          // in node array?
+          // but then node array --> node map --> node rows
+          // seems very expensive to do for each chunk
+
+          // maybe only call node map to update when new node is available, not when a node's content is updated by a message chunk
+
+          // but then also would need node rows to directly read from node array
+
+          console.log(uriDecodedData); // DEV
         }
       },
       onclose() {
