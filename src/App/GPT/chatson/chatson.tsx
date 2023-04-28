@@ -73,14 +73,17 @@ export function send_message(
     "Content-Type": "application/json",
   };
 
+  console.log(nodeArray); // DEV
+
   class CustomFatalError extends Error {} // TODO - build as needed
   try {
-    // DEV - removed await before fetchEventSource
+    console.log("fetchEventSource"); // DEV
     fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
       method: "POST",
       headers: headers,
       body: JSON.stringify(request_body),
       async onopen(res) {
+        console.log("onopen"); // DEV
         //-- Conversation id --//
         let conversation_id: ObjectId;
         let a = res.headers.get("CHRT-conversation-id");
@@ -119,6 +122,8 @@ export function send_message(
           //-- Add root node to nodeArray --//
           nodeArray.push(root_node);
         }
+        console.log("nodeArray after pushing root_node"); // DEV
+        console.log(nodeArray); // DEV
 
         //-- New node --//
         let d = res.headers.get("CHRT-new-node-id");
@@ -167,12 +172,15 @@ export function send_message(
           parentNode.children_node_ids.push(new_node._id);
         }
         nodeArray.push(new_node);
+        console.log("nodeArray after pushing new_node"); // DEV
+        console.log(nodeArray); // DEV
 
         //-- Update CC.nodeMap --//
         nodeMap = {}; //-- reset --//
         nodeArray.forEach((node) => {
           nodeMap[node._id.toString()] = node; //-- populate --//
         });
+        console.log("nodeMap after pushing new_node"); // DEV
 
         //-- Update CC.rowsArray --//
         let new_rows_array: IMessageRow[] = []; //-- Build new rows array --//
@@ -214,6 +222,9 @@ export function send_message(
 
         new_rows_array = new_rows_array.reverse(); //-- push + reverse --//
 
+        console.log("new_rows_array to be set in ChatContext as nodeArray"); // DEV
+        console.log(new_rows_array); // DEV
+
         CC.setRowArray(new_rows_array);
         //----//
       },
@@ -227,6 +238,8 @@ export function send_message(
         //-- Note - this is only sent for new conversations --//
         else if (event.id && event.id === "conversation") {
           let data: IConversation = JSON.parse(event.data);
+          console.log("onmessage - conversation"); // DEV
+          console.log(data); // DEV
           CC.setConversation(data);
         }
         //-- Completion object (IMessage) --//
