@@ -37,8 +37,8 @@ export default function ChatSession() {
   let CC = useChatContext();
 
   //-- Prompt stuff --//
-  const [promptInput, setPromptInput] = useState<string>("");
-  const [promptToSend, setPromptToSend] = useState<string>("");
+  const [promptDraft, setPromptDraft] = useState<string>("");
+  const [promptContent, setPromptContent] = useState<string>("");
   const [promptReadyToSend, setPromptReadyToSend] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [textAreaFocus, setTextAreaFocus] = useState<boolean>(true);
@@ -56,24 +56,38 @@ export default function ChatSession() {
   //== Other ==//
   const OS_NAME = useOSName();
 
-  // TODO - implement:
-  // parentNode
-  // // if new conversation, parent_node is null
-  // // if new branch, parent of current leaf node
-  // // if same branch, current leaf node
-  // chatson.reset_conversation()
-  // chatson.change_branch()
+  //-- ***** ***** ***** ***** start of chatson ***** ***** ***** ***** --//
+  //-- ChatSession calls chatson --> chatson updates CC.rowArray --> ChatSession renders CC.rowArray --//
 
-  //== Side Effects ==//
+  //-- chatson function calls: --//
+  // (1a) chatson.send_message() for first message in a new conversation
+  // // use parentNodeId of null
+  // // // chatsion <<TODO>>
+
+  // (1b) chatson.send_message() to continue conversation on SAME branch
+  // // use parentNodeId of current sibling
+  // // // chatson appends new node to nodeArray and rowArray
+
+  // (1c) chatson.send_message() to continue conversation on NEW branch
+  // // use parentNodeId of current sibling's parent
+  // // // chatson appends new node to nodeArray, pops current sibling from rowArray, appends new node to rowArray. Also, update all siblings' sibling_node_ids array.
+
+  // (2) chatson.reset_conversation()
+  // // call reset_conversation() with <<TODO>>
+  // // // chatson <<TODO>>
+
+  // (3) chatson.change_branch()
+  // // current sibling node id and incrementer or 1 or -1
+  // // // chatson removes current sibling and ancestor nodes from rowArray, appends new sibling, and traverses first-child ancestry, appending each row to rowArray
+
   //-- Submit prompt from textarea --//
   const submitPromptHandler = () => {
     //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
-    setPromptToSend(promptInput);
-    setPromptInput("");
+    setPromptContent(promptDraft);
+    setPromptDraft("");
     CC.setCompletionLoading(true);
-    setPromptReadyToSend(true);
+    setPromptReadyToSend(true); //-- Invokes useEffect() below --//
   };
-  //-- Prompt status checker and submitter --//
   useEffect(() => {
     if (promptReadyToSend) {
       //-- Refocus textarea after submitting a prompt (unless on mobile) --//
@@ -87,7 +101,12 @@ export default function ChatSession() {
 
         //-- Send prompt as chat message --//
         if (user?.sub) {
-          await chatson.send_message(accessToken, promptToSend, parentNode, CC);
+          await chatson.send_message(
+            accessToken,
+            promptContent,
+            parentNodeId,
+            CC
+          );
           CC.setCompletionLoading(false);
         }
       };
@@ -96,7 +115,9 @@ export default function ChatSession() {
       setPromptReadyToSend(false);
     }
   }, [promptReadyToSend]);
+  //-- ***** ***** ***** ***** end of chatson ***** ***** ***** ***** --//
 
+  //== Side Effects ==//
   //-- Listener for keyboard shortcuts --//
   useEffect(() => {
     document.addEventListener("keydown", globalKeyDownHandler);
@@ -269,9 +290,9 @@ export default function ChatSession() {
                 onFocus={textareaFocusHandler}
                 onBlur={textareaBlurHandler}
                 wrap="hard"
-                value={promptInput}
+                value={promptDraft}
                 onKeyDown={keyDownHandler}
-                onChange={(event) => setPromptInput(event.target.value)}
+                onChange={(event) => setPromptDraft(event.target.value)}
                 className={classNames(
                   CC.completionLoading ? "bg-zinc-300 ring-2" : "",
                   "block w-full resize-none rounded-md border-0 bg-white py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-zinc-700 dark:text-white sm:leading-6"
@@ -286,15 +307,15 @@ export default function ChatSession() {
                 <button
                   id="submit-prompt-button"
                   onClick={submitPromptHandler}
-                  disabled={!promptInput}
+                  disabled={!promptDraft}
                   className={classNames(
-                    !promptInput ? "cursor-not-allowed" : "cursor-pointer",
+                    !promptDraft ? "cursor-not-allowed" : "cursor-pointer",
                     "absolute bottom-0 right-0 flex items-center p-1.5 focus:outline-green-600"
                   )}
                 >
                   <ArrowUpCircleIcon
                     className={classNames(
-                      promptInput ? "text-green-600" : "text-zinc-300",
+                      promptDraft ? "text-green-600" : "text-zinc-300",
                       "h-6 w-6"
                     )}
                     aria-hidden="true"

@@ -36,7 +36,7 @@ let nodeMap: Record<string, IMessageNode> = {};
  *
  * @param access_token (a) set as the author id, (b) sent as Bearer token in 'authorization' header
  * @param prompt_content user input to be added to the conversation
- * @param parent_node For new conversations, the parent_node is null. For creating a message on the same branch, the parent_node is the current leaf node. For creating a message on a new branch, the parent_node is the parent of the current leaf node.
+ * @param parent_node_id For new conversations, the parent_node is null. For creating a message on the same branch, the parent_node is the current leaf node. For creating a message on a new branch, the parent_node is the parent of the current leaf node.
  * @param CC chat context
  * @returns IChatsonObject updated with the new prompt
  */
