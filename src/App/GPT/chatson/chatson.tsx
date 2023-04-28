@@ -64,7 +64,7 @@ export function send_message(
   let request_body: IChatCompletionRequestBody = {
     prompt: prompt,
     conversation_id: CC.conversation?._id || null,
-    parent_node_id: parent_node_id, //-- Is null for new conversations --//
+    parent_node_id: parent_node_id,
   };
 
   //-- Headers --//
@@ -94,6 +94,7 @@ export function send_message(
         let b = res.headers.get("CHRT-root-node-id");
         let c = res.headers.get("CHRT-root-node-created-at");
         if (b && c) {
+          console.log("root node found"); // DEV
           let root_node_id: ObjectId = ObjectId.createFromHexString(b);
           let root_node_created_at: Date = new Date(c);
 
@@ -130,7 +131,14 @@ export function send_message(
         let new_node_created_at: Date = new Date(e); // TODO - VERIFY THIS
         let parent_node_id: ObjectId = ObjectId.createFromHexString(f);
 
-        //-- Build new node --//
+        //-- Build prompt node --//
+        let completion: IMessage = {
+          author: CC.model.api_name,
+          model: CC.model,
+          created_at: new Date(),
+          role: "assistant",
+          content: "",
+        };
         let new_node: IMessageNode = {
           _id: new_node_id,
           user_db_id: user_db_id,
@@ -139,7 +147,7 @@ export function send_message(
           parent_node_id: parent_node_id,
           children_node_ids: [],
           prompt: prompt,
-          completion: null,
+          completion: completion,
         };
 
         //-- Update order: --//
@@ -149,7 +157,7 @@ export function send_message(
         //-- Update leaf node --//
         leafNodeIdString = new_node._id.toString();
 
-        //-- Update CC.nodeArray --//
+        //-- Update nodeArray --//
         //-- Find parent node - can't use node map here because the actual node inside the array is to be updated via immer --//
         const parentNode = nodeArray.find((node) =>
           node._id.equals(parent_node_id)
@@ -243,7 +251,7 @@ export function send_message(
               if (draft) {
                 //-- Add message chunk to `content` of last row in rowArray --//
                 draft[draft.length - 1].content =
-                  draft[draft.length - 1] + uriDecodedData;
+                  draft[draft.length - 1].content + uriDecodedData;
               }
             });
           });

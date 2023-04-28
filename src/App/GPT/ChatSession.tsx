@@ -72,15 +72,15 @@ export default function ChatSession() {
   // // use parentNodeId of current sibling's parent
   // // // chatson appends new node to nodeArray, pops current sibling from rowArray, appends new node to rowArray. Also, update all siblings' sibling_node_ids array.
 
-  // (2) chatson.reset_conversation()
-  // // call reset_conversation() with <<TODO>>
-  // // // chatson <<TODO>>
-
-  // (3) chatson.change_branch()
+  // (2) chatson.change_branch()
   // // current sibling node id and incrementer or 1 or -1
   // // // chatson removes current sibling and ancestor nodes from rowArray, appends new sibling, and traverses first-child ancestry, appending each row to rowArray
 
-  //-- Submit prompt from textarea --//
+  // (3) chatson.reset_conversation()
+  // // call reset_conversation() with <<TODO>>
+  // // // chatson <<TODO>>
+
+  //-- chatson.send_message() --//
   const submitPromptHandler = () => {
     //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
     setPromptContent(promptDraft);
@@ -104,7 +104,7 @@ export default function ChatSession() {
           await chatson.send_message(
             accessToken,
             promptContent,
-            parentNodeId,
+            null, // DEV --> parentNodeId
             CC
           );
           CC.setCompletionLoading(false);
@@ -115,6 +115,13 @@ export default function ChatSession() {
       setPromptReadyToSend(false);
     }
   }, [promptReadyToSend]);
+
+  //-- chatson.change_branch() --//
+  // TODO
+
+  //-- chatson.reset_conversation() --//
+  // TODO
+
   //-- ***** ***** ***** ***** end of chatson ***** ***** ***** ***** --//
 
   //== Side Effects ==//
