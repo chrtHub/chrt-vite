@@ -28,7 +28,7 @@ import classNames from "../../Util/classNames";
 import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-
+import { ObjectId } from "bson";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
@@ -96,6 +96,16 @@ export default function ChatSession() {
         textareaRef.current.focus();
       }
 
+      //-- If first message, parentNodeId is null --//
+      let parentNodeId: ObjectId | null = null;
+
+      //-- If continuing branch, parentNodeId is last node's id --//
+      if (CC.rowArray && CC.rowArray.length > 0) {
+        parentNodeId = CC.rowArray[CC.rowArray.length - 1].node_id;
+      }
+
+      // TODO - if (new branch) {parentNodeId = row before last row}
+
       const submitPrompt = async () => {
         const accessToken = await getAccessTokenSilently();
 
@@ -104,7 +114,7 @@ export default function ChatSession() {
           await chatson.send_message(
             accessToken,
             promptContent,
-            null, // DEV --> parentNodeId
+            parentNodeId,
             CC
           );
           CC.setCompletionLoading(false);

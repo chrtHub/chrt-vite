@@ -63,8 +63,8 @@ export function send_message(
   //-- Build request_body --//
   let request_body: IChatCompletionRequestBody = {
     prompt: prompt,
-    conversation_id: CC.conversation?._id || null,
-    parent_node_id: parent_node_id,
+    conversation_id_string: CC.conversation?._id.toString() || null,
+    parent_node_id_string: parent_node_id?.toString() || null,
   };
 
   //-- Headers --//

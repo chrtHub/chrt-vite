@@ -1,4 +1,4 @@
-import { ObjectId, UUID } from "bson";
+import { ObjectId } from "bson";
 
 //-- Type Interfaces --//
 export interface IConversation {
@@ -64,8 +64,8 @@ export interface IAPIReqResMetadata {
 
 export interface IChatCompletionRequestBody {
   prompt: IMessage;
-  conversation_id: ObjectId | null;
-  parent_node_id: ObjectId | null;
+  conversation_id_string: string | null;
+  parent_node_id_string: string | null;
 }
 
 /** This list is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */
