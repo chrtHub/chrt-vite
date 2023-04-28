@@ -1,17 +1,15 @@
 import { useState, createContext, useContext, PropsWithChildren } from "react";
 import {
   IConversation,
-  IMessageNode,
+  IMessageRow,
   IModel,
   ModelAPINames,
 } from "../App/GPT/chatson/chatson_types";
 
 //-- Create interface and Context --//
 export interface IChatContext {
-  nodeArray: IMessageNode[] | null;
-  setNodeArray: React.Dispatch<React.SetStateAction<IMessageNode[] | null>>;
-  leafNodeIdString: string | null; //-- string is ObjectId.toString() --//
-  setLeafNodeIdString: React.Dispatch<React.SetStateAction<string | null>>;
+  rowArray: IMessageRow[] | null;
+  setRowArray: React.Dispatch<React.SetStateAction<IMessageRow[] | null>>;
   conversation: IConversation | null;
   setConversation: React.Dispatch<React.SetStateAction<IConversation | null>>;
   model: IModel;
@@ -40,8 +38,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   };
 
   //-- State values --//
-  const [nodeArray, setNodeArray] = useState<IMessageNode[] | null>(null);
-  const [leafNodeIdString, setLeafNodeIdString] = useState<string | null>(null);
+  const [rowArray, setRowArray] = useState<IMessageRow[] | null>(null);
   const [conversation, setConversation] = useState<IConversation | null>(null);
   const [model, setModel] = useState<IModel>(
     model_options["gpt-3.5-turbo"] as IModel
@@ -50,10 +47,8 @@ function ChatContextProvider({ children }: PropsWithChildren) {
 
   //-- Bundle values into chatContextValue --//
   const chatContextValue: IChatContext = {
-    nodeArray,
-    setNodeArray,
-    leafNodeIdString,
-    setLeafNodeIdString,
+    rowArray,
+    setRowArray,
     conversation,
     setConversation,
     model,

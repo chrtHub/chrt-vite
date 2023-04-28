@@ -22,15 +22,13 @@ import {
 } from "@heroicons/react/24/outline";
 
 //== NPM Functions ==//
-import { produce } from "immer";
 
 //== Utility Functions ==//
 import classNames from "../../Util/classNames";
 import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { IMessageNode, IMessageRow } from "./chatson/chatson_types";
-import { ObjectId } from "bson";
+
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
@@ -58,7 +56,23 @@ export default function ChatSession() {
   //== Other ==//
   const OS_NAME = useOSName();
 
+  // TODO - implement:
+  // parentNode
+  // // if new conversation, parent_node is null
+  // // if new branch, parent of current leaf node
+  // // if same branch, current leaf node
+  // chatson.reset_conversation()
+  // chatson.change_branch()
+
   //== Side Effects ==//
+  //-- Submit prompt from textarea --//
+  const submitPromptHandler = () => {
+    //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
+    setPromptToSend(promptInput);
+    setPromptInput("");
+    CC.setCompletionLoading(true);
+    setPromptReadyToSend(true);
+  };
   //-- Prompt status checker and submitter --//
   useEffect(() => {
     if (promptReadyToSend) {
@@ -73,7 +87,7 @@ export default function ChatSession() {
 
         //-- Send prompt as chat message --//
         if (user?.sub) {
-          await chatson.send_message(accessToken, promptToSend, node_map, CC);
+          await chatson.send_message(accessToken, promptToSend, parentNode, CC);
           CC.setCompletionLoading(false);
         }
       };
@@ -101,15 +115,6 @@ export default function ChatSession() {
   }, [atBottom, setShowButton]);
 
   //== Event Handlers ==//
-  //-- Submit prompt from textarea --//
-  const submitPromptHandler = () => {
-    //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
-    setPromptToSend(promptInput);
-    setPromptInput("");
-    CC.setCompletionLoading(true);
-    setPromptReadyToSend(true);
-  };
-
   //-- 'Enter' to submit prompt, 'Shift + Enter' for newline --//
   const keyDownHandler = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
@@ -160,157 +165,17 @@ export default function ChatSession() {
   //   }
   // };
 
-  //-- ***** ***** ***** ***** ***** ***** ***** ***** --//
-  //-- Message node handlers --//
-
-  // Updates waterfall notes:
-
-  // // (A) User submits a prompt.
-  // (1) Upon receipt of response headers:
-  // // new conversations have root_node:
-  // // // not set as CC.leafNodeIdString
-  // // // added to CC.nodeArray
-  // // all conversations have the new_node:
-  // // // set as CC.leafNodeIdString
-  // // // added to CC.nodeArray
-  // (2) The update to CC.nodeArray causes the node_map to be rebuilt via useEffect
-  // (3) When more than just the root node exists (thus leafNodeIdString != null), updateRowsArray is called to rebuild the rows array
-  // (4) new rows are rendered
-
-  // // (B) User requests display of different branch of history.
-  // (1) branchChangeHandler finds sibling node, then traverses branch's first children to find the new leaf node
-  // (2) updateRowsArray rebuilds the rows array
-  // (3) new rows are rendered
-
-  // Each row knows:
-  // // its siblings' ids and its birth order (via ObjectId timestamp)
-  // // values of an IMessage - `author`, `model`, `created_at`, `role`, `content`
-  // Each row does not know:
-  // // its 1 parent and n children
-
-  let node_map: Record<string, IMessageNode> = {};
-
-  //-- On updates to node array + leaf node (inside chatson.tsx) --//
-  useEffect(() => {
-    //-- Reset node_map --//
-    node_map = {};
-
-    //-- Build node_map --//
-    if (CC.nodeArray) {
-      CC.nodeArray.forEach((node) => {
-        node_map[node._id.toString()] = node;
-      });
-    }
-
-    //-- Call updateRowsArray. Is skipped when just the root_node is available --//
-    CC.leafNodeIdString && updateRowsArray(CC.leafNodeIdString);
-  }, [CC.nodeArray]);
-
-  //-- On 'direct' updates to leaf node - via user selecting new conversation branch --//
-  const branchChangeHandler = (
-    node_id: ObjectId,
-    sibling_node_ids: ObjectId[],
-    increment: 1 | -1
-  ) => {
-    // for a prompt row, display prompt's "sibling_node_ids.indexOf(node_id) + 1 / sibling_node_ids.length", i.e. "1 / 3"
-
-    //-- Current node --//
-    let node_id_idx: number = sibling_node_ids.indexOf(node_id);
-    //-- New version node --//
-    let new_version_node_id: ObjectId =
-      sibling_node_ids[node_id_idx + increment];
-    let new_version_node: IMessageNode =
-      node_map[new_version_node_id.toString()];
-    //-- Find leaf node --//
-    let new_leaf_node_id = findLeafNodeId(new_version_node);
-    //-- Update leaf node state --//
-    // DEV - this state never consumed before updated inside chatson?
-    CC.setLeafNodeIdString((prevState) =>
-      produce(prevState, (draft) => {
-        draft = new_leaf_node_id.toString();
-      })
-    );
-    //-- Call updateRowsArray (not relying on ChatContext state here) --//
-    updateRowsArray(new_leaf_node_id.toString());
-  };
-
-  function findLeafNodeId(node: IMessageNode): ObjectId {
-    //-- Leaf node (only searching "1st child history") --//
-    if (node.children_node_ids.length === 0) {
-      return node._id;
-    }
-    //-- Not leaf node --//
-    else {
-      const first_child_node = node_map[node.children_node_ids[0].toString()];
-      return findLeafNodeId(first_child_node);
-    }
-  }
-
-  //-- All leaf node updates to lead to rebuilding rows_array --//
-  const [rowsArray, setRowsArray] = useState<IMessageRow[] | null>(null);
-  const updateRowsArray = (newLeafNodeIdString: string) => {
-    //-- initialize stuff --//
-    let node: IMessageNode;
-    let parent_node: IMessageNode;
-    let new_rows_array: IMessageRow[] = [];
-
-    //-- Start with new leaf node --//
-    node = node_map[newLeafNodeIdString];
-
-    //-- Loop until reaching the root node where parent_node_id is null --//
-    while (node.parent_node_id) {
-      parent_node = node_map[node.parent_node_id.toString()];
-
-      //-- Sort parent's children by timestamp ascending --//
-      let sibling_ids_timestamp_asc: ObjectId[] = [
-        ...parent_node.children_node_ids.sort(
-          (a, b) => a.getTimestamp().getTime() - b.getTimestamp().getTime()
-        ),
-      ];
-
-      //-- Build completion row, add to new_rows_array --//
-      let completion_row: IMessageRow;
-      if (node.completion) {
-        completion_row = {
-          ...node.completion,
-          node_id: node._id,
-          sibling_node_ids: [], //-- Use prompt_row for this --//
-        };
-        new_rows_array.push(completion_row);
-      }
-
-      //-- Build prompt row, add to new_rows_array --//
-      let prompt_row: IMessageRow = {
-        ...node.prompt,
-        node_id: node._id,
-        sibling_node_ids: [...sibling_ids_timestamp_asc],
-      };
-      new_rows_array.push(prompt_row);
-
-      //-- Update node --//
-      node = parent_node;
-    }
-
-    //-- Update state --//
-    setRowsArray((rowsArray) => {
-      new_rows_array = new_rows_array.reverse(); //-- push + reverse --//
-      return produce(rowsArray, (draft) => {
-        draft = new_rows_array;
-      });
-    });
-  };
-
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
-      {rowsArray && rowsArray.length > 0 ? (
+      {CC.rowArray && CC.rowArray.length > 0 ? (
         <div id="llm-current-chat" className="flex flex-grow">
           <div id="chat-rows" className="w-full list-none">
             {/*-- Similar implemenatation to https://virtuoso.dev/stick-to-bottom/ --*/}
             <Virtuoso
               ref={virtuosoRef}
-              data={rowsArray}
+              data={CC.rowArray}
               itemContent={(index, row) => (
                 <ChatRow key={`${row.node_id}-${row.role}`} row={row} />
               )}
