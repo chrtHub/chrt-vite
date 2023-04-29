@@ -98,11 +98,11 @@ export default function ChatSession() {
 
       //-- If first message, parentNodeId is null --//
       let parentNodeId: ObjectId | null = null;
-
       //-- If continuing branch, parentNodeId is last node's id --//
       if (CC.rowArray && CC.rowArray.length > 0) {
         parentNodeId = CC.rowArray[CC.rowArray.length - 1].node_id;
       }
+      console.log("parentNodeId: ", parentNodeId); // DEV
 
       // TODO - if (new branch) {parentNodeId = row before last row}
 

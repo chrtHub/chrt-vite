@@ -27,7 +27,6 @@ import { ObjectId } from "bson";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- Chatson stuff --//
-let leafNodeIdString: string | null = null; //-- string is ObjectId.toString() --//
 let nodeArray: IMessageNode[] = [];
 let nodeMap: Record<string, IMessageNode> = {};
 
@@ -73,6 +72,7 @@ export function send_message(
     "Content-Type": "application/json",
   };
 
+  console.log("nodeArray:"); // DEV
   console.log(nodeArray); // DEV
 
   class CustomFatalError extends Error {} // TODO - build as needed
@@ -155,15 +155,7 @@ export function send_message(
           completion: completion,
         };
 
-        //-- Update order: --//
-        //-- leafNode sometime before rowArray --//
-        //-- nodeArray --> nodeMap --> rowArray --//
-
-        //-- Update leaf node --//
-        leafNodeIdString = new_node._id.toString();
-
         //-- Update nodeArray --//
-        //-- Find parent node - can't use node map here because the actual node inside the array is to be updated via immer --//
         const parentNode = nodeArray.find((node) =>
           node._id.equals(parent_node_id)
         );
@@ -180,11 +172,11 @@ export function send_message(
         nodeArray.forEach((node) => {
           nodeMap[node._id.toString()] = node; //-- populate --//
         });
-        console.log("nodeMap after pushing new_node"); // DEV
+        console.log("nodeMap after pushing new_node", nodeMap); // DEV
 
-        //-- Update CC.rowsArray --//
-        let new_rows_array: IMessageRow[] = []; //-- Build new rows array --//
-        let node: IMessageNode = nodeMap[leafNodeIdString]; //-- Start with new leaf node --//
+        //-- Build newRowArray and set as CC.rowsArray --//
+        let newRowArray: IMessageRow[] = []; //-- Build new rows array --//
+        let node: IMessageNode = nodeMap[new_node._id.toString()]; //-- Start with new node --//
 
         //-- Loop until reaching the root node where parent_node_id is null --//
         while (node.parent_node_id) {
@@ -197,7 +189,7 @@ export function send_message(
             ),
           ];
 
-          //-- Build completion row, add to new_rows_array --//
+          //-- Build completion row, add to newRowArray --//
           let completion_row: IMessageRow;
           if (node.completion) {
             completion_row = {
@@ -205,27 +197,27 @@ export function send_message(
               node_id: node._id,
               sibling_node_ids: [], //-- Use prompt_row for this --//
             };
-            new_rows_array.push(completion_row);
+            newRowArray.push(completion_row);
           }
 
-          //-- Build prompt row, add to new_rows_array --//
+          //-- Build prompt row, add to newRowArray --//
           let prompt_row: IMessageRow = {
             ...node.prompt,
             node_id: node._id,
             sibling_node_ids: [...sibling_ids_timestamp_asc],
           };
-          new_rows_array.push(prompt_row);
+          newRowArray.push(prompt_row);
 
           //-- Update node --//
           node = parent_node;
         }
 
-        new_rows_array = new_rows_array.reverse(); //-- push + reverse --//
+        newRowArray = newRowArray.reverse(); //-- push + reverse --//
 
-        console.log("new_rows_array to be set in ChatContext as nodeArray"); // DEV
-        console.log(new_rows_array); // DEV
+        console.log("newRowArray to be set in ChatContext as nodeArray"); // DEV
+        console.log(newRowArray); // DEV
 
-        CC.setRowArray(new_rows_array);
+        CC.setRowArray(newRowArray);
         //----//
       },
       onmessage(event) {
@@ -238,7 +230,7 @@ export function send_message(
         //-- Note - this is only sent for new conversations --//
         else if (event.id && event.id === "conversation") {
           let data: IConversation = JSON.parse(event.data);
-          console.log("onmessage - conversation"); // DEV
+          console.log("onmessage - conversation object:"); // DEV
           console.log(data); // DEV
           CC.setConversation(data);
         }
