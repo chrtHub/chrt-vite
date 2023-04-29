@@ -31,7 +31,7 @@ let nodeArray: IMessageNode[] = [];
 let nodeMap: Record<string, IMessageNode> = {};
 
 /**
- * Causes an LLM API call after adding a propmt to a chatson object
+ * send_message sends a prompt to an LLM and receives the response
  *
  * @param access_token (a) set as the author id, (b) sent as Bearer token in 'authorization' header
  * @param prompt_content user input to be added to the conversation
@@ -46,12 +46,14 @@ export function send_message(
   CC: IChatContext
 ) {
   console.log(" ----- SEND MESSAGE ----- "); // DEV
+  console.log("nodeArray:"); // DEV
+  console.log(JSON.stringify(nodeArray, null, 2)); // DEV
 
   //-- Get user_db_id from access token --//
-  let user_db_id = getUserDbId(access_token);
+  const user_db_id = getUserDbId(access_token);
 
   //-- Build prompt --//
-  let prompt: IMessage = {
+  const prompt: IMessage = {
     author: user_db_id,
     model: CC.model,
     created_at: new Date(),
@@ -60,33 +62,34 @@ export function send_message(
   };
 
   //-- Build request_body --//
-  let request_body: IChatCompletionRequestBody = {
+  const request_body: IChatCompletionRequestBody = {
     prompt: prompt,
     conversation_id_string: CC.conversation?._id.toString() || null,
     parent_node_id_string: parent_node_id?.toString() || null,
   };
 
   //-- Headers --//
-  const headers = {
+  const request_headers = {
     Authorization: `Bearer ${access_token}`,
     "Content-Type": "application/json",
   };
 
-  console.log("nodeArray:"); // DEV
-  console.log(nodeArray); // DEV
+  let new_node_id: ObjectId;
 
   class CustomFatalError extends Error {} // TODO - build as needed
   try {
     console.log("fetchEventSource"); // DEV
     fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
       method: "POST",
-      headers: headers,
+      headers: request_headers,
       body: JSON.stringify(request_body),
+      //-- ***** ***** ***** ***** ONOPEN ***** ***** ***** ***** --//
+      //-- ***** ***** ***** ***** ------ ***** ***** ***** ***** --//
       async onopen(res) {
         console.log("onopen"); // DEV
         //-- Conversation id --//
         let conversation_id: ObjectId;
-        let a = res.headers.get("CHRT-conversation-id");
+        const a = res.headers.get("CHRT-conversation-id");
         if (a) {
           console.log("conversation id found", a); // DEV
           conversation_id = ObjectId.createFromHexString(a);
@@ -95,15 +98,15 @@ export function send_message(
         }
 
         //-- Root node (new conversations only) --//
-        let b = res.headers.get("CHRT-root-node-id");
-        let c = res.headers.get("CHRT-root-node-created-at");
-        if (b !== "none" && c !== "none") {
+        const b = res.headers.get("CHRT-root-node-id");
+        const c = res.headers.get("CHRT-root-node-created-at");
+        if (b && b !== "none" && c && c !== "none") {
           console.log("root node found", b); // DEV
-          let root_node_id: ObjectId = ObjectId.createFromHexString(b);
-          let root_node_created_at: Date = new Date(c);
+          const root_node_id: ObjectId = ObjectId.createFromHexString(b);
+          const root_node_created_at: Date = new Date(c);
 
           //-- Build root node --//
-          let root_node: IMessageNode = {
+          const root_node: IMessageNode = {
             _id: root_node_id,
             user_db_id: user_db_id,
             created_at: root_node_created_at,
@@ -123,29 +126,29 @@ export function send_message(
           //-- Add root node to nodeArray --//
           nodeArray.push(root_node);
           console.log("nodeArray after pushing root_node"); // DEV
-          console.log(nodeArray); // DEV
+          console.log(JSON.stringify(nodeArray, null, 2)); // DEV
         }
 
         //-- New node --//
-        let d = res.headers.get("CHRT-new-node-id");
-        let e = res.headers.get("CHRT-new-node-created-at");
-        let f = res.headers.get("CHRT-parent-node-id");
+        const d = res.headers.get("CHRT-new-node-id");
+        const e = res.headers.get("CHRT-new-node-created-at");
+        const f = res.headers.get("CHRT-parent-node-id");
         if (!d || !e || !f) {
           throw new CustomFatalError("missing header(s)");
         }
-        let new_node_id: ObjectId = ObjectId.createFromHexString(d);
-        let new_node_created_at: Date = new Date(e); // TODO - VERIFY THIS
-        let parent_node_id: ObjectId = ObjectId.createFromHexString(f);
+        new_node_id = ObjectId.createFromHexString(d);
+        const new_node_created_at: Date = new Date(e); // TODO - VERIFY THIS
+        const parent_node_id: ObjectId = ObjectId.createFromHexString(f);
 
         //-- Build prompt node --//
-        let completion: IMessage = {
+        const completion: IMessage = {
           author: CC.model.api_name,
           model: CC.model,
           created_at: new Date(),
           role: "assistant",
-          content: "",
+          content: "", //-- overwritten in CC.rowArray during SSE --//
         };
-        let new_node: IMessageNode = {
+        const new_node: IMessageNode = {
           _id: new_node_id,
           user_db_id: user_db_id,
           created_at: new_node_created_at,
@@ -156,17 +159,22 @@ export function send_message(
           completion: completion,
         };
 
-        //-- Update nodeArray --//
-        const parentNode = nodeArray.find((node) =>
-          node._id.equals(parent_node_id)
-        );
-        //-- Add new node's id to children array --//
-        if (parentNode) {
-          parentNode.children_node_ids.push(new_node._id);
-        }
-        nodeArray.push(new_node);
-        console.log("nodeArray after pushing new_node"); // DEV
-        console.log(nodeArray); // DEV
+        //-- Add new_node to nodeArray, update parent node's children_node_ids --//
+        nodeArray = produce(nodeArray, (draft) => {
+          draft.push(new_node);
+
+          let parent_node_in_draft = draft.find((node) =>
+            node._id.equals(parent_node_id)
+          );
+          if (parent_node_in_draft) {
+            parent_node_in_draft.children_node_ids.push(new_node._id);
+          }
+        });
+
+        console.log(
+          "nodeArray after pushing new_node & updating parent node's children_node_ids"
+        ); // DEV
+        console.log(JSON.stringify(nodeArray, null, 2)); // DEV
 
         //-- Update CC.nodeMap --//
         nodeMap = {}; //-- reset --//
@@ -179,8 +187,13 @@ export function send_message(
         let newRowArray: IMessageRow[] = []; //-- Build new rows array --//
         let node: IMessageNode = nodeMap[new_node._id.toString()]; //-- Start with new node --//
 
+        console.log(
+          "node just before while loop",
+          JSON.stringify(node, null, 2)
+        ); // DEV
         //-- Loop until reaching the root node where parent_node_id is null --//
         while (node.parent_node_id) {
+          console.log("node inside while loop", JSON.stringify(node, null, 2)); // DEV
           let parent_node = nodeMap[node.parent_node_id.toString()];
 
           //-- Sort parent's children by timestamp ascending --//
@@ -215,12 +228,14 @@ export function send_message(
 
         newRowArray = newRowArray.reverse(); //-- push + reverse --//
 
-        console.log("newRowArray to be set in ChatContext as nodeArray"); // DEV
-        console.log(newRowArray); // DEV
+        console.log("newRowArray to be set in ChatContext as rowArray"); // DEV
+        console.log(JSON.stringify(newRowArray, null, 2)); // DEV
 
         CC.setRowArray(newRowArray);
         //----//
       },
+      //-- ***** ***** ***** ***** ONMESSAGE ***** ***** ***** ***** --//
+      //-- ***** ***** ***** ***** --------- ***** ***** ***** ***** --//
       onmessage(event) {
         //-- Error --//
         if (event.id && event.id === "error") {
@@ -237,10 +252,31 @@ export function send_message(
         }
         //-- Completion object (IMessage) --//
         else if (event.id && event.id === "completion") {
-          let data: IMessage = JSON.parse(event.data);
-          // TODO - update completion.
-          // overwrite completion object in nodeArray and rowArray.
-          // nodeMap stays the same
+          console.log('event.id === "completion"', JSON.parse(event.data)); // DEV
+          let completion_object: IMessage = JSON.parse(event.data);
+          console.log("completion object"); // DEV
+          console.log(JSON.stringify(completion_object, null, 2)); // DEV
+          //-- Overwrite completion object in nodeArray --//
+          nodeArray = produce(nodeArray, (draft) => {
+            let new_node_in_draft = draft.find((node) => {
+              return node._id.equals(new_node_id);
+            });
+            if (new_node_in_draft) {
+              console.log("new_node_in_draft found"); // DEV
+              new_node_in_draft.completion = completion_object;
+            }
+          });
+          console.log("nodeArray after adding completion_object"); // DEV
+          console.log(JSON.stringify(nodeArray, null, 2)); // DEV
+          //-- Overwrite completion content in rowArray --//
+          CC.setRowArray((prevRowArray) => {
+            return produce(prevRowArray, (draft) => {
+              if (draft) {
+                // TODO - perhaps use 'find()' instead of last index
+                draft[draft.length - 1].content = completion_object.content;
+              }
+            });
+          });
         }
         //-- API Req/Res Metadata (<IAPIReq></IAPIReq>ResMetadata)
         else if (event.id && event.id === "api_req_res_metadata") {
@@ -256,6 +292,7 @@ export function send_message(
             return produce(prevRowArray, (draft) => {
               if (draft) {
                 //-- Add message chunk to `content` of last row in rowArray --//
+                // TODO - perhaps use 'find()' instead of last index
                 draft[draft.length - 1].content =
                   draft[draft.length - 1].content + uriDecodedData;
               }
@@ -263,15 +300,17 @@ export function send_message(
           });
         }
       },
+      //-- ***** ***** ***** ***** ONCLOSE ***** ***** ***** ***** --//
       onclose() {
         console.log("Connection closed by the server"); // DEV
       },
+      //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
       onerror(err) {
         if (err instanceof CustomFatalError) {
           console.error(err.message);
           throw err; //-- Rethrow error to end request --//
         } else {
-          console.log("There was an error from server", err);
+          console.log("There was an error:", err);
         }
       },
     });
