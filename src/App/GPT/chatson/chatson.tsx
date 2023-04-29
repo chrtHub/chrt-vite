@@ -88,6 +88,7 @@ export function send_message(
         let conversation_id: ObjectId;
         let a = res.headers.get("CHRT-conversation-id");
         if (a) {
+          console.log("conversation id found", a); // DEV
           conversation_id = ObjectId.createFromHexString(a);
         } else {
           throw new CustomFatalError("missing conversation_id");
@@ -96,8 +97,8 @@ export function send_message(
         //-- Root node (new conversations only) --//
         let b = res.headers.get("CHRT-root-node-id");
         let c = res.headers.get("CHRT-root-node-created-at");
-        if (b && c) {
-          console.log("root node found"); // DEV
+        if (b !== "none" && c !== "none") {
+          console.log("root node found", b); // DEV
           let root_node_id: ObjectId = ObjectId.createFromHexString(b);
           let root_node_created_at: Date = new Date(c);
 
@@ -121,9 +122,9 @@ export function send_message(
 
           //-- Add root node to nodeArray --//
           nodeArray.push(root_node);
+          console.log("nodeArray after pushing root_node"); // DEV
+          console.log(nodeArray); // DEV
         }
-        console.log("nodeArray after pushing root_node"); // DEV
-        console.log(nodeArray); // DEV
 
         //-- New node --//
         let d = res.headers.get("CHRT-new-node-id");
