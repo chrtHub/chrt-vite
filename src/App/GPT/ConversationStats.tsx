@@ -9,6 +9,7 @@ import { Popover, Transition } from "@headlessui/react";
 
 //-- Icons --//
 import {
+  CalendarDaysIcon,
   ChatBubbleBottomCenterTextIcon,
   CircleStackIcon,
   ClockIcon,
@@ -20,7 +21,7 @@ import {
 
 //-- Utility Functions --//
 import classNames from "../../Util/classNames";
-import { format, parseISO } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
 
@@ -41,6 +42,9 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
     : "n/a";
   const formattedTime: string = created_at
     ? format(new Date(created_at), "hh:mm:ss aaa")
+    : "";
+  const timeDistanceToNow = created_at
+    ? formatDistanceToNow(new Date(created_at)) + " ago"
     : "";
 
   //-- Side Effects --//
@@ -125,7 +129,7 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
                   />
                 </div>
                 <p className="ml-16 truncate text-sm font-medium text-zinc-500">
-                  Messages:
+                  Messages
                 </p>
               </dt>
               <dd className="ml-16 flex items-baseline">
@@ -135,25 +139,45 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
               </dd>
             </div>
 
-            {/* Created At */}
+            {/* Created */}
             <div className="relative overflow-hidden bg-white px-2 py-2">
               <dt>
-                <div className="absolute rounded-md bg-zinc-500 p-3">
-                  <CpuChipIcon
+                <div className="absolute rounded-md bg-indigo-500 p-3">
+                  <ClockIcon
                     className="h-7 w-7 text-white"
                     aria-hidden="true"
                   />
                 </div>
                 <p className="ml-16 truncate text-sm font-medium text-zinc-500">
-                  Created At
+                  Created
                 </p>
               </dt>
               <dd className="ml-16 flex flex-col items-baseline">
                 <p className="text-l font-semibold text-zinc-900">
-                  {formattedDate}
+                  {timeDistanceToNow}
                 </p>
-                <p className="text-l font-semibold text-zinc-900">
+              </dd>
+            </div>
+
+            {/* Date */}
+            <div className="relative overflow-hidden bg-white px-2 py-2">
+              <dt>
+                <div className="absolute rounded-md bg-zinc-500 p-3">
+                  <CalendarDaysIcon
+                    className="h-7 w-7 text-white"
+                    aria-hidden="true"
+                  />
+                </div>
+                <p className="ml-16 truncate text-sm font-medium text-zinc-500">
+                  Created on
+                </p>
+              </dt>
+              <dd className="ml-16 flex flex-col items-baseline">
+                <p className="text-sm font-semibold text-zinc-900">
                   {formattedTime}
+                </p>
+                <p className="text-sm font-semibold text-zinc-900">
+                  {formattedDate}
                 </p>
               </dd>
             </div>
