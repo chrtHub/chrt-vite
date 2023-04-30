@@ -49,7 +49,7 @@ let nodeMap: Record<string, IMessageNode> = {};
 
 // (4) build newRowArray
 // // starting from new_node, find each parent node, stopping when the next parent node is root node
-// // for each prompt row, find the parent nodes children and add to sibling_node_ids
+// // for each prompt row, find the parent node's children and add them to prompt row's sibling_node_ids
 // // build completion IMessageRow and push onto newRowArray
 // // build prompt IMessageRow and push onto newRowArray
 // // reverse newRowArray and set at CC.rowArray
@@ -58,7 +58,7 @@ let nodeMap: Record<string, IMessageNode> = {};
 // // (i) set the conversation object in ChatContext state
 // (5b) All conversastions - onmessage
 // // (i) message chunk events
-// // URI decode the content and append to last message's content in rowArray via setState (DEV NOTE - perhaps build rowArray as a rowObject and use an index here)
+// // URI decode the content and append to last message's content in rowArray via setState
 // // (ii) completion event
 // // parse stringified JSON into completion IMessage object
 // // overwrite completion IMessage object in nodeArray
