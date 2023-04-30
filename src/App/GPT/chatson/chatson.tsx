@@ -35,7 +35,7 @@ let nodeMap: Record<string, IMessageNode> = {};
 
 // (1) Receive: prompt content, parent node id (existing conversation), CC.rowArray
 
-// (2) Build prompt IMessage object and request_body IChatCompletionRequestBody object. Call fetchEventSource with request_body.
+// (2) Build prompt IMessage object and request_body IChatCompletionRequestBody object, call fetchEventSource with request_body.
 
 // (3a) All conversations - onopen
 // // get headers for conversation id
@@ -245,6 +245,7 @@ export function send_message(
           if (node.completion) {
             completion_row = {
               ...node.completion,
+              prompt_or_completion: "completion",
               node_id: node._id,
               sibling_node_ids: [], //-- Use prompt_row for this --//
             };
@@ -254,6 +255,7 @@ export function send_message(
           //-- Build prompt row, add to newRowArray --//
           let prompt_row: IMessageRow = {
             ...node.prompt,
+            prompt_or_completion: "prompt",
             node_id: node._id,
             sibling_node_ids: [...sibling_ids_timestamp_asc],
           };
@@ -453,6 +455,13 @@ export function change_branch() {
   //     });
   //   });
   // };
+}
+
+/**
+ * change_conversation() will
+ */
+export function change_conversation() {
+  // TODO
 }
 
 export function reset_conversation() {
