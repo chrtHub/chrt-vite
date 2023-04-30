@@ -83,8 +83,7 @@ export function send_message(
   CC: IChatContext
 ) {
   console.log(" ----- SEND MESSAGE ----- "); // DEV
-  console.log("nodeArray:"); // DEV
-  console.log(JSON.stringify(nodeArray, null, 2)); // DEV
+  console.log(CC.temperature);
 
   //-- Get user_db_id from access token --//
   const user_db_id = getUserDbId(access_token);
@@ -103,6 +102,7 @@ export function send_message(
     prompt: prompt,
     conversation_id_string: CC.conversation?._id.toString() || null,
     parent_node_id_string: parent_node_id?.toString() || null,
+    temperature: CC.temperature,
   };
 
   //-- Headers --//
@@ -115,7 +115,6 @@ export function send_message(
 
   class CustomFatalError extends Error {} // TODO - build as needed
   try {
-    console.log("fetchEventSource"); // DEV
     fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
       method: "POST",
       headers: request_headers,
@@ -123,12 +122,10 @@ export function send_message(
       //-- ***** ***** ***** ***** ONOPEN ***** ***** ***** ***** --//
       //-- ***** ***** ***** ***** ------ ***** ***** ***** ***** --//
       async onopen(res) {
-        console.log("onopen"); // DEV
         //-- Conversation id --//
         let conversation_id: ObjectId;
         const a = res.headers.get("CHRT-conversation-id");
         if (a) {
-          console.log("conversation id found", a); // DEV
           conversation_id = ObjectId.createFromHexString(a);
         } else {
           throw new CustomFatalError("missing conversation_id");
@@ -138,7 +135,6 @@ export function send_message(
         const b = res.headers.get("CHRT-root-node-id");
         const c = res.headers.get("CHRT-root-node-created-at");
         if (b && b !== "none" && c && c !== "none") {
-          console.log("root node found", b); // DEV
           const root_node_id: ObjectId = ObjectId.createFromHexString(b);
           const root_node_created_at: Date = new Date(c);
 
@@ -162,8 +158,6 @@ export function send_message(
 
           //-- Add root node to nodeArray --//
           nodeArray.push(root_node);
-          console.log("nodeArray after pushing root_node"); // DEV
-          console.log(JSON.stringify(nodeArray, null, 2)); // DEV
         }
 
         //-- New node --//
@@ -208,29 +202,18 @@ export function send_message(
           }
         });
 
-        console.log(
-          "nodeArray after pushing new_node & updating parent node's children_node_ids"
-        ); // DEV
-        console.log(JSON.stringify(nodeArray, null, 2)); // DEV
-
         //-- Update CC.nodeMap --//
         nodeMap = {}; //-- reset --//
         nodeArray.forEach((node) => {
           nodeMap[node._id.toString()] = node; //-- populate --//
         });
-        console.log("nodeMap after pushing new_node", nodeMap); // DEV
 
         //-- Build newRowArray and set as CC.rowsArray --//
         let newRowArray: IMessageRow[] = []; //-- Build new rows array --//
         let node: IMessageNode = nodeMap[new_node._id.toString()]; //-- Start with new node --//
 
-        console.log(
-          "node just before while loop",
-          JSON.stringify(node, null, 2)
-        ); // DEV
         //-- Loop until reaching the root node where parent_node_id is null --//
         while (node.parent_node_id) {
-          console.log("node inside while loop", JSON.stringify(node, null, 2)); // DEV
           let parent_node = nodeMap[node.parent_node_id.toString()];
 
           //-- Sort parent's children by timestamp ascending --//
@@ -267,9 +250,6 @@ export function send_message(
 
         newRowArray = newRowArray.reverse(); //-- push + reverse --//
 
-        console.log("newRowArray to be set in ChatContext as rowArray"); // DEV
-        console.log(JSON.stringify(newRowArray, null, 2)); // DEV
-
         CC.setRowArray(newRowArray);
         //----//
       },
@@ -278,35 +258,26 @@ export function send_message(
       onmessage(event) {
         //-- Error --//
         if (event.id && event.id === "error") {
-          console.log("error", event.data); // DEV
           // TODO - implement error handling
         }
         //-- Conversation object (IConversation) --//
         else if (event.id && event.id === "conversation") {
           //-- Note - this is only sent for new conversations --//
           let data: IConversation = JSON.parse(event.data);
-          console.log("onmessage - conversation object:"); // DEV
-          console.log(data); // DEV
           CC.setConversation(data);
         }
         //-- Completion object (IMessage) --//
         else if (event.id && event.id === "completion") {
-          console.log('event.id === "completion"', JSON.parse(event.data)); // DEV
           let completion_object: IMessage = JSON.parse(event.data);
-          console.log("completion object"); // DEV
-          console.log(JSON.stringify(completion_object, null, 2)); // DEV
           //-- Overwrite completion object in nodeArray --//
           nodeArray = produce(nodeArray, (draft) => {
             let new_node_in_draft = draft.find((node) => {
               return node._id.equals(new_node_id);
             });
             if (new_node_in_draft) {
-              console.log("new_node_in_draft found"); // DEV
               new_node_in_draft.completion = completion_object;
             }
           });
-          console.log("nodeArray after adding completion_object"); // DEV
-          console.log(JSON.stringify(nodeArray, null, 2)); // DEV
           //-- Overwrite completion content in rowArray --//
           CC.setRowArray((prevRowArray) => {
             return produce(prevRowArray, (draft) => {

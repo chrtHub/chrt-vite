@@ -8,6 +8,7 @@ import ModelSelector from "./ModelSelector";
 import * as chatson from "./chatson/chatson";
 import ChatRow from "./ChatRow";
 import ChatLanding from "./ChatLanding";
+import LLMParams from "./LLMParams";
 
 //== NPM Components ==//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
@@ -16,12 +17,10 @@ import TextareaAutosize from "react-textarea-autosize";
 //== Icons ==//
 import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import {
-  AdjustmentsHorizontalIcon,
   ChevronDoubleDownIcon,
   CircleStackIcon,
   CpuChipIcon,
   StopIcon,
-  XCircleIcon,
 } from "@heroicons/react/24/outline";
 
 //== NPM Functions ==//
@@ -32,6 +31,7 @@ import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { ObjectId } from "bson";
+import ConversationStats from "./ConversationStats";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
@@ -248,20 +248,7 @@ export default function ChatSession() {
             <div className="flex w-full items-center justify-start">
               {/* Conversation stats */}
               {/* TODO */}
-              <div>
-                <button
-                  onClick={() => {
-                    console.log("stats button clicked"); // TODO - add logic
-                  }}
-                  type="button"
-                  className="mx-2 align-middle"
-                >
-                  <CircleStackIcon
-                    className="h-6 w-6 text-zinc-600 hover:text-zinc-700"
-                    aria-hidden="true"
-                  />
-                </button>
-              </div>
+              <ConversationStats rowArrayLength={CC.rowArray?.length || 0} />
             </div>
             {/*-- End of LHS --*/}
 
@@ -270,21 +257,8 @@ export default function ChatSession() {
               {/* Select LLM Model */}
               <ModelSelector />
 
-              {/* LLM request settings */}
-              <div>
-                <button
-                  onClick={() => {
-                    console.log("request params button clicked"); // TODO - add logic
-                  }}
-                  type="button"
-                  className="mx-2 align-middle"
-                >
-                  <AdjustmentsHorizontalIcon
-                    className="h-6 w-6 text-zinc-600 hover:text-zinc-700"
-                    aria-hidden="true"
-                  />
-                </button>
-              </div>
+              {/* LLM param settings */}
+              <LLMParams />
             </div>
             {/*-- End of Center --*/}
 

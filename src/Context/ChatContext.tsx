@@ -4,6 +4,7 @@ import {
   IMessageRow,
   IModel,
   ModelAPINames,
+  IOpenAILLMParams,
 } from "../App/GPT/chatson/chatson_types";
 
 //-- Create interface and Context --//
@@ -15,6 +16,8 @@ export interface IChatContext {
   model: IModel;
   setModel: React.Dispatch<React.SetStateAction<IModel>>;
   model_options: Partial<Record<ModelAPINames, IModel>>;
+  temperature: number | null;
+  setTemperature: React.Dispatch<React.SetStateAction<number | null>>;
   completionLoading: boolean;
   setCompletionLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -43,6 +46,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   const [model, setModel] = useState<IModel>(
     model_options["gpt-3.5-turbo"] as IModel
   );
+  const [temperature, setTemperature] = useState<number | null>(null);
   const [completionLoading, setCompletionLoading] = useState<boolean>(false);
 
   //-- Bundle values into chatContextValue --//
@@ -53,6 +57,8 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     setConversation,
     model,
     setModel,
+    temperature,
+    setTemperature,
     model_options,
     completionLoading,
     setCompletionLoading,

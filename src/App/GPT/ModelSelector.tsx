@@ -20,7 +20,7 @@ import classNames from "../../Util/classNames";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ModelSelector() {
   //-- React State --//
-  const ChatContext = useChatContext();
+  const CC = useChatContext();
 
   //-- Recoil State --//
   //-- Auth --//
@@ -29,17 +29,17 @@ export default function ModelSelector() {
   //-- Click Handlers --//
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <Listbox value={ChatContext.model} onChange={ChatContext.setModel}>
+    <Listbox value={CC.model} onChange={CC.setModel}>
       {({ open }) => (
         <>
           <Listbox.Label className="sr-only">Change GPT Model</Listbox.Label>
 
           <div className="relative">
-            <Listbox.Button className="relative flex w-28 flex-row rounded-md bg-zinc-600 py-1.5 pr-5 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:ring-offset-2 focus:ring-offset-zinc-50">
+            <Listbox.Button className="relative flex w-28 flex-row rounded-md bg-zinc-600 py-1.5 pr-5 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-50">
               {/*  */}
               <div className="flex-1">
                 <p className="text-sm font-semibold text-white">
-                  {ChatContext.model.friendly_name}
+                  {CC.model.friendly_name}
                 </p>
               </div>
               <div className="absolute right-0 mr-1.5 ">
@@ -58,8 +58,8 @@ export default function ModelSelector() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute bottom-full left-0 z-10 mb-2 w-48 origin-top-right divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                {Object.values(ChatContext.model_options).map((model) => (
+              <Listbox.Options className="absolute bottom-full left-1/2 z-10 mb-2 w-48 origin-top-right -translate-x-1/2 transform divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                {Object.values(CC.model_options).map((model) => (
                   <Listbox.Option
                     key={model.api_name}
                     className={({ active }) =>
