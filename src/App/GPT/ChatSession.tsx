@@ -14,10 +14,13 @@ import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import TextareaAutosize from "react-textarea-autosize";
 
 //== Icons ==//
-import { ArrowUpCircleIcon } from "@heroicons/react/20/solid";
+import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import {
+  AdjustmentsHorizontalIcon,
   ChevronDoubleDownIcon,
+  CircleStackIcon,
   CpuChipIcon,
+  StopIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 
@@ -192,16 +195,15 @@ export default function ChatSession() {
   };
 
   //-- Virtuoso --//
-  // const scrollToBottomHandler = () => {
-  //   // visibleThread.length > 0
-  //   if (virtuosoRef.current && filteredMessages.length > 0) {
-  //     virtuosoRef.current.scrollToIndex({
-  //       index: filteredMessages.length - 1, // visibleThread.length
-  //       behavior: "smooth",
-  //       align: "end",
-  //     });
-  //   }
-  // };
+  const scrollToBottomHandler = () => {
+    if (virtuosoRef.current && CC.rowArray && CC.rowArray.length > 0) {
+      virtuosoRef.current.scrollToIndex({
+        index: CC.rowArray.length - 1, // e.g. visibleThread.length
+        behavior: "smooth",
+        align: "end",
+      });
+    }
+  };
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
@@ -242,37 +244,73 @@ export default function ChatSession() {
             id="chat-session-control-bar"
             className="flex w-full max-w-prose flex-row"
           >
-            {/* Stop Response Generation */}
-            <div className="flex w-full flex-row items-center justify-center">
+            {/*-- Start of LHS --*/}
+            <div className="flex w-full items-center justify-start">
+              {/* Conversation stats */}
+              {/* TODO */}
+              <div>
+                <button
+                  onClick={() => {
+                    console.log("stats button clicked"); // TODO - add logic
+                  }}
+                  type="button"
+                  className="mx-2 align-middle"
+                >
+                  <CircleStackIcon
+                    className="h-6 w-6 text-zinc-600 hover:text-zinc-700"
+                    aria-hidden="true"
+                  />
+                </button>
+              </div>
+            </div>
+            {/*-- End of LHS --*/}
+
+            {/*-- Start of Center --*/}
+            <div className="flex w-full items-center justify-center">
+              {/* Select LLM Model */}
+              <ModelSelector />
+
+              {/* LLM request settings */}
+              <div>
+                <button
+                  onClick={() => {
+                    console.log("request params button clicked"); // TODO - add logic
+                  }}
+                  type="button"
+                  className="mx-2 align-middle"
+                >
+                  <AdjustmentsHorizontalIcon
+                    className="h-6 w-6 text-zinc-600 hover:text-zinc-700"
+                    aria-hidden="true"
+                  />
+                </button>
+              </div>
+            </div>
+            {/*-- End of Center --*/}
+
+            {/*-- Start of RHS --*/}
+            <div className="flex w-full justify-end">
+              {/* Stop Response Generation */}
               {/* DEV - always 'false' for now, when streaming in use, add logic here to allow user to stop response generation */}
-              {false && CC.completionLoading && (
+              {/* {false && CC.completionLoading && ( */}
+              {false && (
                 <>
                   <button
-                    onClick={() => console.log("cancel")} // TODO - add logic
+                    onClick={() => console.log("stop button clicked")} // TODO - add logic
                     type="button"
-                    className="inline-flex items-center gap-x-1.5 rounded-md bg-zinc-600 px-2.5 py-1.5 font-semibold text-white shadow-sm hover:bg-zinc-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
+                    className="mr-2.5 inline-flex items-center gap-x-1.5 rounded-md bg-zinc-600 px-2.5 py-1.5 font-semibold text-white shadow-sm hover:bg-zinc-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
                   >
-                    <XCircleIcon
-                      className="-ml-0.5 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                    <p className="text-sm">Cancel</p>
+                    <StopIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+                    <p className="text-sm">Stop</p>
                   </button>
                 </>
               )}
-            </div>
 
-            {/* Select LLM Model */}
-            <div className="flex w-full items-center justify-center">
-              <ModelSelector />
-            </div>
-
-            {/* Scroll to Bottom */}
-            <div className="flex w-full items-center justify-end">
+              {/* Scroll to Bottom */}
               <button
                 className="pr-1.5"
                 disabled={!showButton}
-                // onClick={scrollToBottomHandler}
+                onClick={scrollToBottomHandler}
               >
                 <ChevronDoubleDownIcon
                   className={classNames(
@@ -284,6 +322,7 @@ export default function ChatSession() {
                 />
               </button>
             </div>
+            {/*-- End of RHS --*/}
           </div>
         </div>
 

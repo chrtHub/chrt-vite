@@ -37,7 +37,7 @@ let nodeMap: Record<string, IMessageNode> = {};
 
 // (2) Build prompt IMessage object and request_body IChatCompletionRequestBody object, call fetchEventSource with request_body.
 
-// (3a) All conversations - onopen
+// (3a) All conversations - <onopen></onopen>
 // // get headers for conversation id
 // (3b) New conversations - onopen
 // // get headers for root node, build root node, add it to nodeArray
@@ -334,13 +334,10 @@ export function send_message(
         //-- SSE completion content chunks --//
         else {
           const uriDecodedData = decodeURIComponent(event.data);
-          console.log(uriDecodedData); // DEV
-
           CC.setRowArray((prevRowArray) => {
             return produce(prevRowArray, (draft) => {
               if (draft) {
                 //-- Add message chunk to `content` of last row in rowArray --//
-                // DEV NOTE - perhaps use 'find()' instead of last index? or perhaps build rowArray as a rowObject and use an index here
                 draft[draft.length - 1].content =
                   draft[draft.length - 1].content + uriDecodedData;
               }
