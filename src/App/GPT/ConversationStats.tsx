@@ -29,15 +29,10 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
   //-- Recoil State --//
   //-- Auth --//
   //-- Other [] --//
-
-  let formattedDate: string;
-  let created_at = CC.conversation?.created_at; // 2023-04-30T19:35:13.561Z
-  if (created_at) {
-    created_at = parseISO(`${created_at}`);
-    formattedDate = format(created_at, "MMM dd, yyyy @ hh:mm:ss aaa");
-  } else {
-    formattedDate = "n/a";
-  }
+  const created_at = CC.conversation?.created_at;
+  const formattedDate: string = created_at
+    ? format(new Date(created_at), "MMM dd, yyyy @ hh:mm:ss aaa")
+    : "n/a";
 
   //-- Side Effects --//
   let total_tokens: number = 0;
