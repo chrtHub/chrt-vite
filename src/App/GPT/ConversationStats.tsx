@@ -145,7 +145,7 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
                       className={classNames(
                         item.iconBG,
                         item.iconDarkBG,
-                        "rounded-md p-3"
+                        "rounded-lg p-3"
                       )}
                     >
                       <item.icon
