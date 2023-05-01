@@ -30,7 +30,7 @@ export default function LLMParams() {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="mx-2 flex items-center rounded-full align-middle text-zinc-600 hover:text-zinc-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-zinc-100">
+        <Menu.Button className="mx-2 flex items-center rounded-full align-middle text-zinc-600 hover:text-zinc-700 focus:outline-none dark:text-zinc-400 dark:hover:text-zinc-200">
           <span className="sr-only">LLM params settings</span>
           <AdjustmentsHorizontalIcon className="h-6 w-6" aria-hidden="true" />
         </Menu.Button>
