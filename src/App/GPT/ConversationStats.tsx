@@ -39,13 +39,13 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
   const created_at = CC.conversation?.created_at;
   const formattedDate: string = created_at
     ? format(new Date(created_at), "MMM dd, yyyy")
-    : "n/a";
+    : "-";
   const formattedTime: string = created_at
     ? format(new Date(created_at), "hh:mm:ss aaa")
     : "";
   const timeDistanceToNow = created_at
     ? formatDistanceToNow(new Date(created_at)) + " ago"
-    : "n/a";
+    : "-";
 
   //-- Side Effects --//
   useEffect(() => {
@@ -130,20 +130,21 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
         leaveTo="transform opacity-0 scale-95"
       >
         <Popover.Panel className="absolute bottom-full left-0 z-10 mb-3 ml-1 mt-2 w-52 rounded-md bg-white shadow-lg ring-1 ring-transparent ring-opacity-5 focus:outline-none dark:bg-zinc-900">
-          <div className="py-1">
+          <div className="flex flex-col py-1">
             {/* Stats Array items */}
             {statsArray.map((item, index) => {
               return (
                 <div
                   key={index}
-                  className="relative overflow-auto bg-white px-2 py-1 dark:bg-zinc-900"
+                  className="flex flex-row bg-white px-2 py-1 dark:bg-zinc-900"
                 >
-                  <dt>
+                  {/*-- Icon --*/}
+                  <div>
                     <div
                       className={classNames(
                         item.iconBG,
                         item.iconDarkBG,
-                        "absolute rounded-md p-3"
+                        "rounded-md p-3"
                       )}
                     >
                       <item.icon
@@ -151,34 +152,38 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
                         aria-hidden="true"
                       />
                     </div>
-                    <p className="ml-16 truncate text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                      {item.title}
-                    </p>
-                  </dt>
-                  <dd
-                    className={classNames(
-                      "ml-16 flex-col",
-                      "items-center"
-                      // "items-baseline"
-                    )}
-                  >
-                    <p
-                      className={classNames(
-                        item.value === "" ? "text-2xl" : item.valueTextSize,
-                        "font-semibold text-zinc-900 dark:text-white"
-                      )}
-                    >
-                      {item.value2}
-                    </p>
-                    <p
-                      className={classNames(
-                        item.value === "n/a" ? "text-2xl" : item.valueTextSize,
-                        "font-semibold text-zinc-900 dark:text-white"
-                      )}
-                    >
-                      {item?.value}
-                    </p>
-                  </dd>
+                  </div>
+
+                  {/*-- Title and Value --*/}
+                  <div>
+                    {/* Title */}
+                    <div>
+                      <p className="ml-3 truncate text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                        {item.title}
+                      </p>
+                    </div>
+
+                    {/* Value */}
+                    <div className={classNames("ml-3 flex-col")}>
+                      <p
+                        className={classNames(
+                          item.valueTextSize,
+                          "font-semibold text-zinc-900 dark:text-white"
+                        )}
+                      >
+                        {item.value2}
+                      </p>
+                      <p
+                        className={classNames(
+                          item.valueTextSize,
+                          "font-semibold text-zinc-900 dark:text-white"
+                        )}
+                      >
+                        {item?.value}
+                      </p>
+                    </div>
+                  </div>
+                  {/*  */}
                 </div>
               );
             })}
