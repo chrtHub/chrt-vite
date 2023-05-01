@@ -41,7 +41,7 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
     ? format(new Date(created_at), "MMM dd, yyyy")
     : "-";
   const formattedTime: string = created_at
-    ? format(new Date(created_at), "hh:mm:ss aaa")
+    ? format(new Date(created_at), "hh:mm aaa")
     : "";
   const timeDistanceToNow = created_at
     ? formatDistanceToNow(new Date(created_at)) + " ago"
@@ -64,10 +64,8 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
     title: string;
     value: string | number;
     value2?: string | number;
-    valueTextSize: "text-sm" | "text-2xl";
+    valueTextSize: "text-xs" | "text-sm" | "text-2xl";
   }
-
-  let TOKENS = 42420;
 
   const statsArray: IStatsItem[] = [
     {
@@ -106,10 +104,10 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
       icon: CalendarDaysIcon,
       iconBG: "bg-zinc-500",
       iconDarkBG: "dark:bg-zinc-700",
-      title: "Created on",
+      title: "Created On",
       value: formattedTime,
       value2: formattedDate,
-      valueTextSize: "text-sm",
+      valueTextSize: "text-xs",
     },
   ];
 
