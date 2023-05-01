@@ -66,13 +66,16 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
     value2?: string | number;
     valueTextSize: "text-sm" | "text-2xl";
   }
+
+  let TOKENS = 42420;
+
   const statsArray: IStatsItem[] = [
     {
       icon: CpuChipIcon,
       iconBG: "bg-green-500",
       iconDarkBG: "dark:bg-green-700",
       title: "Tokens Used",
-      value: conversationTotalTokens,
+      value: conversationTotalTokens.toLocaleString(),
       valueTextSize: "text-2xl",
     },
     {

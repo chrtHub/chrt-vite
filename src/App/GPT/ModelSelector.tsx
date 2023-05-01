@@ -58,13 +58,15 @@ export default function ModelSelector() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute bottom-full left-1/2 z-10 mb-2 w-48 origin-top-right -translate-x-1/2 transform divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Listbox.Options className="absolute bottom-full left-1/2 z-10 mb-2 w-48 origin-top-right -translate-x-1/2 transform divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:divide-zinc-200 dark:bg-zinc-900">
                 {Object.values(CC.model_options).map((model) => (
                   <Listbox.Option
                     key={model.api_name}
                     className={({ active }) =>
                       classNames(
-                        active ? "bg-green-600 text-white" : "text-zinc-900",
+                        active
+                          ? "bg-green-600 text-white dark:bg-green-700"
+                          : "text-zinc-900",
                         "cursor-default select-none p-4 text-sm"
                       )
                     }
@@ -73,14 +75,14 @@ export default function ModelSelector() {
                     {({ selected, active }) => (
                       <div className="flex flex-col">
                         <div className="flex justify-between">
-                          <p className={selected ? "font-bold" : "font-normal"}>
+                          <p className={"font-bold dark:text-white"}>
                             {model.friendly_name}
                           </p>
                         </div>
                         <p
                           className={classNames(
                             active ? "text-green-200" : "text-zinc-500",
-                            "mt-2"
+                            "mt-2 dark:text-zinc-200"
                           )}
                         >
                           {model.description}
