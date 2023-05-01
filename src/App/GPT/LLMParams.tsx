@@ -28,6 +28,7 @@ export default function LLMParams() {
   //-- Recoil State --//
   //-- Auth --//
   //-- Other [] --//
+
   //-- Side Effects --//
   //-- Click Handlers --//
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
@@ -77,7 +78,7 @@ export default function LLMParams() {
                 {/* Value */}
                 <div className="ml-3">
                   <p className="text-2xl font-semibold text-zinc-900 dark:text-white">
-                    {CC.temperature ? CC.temperature : 1}
+                    {CC.temperature === null ? 1 : CC.temperature}
                   </p>
                 </div>
               </div>
@@ -93,7 +94,7 @@ export default function LLMParams() {
                 min="0"
                 max="2"
                 step="0.1"
-                value={CC.temperature || 1}
+                value={CC.temperature === null ? 1 : CC.temperature}
                 onChange={(event) => {
                   CC.setTemperature(parseFloat(event.target.value));
                 }}
