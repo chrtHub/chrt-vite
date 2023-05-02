@@ -7,6 +7,7 @@ import { useRecoilState } from "recoil";
 
 //-- TSX Components --//
 import { useChatContext } from "../Context/ChatContext";
+import getConversationsList from "../App/GPT/chatson/getConversationsList";
 
 //-- NPM Components --//
 import { Dialog, Menu, Transition } from "@headlessui/react";
@@ -190,6 +191,13 @@ export default function AppLayout({ infoMode }: IProps) {
   const { pathname } = useLocation();
 
   //-- Conversations List --//
+  const { getAccessTokenSilently } = useAuth0();
+  const getConversationsListHandler = async () => {
+    let accessToken = await getAccessTokenSilently();
+    let list = await getConversationsList(accessToken);
+    CC.setConversationsArray(list);
+  };
+
   const ConversationRow = (props: { row: IConversationSerialized }) => {
     const { row } = props;
 
@@ -204,7 +212,7 @@ export default function AppLayout({ infoMode }: IProps) {
       : "-";
 
     let active: Boolean = false;
-    if (CC.conversation && CC.conversation._id.toHexString() === row._id) {
+    if (CC.conversation && CC.conversation._id.toString() === row._id) {
       active = true;
     }
 
@@ -233,6 +241,20 @@ export default function AppLayout({ infoMode }: IProps) {
     if (CC.conversationsArray && CC.conversationsArray.length > 0) {
       return (
         <>
+          <div className="flex flex-row">
+            <button
+              onClick={() => {
+                console.log("NEW CONVO");
+              }}
+            >
+              new conversation
+            </button>
+            {/* Get Conversations List Button */}
+            <button onClick={getConversationsListHandler}>
+              refresh conversations list{" "}
+            </button>
+          </div>
+
           {/* Virtuoso */}
           <Virtuoso
             id="virtuoso-conversations-list"
@@ -669,4 +691,7 @@ export default function AppLayout({ infoMode }: IProps) {
       {/* END OF RHS */}
     </div>
   );
+}
+function getAccessTokenSilently() {
+  throw new Error("Function not implemented.");
 }

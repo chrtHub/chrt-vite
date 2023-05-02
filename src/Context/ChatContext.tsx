@@ -1,4 +1,11 @@
-import { useState, createContext, useContext, PropsWithChildren } from "react";
+import {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  PropsWithChildren,
+} from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import {
   IConversation,
   IConversationSerialized,
@@ -7,6 +14,7 @@ import {
   IModelFriendly,
   ModelAPINames,
 } from "../App/GPT/chatson/chatson_types";
+import getConversationsList from "../App/GPT/chatson/getConversationsList";
 
 //-- Create interface and Context --//
 export interface IChatContext {
@@ -105,7 +113,18 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   const [temperature, setTemperature] = useState<number | null>(null);
   const [completionLoading, setCompletionLoading] = useState<boolean>(false);
 
-  //-- Bundle values into chatContextValue --//
+  //-- Get conversations list on mount --//
+  const { getAccessTokenSilently } = useAuth0();
+  useEffect(() => {
+    const getConversationsListHandler = async () => {
+      let accessToken = await getAccessTokenSilently();
+      let list = await getConversationsList(accessToken);
+      setConversationsArray(list);
+    };
+    getConversationsListHandler();
+  }, []);
+
+  //-- BungetConversationsListHandlerle values into chatContextValue --//
   const chatContextValue: IChatContext = {
     conversationsArray,
     setConversationsArray,
