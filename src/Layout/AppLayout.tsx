@@ -1,6 +1,7 @@
 //-- react, react-router-dom, recoil, Auth0 --//
 import { Fragment, useState, useEffect } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
+
 import { useAuth0 } from "@auth0/auth0-react";
 import { useRecoilState } from "recoil";
 
@@ -9,6 +10,7 @@ import { useChatContext } from "../Context/ChatContext";
 
 //-- NPM Components --//
 import { Dialog, Menu, Transition } from "@headlessui/react";
+import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 
 //-- Icons --//
 import {
@@ -39,6 +41,7 @@ import classNames from "../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 import { echartsThemeState } from "./atoms";
+import { IConversation } from "../App/GPT/chatson/chatson_types";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 interface IProps {
@@ -178,6 +181,29 @@ export default function AppLayout({ infoMode }: IProps) {
       .matchMedia("(prefers-color-scheme: dark)")
       .removeEventListener("change", handleThemeChange);
   }, []);
+
+  //-- ************************* --//
+  //== Secondary List components ==//
+  const { pathname } = useLocation();
+
+  //-- Conversations List --//
+  const ConversationRow = (props: { row: IConversation }) => {
+    let { row } = props;
+    return (
+      <div>
+        <p>{row._id.toString()}</p>
+      </div>
+    );
+  };
+  // TODO - use Virtuoso for rows
+  const ConversationsList = () => {
+    if (CC.conversationsArray) {
+      return CC.conversationsArray.map((row) => {
+        return <ConversationRow row={row} />;
+      });
+    }
+    return null;
+  };
 
   return (
     <div
@@ -362,15 +388,8 @@ export default function AppLayout({ infoMode }: IProps) {
               </div>
             </div>
 
-            {/* List of conversations */}
-            {CC.conversationsArray?.map((row, index) => {
-              return (
-                // TODO - make a beautiful component here
-                <p className="text-sm" key={index}>
-                  {row.user_db_id}
-                </p>
-              );
-            })}
+            {/* When route is "/gpt" - Render List of conversations */}
+            {pathname === "/gpt" && <ConversationsList />}
           </div>
           {/* End of ChrtGPT Conversations */}
           {/* END OF SECONDARY ITEMS LIST */}
