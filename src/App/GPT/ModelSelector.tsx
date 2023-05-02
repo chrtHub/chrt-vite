@@ -14,7 +14,7 @@ import { useChatContext } from "../../Context/ChatContext";
 
 //-- Utility Functions --//
 import classNames from "../../Util/classNames";
-import { IModelFriendly, ModelAPINames } from "./chatson/chatson_types";
+import getFriendly from "./chatson/getFriendly";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
 
@@ -26,24 +26,6 @@ export default function ModelSelector() {
   //-- Recoil State --//
   //-- Auth --//
   //-- Other [] --//
-
-  const getFriendly = (
-    model_api_name: ModelAPINames,
-    option:
-      | "api_provider_friendly_name"
-      | "model_developer_friendly_name"
-      | "model_friendly_name"
-      | "model_description"
-  ) => {
-    let modelFriendly: IModelFriendly | undefined;
-    if (model_api_name && CC.model_friendly_names[model_api_name]) {
-      modelFriendly = CC.model_friendly_names[model_api_name] as IModelFriendly;
-    }
-    if (modelFriendly) {
-      return modelFriendly[option];
-    }
-    return "";
-  };
 
   //-- Side Effects --//
   //-- Click Handlers --//
@@ -60,7 +42,11 @@ export default function ModelSelector() {
               <div className="flex-1">
                 <p className="text-sm font-semibold text-white">
                   {/* Selected Model Name */}
-                  {getFriendly(CC.model.model_api_name, "model_friendly_name")}
+                  {getFriendly(
+                    CC.model.model_api_name,
+                    CC.model_friendly_names,
+                    "model_friendly_name"
+                  )}
                 </p>
               </div>
               <div className="absolute right-0 mr-1.5 ">
@@ -117,6 +103,7 @@ export default function ModelSelector() {
                             >
                               {getFriendly(
                                 model.model_api_name,
+                                CC.model_friendly_names,
                                 "model_friendly_name"
                               )}
                             </p>
@@ -136,6 +123,7 @@ export default function ModelSelector() {
                             >
                               {getFriendly(
                                 model.model_api_name,
+                                CC.model_friendly_names,
                                 "model_developer_friendly_name"
                               )}
                             </p>
@@ -157,6 +145,7 @@ export default function ModelSelector() {
                           >
                             {getFriendly(
                               model.model_api_name,
+                              CC.model_friendly_names,
                               "model_description"
                             )}
                           </p>

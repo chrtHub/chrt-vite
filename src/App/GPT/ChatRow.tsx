@@ -1,4 +1,5 @@
 //== react, react-router-dom, recoil, Auth0 ==//
+import { useChatContext } from "../../Context/ChatContext";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //== TSX Components ==//
@@ -15,12 +16,14 @@ import { CpuChipIcon } from "@heroicons/react/24/outline";
 
 //== Utility Functions ==//
 import classNames from "../../Util/classNames";
+import getFriendly from "./chatson/getFriendly";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { IMessageRow } from "./chatson/chatson_types";
 
 export default function ChatRow(props: { row: IMessageRow }) {
   let { row } = props;
+  let CC = useChatContext();
   const { user } = useAuth0();
 
   const Author = () => {
@@ -40,12 +43,16 @@ export default function ChatRow(props: { row: IMessageRow }) {
     }
 
     //-- If author is a model, display name of the model --//
-    if (row.author === row.model.api_name) {
+    if (row.author === row.model.model_api_name) {
       return (
         <div className="flex flex-col items-center">
           <CpuChipIcon className="h-8 w-8 text-zinc-500 dark:text-zinc-400" />
           <div className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-            {row.model.friendly_name}
+            {getFriendly(
+              row.model.model_api_name,
+              CC.model_friendly_names,
+              "model_friendly_name"
+            )}
           </div>
         </div>
       );
