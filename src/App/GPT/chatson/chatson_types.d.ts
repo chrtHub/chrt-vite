@@ -3,7 +3,8 @@ import { ObjectId } from "bson";
 //-- Type Interfaces --//
 export interface IConversation {
   _id: ObjectId;
-  llm_provider: LLMProvider;
+  api_provider_name: APIProviderNames;
+  model_developer_name: ModelDeveloperNames;
   user_db_id: string;
   title: string;
   root_node_id: ObjectId;
