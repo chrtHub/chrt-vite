@@ -15,6 +15,33 @@ export interface IConversation {
 }
 //-- `conversations` collection --> index on user_db_id --//
 
+//-- This is the format received when fetching IConversation[] from MongoDB --//
+export interface IConversationSerialized {
+  _id: string; //-- in place of ObjectId --//
+  llm_provider: LLMProvider;
+  user_db_id: string;
+  title: string;
+  root_node_id: string; //-- in place of ObjectId --//
+  schema_version: string;
+  created_at: string; //-- in place of Date --//
+  api_req_res_metadata: Array<{
+    user: string;
+    model_api_name: string;
+    params: {
+      temperature?: number | null;
+      [key: string]: any; //-- Index signature for additional parameters --//
+    };
+    created_at: string; //-- in place of Date --//
+    request_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+    node_id: string; //-- in place of ObjectId --//
+    request_messages_node_ids: string[]; //-- in place of ObjectID[] --//
+  }>;
+  system_tags: string[];
+  user_tags: string[];
+}
+
 export interface IMessageNode {
   _id: ObjectId;
   user_db_id: string;
@@ -47,10 +74,17 @@ export interface IMessageRow extends IMessage {
 }
 
 export interface IModel {
-  api_name: ModelAPINames;
-  friendly_name: string;
-  description: string;
+  api_provider_name: APIProviderNames;
+  model_developer_name: ModelDeveloperNames;
+  model_api_name: ModelAPINames;
 }
+
+export type IModelFriendly = {
+  api_provider_friendly_name: string;
+  model_developer_friendly_name: string;
+  model_friendly_name: string;
+  model_description: string;
+};
 
 export interface IAPIReqResMetadata {
   user: string;
@@ -74,10 +108,27 @@ export interface IChatCompletionRequestBody {
   temperature: number | null; //-- between 0 and 2, inclusive --//
 }
 
-/** This list is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */
-export type ModelAPINames = "gpt-3.5-turbo" | "gpt-4" | "gpt-4-32k";
-export type LLMProvider = "openai" | "amazon-bedrock";
+/** These lists is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */
+export type APIProviderNames = "openai" | "amazon_bedrock";
+// export type APIProviderFriendlyName = "OpenAI" | "Amazon Bedrock"
 
+export type ModelDeveloperNames =
+  | "openai"
+  | "ai21labs"
+  | "anthropic"
+  | "stability_ai"
+  | "amazon";
+// export type ModelDeveloperFriendlyName = "OpenAI" | "AI21 Labs" | "Anthropic" | "stability.ai" | "Amazon"
+
+export type ModelAPINames =
+  | "gpt-3.5-turbo"
+  | "gpt-4"
+  | "gpt-4-32k"
+  | "claude"
+  | "jurrasic-2"
+  | "amazon-titan";
+
+//----//
 export interface IOpenAILLMParams
   extends Omit<CreateChatCompletionRequest, "model" | "messages"> {}
 

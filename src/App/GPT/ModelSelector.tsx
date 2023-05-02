@@ -14,6 +14,7 @@ import { useChatContext } from "../../Context/ChatContext";
 
 //-- Utility Functions --//
 import classNames from "../../Util/classNames";
+import { IModelFriendly, ModelAPINames } from "./chatson/chatson_types";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
 
@@ -25,6 +26,25 @@ export default function ModelSelector() {
   //-- Recoil State --//
   //-- Auth --//
   //-- Other [] --//
+
+  const getFriendly = (
+    model_api_name: ModelAPINames,
+    option:
+      | "api_provider_friendly_name"
+      | "model_developer_friendly_name"
+      | "model_friendly_name"
+      | "model_description"
+  ) => {
+    let modelFriendly: IModelFriendly | undefined;
+    if (model_api_name && CC.model_friendly_names[model_api_name]) {
+      modelFriendly = CC.model_friendly_names[model_api_name] as IModelFriendly;
+    }
+    if (modelFriendly) {
+      return modelFriendly[option];
+    }
+    return "";
+  };
+
   //-- Side Effects --//
   //-- Click Handlers --//
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
@@ -39,7 +59,8 @@ export default function ModelSelector() {
               {/*  */}
               <div className="flex-1">
                 <p className="text-sm font-semibold text-white">
-                  {CC.model.friendly_name}
+                  {/* Selected Model Name */}
+                  {getFriendly(CC.model.model_api_name, "model_friendly_name")}
                 </p>
               </div>
               <div className="absolute right-0 mr-1.5 ">
@@ -59,38 +80,91 @@ export default function ModelSelector() {
               leaveTo="opacity-0"
             >
               <Listbox.Options className="absolute bottom-full left-1/2 z-10 mb-2 w-48 origin-top-right -translate-x-1/2 transform divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:divide-zinc-200 dark:bg-zinc-900">
-                {Object.values(CC.model_options).map((model) => (
-                  <Listbox.Option
-                    key={model.api_name}
-                    className={({ active }) =>
-                      classNames(
-                        active
-                          ? "bg-green-600 text-white dark:bg-green-700"
-                          : "text-zinc-900",
-                        "cursor-default select-none p-4 text-sm"
-                      )
-                    }
-                    value={model}
-                  >
-                    {({ selected, active }) => (
-                      <div className="flex flex-col">
-                        <div className="flex justify-between">
-                          <p className={"font-bold dark:text-white"}>
-                            {model.friendly_name}
+                {Object.values(CC.model_options).map((model) => {
+                  //-- Selected --//
+                  const selected =
+                    CC.model.model_api_name === model.model_api_name;
+                  return (
+                    <Listbox.Option
+                      key={model.model_api_name}
+                      className={({ active }) =>
+                        classNames(
+                          //-- Selected --//
+                          selected ? "bg-green-600 dark:bg-green-700" : "",
+                          //-- Active --//
+                          active ? "bg-green-200 dark:bg-green-900" : "",
+                          //-- Normal --//
+                          "cursor-default select-none p-4 text-sm"
+                        )
+                      }
+                      value={model}
+                    >
+                      {({ active }) => (
+                        <div className="flex flex-col">
+                          <div className="flex justify-between">
+                            {/* Model Name */}
+                            <p
+                              className={classNames(
+                                //-- Selected --//
+                                selected
+                                  ? "text-white"
+                                  : "text-zinc-900 dark:text-white",
+                                //-- Active --//
+                                active ? "" : "",
+                                //-- Normal --//
+                                "font-bold"
+                              )}
+                            >
+                              {getFriendly(
+                                model.model_api_name,
+                                "model_friendly_name"
+                              )}
+                            </p>
+
+                            {/* Model Developer Name */}
+                            <p
+                              className={classNames(
+                                //-- Active --//
+                                active ? "" : "",
+                                //-- Selected --//
+                                selected
+                                  ? "text-white dark:text-zinc-300"
+                                  : "text-zinc-500 dark:text-zinc-400",
+                                //-- Normal --//
+                                "font-semibold"
+                              )}
+                            >
+                              {getFriendly(
+                                model.model_api_name,
+                                "model_developer_friendly_name"
+                              )}
+                            </p>
+                          </div>
+
+                          {/* Model Description */}
+                          <p
+                            className={classNames(
+                              // "text-zinc-500",
+                              //-- Selected --//
+                              selected
+                                ? "text-green-200 dark:text-green-100"
+                                : "text-zinc-700 dark:text-zinc-300",
+                              //-- Active --//
+                              active ? "" : "",
+                              //-- Normal --//
+                              "mt-2"
+                            )}
+                          >
+                            {getFriendly(
+                              model.model_api_name,
+                              "model_description"
+                            )}
                           </p>
                         </div>
-                        <p
-                          className={classNames(
-                            active ? "text-green-200" : "text-zinc-500",
-                            "mt-2 dark:text-zinc-200"
-                          )}
-                        >
-                          {model.description}
-                        </p>
-                      </div>
-                    )}
-                  </Listbox.Option>
-                ))}
+                      )}
+                    </Listbox.Option>
+                  );
+                })}
               </Listbox.Options>
             </Transition>
           </div>

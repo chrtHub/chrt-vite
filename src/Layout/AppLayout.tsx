@@ -10,8 +10,7 @@ import { useChatContext } from "../Context/ChatContext";
 
 //-- NPM Components --//
 import { Dialog, Menu, Transition } from "@headlessui/react";
-import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
-
+import { Virtuoso } from "react-virtuoso";
 //-- Icons --//
 import {
   MagnifyingGlassIcon,
@@ -35,13 +34,17 @@ import {
 } from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
+import { format, formatDistanceToNow } from "date-fns";
 
 //-- Utility Functions --//
 import classNames from "../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 import { echartsThemeState } from "./atoms";
-import { IConversation } from "../App/GPT/chatson/chatson_types";
+import {
+  IConversation,
+  IConversationSerialized,
+} from "../App/GPT/chatson/chatson_types";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 interface IProps {
@@ -187,20 +190,59 @@ export default function AppLayout({ infoMode }: IProps) {
   const { pathname } = useLocation();
 
   //-- Conversations List --//
-  const ConversationRow = (props: { row: IConversation }) => {
-    let { row } = props;
+  const ConversationRow = (props: { row: IConversationSerialized }) => {
+    const { row } = props;
+
+    const formattedDate: string = row.created_at
+      ? format(new Date(row.created_at), "MMM dd, yyyy")
+      : "-";
+    const formattedTime: string = row.created_at
+      ? format(new Date(row.created_at), "hh:mm aaa")
+      : "";
+    const timeDistanceToNow = row.created_at
+      ? formatDistanceToNow(new Date(row.created_at)) + " ago"
+      : "-";
+
+    let active: Boolean = false;
+    if (CC.conversation && CC.conversation._id.toHexString() === row._id) {
+      active = true;
+    }
+
     return (
-      <div>
-        <p>{row._id.toString()}</p>
-      </div>
+      <>
+        <div
+          className={classNames(
+            "rounded-md hover:bg-zinc-100",
+            active && "bg-zinc-300"
+          )}
+        >
+          <p className="font-semibold">
+            {row.title + "this is the title string summarizing the..."}
+          </p>
+          <p className="text-sm text-zinc-500">Created: {formattedTime}</p>
+          {/* <p className="text-sm text-zinc-500">{llm_provider}</p> */}
+          <p className="text-sm text-zinc-500">
+            {row.api_req_res_metadata.length} request(s)
+          </p>
+        </div>
+        <div>hi</div>
+      </>
     );
   };
-  // TODO - use Virtuoso for rows
   const ConversationsList = () => {
-    if (CC.conversationsArray) {
-      return CC.conversationsArray.map((row) => {
-        return <ConversationRow row={row} />;
-      });
+    if (CC.conversationsArray && CC.conversationsArray.length > 0) {
+      return (
+        <>
+          {/* Virtuoso */}
+          <Virtuoso
+            id="virtuoso-conversations-list"
+            data={CC.conversationsArray}
+            itemContent={(index, row) => {
+              return <ConversationRow row={row} />;
+            }}
+          />
+        </>
+      );
     }
     return null;
   };
@@ -318,7 +360,11 @@ export default function AppLayout({ infoMode }: IProps) {
         id="app-layout-static-sidebar"
         className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-48 lg:flex-col"
       >
-        <div className="flex flex-col overflow-y-auto  bg-zinc-50 pt-5 dark:bg-zinc-800">
+        <div
+          id="sidebar-primary-items-list"
+          className="flex h-full flex-col overflow-y-auto bg-zinc-50 pt-3 dark:bg-zinc-800"
+        >
+          {/* START OF CHRT LOGO */}
           <div className="flex flex-shrink-0 items-center px-6">
             <a
               href={window.location.origin}
@@ -327,9 +373,10 @@ export default function AppLayout({ infoMode }: IProps) {
               chrt
             </a>
           </div>
+          {/* END OF CHRT LOGO */}
           {/* START OF NAVIGATION ITEMS */}
-          <div className="mt-5 flex flex-col">
-            <nav className="flex-1 space-y-1 pb-4 pl-3">
+          <div className="mt-4 flex flex-col">
+            <nav className="flex-1 space-y-1 pb-3 pl-3">
               {navigationItems.map((item) => (
                 <NavLink
                   key={item.name}
@@ -341,7 +388,7 @@ export default function AppLayout({ infoMode }: IProps) {
                     item.to === currentNavItem
                       ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:text-white"
                       : "text-zinc-700 hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white",
-                    "group flex items-center rounded-md px-2 py-2 text-sm font-medium"
+                    "group flex items-center rounded-md px-2 py-1.5 text-sm font-medium"
                   )}
                 >
                   <item.icon
@@ -359,40 +406,19 @@ export default function AppLayout({ infoMode }: IProps) {
             </nav>
           </div>
           {/* END OF NAVIGATION ITEMS */}
-
-          {/* START OF SECONDARY ITEMS LIST */}
-          {/* End of ChrtGPT Conversations */}
-          <div id="secondary-items-list" className="ml-3">
-            <div className="relative">
-              {/* Button - new conversation */}
-              <div
-                className="absolute inset-0 flex items-center"
-                aria-hidden="true"
-              >
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center">
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-x-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                  onClick={() => {
-                    console.log("new conversation button clicked");
-                  }}
-                >
-                  <PlusIcon
-                    className="-ml-1 -mr-0.5 h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                  New Conversation
-                </button>
-              </div>
-            </div>
-
-            {/* When route is "/gpt" - Render List of conversations */}
+          <div
+            //-- DIVIDER --//
+            className="ml-3 w-full border-t border-zinc-300 pb-2 dark:border-zinc-500"
+            aria-hidden="true"
+          />
+          {/* START OF SECONDARY ITEMS */}
+          <div
+            id="secondary-items-list"
+            className="ml-3 flex-grow overflow-y-auto"
+          >
             {pathname === "/gpt" && <ConversationsList />}
           </div>
-          {/* End of ChrtGPT Conversations */}
-          {/* END OF SECONDARY ITEMS LIST */}
+          {/* END OF SECONDARY ITEMS */}
         </div>
       </div>
       {/* END OF STATIC SIDEBAR */}

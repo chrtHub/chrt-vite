@@ -33,6 +33,11 @@ import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { ObjectId } from "bson";
 import ConversationStats from "./ConversationStats";
+import {
+  IAPIReqResMetadata,
+  IConversation,
+  IConversationSerialized,
+} from "./chatson/chatson_types";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
@@ -143,8 +148,6 @@ export default function ChatSession() {
 
   // TODO
   useEffect(() => {
-    console.log("TODO - fetch conversations list, date desc"); // DEV
-
     const getConversationsList = async () => {
       try {
         //-- Get access token from memory or request new token --//
@@ -159,7 +162,6 @@ export default function ChatSession() {
             },
           }
         );
-        console.log("res.data", res.data);
         CC.setConversationsArray(res.data);
         //----//
       } catch (err) {

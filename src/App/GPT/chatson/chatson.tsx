@@ -173,7 +173,7 @@ export function send_message(
 
         //-- Build prompt node --//
         const completion: IMessage = {
-          author: CC.model.api_name,
+          author: CC.model.model_api_name,
           model: CC.model,
           created_at: new Date(),
           role: "assistant",
