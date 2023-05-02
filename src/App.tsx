@@ -1,5 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { useState, useEffect, createContext } from "react";
+import { useState, useEffect, createContext, ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -42,9 +42,17 @@ const ScrollToTop = () => {
   return null;
 };
 
+//-- ContextsProvider as nested Contexts Providers --//
+interface IContextsProviderProps {
+  children: ReactNode;
+}
+const ContextsProvider = ({ children }: IContextsProviderProps) => {
+  return <ChatContextProvider>{children}</ChatContextProvider>;
+};
+
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-interface IProps {}
-export default function App({}: IProps) {
+interface IAppProps {}
+export default function App({}: IAppProps) {
   //-- React state --//
 
   //-- Before checking for user --> For Info routes, load AppLayout in infoMode --//
@@ -85,16 +93,20 @@ export default function App({}: IProps) {
   //-- Loading is complete, user is authenticated --> show the app --//
   if (isAuthenticated) {
     return (
-      <ChatContextProvider>
+      <ContextsProvider>
         <AppLayout infoMode={false} />
-      </ChatContextProvider>
+      </ContextsProvider>
     );
   }
   //-- ***** ***** *****  ***** ***** ***** --//
 
   //-- isLoading starts as 'true'. Only show AppLayout if auth0Stuff found --//
   if (isLoading && auth0Stuff) {
-    return <AppLayout infoMode={false} />;
+    return (
+      <ContextsProvider>
+        <AppLayout infoMode={false} />
+      </ContextsProvider>
+    );
   }
 
   //-- Loading is complete and no authenticated user was found --//
@@ -104,7 +116,11 @@ export default function App({}: IProps) {
       return <LandingPage />;
     } else {
       //-- For protected routes, Outlet renders the AuthGuard component, redirecting users to sign in --//
-      return <AppLayout infoMode={false} />;
+      return (
+        <ContextsProvider>
+          <AppLayout infoMode={false} />
+        </ContextsProvider>
+      );
     }
   }
 

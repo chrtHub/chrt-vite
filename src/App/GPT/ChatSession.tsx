@@ -24,6 +24,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 //== NPM Functions ==//
+import axios from "axios";
 
 //== Utility Functions ==//
 import classNames from "../../Util/classNames";
@@ -138,6 +139,38 @@ export default function ChatSession() {
   //-- ***** ***** ***** ***** end of chatson ***** ***** ***** ***** --//
 
   //== Side Effects ==//
+  //-- Fetch conversations --//
+
+  // TODO
+  useEffect(() => {
+    console.log("TODO - fetch conversations list, date desc"); // DEV
+
+    const getConversationsList = async () => {
+      try {
+        //-- Get access token from memory or request new token --//
+        let accessToken = await getAccessTokenSilently();
+
+        //-- Make POST request --//
+        let res = await axios.get(
+          `${VITE_ALB_BASE_URL}/llm/list_conversations`,
+          {
+            headers: {
+              authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        console.log("res.data", res.data);
+        CC.setConversationsArray(res.data);
+        //----//
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getConversationsList();
+
+    // DEV - are these sensible dependencies?
+  }, [CC.conversation, CC.rowArray]);
+
   //-- Listener for keyboard shortcuts --//
   useEffect(() => {
     document.addEventListener("keydown", globalKeyDownHandler);
@@ -146,7 +179,7 @@ export default function ChatSession() {
     };
   }, []);
 
-  //-- Virtuosos - when 'atBottom' changes - if at bottom don't show button, else show button --//
+  //-- Virtuoso - when 'atBottom' changes - if at bottom don't show button, else show button --//
   useEffect(() => {
     if (atBottom) {
       setShowButton(false);

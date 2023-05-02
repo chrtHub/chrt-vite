@@ -9,6 +9,10 @@ import {
 
 //-- Create interface and Context --//
 export interface IChatContext {
+  conversationsArray: IConversation[] | null;
+  setConversationsArray: React.Dispatch<
+    React.SetStateAction<IConversation[] | null>
+  >;
   rowArray: IMessageRow[] | null;
   setRowArray: React.Dispatch<React.SetStateAction<IMessageRow[] | null>>;
   conversation: IConversation | null;
@@ -41,6 +45,9 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   };
 
   //-- State values --//
+  const [conversationsArray, setConversationsArray] = useState<
+    IConversation[] | null
+  >(null);
   const [rowArray, setRowArray] = useState<IMessageRow[] | null>(null);
   const [conversation, setConversation] = useState<IConversation | null>(null);
   const [model, setModel] = useState<IModel>(
@@ -51,6 +58,8 @@ function ChatContextProvider({ children }: PropsWithChildren) {
 
   //-- Bundle values into chatContextValue --//
   const chatContextValue: IChatContext = {
+    conversationsArray,
+    setConversationsArray,
     rowArray,
     setRowArray,
     conversation,

@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useRecoilState } from "recoil";
 
 //-- TSX Components --//
+import { useChatContext } from "../Context/ChatContext";
 
 //-- NPM Components --//
 import { Dialog, Menu, Transition } from "@headlessui/react";
@@ -28,6 +29,7 @@ import {
   SunIcon,
   XMarkIcon,
   CodeBracketIcon,
+  PlusIcon,
 } from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
@@ -43,6 +45,8 @@ interface IProps {
   infoMode: boolean;
 }
 export default function AppLayout({ infoMode }: IProps) {
+  //== React State ==//
+  let CC = useChatContext();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [currentNavItem, setCurrentNavItem] = useState<string>(
     window.location.pathname
@@ -288,7 +292,7 @@ export default function AppLayout({ infoMode }: IProps) {
         id="app-layout-static-sidebar"
         className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-48 lg:flex-col"
       >
-        <div className="flex flex-grow flex-col overflow-y-auto  bg-zinc-50 pt-5 dark:bg-zinc-800">
+        <div className="flex flex-col overflow-y-auto  bg-zinc-50 pt-5 dark:bg-zinc-800">
           <div className="flex flex-shrink-0 items-center px-6">
             <a
               href={window.location.origin}
@@ -298,8 +302,8 @@ export default function AppLayout({ infoMode }: IProps) {
             </a>
           </div>
           {/* START OF NAVIGATION ITEMS */}
-          <div className="mt-5 flex flex-grow flex-col">
-            <nav className="flex-1 space-y-1 pb-4 pl-4">
+          <div className="mt-5 flex flex-col">
+            <nav className="flex-1 space-y-1 pb-4 pl-3">
               {navigationItems.map((item) => (
                 <NavLink
                   key={item.name}
@@ -329,6 +333,47 @@ export default function AppLayout({ infoMode }: IProps) {
             </nav>
           </div>
           {/* END OF NAVIGATION ITEMS */}
+
+          {/* START OF SECONDARY ITEMS LIST */}
+          {/* End of ChrtGPT Conversations */}
+          <div id="secondary-items-list" className="ml-3">
+            <div className="relative">
+              {/* Button - new conversation */}
+              <div
+                className="absolute inset-0 flex items-center"
+                aria-hidden="true"
+              >
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center">
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-x-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                  onClick={() => {
+                    console.log("new conversation button clicked");
+                  }}
+                >
+                  <PlusIcon
+                    className="-ml-1 -mr-0.5 h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                  New Conversation
+                </button>
+              </div>
+            </div>
+
+            {/* List of conversations */}
+            {CC.conversationsArray?.map((row, index) => {
+              return (
+                // TODO - make a beautiful component here
+                <p className="text-sm" key={index}>
+                  {row.user_db_id}
+                </p>
+              );
+            })}
+          </div>
+          {/* End of ChrtGPT Conversations */}
+          {/* END OF SECONDARY ITEMS LIST */}
         </div>
       </div>
       {/* END OF STATIC SIDEBAR */}
