@@ -16,6 +16,7 @@ import classNames from "../../../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 import { IConversationSerialized } from "../chatson/chatson_types";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
 
 //-- Conversation Row --//
 const ConversationRow = (props: { row: IConversationSerialized }) => {
@@ -24,7 +25,7 @@ const ConversationRow = (props: { row: IConversationSerialized }) => {
     ? format(new Date(row.created_at), "MMM dd, yyyy")
     : "-";
   const formattedTime: string = row.created_at
-    ? format(new Date(row.created_at), "hh:mm aaa")
+    ? format(new Date(row.created_at), "h:mm aaa")
     : "";
   const timeDistanceToNow = row.created_at
     ? formatDistanceToNow(new Date(row.created_at)) + " ago"
@@ -32,19 +33,30 @@ const ConversationRow = (props: { row: IConversationSerialized }) => {
   return (
     <>
       <div className={classNames("rounded-md hover:bg-zinc-100")}>
-        <p className="dark:text-zinc-200">
-          {row.title + "this is the title string for the conversation..."}
-        </p>
-        <div className="flex flex-row justify-between">
-          <p className="text-sm font-semibold text-zinc-500">
-            {row.api_req_res_metadata.length === 1
-              ? `${row.api_req_res_metadata.length} request`
-              : `${row.api_req_res_metadata.length} requests`}
+        <button
+          onClick={() => {
+            // TODO - request conversation, set it in state
+            console.log(`TODO - request conversation: ${row._id}`); // DEV
+          }}
+        >
+          {/* Title string */}
+          <p className="truncate text-clip text-left text-zinc-700 dark:text-zinc-200">
+            {row.title +
+              "this is the title string for the conversation. what happens when it's really long like this? What's clip do? "}
           </p>
-          <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-500">
-            {formattedTime}
-          </p>
-        </div>
+          <div className="flex flex-row justify-between">
+            {/* Request count */}
+            <p className="text-sm font-semibold text-zinc-500">
+              {row.api_req_res_metadata.length === 1
+                ? `${row.api_req_res_metadata.length} request`
+                : `${row.api_req_res_metadata.length} requests`}
+            </p>
+            {/* Time */}
+            <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-500">
+              {formattedTime}
+            </p>
+          </div>
+        </button>
       </div>
     </>
   );
@@ -60,18 +72,22 @@ export default function ConversationsList() {
   ) {
     return (
       <>
-        <div className="flex flex-row">
+        <div className="flex flex-row justify-center">
           {/* New conversation button */}
           <button
+            type="button"
+            className="inline-flex w-full items-center gap-x-1.5 rounded-md bg-zinc-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
             onClick={() => {
-              console.log("NEW CONVO");
+              // TODO - start new conversation
+              console.log("TODO - start new conversation");
             }}
           >
-            new conversation
+            <PlusCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+            New Conversation
           </button>
         </div>
 
-        {/* Virtuoso */}
+        {/* Virtuoso Rows */}
         <Virtuoso
           id="virtuoso-conversations-list"
           data={ConversationsContext.conversationsArray}

@@ -295,7 +295,8 @@ export default function AppLayout({ infoMode }: IProps) {
       {/* START OF STATIC SIDEBAR */}
       <div
         id="app-layout-static-sidebar"
-        className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-48 lg:flex-col"
+        // className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-48 lg:flex-col"
+        className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-56 lg:flex-col"
       >
         <div
           id="sidebar-primary-items-list"
@@ -370,7 +371,8 @@ export default function AppLayout({ infoMode }: IProps) {
       {/* START OF RHS */}
       <div
         id="app-layout-rhs-div"
-        className="h-full overflow-y-auto overflow-x-hidden lg:pl-48"
+        // className="h-full overflow-y-auto overflow-x-hidden lg:pl-48"
+        className="h-full overflow-y-auto overflow-x-hidden lg:pl-56"
       >
         <div
           id="app-layout-rhs-content"

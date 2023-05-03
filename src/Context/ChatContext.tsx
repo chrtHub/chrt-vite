@@ -39,21 +39,21 @@ function ChatContextProvider({ children }: PropsWithChildren) {
       model_developer_name: "openai",
       model_api_name: "gpt-4",
     },
-    claude: {
-      api_provider_name: "amazon_bedrock",
-      model_developer_name: "anthropic",
-      model_api_name: "claude",
-    },
-    "jurrasic-2": {
-      api_provider_name: "amazon_bedrock",
-      model_developer_name: "ai21labs",
-      model_api_name: "jurrasic-2",
-    },
-    "amazon-titan": {
-      api_provider_name: "amazon_bedrock",
-      model_developer_name: "amazon",
-      model_api_name: "amazon-titan",
-    },
+    // claude: {
+    //   api_provider_name: "amazon_bedrock",
+    //   model_developer_name: "anthropic",
+    //   model_api_name: "claude",
+    // },
+    // "jurrasic-2": {
+    //   api_provider_name: "amazon_bedrock",
+    //   model_developer_name: "ai21labs",
+    //   model_api_name: "jurrasic-2",
+    // },
+    // "amazon-titan": {
+    //   api_provider_name: "amazon_bedrock",
+    //   model_developer_name: "amazon",
+    //   model_api_name: "amazon-titan",
+    // },
   };
   const model_friendly_names: Partial<Record<ModelAPINames, IModelFriendly>> = {
     "gpt-3.5-turbo": {
@@ -70,27 +70,27 @@ function ChatContextProvider({ children }: PropsWithChildren) {
       model_friendly_name: "GPT-4",
       model_description: "Max Power (slower)",
     },
-    claude: {
-      api_provider_friendly_name: "Amazon Bedrock",
-      model_developer_friendly_name: "Anthropic",
-      model_developer_link: "https://anthropic.com",
-      model_friendly_name: "Claude",
-      model_description: "General purpose LLM",
-    },
-    "jurrasic-2": {
-      api_provider_friendly_name: "Amazon Bedrock",
-      model_developer_friendly_name: "AI21",
-      model_developer_link: "https://ai21.com",
-      model_friendly_name: "Jurrasic 2",
-      model_description: "General purpose LLM",
-    },
-    "amazon-titan": {
-      api_provider_friendly_name: "Amazon Bedrock",
-      model_developer_friendly_name: "Amazon",
-      model_developer_link: "https://aws.amazon.com/bedrock/titan",
-      model_friendly_name: "Titan",
-      model_description: "General purpose LLM",
-    },
+    // claude: {
+    //   api_provider_friendly_name: "Amazon Bedrock",
+    //   model_developer_friendly_name: "Anthropic",
+    //   model_developer_link: "https://anthropic.com",
+    //   model_friendly_name: "Claude",
+    //   model_description: "General purpose LLM",
+    // },
+    // "jurrasic-2": {
+    //   api_provider_friendly_name: "Amazon Bedrock",
+    //   model_developer_friendly_name: "AI21",
+    //   model_developer_link: "https://ai21.com",
+    //   model_friendly_name: "Jurrasic 2",
+    //   model_description: "General purpose LLM",
+    // },
+    // "amazon-titan": {
+    //   api_provider_friendly_name: "Amazon Bedrock",
+    //   model_developer_friendly_name: "Amazon",
+    //   model_developer_link: "https://aws.amazon.com/bedrock/titan",
+    //   model_friendly_name: "Titan",
+    //   model_description: "General purpose LLM",
+    // },
   };
 
   //-- State values --//

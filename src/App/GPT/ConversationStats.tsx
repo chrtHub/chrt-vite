@@ -41,7 +41,7 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
     ? format(new Date(created_at), "MMM dd, yyyy")
     : "-";
   const formattedTime: string = created_at
-    ? format(new Date(created_at), "hh:mm aaa")
+    ? format(new Date(created_at), "h:mm aaa")
     : "";
   const timeDistanceToNow = created_at
     ? formatDistanceToNow(new Date(created_at)) + " ago"
