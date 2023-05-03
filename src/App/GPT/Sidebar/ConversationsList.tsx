@@ -32,18 +32,23 @@ const ConversationRow = (props: { row: IConversationSerialized }) => {
     : "-";
   return (
     <>
-      <div className={classNames("rounded-md hover:bg-zinc-100")}>
+      <div className="rounded-md px-1.5 pb-1 pt-0.5 hover:bg-zinc-200 dark:hover:bg-zinc-700">
+        {/* Each row is a button for selecting that conversation */}
         <button
           onClick={() => {
             // TODO - request conversation, set it in state
             console.log(`TODO - request conversation: ${row._id}`); // DEV
           }}
         >
-          {/* Title string */}
-          <p className="truncate text-clip text-left text-zinc-700 dark:text-zinc-200">
-            {row.title +
-              "this is the title string for the conversation. what happens when it's really long like this? What's clip do? "}
-          </p>
+          <div className="">
+            {/* Title string */}
+            <p className="line-clamp-1 text-sm text-left font-semibold text-zinc-700 dark:text-zinc-300">
+              {row.title +
+                "this is the title string for the conversation. what happens when it's really long like this? What's clip do? "}
+            </p>
+          </div>
+
+          {/* Request Count and Time */}
           <div className="flex flex-row justify-between">
             {/* Request count */}
             <p className="text-sm font-semibold text-zinc-500">
@@ -76,7 +81,7 @@ export default function ConversationsList() {
           {/* New conversation button */}
           <button
             type="button"
-            className="inline-flex w-full items-center gap-x-1.5 rounded-md bg-zinc-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
+            className="mb-1.5 inline-flex w-full items-center gap-x-1.5 rounded-md bg-zinc-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-green-600 dark:hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
             onClick={() => {
               // TODO - start new conversation
               console.log("TODO - start new conversation");

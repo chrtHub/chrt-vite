@@ -220,7 +220,7 @@ export default function AppLayout({ infoMode }: IProps) {
               leaveFrom="translate-x-0"
               leaveTo="-translate-x-full"
             >
-              <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-zinc-50 pb-4 pt-5 dark:bg-zinc-800">
+              <Dialog.Panel className="relative flex w-full max-w-sm flex-1 flex-col bg-zinc-50 pb-4 pt-5 dark:bg-zinc-800">
                 <Transition.Child
                   as={Fragment}
                   enter="ease-in-out duration-300"
@@ -265,7 +265,7 @@ export default function AppLayout({ infoMode }: IProps) {
                         className={classNames(
                           item.to === currentNavItem
                             ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:text-white"
-                            : "hover:text-zinc:800 text-zinc-700 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white",
+                            : "hover:text-zinc:800 text-zinc-700 hover:bg-zinc-200 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white",
                           "group flex items-center rounded-md px-2 py-2 text-base font-medium"
                         )}
                       >
@@ -295,7 +295,6 @@ export default function AppLayout({ infoMode }: IProps) {
       {/* START OF STATIC SIDEBAR */}
       <div
         id="app-layout-static-sidebar"
-        // className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-48 lg:flex-col"
         className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-56 lg:flex-col"
       >
         <div
@@ -325,7 +324,7 @@ export default function AppLayout({ infoMode }: IProps) {
                   className={classNames(
                     item.to === currentNavItem
                       ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:text-white"
-                      : "text-zinc-700 hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white",
+                      : "text-zinc-700 hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white",
                     "group flex items-center rounded-md px-2 py-1.5 text-sm font-medium"
                   )}
                 >
@@ -345,16 +344,18 @@ export default function AppLayout({ infoMode }: IProps) {
           </div>
           {/* END OF NAVIGATION ITEMS */}
 
-          <div
-            //-- DIVIDER --//
-            className={classNames(
-              "ml-3 w-full pb-2",
-              pathname == "/gpt" //-- Add any route that needs the divider --//
-                ? "border-t border-zinc-300 dark:border-zinc-500"
-                : ""
-            )}
-            aria-hidden="true"
-          />
+          <div className="ml-3">
+            <div
+              //-- DIVIDER --//
+              className={classNames(
+                "pb-2",
+                pathname == "/gpt" //-- Add any route that needs the divider --//
+                  ? "border-t border-zinc-300 dark:border-zinc-500"
+                  : ""
+              )}
+              aria-hidden="true"
+            />
+          </div>
 
           {/* START OF SECONDARY ITEMS */}
           <div
@@ -371,7 +372,6 @@ export default function AppLayout({ infoMode }: IProps) {
       {/* START OF RHS */}
       <div
         id="app-layout-rhs-div"
-        // className="h-full overflow-y-auto overflow-x-hidden lg:pl-48"
         className="h-full overflow-y-auto overflow-x-hidden lg:pl-56"
       >
         <div
