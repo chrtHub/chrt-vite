@@ -19,7 +19,8 @@ export interface IConversation {
 //-- This is the format received when fetching IConversation[] from MongoDB --//
 export interface IConversationSerialized {
   _id: string; //-- in place of ObjectId --//
-  llm_provider: LLMProvider;
+  api_provider_name: APIProviderNames;
+  model_developer_name: ModelDeveloperNames;
   user_db_id: string;
   title: string;
   root_node_id: string; //-- in place of ObjectId --//

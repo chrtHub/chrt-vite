@@ -50,7 +50,6 @@ interface IProps {
 }
 export default function AppLayout({ infoMode }: IProps) {
   //== React State ==//
-  // const { conversation } = useChatContext(); // DEV
   const ConversationsContext = useConversationsContext();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [currentNavItem, setCurrentNavItem] = useState<string>(
@@ -214,7 +213,7 @@ export default function AppLayout({ infoMode }: IProps) {
             {row.title + "this is the title string summarizing the..."}
           </p>
           <p className="text-sm text-zinc-500">Created: {formattedTime}</p>
-          {/* <p className="text-sm text-zinc-500">{llm_provider}</p> */}
+          <p className="text-sm text-zinc-500">{row.model_developer_name}</p>
           <p className="text-sm text-zinc-500">
             {row.api_req_res_metadata.length} request(s)
           </p>
@@ -224,7 +223,6 @@ export default function AppLayout({ infoMode }: IProps) {
     );
   };
   const ConversationsList = () => {
-    // if (CC.conversationsArray && CC.conversationsArray.length > 0) {
     if (
       ConversationsContext.conversationsArray &&
       ConversationsContext.conversationsArray.length > 0
@@ -248,7 +246,6 @@ export default function AppLayout({ infoMode }: IProps) {
           {/* Virtuoso */}
           <Virtuoso
             id="virtuoso-conversations-list"
-            // data={CC.conversationsArray}
             data={ConversationsContext.conversationsArray}
             itemContent={(index, row) => {
               return <ConversationRow row={row} />;
@@ -259,8 +256,6 @@ export default function AppLayout({ infoMode }: IProps) {
     }
     return null;
   };
-
-  console.log("AppLayout render"); // DEV
 
   return (
     <div

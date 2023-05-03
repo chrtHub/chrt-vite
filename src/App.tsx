@@ -65,7 +65,9 @@ export default function App({}: IAppProps) {
     return (
       <>
         <ScrollToTop />
-        <AppLayout infoMode={true} />
+        <ContextsProvider>
+          <AppLayout infoMode={true} />
+        </ContextsProvider>
       </>
     );
   }
