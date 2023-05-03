@@ -3,11 +3,7 @@ import { IModelFriendly, ModelAPINames } from "./chatson_types";
 export default function getFriendly(
   model_api_name: ModelAPINames,
   model_friendly_names: Partial<Record<ModelAPINames, Object>>, //-- CC.model_friendly_names --//
-  option:
-    | "api_provider_friendly_name"
-    | "model_developer_friendly_name"
-    | "model_friendly_name"
-    | "model_description"
+  option: keyof IModelFriendly
 ) {
   let modelFriendly: IModelFriendly | undefined;
   if (model_api_name && model_friendly_names[model_api_name]) {

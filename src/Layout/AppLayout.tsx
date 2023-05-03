@@ -1,17 +1,15 @@
 //-- react, react-router-dom, recoil, Auth0 --//
 import { Fragment, useMemo, useState, useEffect } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { useConversationsContext } from "../Context/ConversationsContext";
-import { useChatContext } from "../Context/ChatContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useRecoilState } from "recoil";
 
 //-- TSX Components --//
-import getConversationsList from "../App/GPT/chatson/getConversationsList";
+import ConversationsList from "../App/GPT/Sidebar/ConversationsList";
 
 //-- NPM Components --//
 import { Dialog, Menu, Transition } from "@headlessui/react";
-import { Virtuoso } from "react-virtuoso";
+
 //-- Icons --//
 import {
   MagnifyingGlassIcon,
@@ -42,7 +40,6 @@ import classNames from "../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 import { echartsThemeState } from "./atoms";
-import { IConversationSerialized } from "../App/GPT/chatson/chatson_types";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 interface IProps {
@@ -50,7 +47,7 @@ interface IProps {
 }
 export default function AppLayout({ infoMode }: IProps) {
   //== React State ==//
-  const ConversationsContext = useConversationsContext();
+
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [currentNavItem, setCurrentNavItem] = useState<string>(
     window.location.pathname
@@ -186,81 +183,6 @@ export default function AppLayout({ infoMode }: IProps) {
   //-- ************************* --//
   //== Secondary List components ==//
   const { pathname } = useLocation();
-
-  //-- Conversations List --//
-  const { getAccessTokenSilently } = useAuth0();
-  const getConversationsListHandler = async () => {
-    console.log("AppLayout -- getConversationsList"); // DEV
-    let accessToken = await getAccessTokenSilently();
-    let list = await getConversationsList(accessToken);
-    ConversationsContext.setConversationsArray(list);
-  };
-  const ConversationRow = (props: { row: IConversationSerialized }) => {
-    const { row } = props;
-    const formattedDate: string = row.created_at
-      ? format(new Date(row.created_at), "MMM dd, yyyy")
-      : "-";
-    const formattedTime: string = row.created_at
-      ? format(new Date(row.created_at), "hh:mm aaa")
-      : "";
-    const timeDistanceToNow = row.created_at
-      ? formatDistanceToNow(new Date(row.created_at)) + " ago"
-      : "-";
-    return (
-      <>
-        <div className={classNames("rounded-md hover:bg-zinc-100")}>
-          <p className="dark:text-zinc-200">
-            {row.title + "this is the title string for the conversation..."}
-          </p>
-          <div className="flex flex-row justify-between">
-            <p className="text-sm font-semibold text-zinc-500">
-              {row.api_req_res_metadata.length === 1
-                ? `${row.api_req_res_metadata.length} request`
-                : `${row.api_req_res_metadata.length} requests`}
-            </p>
-            <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-500">
-              {formattedTime}
-            </p>
-          </div>
-        </div>
-      </>
-    );
-  };
-  const ConversationsList = () => {
-    if (
-      ConversationsContext.conversationsArray &&
-      ConversationsContext.conversationsArray.length > 0
-    ) {
-      return (
-        <>
-          <div className="flex flex-row">
-            {/* Get Conversations List Button */}
-            <button onClick={getConversationsListHandler}>
-              refresh conversations list{" "}
-            </button>
-            {/* New conversation button */}
-            <button
-              onClick={() => {
-                console.log("NEW CONVO");
-              }}
-            >
-              new conversation
-            </button>
-          </div>
-
-          {/* Virtuoso */}
-          <Virtuoso
-            id="virtuoso-conversations-list"
-            data={ConversationsContext.conversationsArray}
-            itemContent={(index, row) => {
-              return <ConversationRow row={row} />;
-            }}
-          />
-        </>
-      );
-    }
-    return null;
-  };
 
   return (
     <div

@@ -15,6 +15,7 @@ import { useChatContext } from "../../Context/ChatContext";
 //-- Utility Functions --//
 import classNames from "../../Util/classNames";
 import getFriendly from "./chatson/getFriendly";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
 
@@ -108,25 +109,50 @@ export default function ModelSelector() {
                               )}
                             </p>
 
-                            {/* Model Developer Name */}
-                            <p
-                              className={classNames(
-                                //-- Active --//
-                                active ? "" : "",
-                                //-- Selected --//
-                                selected
-                                  ? "text-white dark:text-zinc-300"
-                                  : "text-zinc-500 dark:text-zinc-400",
-                                //-- Normal --//
-                                "font-semibold"
-                              )}
-                            >
-                              {getFriendly(
-                                model.model_api_name,
-                                CC.model_friendly_names,
-                                "model_developer_friendly_name"
-                              )}
-                            </p>
+                            {/* Model Developer Name and link */}
+                            <div className="flex flex-row">
+                              <p
+                                className={classNames(
+                                  //-- Active --//
+                                  active ? "" : "",
+                                  //-- Selected --//
+                                  selected
+                                    ? "text-white dark:text-zinc-300"
+                                    : "text-zinc-500 dark:text-zinc-400",
+                                  //-- Normal --//
+                                  "font-semibold"
+                                )}
+                              >
+                                {getFriendly(
+                                  model.model_api_name,
+                                  CC.model_friendly_names,
+                                  "model_developer_friendly_name"
+                                )}
+                              </p>
+                              <a
+                                href={getFriendly(
+                                  model.model_api_name,
+                                  CC.model_friendly_names,
+                                  "model_developer_link"
+                                )}
+                                target="_blank" //-- Open in new tab --//
+                                onClick={(event) => {
+                                  event.stopPropagation(); //-- Don't trigger model selection --//
+                                }}
+                              >
+                                <ArrowTopRightOnSquareIcon
+                                  className={classNames(
+                                    //-- Active --//
+                                    //-- Selected --//
+                                    selected
+                                      ? "text-white dark:text-zinc-300"
+                                      : "text-zinc-500 dark:text-zinc-400",
+                                    //-- Normal --//
+                                    "ml-1 h-4 w-4"
+                                  )}
+                                />
+                              </a>
+                            </div>
                           </div>
 
                           {/* Model Description */}

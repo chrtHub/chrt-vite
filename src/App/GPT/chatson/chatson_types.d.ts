@@ -84,6 +84,7 @@ export interface IModel {
 export type IModelFriendly = {
   api_provider_friendly_name: string;
   model_developer_friendly_name: string;
+  model_developer_link: string;
   model_friendly_name: string;
   model_description: string;
 };

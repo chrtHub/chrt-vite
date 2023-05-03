@@ -12,6 +12,7 @@ import { fetchEventSource } from "@microsoft/fetch-event-source";
 
 //== Utility Functions ==//
 import { getUserDbId } from "../../../Util/getUserDbId";
+import getConversationsList from "./getConversationsList";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import {
@@ -23,6 +24,7 @@ import {
   IChatCompletionRequestBody,
 } from "./chatson_types";
 import { IChatContext } from "../../../Context/ChatContext";
+import { IConversationsContext } from "../../../Context/ConversationsContext";
 import { ObjectId } from "bson";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
@@ -74,13 +76,15 @@ let nodeMap: Record<string, IMessageNode> = {};
  * @param prompt_content user input to be added to the conversation
  * @param parent_node_id For new conversations, the parent_node is null. For creating a message on the same branch, the parent_node is the current leaf node. For creating a message on a new branch, the parent_node is the parent of the current leaf node.
  * @param CC chat context
+ * @param ConversationsContext conversations context
  * @returns IChatsonObject updated with the new prompt
  */
-export function send_message(
+export async function send_message(
   access_token: string,
   prompt_content: string,
   parent_node_id: ObjectId | null,
-  CC: IChatContext
+  CC: IChatContext,
+  ConversationsContext: IConversationsContext
 ) {
   console.log(" ----- SEND MESSAGE ----- "); // DEV
   console.log(CC.temperature);
@@ -112,6 +116,7 @@ export function send_message(
   };
 
   let new_node_id: ObjectId;
+  let new_conversation: boolean = false;
 
   class CustomFatalError extends Error {} // TODO - build as needed
   try {
@@ -135,6 +140,7 @@ export function send_message(
         const b = res.headers.get("CHRT-root-node-id");
         const c = res.headers.get("CHRT-root-node-created-at");
         if (b && b !== "none" && c && c !== "none") {
+          new_conversation = true;
           const root_node_id: ObjectId = ObjectId.createFromHexString(b);
           const root_node_created_at: Date = new Date(c);
 
@@ -318,6 +324,16 @@ export function send_message(
       //-- ***** ***** ***** ***** ONCLOSE ***** ***** ***** ***** --//
       onclose() {
         console.log("Connection closed by the server"); // DEV
+
+        //-- If new conversation, update conversations list --//
+        if (new_conversation) {
+          console.log("new conversation --> updating conversations list"); // DEV
+          const getConversationsListHandler = async () => {
+            let list = await getConversationsList(access_token);
+            ConversationsContext.setConversationsArray(list);
+          };
+          getConversationsListHandler();
+        }
       },
       //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
       onerror(err) {

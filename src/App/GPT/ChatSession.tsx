@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useChatContext } from "../../Context/ChatContext";
+import { useConversationsContext } from "../../Context/ConversationsContext";
 
 //== TSX Components ==//
 import ModelSelector from "./ModelSelector";
@@ -45,6 +46,7 @@ let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 export default function ChatSession() {
   //== React State (+ Context, Refs) ==//
   let CC = useChatContext();
+  let ConversationsContext = useConversationsContext();
 
   //-- Prompt stuff --//
   const [promptDraft, setPromptDraft] = useState<string>("");
@@ -124,7 +126,8 @@ export default function ChatSession() {
             accessToken,
             promptContent,
             parentNodeId,
-            CC
+            CC,
+            ConversationsContext
           );
           CC.setCompletionLoading(false);
         }
