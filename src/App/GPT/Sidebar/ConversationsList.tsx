@@ -7,16 +7,17 @@ import { useConversationsContext } from "../../../Context/ConversationsContext";
 //-- NPM Components --//
 import { Virtuoso } from "react-virtuoso";
 //-- Icons --//
+import { CalendarDaysIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+// import { PlusCircleIcon } from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
-import { format, formatDistanceToNow, isToday, isYesterday } from "date-fns";
+import { format, isToday, isYesterday } from "date-fns";
 
 //-- Utility Functions --//
 import classNames from "../../../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 import { IConversationSerialized } from "../chatson/chatson_types";
-import { CalendarDaysIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 
 //-- Conversation Rows with Sticky Header Logic --//
 const ConversationRow = (index: number, row: IConversationSerialized) => {
@@ -57,11 +58,12 @@ const ConversationRow = (index: number, row: IConversationSerialized) => {
     return (
       <div>
         {/* Sticky header date */}
-
         {showStickyHeader && (
-          <div className="sticky top-0 my-1 flex flex-row border-b-2 border-zinc-300 bg-zinc-50 pb-1 pl-1 pt-1.5 text-sm font-bold text-zinc-700 dark:border-zinc-500">
-            <CalendarDaysIcon className="mr-1 h-5 w-5" />
-            {stickyHeaderText}
+          <div className="sticky top-0 my-1 border-b-2 border-zinc-300 pb-1 pl-1 pt-1.5 text-sm font-bold text-zinc-700 dark:border-zinc-500 dark:text-zinc-200">
+            <div className="flex flex-row">
+              <CalendarDaysIcon className="mr-1 h-5 w-5" />
+              {stickyHeaderText}
+            </div>
           </div>
         )}
 
@@ -125,10 +127,18 @@ export default function ConversationsList() {
           {/* New conversation button */}
           <button
             type="button"
-            className="inline-flex w-full items-center gap-x-1.5 rounded-md bg-zinc-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600 dark:hover:bg-green-700"
+            className={classNames(
+              //-- Normal --//
+              "inline-flex w-full items-center gap-x-1.5 rounded-md border-2 border-zinc-500 px-2.5 py-1.5 text-sm font-semibold text-zinc-900 shadow-sm",
+              //-- Hover --//
+              "hover:border-green-600 hover:bg-green-600 hover:text-white",
+              //-- Focus --//
+              "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600",
+              //-- Dark --//
+              "dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-green-700 dark:hover:bg-green-700"
+            )}
             onClick={() => {
-              // TODO - start new conversation
-              console.log("TODO - start new conversation");
+              console.log("TODO - start new conversation"); // TODO - start new conversation
             }}
           >
             <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
