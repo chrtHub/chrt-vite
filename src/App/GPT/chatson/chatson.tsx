@@ -282,7 +282,6 @@ export function send_message(
           CC.setRowArray((prevRowArray) => {
             return produce(prevRowArray, (draft) => {
               if (draft) {
-                // TODO - perhaps use 'find()' instead of last index
                 draft[draft.length - 1].content = completion_object.content;
               }
             });

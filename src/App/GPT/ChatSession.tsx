@@ -112,7 +112,6 @@ export default function ChatSession() {
       if (CC.rowArray && CC.rowArray.length > 0) {
         parentNodeId = CC.rowArray[CC.rowArray.length - 1].node_id;
       }
-      console.log("parentNodeId: ", parentNodeId); // DEV
 
       // TODO - if (new branch) {parentNodeId = row before last row}
 

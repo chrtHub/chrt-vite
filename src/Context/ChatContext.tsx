@@ -117,6 +117,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   const { getAccessTokenSilently } = useAuth0();
   useEffect(() => {
     const getConversationsListHandler = async () => {
+      console.log("ChatContext -- getConversationsList"); // DEV
       let accessToken = await getAccessTokenSilently();
       let list = await getConversationsList(accessToken);
       setConversationsArray(list);

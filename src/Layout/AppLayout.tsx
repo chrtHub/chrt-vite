@@ -1,5 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useMemo, useState, useEffect } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 
 import { useAuth0 } from "@auth0/auth0-react";
@@ -42,10 +42,7 @@ import classNames from "../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 import { echartsThemeState } from "./atoms";
-import {
-  IConversation,
-  IConversationSerialized,
-} from "../App/GPT/chatson/chatson_types";
+import { IConversationSerialized } from "../App/GPT/chatson/chatson_types";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 interface IProps {
@@ -53,7 +50,9 @@ interface IProps {
 }
 export default function AppLayout({ infoMode }: IProps) {
   //== React State ==//
-  let CC = useChatContext();
+  const { conversation, conversationsArray, setConversationsArray } =
+    useChatContext(); // DEV
+  const CC = useChatContext();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [currentNavItem, setCurrentNavItem] = useState<string>(
     window.location.pathname
@@ -193,14 +192,14 @@ export default function AppLayout({ infoMode }: IProps) {
   //-- Conversations List --//
   const { getAccessTokenSilently } = useAuth0();
   const getConversationsListHandler = async () => {
+    console.log("AppLayout -- getConversationsList"); // DEV
     let accessToken = await getAccessTokenSilently();
     let list = await getConversationsList(accessToken);
-    CC.setConversationsArray(list);
+    // CC.setConversationsArray(list);
+    setConversationsArray(list);
   };
-
   const ConversationRow = (props: { row: IConversationSerialized }) => {
     const { row } = props;
-
     const formattedDate: string = row.created_at
       ? format(new Date(row.created_at), "MMM dd, yyyy")
       : "-";
@@ -210,12 +209,11 @@ export default function AppLayout({ infoMode }: IProps) {
     const timeDistanceToNow = row.created_at
       ? formatDistanceToNow(new Date(row.created_at)) + " ago"
       : "-";
-
-    let active: Boolean = false;
-    if (CC.conversation && CC.conversation._id.toString() === row._id) {
+    let active: Boolean = false; //-- Active Conversation --//
+    // if (CC.conversation && CC.conversation._id.toString() === row._id) {
+    if (conversation && conversation._id.toString() === row._id) {
       active = true;
     }
-
     return (
       <>
         <div
@@ -238,7 +236,8 @@ export default function AppLayout({ infoMode }: IProps) {
     );
   };
   const ConversationsList = () => {
-    if (CC.conversationsArray && CC.conversationsArray.length > 0) {
+    // if (CC.conversationsArray && CC.conversationsArray.length > 0) {
+    if (conversationsArray && conversationsArray.length > 0) {
       return (
         <>
           <div className="flex flex-row">
@@ -258,7 +257,8 @@ export default function AppLayout({ infoMode }: IProps) {
           {/* Virtuoso */}
           <Virtuoso
             id="virtuoso-conversations-list"
-            data={CC.conversationsArray}
+            // data={CC.conversationsArray}
+            data={conversationsArray}
             itemContent={(index, row) => {
               return <ConversationRow row={row} />;
             }}
@@ -268,6 +268,8 @@ export default function AppLayout({ infoMode }: IProps) {
     }
     return null;
   };
+
+  console.log("AppLayout render"); // DEV
 
   return (
     <div
@@ -428,11 +430,18 @@ export default function AppLayout({ infoMode }: IProps) {
             </nav>
           </div>
           {/* END OF NAVIGATION ITEMS */}
+
           <div
             //-- DIVIDER --//
-            className="ml-3 w-full border-t border-zinc-300 pb-2 dark:border-zinc-500"
+            className={classNames(
+              "ml-3 w-full pb-2",
+              pathname == "/gpt" //-- Add any route that needs the divider --//
+                ? "border-t border-zinc-300 dark:border-zinc-500"
+                : ""
+            )}
             aria-hidden="true"
           />
+
           {/* START OF SECONDARY ITEMS */}
           <div
             id="secondary-items-list"
@@ -691,7 +700,4 @@ export default function AppLayout({ infoMode }: IProps) {
       {/* END OF RHS */}
     </div>
   );
-}
-function getAccessTokenSilently() {
-  throw new Error("Function not implemented.");
 }
