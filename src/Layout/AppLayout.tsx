@@ -209,16 +209,20 @@ export default function AppLayout({ infoMode }: IProps) {
     return (
       <>
         <div className={classNames("rounded-md hover:bg-zinc-100")}>
-          <p className="font-semibold">
-            {row.title + "this is the title string summarizing the..."}
+          <p className="dark:text-zinc-200">
+            {row.title + "this is the title string for the conversation..."}
           </p>
-          <p className="text-sm text-zinc-500">Created: {formattedTime}</p>
-          <p className="text-sm text-zinc-500">{row.model_developer_name}</p>
-          <p className="text-sm text-zinc-500">
-            {row.api_req_res_metadata.length} request(s)
-          </p>
+          <div className="flex flex-row justify-between">
+            <p className="text-sm font-semibold text-zinc-500">
+              {row.api_req_res_metadata.length === 1
+                ? `${row.api_req_res_metadata.length} request`
+                : `${row.api_req_res_metadata.length} requests`}
+            </p>
+            <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-500">
+              {formattedTime}
+            </p>
+          </div>
         </div>
-        <div>hi</div>
       </>
     );
   };
@@ -230,16 +234,17 @@ export default function AppLayout({ infoMode }: IProps) {
       return (
         <>
           <div className="flex flex-row">
+            {/* Get Conversations List Button */}
+            <button onClick={getConversationsListHandler}>
+              refresh conversations list{" "}
+            </button>
+            {/* New conversation button */}
             <button
               onClick={() => {
                 console.log("NEW CONVO");
               }}
             >
               new conversation
-            </button>
-            {/* Get Conversations List Button */}
-            <button onClick={getConversationsListHandler}>
-              refresh conversations list{" "}
             </button>
           </div>
 
