@@ -313,7 +313,7 @@ export default function AppLayout({ infoMode }: IProps) {
           {/* END OF CHRT LOGO */}
           {/* START OF NAVIGATION ITEMS */}
           <div className="mt-4 flex flex-col">
-            <nav className="flex-1 space-y-1 pb-3 pl-3">
+            <nav className="flex-1 space-y-1 pl-3">
               {navigationItems.map((item) => (
                 <NavLink
                   key={item.name}
@@ -343,19 +343,6 @@ export default function AppLayout({ infoMode }: IProps) {
             </nav>
           </div>
           {/* END OF NAVIGATION ITEMS */}
-
-          <div className="ml-3">
-            <div
-              //-- DIVIDER --//
-              className={classNames(
-                "pb-2",
-                pathname == "/gpt" //-- Add any route that needs the divider --//
-                  ? "border-t border-zinc-300 dark:border-zinc-500"
-                  : ""
-              )}
-              aria-hidden="true"
-            />
-          </div>
 
           {/* START OF SECONDARY ITEMS */}
           <div

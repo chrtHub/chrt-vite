@@ -20,6 +20,5 @@ module.exports = {
     require("@tailwindcss/forms"),
     require("@tailwindcss/typography"),
     require("@headlessui/tailwindcss"),
-    require("@tailwindcss/line-clamp"),
   ],
 };
