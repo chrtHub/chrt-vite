@@ -1,12 +1,12 @@
 //-- react, react-router-dom, recoil, Auth0 --//
 import { Fragment, useMemo, useState, useEffect } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-
+import { useConversationsContext } from "../Context/ConversationsContext";
+import { useChatContext } from "../Context/ChatContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useRecoilState } from "recoil";
 
 //-- TSX Components --//
-import { useChatContext } from "../Context/ChatContext";
 import getConversationsList from "../App/GPT/chatson/getConversationsList";
 
 //-- NPM Components --//
@@ -50,9 +50,8 @@ interface IProps {
 }
 export default function AppLayout({ infoMode }: IProps) {
   //== React State ==//
-  const { conversation, conversationsArray, setConversationsArray } =
-    useChatContext(); // DEV
-  const CC = useChatContext();
+  // const { conversation } = useChatContext(); // DEV
+  const ConversationsContext = useConversationsContext();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [currentNavItem, setCurrentNavItem] = useState<string>(
     window.location.pathname
@@ -195,8 +194,7 @@ export default function AppLayout({ infoMode }: IProps) {
     console.log("AppLayout -- getConversationsList"); // DEV
     let accessToken = await getAccessTokenSilently();
     let list = await getConversationsList(accessToken);
-    // CC.setConversationsArray(list);
-    setConversationsArray(list);
+    ConversationsContext.setConversationsArray(list);
   };
   const ConversationRow = (props: { row: IConversationSerialized }) => {
     const { row } = props;
@@ -209,19 +207,9 @@ export default function AppLayout({ infoMode }: IProps) {
     const timeDistanceToNow = row.created_at
       ? formatDistanceToNow(new Date(row.created_at)) + " ago"
       : "-";
-    let active: Boolean = false; //-- Active Conversation --//
-    // if (CC.conversation && CC.conversation._id.toString() === row._id) {
-    if (conversation && conversation._id.toString() === row._id) {
-      active = true;
-    }
     return (
       <>
-        <div
-          className={classNames(
-            "rounded-md hover:bg-zinc-100",
-            active && "bg-zinc-300"
-          )}
-        >
+        <div className={classNames("rounded-md hover:bg-zinc-100")}>
           <p className="font-semibold">
             {row.title + "this is the title string summarizing the..."}
           </p>
@@ -237,7 +225,10 @@ export default function AppLayout({ infoMode }: IProps) {
   };
   const ConversationsList = () => {
     // if (CC.conversationsArray && CC.conversationsArray.length > 0) {
-    if (conversationsArray && conversationsArray.length > 0) {
+    if (
+      ConversationsContext.conversationsArray &&
+      ConversationsContext.conversationsArray.length > 0
+    ) {
       return (
         <>
           <div className="flex flex-row">
@@ -258,7 +249,7 @@ export default function AppLayout({ infoMode }: IProps) {
           <Virtuoso
             id="virtuoso-conversations-list"
             // data={CC.conversationsArray}
-            data={conversationsArray}
+            data={ConversationsContext.conversationsArray}
             itemContent={(index, row) => {
               return <ConversationRow row={row} />;
             }}
@@ -688,10 +679,7 @@ export default function AppLayout({ infoMode }: IProps) {
           {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
 
           {/* START OF MAIN */}
-          <main
-            id="app-layout-react-router-Outlet"
-            className="h-full" // NOTE - was "flex-1"
-          >
+          <main id="app-layout-react-router-Outlet" className="h-full">
             <Outlet />
           </main>
           {/* END OF MAIN */}

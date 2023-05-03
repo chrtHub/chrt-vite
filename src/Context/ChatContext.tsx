@@ -18,10 +18,10 @@ import getConversationsList from "../App/GPT/chatson/getConversationsList";
 
 //-- Create interface and Context --//
 export interface IChatContext {
-  conversationsArray: IConversationSerialized[] | null;
-  setConversationsArray: React.Dispatch<
-    React.SetStateAction<IConversationSerialized[] | null>
-  >;
+  // conversationsArray: IConversationSerialized[] | null;
+  // setConversationsArray: React.Dispatch<
+  //   React.SetStateAction<IConversationSerialized[] | null>
+  // >;
   rowArray: IMessageRow[] | null;
   setRowArray: React.Dispatch<React.SetStateAction<IMessageRow[] | null>>;
   conversation: IConversation | null;
@@ -102,9 +102,9 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   };
 
   //-- State values --//
-  const [conversationsArray, setConversationsArray] = useState<
-    IConversationSerialized[] | null
-  >(null);
+  // const [conversationsArray, setConversationsArray] = useState<
+  //   IConversationSerialized[] | null
+  // >(null);
   const [rowArray, setRowArray] = useState<IMessageRow[] | null>(null);
   const [conversation, setConversation] = useState<IConversation | null>(null);
   const [model, setModel] = useState<IModel>(
@@ -114,21 +114,21 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   const [completionLoading, setCompletionLoading] = useState<boolean>(false);
 
   //-- Get conversations list on mount --//
-  const { getAccessTokenSilently } = useAuth0();
-  useEffect(() => {
-    const getConversationsListHandler = async () => {
-      console.log("ChatContext -- getConversationsList"); // DEV
-      let accessToken = await getAccessTokenSilently();
-      let list = await getConversationsList(accessToken);
-      setConversationsArray(list);
-    };
-    getConversationsListHandler();
-  }, []);
+  // const { getAccessTokenSilently } = useAuth0();
+  // useEffect(() => {
+  //   const getConversationsListHandler = async () => {
+  //     console.log("ChatContext -- getConversationsList"); // DEV
+  //     let accessToken = await getAccessTokenSilently();
+  //     let list = await getConversationsList(accessToken);
+  //     setConversationsArray(list);
+  //   };
+  //   getConversationsListHandler();
+  // }, []);
 
   //-- BungetConversationsListHandlerle values into chatContextValue --//
   const chatContextValue: IChatContext = {
-    conversationsArray,
-    setConversationsArray,
+    // conversationsArray,
+    // setConversationsArray,
     rowArray,
     setRowArray,
     conversation,
