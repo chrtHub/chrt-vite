@@ -33,7 +33,10 @@ function ConversationsContextProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     const getConversationsListHandler = async () => {
       let accessToken = await getAccessTokenSilently();
-      let list = await getConversationsList(accessToken);
+      let list = await getConversationsList(
+        accessToken,
+        conversationsArray?.length || 0
+      );
       setConversationsArray(list);
     };
     getConversationsListHandler();

@@ -329,7 +329,10 @@ export async function send_message(
         if (new_conversation) {
           console.log("new conversation --> updating conversations list"); // DEV
           const getConversationsListHandler = async () => {
-            let list = await getConversationsList(access_token);
+            let list = await getConversationsList(
+              access_token,
+              ConversationsContext.conversationsArray?.length || 0
+            );
             ConversationsContext.setConversationsArray(list);
           };
           getConversationsListHandler();
