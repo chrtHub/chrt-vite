@@ -47,7 +47,6 @@ interface IProps {
 }
 export default function AppLayout({ infoMode }: IProps) {
   //== React State ==//
-
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [currentNavItem, setCurrentNavItem] = useState<string>(
     window.location.pathname

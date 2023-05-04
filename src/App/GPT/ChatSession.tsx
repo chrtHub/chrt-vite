@@ -1,5 +1,6 @@
 //== react, react-router-dom, recoil, Auth0 ==//
 import { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useChatContext } from "../../Context/ChatContext";
 import { useConversationsContext } from "../../Context/ConversationsContext";
@@ -71,6 +72,7 @@ export default function ChatSession() {
   //-- ***** ***** ***** ***** start of chatson ***** ***** ***** ***** --//
   //-- ChatSession calls chatson --> chatson updates CC.rowArray --> ChatSession renders CC.rowArray --//
 
+  // TODO - update these
   //-- chatson function calls: --//
   // (1a) chatson.send_message() for first message in a new conversation
   // // use parentNodeId of null
@@ -91,6 +93,25 @@ export default function ChatSession() {
   // (3) chatson.reset_conversation()
   // // call reset_conversation() with <<TODO>>
   // // // chatson <<TODO>>
+
+  // TODO - use param to load conversation
+  let { conversation_id } = useParams(); // TODO, /gpt/:conversation_id
+  useEffect(() => {
+    console.log("TODO - use param to load conversation");
+  }, []);
+
+  //-- When conversationID is updated (a) load that conversation, or (b) if null, reset conversation --//
+  useEffect(() => {
+    const lambda = async () => {
+      if (CC.conversationId) {
+        const accessToken = await getAccessTokenSilently();
+        chatson.get_conversation_and_messages(accessToken, CC); //-- chatson.get_conversation_and_messages --//
+      } else {
+        chatson.reset_conversation(); //-- chatson.reset_conversation --//
+      }
+    };
+    lambda();
+  }, [CC.conversationId]);
 
   //-- chatson.send_message() --//
   const submitPromptHandler = () => {

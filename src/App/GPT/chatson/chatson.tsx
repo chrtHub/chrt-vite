@@ -7,6 +7,7 @@
 //== Icons ==//
 
 //== NPM Functions ==//
+import axios from "axios";
 import { produce } from "immer";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 
@@ -31,6 +32,71 @@ let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 //-- Chatson stuff --//
 let nodeArray: IMessageNode[] = [];
 let nodeMap: Record<string, IMessageNode> = {};
+
+//== METHODS ==//
+// (1) get_conversation
+// (2) reset_conversation
+// (3) send_message
+// (4) change_branch
+//== ******* ==//
+
+/**
+ * send_message sends a prompt to an LLM and receives the response
+ *
+ * @param access_token
+ * @param conversation_id
+ * @param CC chat context
+ */
+export async function get_conversation_and_messages(
+  access_token: string,
+  CC: IChatContext
+) {
+  // TODO
+  try {
+    //-- Make GET request --//
+    let res = await axios.get(
+      `${VITE_ALB_BASE_URL}/llm/get_conversation_and_messages/${CC.conversationId}`,
+      {
+        headers: {
+          authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+    const { conversation, message_nodes } = res.data;
+    console.log(conversation); // DEV
+    console.log(message_nodes); // DEV
+
+    // TODO - set conversation in ChatContext state
+    CC.setConversation(conversation);
+    // CC.setModel() // TODO - set to the model of the leaf node
+
+    // TODO - build row array from message nodes
+
+    // export interface IMessageRow extends IMessage {
+    //   prompt_or_completion: "prompt" | "completion";
+    //   node_id: ObjectId;
+    //   sibling_node_ids: ObjectId[];
+    // author: string;
+    // model: IModel;
+    // created_at: Date;
+    // role: ChatCompletionResponseMessageRoleEnum;
+    // content: string;
+    // }
+
+    // CC.setRowArray() // TODO
+
+    //----//
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+/**
+ * TODO
+ */
+export function reset_conversation() {
+  console.log("TO BE IMPLEMENTED - chastson.reset_conversation()");
+}
 
 //-- send_message() outline --//
 // (0) nodeArray available within the global scope of chatson, persists unless reset
@@ -77,7 +143,6 @@ let nodeMap: Record<string, IMessageNode> = {};
  * @param parent_node_id For new conversations, the parent_node is null. For creating a message on the same branch, the parent_node is the current leaf node. For creating a message on a new branch, the parent_node is the parent of the current leaf node.
  * @param CC chat context
  * @param ConversationsContext conversations context
- * @returns IChatsonObject updated with the new prompt
  */
 export async function send_message(
   access_token: string,
@@ -221,14 +286,12 @@ export async function send_message(
         //-- Loop until reaching the root node where parent_node_id is null --//
         while (node.parent_node_id) {
           let parent_node = nodeMap[node.parent_node_id.toString()];
-
           //-- Sort parent's children by timestamp ascending --//
           let sibling_ids_timestamp_asc: ObjectId[] = [
             ...parent_node.children_node_ids.sort(
               (a, b) => a.getTimestamp().getTime() - b.getTimestamp().getTime()
             ),
           ];
-
           //-- Build completion row, add to newRowArray --//
           let completion_row: IMessageRow;
           if (node.completion) {
@@ -240,7 +303,6 @@ export async function send_message(
             };
             newRowArray.push(completion_row);
           }
-
           //-- Build prompt row, add to newRowArray --//
           let prompt_row: IMessageRow = {
             ...node.prompt,
@@ -249,13 +311,10 @@ export async function send_message(
             sibling_node_ids: [...sibling_ids_timestamp_asc],
           };
           newRowArray.push(prompt_row);
-
           //-- Update node --//
           node = parent_node;
         }
-
         newRowArray = newRowArray.reverse(); //-- push + reverse --//
-
         CC.setRowArray(newRowArray);
         //----//
       },
@@ -345,7 +404,6 @@ export async function send_message(
       //-- ***** ***** ***** ***** ONCLOSE ***** ***** ***** ***** --//
       onclose() {
         console.log("Connection closed by the server"); // DEV
-
         //-- If new conversation, update conversations list --//
         if (new_conversation) {
           console.log("new conversation --> updating conversations list"); // DEV
@@ -354,8 +412,6 @@ export async function send_message(
             ConversationsContext.setConversationsArray(list);
           };
           getConversationsListHandler();
-        } else {
-          // update request count
         }
       },
       //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
@@ -461,15 +517,4 @@ export function change_branch() {
   //     });
   //   });
   // };
-}
-
-/**
- * change_conversation() will
- */
-export function change_conversation() {
-  // TODO
-}
-
-export function reset_conversation() {
-  // TODO
 }

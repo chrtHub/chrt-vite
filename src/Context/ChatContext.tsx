@@ -6,11 +6,14 @@ import {
   IModelFriendly,
   ModelAPINames,
 } from "../App/GPT/chatson/chatson_types";
+import { ObjectId } from "bson";
 
 //-- Create interface and Context --//
 export interface IChatContext {
   rowArray: IMessageRow[] | null;
   setRowArray: React.Dispatch<React.SetStateAction<IMessageRow[] | null>>;
+  conversationId: ObjectId | null;
+  setConversationId: React.Dispatch<React.SetStateAction<ObjectId | null>>;
   conversation: IConversation | null;
   setConversation: React.Dispatch<React.SetStateAction<IConversation | null>>;
   model: IModel;
@@ -95,6 +98,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
 
   //-- State values --//
   const [rowArray, setRowArray] = useState<IMessageRow[] | null>(null);
+  const [conversationId, setConversationId] = useState<ObjectId | null>(null);
   const [conversation, setConversation] = useState<IConversation | null>(null);
   const [model, setModel] = useState<IModel>(
     model_options["gpt-3.5-turbo"] as IModel
@@ -106,6 +110,8 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   const chatContextValue: IChatContext = {
     rowArray,
     setRowArray,
+    conversationId,
+    setConversationId,
     conversation,
     setConversation,
     model,

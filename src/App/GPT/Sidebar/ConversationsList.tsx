@@ -5,6 +5,7 @@ import { useConversationsContext } from "../../../Context/ConversationsContext";
 
 //-- TSX Components --//
 import getConversationsList from "../chatson/getConversationsList";
+import * as chatson from "../chatson/chatson";
 
 //-- NPM Components --//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
@@ -27,6 +28,8 @@ import classNames from "../../../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 import { IConversationSerialized } from "../chatson/chatson_types";
+import { useChatContext } from "../../../Context/ChatContext";
+import { ObjectId } from "bson";
 
 //-- Conversation Button --//
 interface ConversationButtonProps {
@@ -90,10 +93,16 @@ const StyledButton: React.FC<StyledButtonProps> = ({
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ConversationsList() {
+  console.log("conversations list render"); // DEV
+
   //-- State --//
+  const CC = useChatContext();
   const ConversationsContext = useConversationsContext();
   const [atBottom, setAtBottom] = useState<boolean>(false);
   const [atTop, setAtTop] = useState<boolean>(true);
+
+  //-- Auth --//
+  const { getAccessTokenSilently } = useAuth0();
 
   //-- Virutoso --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
@@ -121,7 +130,6 @@ export default function ConversationsList() {
   };
 
   //-- Get more conversations --//
-  const { getAccessTokenSilently } = useAuth0();
   const getConversationsListHandler = async () => {
     let accessToken = await getAccessTokenSilently();
     let conversationsArrayLength = ConversationsContext.conversationsArray
@@ -142,6 +150,11 @@ export default function ConversationsList() {
         })
       );
     }
+  };
+
+  //-- Set conversationId --//
+  const setConversationIdHandler = async (row: IConversationSerialized) => {
+    CC.setConversationId(ObjectId.createFromHexString(row._id));
   };
 
   //-- Conversation Rows with Sticky Header Logic --//
@@ -196,8 +209,7 @@ export default function ConversationsList() {
             {/* Each row is a button for selecting that conversation */}
             <button
               onClick={() => {
-                // TODO - request conversation, set it in state
-                console.log(`TODO - request conversation: ${row._id}`); // DEV
+                setConversationIdHandler(row);
               }}
             >
               <div className="">
