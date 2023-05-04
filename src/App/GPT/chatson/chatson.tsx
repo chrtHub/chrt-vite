@@ -22,26 +22,29 @@ import {
   IMessageNode,
   IMessageRow,
   IMessage,
-  IChatCompletionRequestBody,
+  IOpenAIChatCompletionRequestBody,
+  IGetConversationsAndMessagesResponse,
 } from "./chatson_types";
 import { IChatContext } from "../../../Context/ChatContext";
 import { IConversationsContext } from "../../../Context/ConversationsContext";
-import { ObjectId, serialize } from "bson";
+import { ObjectId } from "bson";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- Chatson stuff --//
 let nodeArray: IMessageNode[] = [];
-let nodeMap: Record<string, IMessageNode> = {};
 
 //== METHODS ==//
-// (1) get_conversation
+// (0) get_conversations_list()
+// (1) get_conversation_and_messages
 // (2) reset_conversation
 // (3) send_message
 // (4) change_branch
+// Utilities
+// (5) nodeArrayToRowArray
 //== ******* ==//
 
 /**
- * send_message sends a prompt to an LLM and receives the response
+ * (1) get_conversation_and_messages sends a prompt to an LLM and receives the response
  *
  * @param access_token
  * @param conversation_id
@@ -50,11 +53,10 @@ let nodeMap: Record<string, IMessageNode> = {};
 export async function get_conversation_and_messages(
   access_token: string,
   CC: IChatContext
-) {
-  // TODO
+): Promise<void> {
   try {
     //-- Make GET request --//
-    let res = await axios.get(
+    let res = await axios.get<IGetConversationsAndMessagesResponse>(
       `${VITE_ALB_BASE_URL}/llm/get_conversation_and_messages/${CC.conversationId}`,
       {
         headers: {
@@ -63,28 +65,22 @@ export async function get_conversation_and_messages(
       }
     );
     const { conversation, message_nodes } = res.data;
-    console.log(conversation); // DEV
-    console.log(message_nodes); // DEV
 
-    // TODO - set conversation in ChatContext state
+    //-- Update conversation --//
     CC.setConversation(conversation);
-    // CC.setModel() // TODO - set to the model of the leaf node
 
-    // TODO - build row array from message nodes
-
-    // export interface IMessageRow extends IMessage {
-    //   prompt_or_completion: "prompt" | "completion";
-    //   node_id: ObjectId;
-    //   sibling_node_ids: ObjectId[];
-    // author: string;
-    // model: IModel;
-    // created_at: Date;
-    // role: ChatCompletionResponseMessageRoleEnum;
-    // content: string;
-    // }
-
-    // CC.setRowArray() // TODO
-
+    //-- Update messages --/
+    if (message_nodes.length > 0) {
+      //-- Set newest node as the leaf node  --//
+      let leaf_node = getLeafNode(message_nodes);
+      //-- Set model to match leaf node's model --//
+      if (leaf_node.completion?.model) {
+        CC.setModel(leaf_node.completion.model);
+      }
+      //-- Update rowArray --//
+      let rowArray = nodeArrayToRowArray(message_nodes, leaf_node);
+      CC.setRowArray(rowArray);
+    }
     //----//
   } catch (err) {
     console.log(err);
@@ -94,7 +90,7 @@ export async function get_conversation_and_messages(
 /**
  * TODO
  */
-export function reset_conversation() {
+export function reset_conversation(): void {
   console.log("TO BE IMPLEMENTED - chastson.reset_conversation()");
 }
 
@@ -150,7 +146,7 @@ export async function send_message(
   parent_node_id: ObjectId | null,
   CC: IChatContext,
   ConversationsContext: IConversationsContext
-) {
+): Promise<void> {
   console.log(" ----- SEND MESSAGE ----- "); // DEV
   console.log(CC.temperature);
 
@@ -167,7 +163,7 @@ export async function send_message(
   };
 
   //-- Build request_body --//
-  const request_body: IChatCompletionRequestBody = {
+  const request_body: IOpenAIChatCompletionRequestBody = {
     prompt: prompt,
     conversation_id_string: CC.conversation?._id.toString() || null,
     parent_node_id_string: parent_node_id?.toString() || null,
@@ -273,49 +269,9 @@ export async function send_message(
           }
         });
 
-        //-- Update CC.nodeMap --//
-        nodeMap = {}; //-- reset --//
-        nodeArray.forEach((node) => {
-          nodeMap[node._id.toString()] = node; //-- populate --//
-        });
-
-        //-- Build newRowArray and set as CC.rowsArray --//
-        let newRowArray: IMessageRow[] = []; //-- Build new rows array --//
-        let node: IMessageNode = nodeMap[new_node._id.toString()]; //-- Start with new node --//
-
-        //-- Loop until reaching the root node where parent_node_id is null --//
-        while (node.parent_node_id) {
-          let parent_node = nodeMap[node.parent_node_id.toString()];
-          //-- Sort parent's children by timestamp ascending --//
-          let sibling_ids_timestamp_asc: ObjectId[] = [
-            ...parent_node.children_node_ids.sort(
-              (a, b) => a.getTimestamp().getTime() - b.getTimestamp().getTime()
-            ),
-          ];
-          //-- Build completion row, add to newRowArray --//
-          let completion_row: IMessageRow;
-          if (node.completion) {
-            completion_row = {
-              ...node.completion,
-              prompt_or_completion: "completion",
-              node_id: node._id,
-              sibling_node_ids: [], //-- Use prompt_row for this --//
-            };
-            newRowArray.push(completion_row);
-          }
-          //-- Build prompt row, add to newRowArray --//
-          let prompt_row: IMessageRow = {
-            ...node.prompt,
-            prompt_or_completion: "prompt",
-            node_id: node._id,
-            sibling_node_ids: [...sibling_ids_timestamp_asc],
-          };
-          newRowArray.push(prompt_row);
-          //-- Update node --//
-          node = parent_node;
-        }
-        newRowArray = newRowArray.reverse(); //-- push + reverse --//
-        CC.setRowArray(newRowArray);
+        //-- Update rowArray --//
+        let rowArray = nodeArrayToRowArray(nodeArray, new_node);
+        CC.setRowArray(rowArray);
         //----//
       },
       //-- ***** ***** ***** ***** ONMESSAGE ***** ***** ***** ***** --//
@@ -434,7 +390,7 @@ export async function send_message(
  *
  * @param
  */
-export function change_branch() {
+export function change_branch(): void {
   // Something like this?
   //-- On 'direct' updates to leaf node - via user selecting new conversation branch --//
   // const branchChangeHandler = (
@@ -518,3 +474,78 @@ export function change_branch() {
   //   });
   // };
 }
+
+//-- Utility function(s) --//
+/**
+ *
+ * @param nodeArray
+ * @param leafNode
+ * @returns
+ */
+const nodeArrayToRowArray = (
+  nodeArray: IMessageNode[],
+  leafNode: IMessageNode
+): IMessageRow[] => {
+  //-- Build Node Map --//
+  let nodeMap: Record<string, IMessageNode> = {};
+  nodeArray.forEach((node) => {
+    nodeMap[node._id.toString()] = node; //-- populate --//
+  });
+
+  //-- Build newRowArray and set as CC.rowsArray --//
+  let newRowArray: IMessageRow[] = []; //-- Build new rows array --//
+  let node: IMessageNode = nodeMap[leafNode._id.toString()]; //-- Start with leaf node --//
+
+  //-- Loop until reaching the root node where parent_node_id is null --//
+  while (node.parent_node_id) {
+    let parent_node = nodeMap[node.parent_node_id.toString()];
+    //-- Sort parent's children by timestamp ascending --//
+    let sibling_ids_timestamp_asc: ObjectId[] = [
+      ...parent_node.children_node_ids.sort(
+        (a, b) => a.getTimestamp().getTime() - b.getTimestamp().getTime()
+      ),
+    ];
+
+    // DEV - the leaf node won't have any children_node_ids
+
+    //-- Build completion row, add to newRowArray --//
+    let completion_row: IMessageRow;
+    if (node.completion) {
+      completion_row = {
+        ...node.completion,
+        prompt_or_completion: "completion",
+        node_id: node._id,
+        sibling_node_ids: [], //-- Use prompt_row for this --//
+      };
+      newRowArray.push(completion_row);
+    }
+    //-- Build prompt row, add to newRowArray --//
+    let prompt_row: IMessageRow = {
+      ...node.prompt,
+      prompt_or_completion: "prompt",
+      node_id: node._id,
+      sibling_node_ids: [...sibling_ids_timestamp_asc],
+    };
+    newRowArray.push(prompt_row);
+    //-- Update node --//
+    node = parent_node;
+  }
+  newRowArray = newRowArray.reverse(); //-- push + reverse --//
+  return newRowArray;
+};
+
+/**
+ *
+ * @param nodeArray
+ * @returns
+ */
+const getLeafNode = (nodeArray: IMessageNode[]): IMessageNode => {
+  let newestNode: IMessageNode = nodeArray[0];
+  for (const node of nodeArray) {
+    if (node.created_at > newestNode.created_at) {
+      newestNode = node;
+    }
+  }
+
+  return newestNode;
+};

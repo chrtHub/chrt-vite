@@ -104,11 +104,17 @@ export interface IAPIReqResMetadata {
   request_messages_node_ids: ObjectId[];
 }
 
-export interface IChatCompletionRequestBody {
+export interface IOpenAIChatCompletionRequestBody {
   prompt: IMessage;
   conversation_id_string: string | null;
   parent_node_id_string: string | null;
   temperature: number | null; //-- between 0 and 2, inclusive --//
+}
+
+//== Server Response Types ==//
+export interface IGetConversationsAndMessagesResponse {
+  conversation: IConversation;
+  message_nodes: IMessageNode[];
 }
 
 /** These lists is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */

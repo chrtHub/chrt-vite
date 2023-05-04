@@ -18,7 +18,7 @@ export default async function getConversationsList(
     //-- Get access token from memory or request new token --//
 
     //-- Make POST request --//
-    let res = await axios.get(
+    let res = await axios.get<IConversationSerialized[] | null>(
       `${VITE_ALB_BASE_URL}/llm/list_conversations/${skip}`,
       {
         headers: {

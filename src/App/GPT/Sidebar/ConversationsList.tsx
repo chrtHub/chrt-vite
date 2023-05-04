@@ -93,8 +93,6 @@ const StyledButton: React.FC<StyledButtonProps> = ({
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ConversationsList() {
-  console.log("conversations list render"); // DEV
-
   //-- State --//
   const CC = useChatContext();
   const ConversationsContext = useConversationsContext();
