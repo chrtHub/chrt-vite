@@ -1,23 +1,25 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { useState, useRef } from "react";
+import { useState, useRef, MouseEventHandler, ReactNode } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useConversationsContext } from "../../../Context/ConversationsContext";
 
 //-- TSX Components --//
+import getConversationsList from "../chatson/getConversationsList";
 
 //-- NPM Components --//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 
 //-- Icons --//
 import {
-  ArrowDownCircleIcon,
-  ArrowDownIcon,
   CalendarDaysIcon,
+  ChevronDoubleDownIcon,
+  ChevronDoubleUpIcon,
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 // import { PlusCircleIcon } from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
+import { produce } from "immer";
 import { format, isToday, isYesterday } from "date-fns";
 
 //-- Utility Functions --//
@@ -26,11 +28,74 @@ import classNames from "../../../Util/classNames";
 //-- Data Objects, Environment Variables --//
 import { IConversationSerialized } from "../chatson/chatson_types";
 
+//-- Conversation Button --//
+interface ConversationButtonProps {
+  children: ReactNode;
+  onClick: MouseEventHandler;
+}
+const ConversationButton: React.FC<ConversationButtonProps> = ({
+  children,
+  onClick,
+}) => {
+  return (
+    <button
+      type="button"
+      className={classNames(
+        //-- Normal --//
+        "mb-2 mt-1 inline-flex w-full items-center justify-center gap-x-1.5 rounded-md border-2 border-zinc-500 px-2.5 py-1.5 text-sm font-semibold text-zinc-900 shadow-sm",
+        //-- Hover --//
+        "hover:border-green-600 hover:bg-green-600 hover:text-white",
+        //-- Focus --//
+        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600",
+        //-- Dark --//
+        "dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-green-700 dark:hover:bg-green-700"
+      )}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+};
+
+//-- Styled Button --//
+interface StyledButtonProps {
+  children: ReactNode;
+  onClick: MouseEventHandler;
+  frozen: boolean;
+}
+const StyledButton: React.FC<StyledButtonProps> = ({
+  children,
+  onClick,
+  frozen,
+}) => {
+  return (
+    <button
+      type="button"
+      className={classNames(
+        //-- Normal --//
+        "mb-2 mt-0 inline-flex w-full items-center justify-center gap-x-1.5 rounded-md border-2 border-zinc-500 px-2.5 py-1 text-sm font-semibold text-zinc-900 shadow-sm",
+        //-- Hover --//
+        frozen
+          ? "cursor-not-allowed dark:text-zinc-600"
+          : "hover:border-green-600 hover:bg-green-600 hover:text-white dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-green-700 dark:hover:bg-green-700",
+        //-- Focus --//
+        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
+      )}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+};
+
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ConversationsList() {
   //-- State --//
   const ConversationsContext = useConversationsContext();
   const [atBottom, setAtBottom] = useState<boolean>(false);
+  const [atTop, setAtTop] = useState<boolean>(true);
+
+  //-- Virutoso --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
   const scrollToBottomHandler = () => {
     if (
@@ -39,10 +104,43 @@ export default function ConversationsList() {
       ConversationsContext.conversationsArray.length > 0
     ) {
       virtuosoRef.current.scrollToIndex({
-        index: ConversationsContext.conversationsArray.length - 1, //-- e.g. visible conversations list length --//
+        index: ConversationsContext.conversationsArray.length, //-- not subtracting 1 cos it works without that --//
         behavior: "smooth",
         align: "end",
       });
+    }
+  };
+  const scrollToTopHandler = () => {
+    if (virtuosoRef.current) {
+      virtuosoRef.current.scrollToIndex({
+        index: 0,
+        behavior: "smooth",
+        align: "start",
+      });
+    }
+  };
+
+  //-- Get more conversations --//
+  const { getAccessTokenSilently } = useAuth0();
+  const getConversationsListHandler = async () => {
+    let accessToken = await getAccessTokenSilently();
+    let conversationsArrayLength = ConversationsContext.conversationsArray
+      ? ConversationsContext.conversationsArray.length
+      : 0;
+
+    if (conversationsArrayLength > 0) {
+      let list = await getConversationsList(
+        accessToken,
+        conversationsArrayLength
+      );
+
+      ConversationsContext.setConversationsArray(
+        produce(ConversationsContext.conversationsArray, (draft) => {
+          if (draft && list) {
+            draft.push(...list);
+          } //-- else no mutation occurs --//
+        })
+      );
     }
   };
 
@@ -149,29 +247,18 @@ export default function ConversationsList() {
 
         {/* New conversation button */}
         <div className="flex flex-row justify-center">
-          <button
-            type="button"
-            className={classNames(
-              //-- Normal --//
-              "inline-flex w-full items-center gap-x-1.5 rounded-md border-2 border-zinc-500 px-2.5 py-1.5 text-sm font-semibold text-zinc-900 shadow-sm",
-              //-- Hover --//
-              "hover:border-green-600 hover:bg-green-600 hover:text-white",
-              //-- Focus --//
-              "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600",
-              //-- Dark --//
-              "dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-green-700 dark:hover:bg-green-700"
-            )}
+          <ConversationButton
             onClick={() => {
               console.log("TODO - start new conversation"); // TODO - start new conversation
             }}
           >
             <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
             New Conversation
-          </button>
+          </ConversationButton>
         </div>
 
         {/*-- DIVIDER --*/}
-        <div className="">
+        <div>
           <div
             className={classNames(
               //-- 2nd divider mb of 0.5 + sticky row my-1 = 1.5 --//
@@ -182,65 +269,38 @@ export default function ConversationsList() {
         </div>
 
         {/* Virtuoso Rows */}
+
         <Virtuoso
           id="virtuoso-conversations-list"
           ref={virtuosoRef}
           data={ConversationsContext.conversationsArray}
           itemContent={(index, row) => ConversationRow(index, row)} //-- Don't call hooks within this callback --//
           atBottomStateChange={(isAtBottom) => {
-            console.log("isAtBottom: ", isAtBottom); // DEV
             setAtBottom(isAtBottom);
+          }}
+          atTopStateChange={(isAtTop) => {
+            setAtTop(isAtTop);
           }}
         />
 
-        {atBottom ? (
-          //-- Load more conversations button --//
-          <div className="flex flex-row justify-center">
-            <button
-              type="button"
-              className={classNames(
-                //-- Normal --//
-                "mt-1 inline-flex w-full items-center gap-x-1.5 rounded-md border-2 border-zinc-500 px-2.5 py-1.5 text-sm font-semibold text-zinc-900 shadow-sm",
-                //-- Hover --//
-                "hover:border-green-600 hover:bg-green-600 hover:text-white",
-                //-- Focus --//
-                "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600",
-                //-- Dark --//
-                "dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-green-700 dark:hover:bg-green-700"
-              )}
-              onClick={() => {
-                console.log("TODO - load more conversations"); // TODO - load more conversations
-              }}
-            >
-              <ArrowDownCircleIcon className="h-5 w-5" aria-hidden="true" />
-              Load more
-            </button>
-          </div>
-        ) : (
-          //-- Scroll to bottom button --//
-          <div className="flex flex-row justify-center">
-            <button
-              type="button"
-              className={classNames(
-                //-- Normal --//
-                "mt-1 inline-flex w-full items-center gap-x-1.5 rounded-md border-2 border-zinc-500 px-2.5 py-1.5 text-sm font-semibold text-zinc-900 shadow-sm",
-                //-- Hover --//
-                "hover:border-green-600 hover:bg-green-600 hover:text-white",
-                //-- Focus --//
-                "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600",
-                //-- Dark --//
-                "dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-green-700 dark:hover:bg-green-700"
-              )}
-              onClick={() => {
-                console.log("TODO - scroll to bottom"); // TODO - load more conversations
-                scrollToBottomHandler();
-              }}
-            >
-              <ArrowDownCircleIcon className="h-5 w-5" aria-hidden="true" />
-              Scroll to bottom
-            </button>
-          </div>
-        )}
+        {/* Buttons - scroll to top/bottom, show more conversations */}
+        <div className="flex flex-row gap-2">
+          {/* Scroll to top */}
+          <StyledButton onClick={scrollToTopHandler} frozen={atTop}>
+            <ChevronDoubleUpIcon className="h-5 w-5" aria-hidden="true" />
+          </StyledButton>
+          {atBottom ? (
+            //-- Show more conversations --//
+            <StyledButton frozen={false} onClick={getConversationsListHandler}>
+              Show more
+            </StyledButton>
+          ) : (
+            //-- Scroll to bottom --//
+            <StyledButton onClick={scrollToBottomHandler} frozen={atBottom}>
+              <ChevronDoubleDownIcon className="h-5 w-5" aria-hidden="true" />
+            </StyledButton>
+          )}
+        </div>
       </div>
     );
   }
