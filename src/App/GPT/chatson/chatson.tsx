@@ -25,7 +25,7 @@ import {
 } from "./chatson_types";
 import { IChatContext } from "../../../Context/ChatContext";
 import { IConversationsContext } from "../../../Context/ConversationsContext";
-import { ObjectId } from "bson";
+import { ObjectId, serialize } from "bson";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- Chatson stuff --//
@@ -306,6 +306,27 @@ export async function send_message(
               }
             });
           });
+          //-- Existin conversations only - update ConversationsContext conversationsArray --//
+          if (!new_conversation) {
+            ConversationsContext.setConversationsArray((prevArray) => {
+              return produce(prevArray, (draft) => {
+                if (draft) {
+                  //-- Alter object because it's going into an IConversationSerialized[] --//
+                  const serializedMetadata = {
+                    ...api_req_res_metadata_object,
+                    created_at:
+                      api_req_res_metadata_object.created_at.toString(),
+                    node_id: api_req_res_metadata_object.node_id.toString(),
+                    request_messages_node_ids:
+                      api_req_res_metadata_object.request_messages_node_ids.map(
+                        (id) => id.toString()
+                      ),
+                  };
+                  draft[0].api_req_res_metadata.push(serializedMetadata);
+                }
+              });
+            });
+          }
         }
         //-- SSE completion content chunks --//
         else {
@@ -329,13 +350,12 @@ export async function send_message(
         if (new_conversation) {
           console.log("new conversation --> updating conversations list"); // DEV
           const getConversationsListHandler = async () => {
-            let list = await getConversationsList(
-              access_token,
-              ConversationsContext.conversationsArray?.length || 0
-            );
+            let list = await getConversationsList(access_token, 0);
             ConversationsContext.setConversationsArray(list);
           };
           getConversationsListHandler();
+        } else {
+          // update request count
         }
       },
       //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//

@@ -73,11 +73,11 @@ const StyledButton: React.FC<StyledButtonProps> = ({
       type="button"
       className={classNames(
         //-- Normal --//
-        "mb-2 mt-0 inline-flex w-full items-center justify-center gap-x-1.5 rounded-md border-2 border-zinc-500 px-2.5 py-1 text-sm font-semibold text-zinc-900 shadow-sm",
+        "mb-2 mt-0 inline-flex w-full items-center justify-center gap-x-1.5 rounded-md border-2 px-2.5 py-1 text-sm font-semibold  shadow-sm",
         //-- Hover --//
         frozen
-          ? "cursor-not-allowed dark:text-zinc-600"
-          : "hover:border-green-600 hover:bg-green-600 hover:text-white dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-green-700 dark:hover:bg-green-700",
+          ? "cursor-not-allowed border-zinc-300 text-zinc-300 dark:text-zinc-600"
+          : "border-zinc-600 text-zinc-600 hover:border-green-600 hover:bg-green-600 hover:text-white dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-green-700 dark:hover:bg-green-700",
         //-- Focus --//
         "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
       )}
@@ -239,7 +239,7 @@ export default function ConversationsList() {
         <div className="mb-1.5 mt-1.5">
           <div
             className={classNames(
-              "border-t border-zinc-300 dark:border-zinc-500"
+              "border-t border-zinc-50 dark:border-zinc-800" // hidden - same bg as page
             )}
             aria-hidden="true"
           />
@@ -261,8 +261,7 @@ export default function ConversationsList() {
         <div>
           <div
             className={classNames(
-              //-- 2nd divider mb of 0.5 + sticky row my-1 = 1.5 --//
-              "mb-0.5 mt-1.5 border-t border-zinc-300 dark:border-zinc-500"
+              "mb-0.5 mt-0.5 border-t border-zinc-50 dark:border-zinc-800" // hidden - same bg as page
             )}
             aria-hidden="true"
           />
@@ -284,7 +283,7 @@ export default function ConversationsList() {
         />
 
         {/* Buttons - scroll to top/bottom, show more conversations */}
-        <div className="flex flex-row gap-2">
+        <div className="mt-1.5 flex flex-row gap-2">
           {/* Scroll to top */}
           <StyledButton onClick={scrollToTopHandler} frozen={atTop}>
             <ChevronDoubleUpIcon className="h-5 w-5" aria-hidden="true" />
