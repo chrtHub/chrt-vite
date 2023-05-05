@@ -36,7 +36,7 @@ let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 let nodeArray: IMessageNode[] = [];
 
 //== METHODS ==//
-// (0) get_conversations_list()
+// (0) list_conversations()
 // (1) get_conversation_and_messages
 // (2) reset_conversation
 // (3) send_message
@@ -49,13 +49,13 @@ let nodeArray: IMessageNode[] = [];
 //== ******* ==//
 
 /**
- * (0) get_conversations_list
+ * (0) list_conversations
  *
  * @param accessToken user's access token
  * @param skip the number of documents to skip when returning results. equal to the length of the conversations array.
  * @returns
  */
-export async function get_conversations_list(
+export async function list_conversations(
   accessToken: string,
   skip: number
 ): Promise<IConversation[] | null> {
@@ -71,7 +71,9 @@ export async function get_conversations_list(
     );
     //-- Deserialize response --//
     if (res.data) {
+      console.log("res.data: ", res.data); // DEV
       let conversations: IConversation[] = getIConversationArray(res.data);
+      console.log("conversations: ", conversations); // DEV
       return conversations;
     } else {
       return null;
@@ -406,9 +408,8 @@ export async function send_message(
         console.log("Connection closed by the server"); // DEV
         //-- If new conversation, update conversations list --//
         if (new_conversation) {
-          console.log("new conversation --> updating conversations list"); // DEV
           const getConversationsListHandler = async () => {
-            let list = await get_conversations_list(access_token, 0);
+            let list = await list_conversations(access_token, 0);
             ConversationsContext.setConversationsArray(list);
           };
           getConversationsListHandler();

@@ -33,7 +33,7 @@ function ConversationsContextProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     const getConversationsListHandler = async () => {
       let accessToken = await getAccessTokenSilently();
-      let list = await chatson.get_conversations_list(
+      let list = await chatson.list_conversations(
         accessToken,
         conversationsArray?.length || 0
       );

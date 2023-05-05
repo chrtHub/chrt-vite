@@ -348,7 +348,7 @@ export default function AppLayout({ infoMode }: IProps) {
             id="secondary-items-list"
             className="ml-3 flex-grow overflow-y-auto"
           >
-            {pathname === "/gpt" && <ConversationsList />}
+            {pathname.startsWith("/gpt") && <ConversationsList />}
           </div>
           {/* END OF SECONDARY ITEMS */}
         </div>
