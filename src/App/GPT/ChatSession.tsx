@@ -20,7 +20,6 @@ import TextareaAutosize from "react-textarea-autosize";
 import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import {
   ChevronDoubleDownIcon,
-  CircleStackIcon,
   CpuChipIcon,
   StopIcon,
 } from "@heroicons/react/24/outline";
@@ -35,11 +34,6 @@ import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { ObjectId } from "bson";
 import ConversationStats from "./ConversationStats";
-import {
-  IAPIReqResMetadata,
-  IConversation,
-  IConversationSerialized,
-} from "./chatson/chatson_types";
 
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 

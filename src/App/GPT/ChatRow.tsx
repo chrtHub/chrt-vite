@@ -59,8 +59,9 @@ export default function ChatRow(props: { row: IMessageRow }) {
     }
 
     return (
-      // TODO - implement logic to show initials or perhaps photo in mulit-user chats(?)
-      <div>human</div>
+      <div className="flex flex-col items-center">
+        <CpuChipIcon className="mt-1 h-8 w-8 text-zinc-500 dark:text-zinc-400" />
+      </div>
     );
   };
 

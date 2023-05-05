@@ -4,7 +4,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useConversationsContext } from "../../../Context/ConversationsContext";
 
 //-- TSX Components --//
-import getConversationsList from "../chatson/getConversationsList";
 import * as chatson from "../chatson/chatson";
 
 //-- NPM Components --//
@@ -27,7 +26,7 @@ import { format, isToday, isYesterday } from "date-fns";
 import classNames from "../../../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
-import { IConversationSerialized } from "../chatson/chatson_types";
+import { IConversation } from "../chatson/chatson_types";
 import { useChatContext } from "../../../Context/ChatContext";
 import { ObjectId } from "bson";
 
@@ -135,7 +134,7 @@ export default function ConversationsList() {
       : 0;
 
     if (conversationsArrayLength > 0) {
-      let list = await getConversationsList(
+      let list = await chatson.get_conversations_list(
         accessToken,
         conversationsArrayLength
       );
@@ -151,12 +150,12 @@ export default function ConversationsList() {
   };
 
   //-- Set conversationId --//
-  const setConversationIdHandler = async (row: IConversationSerialized) => {
-    CC.setConversationId(ObjectId.createFromHexString(row._id));
+  const setConversationIdHandler = async (row: IConversation) => {
+    CC.setConversationId(row._id);
   };
 
   //-- Conversation Rows with Sticky Header Logic --//
-  const ConversationRow = (index: number, row: IConversationSerialized) => {
+  const ConversationRow = (index: number, row: IConversation) => {
     if (
       ConversationsContext.conversationsArray &&
       ConversationsContext.conversationsArray.length > 0

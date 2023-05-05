@@ -13,17 +13,19 @@ import { fetchEventSource } from "@microsoft/fetch-event-source";
 
 //== Utility Functions ==//
 import { getUserDbId } from "../../../Util/getUserDbId";
-import getConversationsList from "./getConversationsList";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import {
   IAPIReqResMetadata,
   IConversation,
+  IConversationSerialized,
   IMessageNode,
+  IMessageNodeSerialized,
   IMessageRow,
   IMessage,
+  IModel,
   IOpenAIChatCompletionRequestBody,
-  IGetConversationsAndMessagesResponse,
+  ChatCompletionResponseMessageRoleEnum,
 } from "./chatson_types";
 import { IChatContext } from "../../../Context/ChatContext";
 import { IConversationsContext } from "../../../Context/ConversationsContext";
@@ -40,8 +42,47 @@ let nodeArray: IMessageNode[] = [];
 // (3) send_message
 // (4) change_branch
 // Utilities
-// (5) nodeArrayToRowArray
+// (5) getLeafNode
+// (6) nodeArrayToRowArray
+// (7) getIConversations
+// (8) getIConversations
 //== ******* ==//
+
+/**
+ * (0) get_conversations_list
+ *
+ * @param accessToken user's access token
+ * @param skip the number of documents to skip when returning results. equal to the length of the conversations array.
+ * @returns
+ */
+export async function get_conversations_list(
+  accessToken: string,
+  skip: number
+): Promise<IConversation[] | null> {
+  try {
+    //-- Make POST request --//
+    let res = await axios.get<IConversationSerialized[]>(
+      `${VITE_ALB_BASE_URL}/llm/list_conversations/${skip}`,
+      {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    //-- Deserialize response --//
+    if (res.data) {
+      let conversations: IConversation[] = getIConversationArray(res.data);
+      return conversations;
+    } else {
+      return null;
+    }
+    //----//
+  } catch (err) {
+    console.log(err);
+  }
+
+  return null;
+}
 
 /**
  * (1) get_conversation_and_messages sends a prompt to an LLM and receives the response
@@ -56,7 +97,7 @@ export async function get_conversation_and_messages(
 ): Promise<void> {
   try {
     //-- Make GET request --//
-    let res = await axios.get<IGetConversationsAndMessagesResponse>(
+    let res = await axios.get(
       `${VITE_ALB_BASE_URL}/llm/get_conversation_and_messages/${CC.conversationId}`,
       {
         headers: {
@@ -64,12 +105,19 @@ export async function get_conversation_and_messages(
         },
       }
     );
-    const { conversation, message_nodes } = res.data;
+    let { conversation, message_nodes } = res.data;
+
+    // TODO - deserialize responses
+    conversation = getIConversation(conversation);
+
+    console.log("serialized message nodes", message_nodes);
+    message_nodes = getIMessageNodes(message_nodes);
+    console.log("deserialized message nodes", message_nodes);
 
     //-- Update conversation --//
     CC.setConversation(conversation);
 
-    //-- Update messages --/
+    //-- If messages received, update CC.model, CC.rowArray, and local nodeArray --/
     if (message_nodes.length > 0) {
       //-- Set newest node as the leaf node  --//
       let leaf_node = getLeafNode(message_nodes);
@@ -77,6 +125,10 @@ export async function get_conversation_and_messages(
       if (leaf_node.completion?.model) {
         CC.setModel(leaf_node.completion.model);
       }
+      //-- Update nodeArray --//
+      // nodeArray = deserializeMessageNodes(message_nodes) // TODO
+      nodeArray = message_nodes; // DEV the type seems wrong. deserialize??
+      console.log("nodeArray in get convo + msgs: ", nodeArray);
       //-- Update rowArray --//
       let rowArray = nodeArrayToRowArray(message_nodes, leaf_node);
       CC.setRowArray(rowArray);
@@ -101,7 +153,7 @@ export function reset_conversation(): void {
 
 // (2) Build prompt IMessage object and request_body IChatCompletionRequestBody object, call fetchEventSource with request_body.
 
-// (3a) All conversations - <onopen></onopen>
+// (3a) All conversations - onopen
 // // get headers for conversation id
 // (3b) New conversations - onopen
 // // get headers for root node, build root node, add it to nodeArray
@@ -148,7 +200,6 @@ export async function send_message(
   ConversationsContext: IConversationsContext
 ): Promise<void> {
   console.log(" ----- SEND MESSAGE ----- "); // DEV
-  console.log(CC.temperature);
 
   //-- Get user_db_id from access token --//
   const user_db_id = getUserDbId(access_token);
@@ -257,6 +308,8 @@ export async function send_message(
           completion: completion,
         };
 
+        console.log("nodeArray in onopen: ", nodeArray); // DEV
+
         //-- Add new_node to nodeArray, update parent node's children_node_ids --//
         nodeArray = produce(nodeArray, (draft) => {
           draft.push(new_node);
@@ -321,23 +374,14 @@ export async function send_message(
               }
             });
           });
-          //-- Existin conversations only - update ConversationsContext conversationsArray --//
+          //-- Existing conversations only - update ConversationsContext conversationsArray --//
           if (!new_conversation) {
             ConversationsContext.setConversationsArray((prevArray) => {
               return produce(prevArray, (draft) => {
                 if (draft) {
-                  //-- Alter object because it's going into an IConversationSerialized[] --//
-                  const serializedMetadata = {
-                    ...api_req_res_metadata_object,
-                    created_at:
-                      api_req_res_metadata_object.created_at.toString(),
-                    node_id: api_req_res_metadata_object.node_id.toString(),
-                    request_messages_node_ids:
-                      api_req_res_metadata_object.request_messages_node_ids.map(
-                        (id) => id.toString()
-                      ),
-                  };
-                  draft[0].api_req_res_metadata.push(serializedMetadata);
+                  draft[0].api_req_res_metadata.push(
+                    api_req_res_metadata_object
+                  );
                 }
               });
             });
@@ -364,7 +408,7 @@ export async function send_message(
         if (new_conversation) {
           console.log("new conversation --> updating conversations list"); // DEV
           const getConversationsListHandler = async () => {
-            let list = await getConversationsList(access_token, 0);
+            let list = await get_conversations_list(access_token, 0);
             ConversationsContext.setConversationsArray(list);
           };
           getConversationsListHandler();
@@ -477,6 +521,7 @@ export function change_branch(): void {
 
 //-- Utility function(s) --//
 /**
+ * (5)
  *
  * @param nodeArray
  * @param leafNode
@@ -505,9 +550,6 @@ const nodeArrayToRowArray = (
         (a, b) => a.getTimestamp().getTime() - b.getTimestamp().getTime()
       ),
     ];
-
-    // DEV - the leaf node won't have any children_node_ids
-
     //-- Build completion row, add to newRowArray --//
     let completion_row: IMessageRow;
     if (node.completion) {
@@ -528,6 +570,7 @@ const nodeArrayToRowArray = (
     };
     newRowArray.push(prompt_row);
     //-- Update node --//
+
     node = parent_node;
   }
   newRowArray = newRowArray.reverse(); //-- push + reverse --//
@@ -535,6 +578,7 @@ const nodeArrayToRowArray = (
 };
 
 /**
+ * (6)
  *
  * @param nodeArray
  * @returns
@@ -549,3 +593,108 @@ const getLeafNode = (nodeArray: IMessageNode[]): IMessageNode => {
 
   return newestNode;
 };
+
+/**
+ * (7)
+ *
+ * @param serializedConversations
+ * @returns
+ */
+function getIConversationArray(
+  serializedConversations: IConversationSerialized[]
+): IConversation[] {
+  return serializedConversations.map((serializedConversation) =>
+    getIConversation(serializedConversation)
+  );
+}
+
+/**
+ * (8)
+ *
+ * @param c
+ * @returns
+ */
+function getIConversation(c: IConversationSerialized): IConversation {
+  const conversation: IConversation = {
+    _id: new ObjectId(c._id),
+    api_provider_name: c.api_provider_name,
+    model_developer_name: c.model_developer_name,
+    user_db_id: c.user_db_id,
+    title: c.title,
+    root_node_id: new ObjectId(c.root_node_id),
+    schema_version: c.schema_version,
+    created_at: new Date(c.created_at),
+    api_req_res_metadata: [],
+    system_tags: c.system_tags,
+    user_tags: c.user_tags,
+  };
+
+  c.api_req_res_metadata.forEach((metadata) => {
+    const apiMetadata: IAPIReqResMetadata = {
+      user: metadata.user,
+      model_api_name: metadata.model_api_name,
+      params: metadata.params,
+      created_at: new Date(metadata.created_at),
+      request_tokens: metadata.request_tokens,
+      completion_tokens: metadata.completion_tokens,
+      total_tokens: metadata.total_tokens,
+      node_id: new ObjectId(metadata.node_id),
+      request_messages_node_ids: metadata.request_messages_node_ids.map(
+        (id) => new ObjectId(id)
+      ),
+    };
+
+    conversation.api_req_res_metadata.push(apiMetadata);
+  });
+
+  return conversation;
+}
+
+/**
+ * (9)
+ *
+ * @param serializedNode
+ * @returns
+ */
+function getIMessageNode(node: IMessageNodeSerialized): IMessageNode {
+  const messageNode: IMessageNode = {
+    _id: new ObjectId(node._id),
+    user_db_id: node.user_db_id,
+    created_at: new Date(node.created_at),
+    conversation_id: new ObjectId(node.conversation_id),
+    parent_node_id: node.parent_node_id
+      ? new ObjectId(node.parent_node_id)
+      : null,
+    children_node_ids: node.children_node_ids.map((id) => new ObjectId(id)),
+    prompt: getIMessage(node.prompt),
+    completion: node.completion ? getIMessage(node.completion) : null,
+  };
+
+  return messageNode;
+}
+
+function getIMessage(m: any): IMessage {
+  const message: IMessage = {
+    author: m.author,
+    model: {
+      api_provider_name: m.model.api_provider_name,
+      model_developer_name: m.model.model_developer_name,
+      model_api_name: m.model.model_api_name,
+    },
+    created_at: new Date(m.created_at),
+    role: m.role,
+    content: m.content,
+  };
+
+  return message;
+}
+
+/**
+ * (10)
+ *
+ * @param serializedNodes
+ * @returns
+ */
+function getIMessageNodes(nodes: IMessageNodeSerialized[]): IMessageNode[] {
+  return nodes.map((node) => getIMessageNode(node));
+}

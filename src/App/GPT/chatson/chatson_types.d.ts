@@ -56,6 +56,37 @@ export interface IMessageNode {
 }
 //-- `message_nodes` collection --> index on conversation_id --//
 
+export interface IMessageNodeSerialized {
+  _id: string;
+  user_db_id: string;
+  created_at: string;
+  conversation_id: string;
+  parent_node_id: string;
+  children_node_ids: string[];
+  prompt: {
+    author: string;
+    model: {
+      api_provider_name: string;
+      model_developer_name: string;
+      model_api_name: string;
+    };
+    created_at: string;
+    role: string;
+    content: string;
+  };
+  completion: {
+    author: string;
+    model: {
+      api_provider_name: string;
+      model_developer_name: string;
+      model_api_name: string;
+    };
+    created_at: string;
+    role: string;
+    content: string;
+  } | null;
+}
+
 export interface IMessage {
   author: string;
   model: IModel;
@@ -111,15 +142,8 @@ export interface IOpenAIChatCompletionRequestBody {
   temperature: number | null; //-- between 0 and 2, inclusive --//
 }
 
-//== Server Response Types ==//
-export interface IGetConversationsAndMessagesResponse {
-  conversation: IConversation;
-  message_nodes: IMessageNode[];
-}
-
 /** These lists is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */
 export type APIProviderNames = "openai" | "amazon_bedrock";
-// export type APIProviderFriendlyName = "OpenAI" | "Amazon Bedrock"
 
 export type ModelDeveloperNames =
   | "openai"

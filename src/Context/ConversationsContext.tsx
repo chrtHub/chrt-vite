@@ -6,14 +6,14 @@ import {
   PropsWithChildren,
 } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { IConversationSerialized } from "../App/GPT/chatson/chatson_types";
-import getConversationsList from "../App/GPT/chatson/getConversationsList";
+import { IConversation } from "../App/GPT/chatson/chatson_types";
+import * as chatson from "../App/GPT/chatson/chatson";
 
 //-- Create interface and Context --//
 export interface IConversationsContext {
-  conversationsArray: IConversationSerialized[] | null;
+  conversationsArray: IConversation[] | null;
   setConversationsArray: React.Dispatch<
-    React.SetStateAction<IConversationSerialized[] | null>
+    React.SetStateAction<IConversation[] | null>
   >;
 }
 
@@ -25,7 +25,7 @@ const ConversationsContext = createContext<IConversationsContext | undefined>(
 function ConversationsContextProvider({ children }: PropsWithChildren) {
   //-- State values --//
   const [conversationsArray, setConversationsArray] = useState<
-    IConversationSerialized[] | null
+    IConversation[] | null
   >(null);
 
   //-- Get conversations list on mount --//
@@ -33,7 +33,7 @@ function ConversationsContextProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     const getConversationsListHandler = async () => {
       let accessToken = await getAccessTokenSilently();
-      let list = await getConversationsList(
+      let list = await chatson.get_conversations_list(
         accessToken,
         conversationsArray?.length || 0
       );
