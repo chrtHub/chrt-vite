@@ -1,48 +1,84 @@
 import { ObjectId } from "bson";
 
+//-- Mongoize - ObjectId and Date --//
+// Outside MongoDB - "ObjectId" stored as Hex String
+// // new ObjectId().toHexString()
+
+// Inside MongoDB - "ObjectId" stored as ObjectId Object
+// // ObjectId.createFromHexString()
+
+// Outside MongoDB - "Date" stored as ISO 8601 string
+// // new Date().toISOString() --> '2023-05-06T05:10:00.731Z'
+
+// Inside MongoDB - "Date" stored as Date object
+// // new Date('2023-05-06T05:10:00.731Z') --> Date Object
+
 //-- Type Interfaces --//
+//-- `conversations` collection --> index on user_db_id --//
 export interface IConversation {
-  _id: string; //-- ObjectId as Hex String --//
+  _id: string; //-- {MONGOIZE} ObjectId --//
+  created_at: string; //-- {MONGOIZE} Date --//
   api_provider_name: APIProviderNames;
   model_developer_name: ModelDeveloperNames;
   user_db_id: string;
   title: string;
-  root_node_id: string; //-- ObjectId as Hex String --//
+  root_node_id: string; //-- ObjectId --//
   schema_version: string;
-  created_at: string; //-- Date as ISO 8601 string, e.g. new Date().toISOString() --//
   api_req_res_metadata: IAPIReqResMetadata[];
   system_tags: string[]; //-- predefined lists for favorites, etc. --//
   user_tags: string[]; //-- user-defined tags --//
 }
-//-- `conversations` collection --> index on user_db_id --//
-
-export interface IMessageNode {
-  _id: string; //-- ObjectId as Hex String --//
+export interface IConversation_Mongo {
+  _id: ObjectId; //-- MONGOIZED --//
+  created_at: Date; //-- MONGOIZED --//
+  api_provider_name: APIProviderNames;
+  model_developer_name: ModelDeveloperNames;
   user_db_id: string;
-  created_at: string; //-- Date as ISO 8601 string, e.g. new Date().toISOString() --//
-  conversation_id: string; //-- ObjectId as Hex String --//
-  parent_node_id: string | null; //-- ObjectId as Hex String --//
-  children_node_ids: string[]; //-- ObjectId[] as Hex Strings --//
+  title: string;
+  root_node_id: string;
+  schema_version: string;
+  api_req_res_metadata: IAPIReqResMetadata[];
+  system_tags: string[];
+  user_tags: string[];
+}
+
+//-- `message_nodes` collection --> index on conversation_id: 1, created_at: -1 --//
+export interface IMessageNode {
+  _id: string; //-- {MONGOIZE} ObjectId --//
+  conversation_id: string; //-- {MONGOIZE} ObjectId --//
+  created_at: string; //-- {MONGOIZE} Date --//
+  user_db_id: string;
+  parent_node_id: string | null; //-- ObjectId --//
+  children_node_ids: string[]; //-- ObjectId[] --//
   prompt: IMessage;
   completion: IMessage | null;
 }
-//-- `message_nodes` collection --> index on conversation_id --//
+export interface IMessageNode_Mongo {
+  _id: ObjectId; //-- MONGOIZED --//
+  conversation_id: ObjectId; //-- MONGOIZED --//
+  created_at: Date; //-- MONGOIZED --//
+  user_db_id: string;
+  parent_node_id: string | null;
+  children_node_ids: string[];
+  prompt: IMessage;
+  completion: IMessage | null;
+}
 
 export interface IMessage {
   author: string;
   model: IModel;
-  created_at: string; //-- Date as ISO 8601 string, e.g. new Date().toISOString() --//
+  created_at: string; //-- Date --//
   role: ChatCompletionResponseMessageRoleEnum;
   content: string;
 }
 
 export interface IMessageRow extends IMessage {
   prompt_or_completion: "prompt" | "completion";
-  node_id: string; //-- ObjectId as Hex String --//
-  sibling_node_ids: string[]; //-- ObjectId[] as Hex Strings --//
+  node_id: string; //-- ObjectId --//
+  sibling_node_ids: string[]; //-- ObjectId[] --//
   // author: string;
   // model: IModel;
-  // created_at: string; //-- Date as ISO 8601 string, e.g. new Date().toISOString() --//
+  // created_at: string; //-- Date --//
   // role: ChatCompletionResponseMessageRoleEnum;
   // content: string;
 }
@@ -72,8 +108,8 @@ export interface IAPIReqResMetadata {
   request_tokens: number;
   completion_tokens: number;
   total_tokens: number;
-  node_id: string; //-- ObjectId as Hex String --//
-  request_messages_node_ids: string[]; //-- ObjectId[] as Hex Strings --//
+  node_id: string; //-- ObjectId --//
+  request_messages_node_ids: string[]; //-- ObjectId[] --//
 }
 
 export interface IOpenAIChatCompletionRequestBody {
