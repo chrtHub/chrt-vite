@@ -1,7 +1,6 @@
 //-- react, react-router-dom, recoil, Auth0 --//
 import { useState, useRef, MouseEventHandler, ReactNode } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useConversationsContext } from "../../../Context/ConversationsContext";
 
 //-- TSX Components --//
 import * as chatson from "../chatson/chatson";
@@ -93,7 +92,6 @@ const StyledButton: React.FC<StyledButtonProps> = ({
 export default function ConversationsList() {
   //-- State --//
   const CC = useChatContext();
-  const ConversationsContext = useConversationsContext();
   const [atBottom, setAtBottom] = useState<boolean>(false);
   const [atTop, setAtTop] = useState<boolean>(true);
 
@@ -105,11 +103,11 @@ export default function ConversationsList() {
   const scrollToBottomHandler = () => {
     if (
       virtuosoRef.current &&
-      ConversationsContext.conversationsArray &&
-      ConversationsContext.conversationsArray.length > 0
+      CC.conversationsArray &&
+      CC.conversationsArray.length > 0
     ) {
       virtuosoRef.current.scrollToIndex({
-        index: ConversationsContext.conversationsArray.length, //-- not subtracting 1 cos it works without that --//
+        index: CC.conversationsArray.length, //-- not subtracting 1 cos it works without that --//
         behavior: "smooth",
         align: "end",
       });
@@ -128,8 +126,8 @@ export default function ConversationsList() {
   //-- Get more conversations --//
   const getConversationsListHandler = async () => {
     let accessToken = await getAccessTokenSilently();
-    let conversationsArrayLength = ConversationsContext.conversationsArray
-      ? ConversationsContext.conversationsArray.length
+    let conversationsArrayLength = CC.conversationsArray
+      ? CC.conversationsArray.length
       : 0;
 
     if (conversationsArrayLength > 0) {
@@ -138,8 +136,8 @@ export default function ConversationsList() {
         conversationsArrayLength
       );
 
-      ConversationsContext.setConversationsArray(
-        produce(ConversationsContext.conversationsArray, (draft) => {
+      CC.setConversationsArray(
+        produce(CC.conversationsArray, (draft) => {
           if (draft && list) {
             draft.push(...list);
           } //-- else no mutation occurs --//
@@ -155,10 +153,7 @@ export default function ConversationsList() {
 
   //-- Conversation Rows with Sticky Header Logic --//
   const ConversationRow = (index: number, row: IConversation) => {
-    if (
-      ConversationsContext.conversationsArray &&
-      ConversationsContext.conversationsArray.length > 0
-    ) {
+    if (CC.conversationsArray && CC.conversationsArray.length > 0) {
       //-- Get date of current row --//
       let rowCreatedAt = new Date(row.created_at);
       let currentRowDate = format(rowCreatedAt, "EEE, MMM dd");
@@ -181,9 +176,7 @@ export default function ConversationsList() {
         index === 0 ||
         currentRowDate !==
           format(
-            new Date(
-              ConversationsContext.conversationsArray[index - 1].created_at
-            ),
+            new Date(CC.conversationsArray[index - 1].created_at),
             "EEE, MMM dd"
           );
 
@@ -237,10 +230,7 @@ export default function ConversationsList() {
   };
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
-  if (
-    ConversationsContext.conversationsArray &&
-    ConversationsContext.conversationsArray.length > 0
-  ) {
+  if (CC.conversationsArray && CC.conversationsArray.length > 0) {
     return (
       <div className="flex h-full flex-col">
         {/*-- DIVIDER --*/}
@@ -280,7 +270,7 @@ export default function ConversationsList() {
         <Virtuoso
           id="virtuoso-conversations-list"
           ref={virtuosoRef}
-          data={ConversationsContext.conversationsArray}
+          data={CC.conversationsArray}
           itemContent={(index, row) => ConversationRow(index, row)} //-- Don't call hooks within this callback --//
           atBottomStateChange={(isAtBottom) => {
             setAtBottom(isAtBottom);

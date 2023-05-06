@@ -1,4 +1,10 @@
-import { useState, createContext, useContext, PropsWithChildren } from "react";
+import {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  PropsWithChildren,
+} from "react";
 import {
   IConversation,
   IMessageRow,
@@ -6,9 +12,15 @@ import {
   IModelFriendly,
   ModelAPINames,
 } from "../App/GPT/chatson/chatson_types";
+import { useAuth0 } from "@auth0/auth0-react";
+import * as chatson from "../App/GPT/chatson/chatson";
 
 //-- Create interface and Context --//
 export interface IChatContext {
+  conversationsArray: IConversation[] | null;
+  setConversationsArray: React.Dispatch<
+    React.SetStateAction<IConversation[] | null>
+  >;
   rowArray: IMessageRow[] | null;
   setRowArray: React.Dispatch<React.SetStateAction<IMessageRow[] | null>>;
   conversationId: string | null;
@@ -96,6 +108,9 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   };
 
   //-- State values --//
+  const [conversationsArray, setConversationsArray] = useState<
+    IConversation[] | null
+  >(null);
   const [rowArray, setRowArray] = useState<IMessageRow[] | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [conversation, setConversation] = useState<IConversation | null>(null);
@@ -105,8 +120,24 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   const [temperature, setTemperature] = useState<number | null>(null);
   const [completionLoading, setCompletionLoading] = useState<boolean>(false);
 
-  //-- BungetConversationsListHandlerle values into chatContextValue --//
+  //-- Get conversations list on mount --//
+  const { getAccessTokenSilently } = useAuth0();
+  useEffect(() => {
+    const getConversationsListHandler = async () => {
+      let accessToken = await getAccessTokenSilently();
+      let list = await chatson.list_conversations(
+        accessToken,
+        conversationsArray?.length || 0
+      );
+      setConversationsArray(list);
+    };
+    getConversationsListHandler();
+  }, []);
+
+  //-- Bundle values into chatContextValue --//
   const chatContextValue: IChatContext = {
+    conversationsArray,
+    setConversationsArray,
     rowArray,
     setRowArray,
     conversationId,

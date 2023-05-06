@@ -26,7 +26,6 @@ import {
   ChatCompletionResponseMessageRoleEnum,
 } from "./chatson_types";
 import { IChatContext } from "../../../Context/ChatContext";
-import { IConversationsContext } from "../../../Context/ConversationsContext";
 import { ObjectId } from "bson";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
@@ -186,8 +185,7 @@ export async function send_message(
   access_token: string,
   prompt_content: string,
   parent_node_id: string | null,
-  CC: IChatContext,
-  ConversationsContext: IConversationsContext
+  CC: IChatContext
 ): Promise<void> {
   console.log(" ----- SEND MESSAGE ----- "); // DEV
 
@@ -363,7 +361,7 @@ export async function send_message(
           });
           //-- Existing conversations only - update ConversationsContext conversationsArray --//
           if (!new_conversation) {
-            ConversationsContext.setConversationsArray((prevArray) => {
+            CC.setConversationsArray((prevArray) => {
               return produce(prevArray, (draft) => {
                 if (draft) {
                   draft[0].api_req_res_metadata.push(
@@ -395,7 +393,7 @@ export async function send_message(
         if (new_conversation) {
           const getConversationsListHandler = async () => {
             let list = await list_conversations(access_token, 0);
-            ConversationsContext.setConversationsArray(list);
+            CC.setConversationsArray(list);
           };
           getConversationsListHandler();
         }
