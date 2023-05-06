@@ -32,7 +32,6 @@ import classNames from "../../Util/classNames";
 import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { ObjectId } from "bson";
 import ConversationStats from "./ConversationStats";
 
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
@@ -124,7 +123,7 @@ export default function ChatSession() {
       }
 
       //-- If first message, parentNodeId is null --//
-      let parentNodeId: ObjectId | null = null;
+      let parentNodeId: string | null = null;
       //-- If continuing branch, parentNodeId is last node's id --//
       if (CC.rowArray && CC.rowArray.length > 0) {
         parentNodeId = CC.rowArray[CC.rowArray.length - 1].node_id;

@@ -28,7 +28,6 @@ import classNames from "../../../Util/classNames";
 //-- Data Objects, Environment Variables --//
 import { IConversation } from "../chatson/chatson_types";
 import { useChatContext } from "../../../Context/ChatContext";
-import { ObjectId } from "bson";
 
 //-- Conversation Button --//
 interface ConversationButtonProps {
@@ -134,7 +133,7 @@ export default function ConversationsList() {
       : 0;
 
     if (conversationsArrayLength > 0) {
-      let list = await chatson.get_conversations_list(
+      let list = await chatson.list_conversations(
         accessToken,
         conversationsArrayLength
       );

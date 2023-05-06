@@ -18,9 +18,7 @@ import { getUserDbId } from "../../../Util/getUserDbId";
 import {
   IAPIReqResMetadata,
   IConversation,
-  IConversationSerialized,
   IMessageNode,
-  IMessageNodeSerialized,
   IMessageRow,
   IMessage,
   IModel,
@@ -44,8 +42,6 @@ let nodeArray: IMessageNode[] = [];
 // Utilities
 // (5) getLeafNode
 // (6) nodeArrayToRowArray
-// (7) getIConversations
-// (8) getIConversations
 //== ******* ==//
 
 /**
@@ -61,7 +57,7 @@ export async function list_conversations(
 ): Promise<IConversation[] | null> {
   try {
     //-- Make POST request --//
-    let res = await axios.get<IConversationSerialized[]>(
+    let res = await axios.get<IConversation[]>(
       `${VITE_ALB_BASE_URL}/llm/list_conversations/${skip}`,
       {
         headers: {
@@ -69,12 +65,8 @@ export async function list_conversations(
         },
       }
     );
-    //-- Deserialize response --//
     if (res.data) {
-      console.log("res.data: ", res.data); // DEV
-      let conversations: IConversation[] = getIConversationArray(res.data);
-      console.log("conversations: ", conversations); // DEV
-      return conversations;
+      return res.data;
     } else {
       return null;
     }
@@ -99,7 +91,10 @@ export async function get_conversation_and_messages(
 ): Promise<void> {
   try {
     //-- Make GET request --//
-    let res = await axios.get(
+    let res = await axios.get<{
+      conversation: IConversation;
+      message_nodes: IMessageNode[];
+    }>(
       `${VITE_ALB_BASE_URL}/llm/get_conversation_and_messages/${CC.conversationId}`,
       {
         headers: {
@@ -108,13 +103,6 @@ export async function get_conversation_and_messages(
       }
     );
     let { conversation, message_nodes } = res.data;
-
-    // TODO - deserialize responses
-    conversation = getIConversation(conversation);
-
-    console.log("serialized message nodes", message_nodes);
-    message_nodes = getIMessageNodes(message_nodes);
-    console.log("deserialized message nodes", message_nodes);
 
     //-- Update conversation --//
     CC.setConversation(conversation);
@@ -197,7 +185,7 @@ export function reset_conversation(): void {
 export async function send_message(
   access_token: string,
   prompt_content: string,
-  parent_node_id: ObjectId | null,
+  parent_node_id: string | null,
   CC: IChatContext,
   ConversationsContext: IConversationsContext
 ): Promise<void> {
@@ -210,7 +198,7 @@ export async function send_message(
   const prompt: IMessage = {
     author: user_db_id,
     model: CC.model,
-    created_at: new Date(),
+    created_at: new Date().toISOString(),
     role: "user",
     content: prompt_content,
   };
@@ -229,7 +217,7 @@ export async function send_message(
     "Content-Type": "application/json",
   };
 
-  let new_node_id: ObjectId;
+  let new_node_id: string;
   let new_conversation: boolean = false;
 
   class CustomFatalError extends Error {} // TODO - build as needed
@@ -242,22 +230,23 @@ export async function send_message(
       //-- ***** ***** ***** ***** ------ ***** ***** ***** ***** --//
       async onopen(res) {
         //-- Conversation id --//
-        let conversation_id: ObjectId;
-        const a = res.headers.get("CHRT-conversation-id");
-        if (a) {
-          conversation_id = ObjectId.createFromHexString(a);
-        } else {
+        const conversation_id = res.headers.get("CHRT-conversation-id");
+        if (!conversation_id) {
           throw new CustomFatalError("missing conversation_id");
         }
 
         //-- Root node (new conversations only) --//
-        const b = res.headers.get("CHRT-root-node-id");
-        const c = res.headers.get("CHRT-root-node-created-at");
-        if (b && b !== "none" && c && c !== "none") {
+        const root_node_id = res.headers.get("CHRT-root-node-id");
+        const root_node_created_at = res.headers.get(
+          "CHRT-root-node-created-at"
+        );
+        if (
+          root_node_id &&
+          root_node_id !== "none" &&
+          root_node_created_at &&
+          root_node_created_at !== "none"
+        ) {
           new_conversation = true;
-          const root_node_id: ObjectId = ObjectId.createFromHexString(b);
-          const root_node_created_at: Date = new Date(c);
-
           //-- Build root node --//
           const root_node: IMessageNode = {
             _id: root_node_id,
@@ -281,21 +270,17 @@ export async function send_message(
         }
 
         //-- New node --//
-        const d = res.headers.get("CHRT-new-node-id");
-        const e = res.headers.get("CHRT-new-node-created-at");
-        const f = res.headers.get("CHRT-parent-node-id");
-        if (!d || !e || !f) {
+        const new_node_id = res.headers.get("CHRT-new-node-id");
+        const new_node_created_at = res.headers.get("CHRT-new-node-created-at");
+        const parent_node_id = res.headers.get("CHRT-parent-node-id");
+        if (!new_node_id || !new_node_created_at || !parent_node_id) {
           throw new CustomFatalError("missing header(s)");
         }
-        new_node_id = ObjectId.createFromHexString(d);
-        const new_node_created_at: Date = new Date(e);
-        const parent_node_id: ObjectId = ObjectId.createFromHexString(f);
-
         //-- Build prompt node --//
         const completion: IMessage = {
           author: CC.model.model_api_name,
           model: CC.model,
-          created_at: new Date(),
+          created_at: new Date().toISOString(),
           role: "assistant",
           content: "", //-- overwritten in CC.rowArray during SSE --//
         };
@@ -316,8 +301,8 @@ export async function send_message(
         nodeArray = produce(nodeArray, (draft) => {
           draft.push(new_node);
 
-          let parent_node_in_draft = draft.find((node) =>
-            node._id.equals(parent_node_id)
+          let parent_node_in_draft = draft.find(
+            (node) => node._id === parent_node_id // TODO - check this
           );
           if (parent_node_in_draft) {
             parent_node_in_draft.children_node_ids.push(new_node._id);
@@ -348,7 +333,7 @@ export async function send_message(
           //-- Overwrite completion object in nodeArray --//
           nodeArray = produce(nodeArray, (draft) => {
             let new_node_in_draft = draft.find((node) => {
-              return node._id.equals(new_node_id);
+              return node._id === new_node_id;
             });
             if (new_node_in_draft) {
               new_node_in_draft.completion = completion_object;
@@ -439,15 +424,15 @@ export function change_branch(): void {
   // Something like this?
   //-- On 'direct' updates to leaf node - via user selecting new conversation branch --//
   // const branchChangeHandler = (
-  //   node_id: ObjectId,
-  //   sibling_node_ids: ObjectId[],
+  //   node_id: string,
+  //   sibling_node_ids: string[],
   //   increment: 1 | -1
   // ) => {
   //   // for a prompt row, display prompt's "sibling_node_ids.indexOf(node_id) + 1 / sibling_node_ids.length", i.e. "1 / 3"
   //   //-- Current node --//
   //   let node_id_idx: number = sibling_node_ids.indexOf(node_id);
   //   //-- New version node --//
-  //   let new_version_node_id: ObjectId =
+  //   let new_version_node_id: string =
   //     sibling_node_ids[node_id_idx + increment];
   //   let new_version_node: IMessageNode =
   //     node_map[new_version_node_id.toString()];
@@ -463,7 +448,7 @@ export function change_branch(): void {
   //   //-- Call updateRowsArray (not relying on ChatContext state here) --//
   //   buildRowArray(new_leaf_node_id.toString());
   // };
-  // function findLeafNodeId(node: IMessageNode): ObjectId {
+  // function findLeafNodeId(node: IMessageNode): string {
   //   //-- Leaf node (only searching "1st child history") --//
   //   if (node.children_node_ids.length === 0) {
   //     return node._id;
@@ -485,7 +470,7 @@ export function change_branch(): void {
   //   while (node.parent_node_id) {
   //     parent_node = node_map[node.parent_node_id.toString()];
   //     //-- Sort parent's children by timestamp ascending --//
-  //     let sibling_ids_timestamp_asc: ObjectId[] = [
+  //     let sibling_ids_timestamp_asc: string[] = [
   //       ...parent_node.children_node_ids.sort(
   //         (a, b) => a.getTimestamp().getTime() - b.getTimestamp().getTime()
   //       ),
@@ -546,9 +531,11 @@ const nodeArrayToRowArray = (
   while (node.parent_node_id) {
     let parent_node = nodeMap[node.parent_node_id.toString()];
     //-- Sort parent's children by timestamp ascending --//
-    let sibling_ids_timestamp_asc: ObjectId[] = [
+    let sibling_ids_timestamp_asc: string[] = [
       ...parent_node.children_node_ids.sort(
-        (a, b) => a.getTimestamp().getTime() - b.getTimestamp().getTime()
+        (a, b) =>
+          ObjectId.createFromHexString(a).getTimestamp().getTime() -
+          ObjectId.createFromHexString(b).getTimestamp().getTime()
       ),
     ];
     //-- Build completion row, add to newRowArray --//
@@ -594,108 +581,3 @@ const getLeafNode = (nodeArray: IMessageNode[]): IMessageNode => {
 
   return newestNode;
 };
-
-/**
- * (7)
- *
- * @param serializedConversations
- * @returns
- */
-function getIConversationArray(
-  serializedConversations: IConversationSerialized[]
-): IConversation[] {
-  return serializedConversations.map((serializedConversation) =>
-    getIConversation(serializedConversation)
-  );
-}
-
-/**
- * (8)
- *
- * @param c
- * @returns
- */
-function getIConversation(c: IConversationSerialized): IConversation {
-  const conversation: IConversation = {
-    _id: new ObjectId(c._id),
-    api_provider_name: c.api_provider_name,
-    model_developer_name: c.model_developer_name,
-    user_db_id: c.user_db_id,
-    title: c.title,
-    root_node_id: new ObjectId(c.root_node_id),
-    schema_version: c.schema_version,
-    created_at: new Date(c.created_at),
-    api_req_res_metadata: [],
-    system_tags: c.system_tags,
-    user_tags: c.user_tags,
-  };
-
-  c.api_req_res_metadata.forEach((metadata) => {
-    const apiMetadata: IAPIReqResMetadata = {
-      user: metadata.user,
-      model_api_name: metadata.model_api_name,
-      params: metadata.params,
-      created_at: new Date(metadata.created_at),
-      request_tokens: metadata.request_tokens,
-      completion_tokens: metadata.completion_tokens,
-      total_tokens: metadata.total_tokens,
-      node_id: new ObjectId(metadata.node_id),
-      request_messages_node_ids: metadata.request_messages_node_ids.map(
-        (id) => new ObjectId(id)
-      ),
-    };
-
-    conversation.api_req_res_metadata.push(apiMetadata);
-  });
-
-  return conversation;
-}
-
-/**
- * (9)
- *
- * @param serializedNode
- * @returns
- */
-function getIMessageNode(node: IMessageNodeSerialized): IMessageNode {
-  const messageNode: IMessageNode = {
-    _id: new ObjectId(node._id),
-    user_db_id: node.user_db_id,
-    created_at: new Date(node.created_at),
-    conversation_id: new ObjectId(node.conversation_id),
-    parent_node_id: node.parent_node_id
-      ? new ObjectId(node.parent_node_id)
-      : null,
-    children_node_ids: node.children_node_ids.map((id) => new ObjectId(id)),
-    prompt: getIMessage(node.prompt),
-    completion: node.completion ? getIMessage(node.completion) : null,
-  };
-
-  return messageNode;
-}
-
-function getIMessage(m: any): IMessage {
-  const message: IMessage = {
-    author: m.author,
-    model: {
-      api_provider_name: m.model.api_provider_name,
-      model_developer_name: m.model.model_developer_name,
-      model_api_name: m.model.model_api_name,
-    },
-    created_at: new Date(m.created_at),
-    role: m.role,
-    content: m.content,
-  };
-
-  return message;
-}
-
-/**
- * (10)
- *
- * @param serializedNodes
- * @returns
- */
-function getIMessageNodes(nodes: IMessageNodeSerialized[]): IMessageNode[] {
-  return nodes.map((node) => getIMessageNode(node));
-}
