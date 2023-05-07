@@ -90,6 +90,7 @@ const StyledButton: React.FC<StyledButtonProps> = ({
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ConversationsList() {
+  console.log("-- ConversationsList render --");
   //-- State --//
   const CC = useChatContext();
   const [atBottom, setAtBottom] = useState<boolean>(false);
@@ -230,76 +231,79 @@ export default function ConversationsList() {
   };
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
-  if (CC.conversationsArray && CC.conversationsArray.length > 0) {
-    return (
-      <div className="flex h-full flex-col">
-        {/*-- DIVIDER --*/}
-        <div className="mb-1.5 mt-1.5">
-          <div
-            className={classNames(
-              "border-t border-zinc-50 dark:border-zinc-800" // hidden - same bg as page
-            )}
-            aria-hidden="true"
-          />
-        </div>
-
-        {/* New conversation button */}
-        <div className="flex flex-row justify-center">
-          <ConversationButton
-            onClick={() => {
-              console.log("TODO - start new conversation"); // TODO - start new conversation
-            }}
-          >
-            <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
-            New Conversation
-          </ConversationButton>
-        </div>
-
-        {/*-- DIVIDER --*/}
-        <div>
-          <div
-            className={classNames(
-              "mb-0.5 mt-0.5 border-t border-zinc-50 dark:border-zinc-800" // hidden - same bg as page
-            )}
-            aria-hidden="true"
-          />
-        </div>
-
-        {/* Virtuoso Rows */}
-
-        <Virtuoso
-          id="virtuoso-conversations-list"
-          ref={virtuosoRef}
-          data={CC.conversationsArray}
-          itemContent={(index, row) => ConversationRow(index, row)} //-- Don't call hooks within this callback --//
-          atBottomStateChange={(isAtBottom) => {
-            setAtBottom(isAtBottom);
-          }}
-          atTopStateChange={(isAtTop) => {
-            setAtTop(isAtTop);
-          }}
-        />
-
-        {/* Buttons - scroll to top/bottom, show more conversations */}
-        <div className="mt-1.5 flex flex-row gap-2">
-          {/* Scroll to top */}
-          <StyledButton onClick={scrollToTopHandler} frozen={atTop}>
-            <ChevronDoubleUpIcon className="h-5 w-5" aria-hidden="true" />
-          </StyledButton>
-          {atBottom ? (
-            //-- Show more conversations --//
-            <StyledButton frozen={false} onClick={getConversationsListHandler}>
-              Show more
-            </StyledButton>
-          ) : (
-            //-- Scroll to bottom --//
-            <StyledButton onClick={scrollToBottomHandler} frozen={atBottom}>
-              <ChevronDoubleDownIcon className="h-5 w-5" aria-hidden="true" />
-            </StyledButton>
+  return (
+    <div className="flex h-full flex-col">
+      {/*-- DIVIDER --*/}
+      <div className="mb-1.5 mt-1.5">
+        <div
+          className={classNames(
+            "border-t border-zinc-50 dark:border-zinc-800" // hidden - same bg as page
           )}
-        </div>
+          aria-hidden="true"
+        />
       </div>
-    );
-  }
-  return null;
+
+      {/* New conversation button */}
+      <div className="flex flex-row justify-center">
+        <ConversationButton
+          onClick={() => {
+            console.log("TODO - start new conversation"); // TODO - start new conversation
+          }}
+        >
+          <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
+          New Conversation
+        </ConversationButton>
+      </div>
+
+      {/*-- DIVIDER --*/}
+      <div>
+        <div
+          className={classNames(
+            "mb-0.5 mt-0.5 border-t border-zinc-50 dark:border-zinc-800" // hidden - same bg as page
+          )}
+          aria-hidden="true"
+        />
+      </div>
+
+      {CC.conversationsArray && CC.conversationsArray.length > 0 && (
+        <>
+          {/* Virtuoso Rows */}
+          <Virtuoso
+            id="virtuoso-conversations-list"
+            ref={virtuosoRef}
+            data={CC.conversationsArray}
+            itemContent={(index, row) => ConversationRow(index, row)} //-- Don't call hooks within this callback --//
+            atBottomStateChange={(isAtBottom) => {
+              setAtBottom(isAtBottom);
+            }}
+            atTopStateChange={(isAtTop) => {
+              setAtTop(isAtTop);
+            }}
+          />
+
+          {/* Buttons - scroll to top/bottom, show more conversations */}
+          <div className="mt-1.5 flex flex-row gap-2">
+            {/* Scroll to top */}
+            <StyledButton onClick={scrollToTopHandler} frozen={atTop}>
+              <ChevronDoubleUpIcon className="h-5 w-5" aria-hidden="true" />
+            </StyledButton>
+            {atBottom ? (
+              //-- Show more conversations --//
+              <StyledButton
+                frozen={false}
+                onClick={getConversationsListHandler}
+              >
+                Show more
+              </StyledButton>
+            ) : (
+              //-- Scroll to bottom --//
+              <StyledButton onClick={scrollToBottomHandler} frozen={atBottom}>
+                <ChevronDoubleDownIcon className="h-5 w-5" aria-hidden="true" />
+              </StyledButton>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
 }

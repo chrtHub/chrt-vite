@@ -112,7 +112,7 @@ export interface IAPIReqResMetadata {
   request_messages_node_ids: string[]; //-- ObjectId[] --//
 }
 
-export interface IOpenAIChatCompletionRequestBody {
+export interface IChatCompletionRequestBody_OpenAI {
   prompt: IMessage;
   conversation_id_string: string | null;
   parent_node_id_string: string | null;

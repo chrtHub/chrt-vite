@@ -21,7 +21,7 @@ import {
   IMessageNode,
   IMessageRow,
   IMessage,
-  IOpenAIChatCompletionRequestBody,
+  IChatCompletionRequestBody_OpenAI,
 } from "./chatson_types";
 import { IChatContext } from "../../../Context/ChatContext";
 import { ObjectId } from "bson";
@@ -30,15 +30,24 @@ let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 //-- Chatson stuff --//
 let nodeArray: IMessageNode[] = [];
 
+//== DATA STRUCTURES ==//
+// `nodeArray` - IMessageNode[] stored locally in this chatson.tsx file
+// // use: used to store all IMessageNode objects for the current conversation, no particular order
+// // updated: (1) overwritten by the message_nodes received during get_conversation_and_messages, (2) send_message onopen and onmessage
+
+// `CC.rowArray` - IMessageRow[] | null stored in ChatContext in correct conversation branch order
+// // use: directly rendered as <ChatRow /> components by the Virtuoso list
+// // updated: set by (1) get_conversation_and_messages, (2) send_message onopen, (3) send_message onmessage for both SSE chunks and 'completion' event
+
 //== METHODS ==//
-// (0) list_conversations()
-// (1) get_conversation_and_messages
-// (2) reset_conversation
+// (0) list_conversations
+// (1) reset_conversation
+// (2) get_conversation_and_messages
 // (3) send_message
 // (4) change_branch
 // Utilities
-// (5) getLeafNode
-// (6) nodeArrayToRowArray
+// (5) nodeArrayToRowArray
+// (6) getNewestNode
 //== ******* ==//
 
 /**
@@ -77,7 +86,15 @@ export async function list_conversations(
 }
 
 /**
- * (1) get_conversation_and_messages sends a prompt to an LLM and receives the response
+ * (1) reset_conversation
+ * TODO
+ */
+export function reset_conversation(): void {
+  console.log("TO BE IMPLEMENTED - chastson.reset_conversation()");
+}
+
+/**
+ * (2) get_conversation_and_messages sends a prompt to an LLM and receives the response
  *
  * @param access_token
  * @param conversation_id
@@ -101,8 +118,8 @@ export async function get_conversation_and_messages(
       }
     );
     let { conversation, message_nodes } = res.data;
-    console.log("conversation: ", conversation); // DEV
-    console.log("message_nodes: ", message_nodes); // DEV
+    console.log("get_conversation_and_messages conversation: ", conversation); // DEV
+    console.log("get_conversation_and_messages message_nodes: ", message_nodes); // DEV
 
     //-- Update conversation --//
     CC.setConversation(conversation);
@@ -110,14 +127,13 @@ export async function get_conversation_and_messages(
     //-- If messages received, update CC.model, CC.rowArray, and local nodeArray --/
     if (message_nodes.length > 0) {
       //-- Set newest node as the leaf node  --//
-      let leaf_node = getLeafNode(message_nodes);
+      let leaf_node = getNewestNode(message_nodes);
       //-- Set model to match leaf node's model --//
       if (leaf_node.completion?.model) {
         CC.setModel(leaf_node.completion.model);
       }
       //-- Update nodeArray --//
       nodeArray = message_nodes;
-      console.log("nodeArray in get convo + msgs: ", nodeArray);
       //-- Update rowArray --//
       let rowArray = nodeArrayToRowArray(message_nodes, leaf_node);
       CC.setRowArray(rowArray);
@@ -126,13 +142,6 @@ export async function get_conversation_and_messages(
   } catch (err) {
     console.log(err);
   }
-}
-
-/**
- * TODO
- */
-export function reset_conversation(): void {
-  console.log("TO BE IMPLEMENTED - chastson.reset_conversation()");
 }
 
 //-- send_message() outline --//
@@ -173,13 +182,12 @@ export function reset_conversation(): void {
 // // add to conversation's api_req_res_metadata array in state
 
 /**
- * send_message sends a prompt to an LLM and receives the response
+ * (3) send_message sends a prompt to an LLM and receives the response
  *
  * @param access_token (a) set as the author id, (b) sent as Bearer token in 'authorization' header
  * @param prompt_content user input to be added to the conversation
  * @param parent_node_id For new conversations, the parent_node is null. For creating a message on the same branch, the parent_node is the current leaf node. For creating a message on a new branch, the parent_node is the parent of the current leaf node.
  * @param CC chat context
- * @param ConversationsContext conversations context
  */
 export async function send_message(
   access_token: string,
@@ -188,7 +196,6 @@ export async function send_message(
   CC: IChatContext
 ): Promise<void> {
   console.log(" ----- SEND MESSAGE ----- "); // DEV
-
   //-- Get user_db_id from access token --//
   const user_db_id = getUserDbId(access_token);
 
@@ -202,7 +209,7 @@ export async function send_message(
   };
 
   //-- Build request_body --//
-  const request_body: IOpenAIChatCompletionRequestBody = {
+  const request_body: IChatCompletionRequestBody_OpenAI = {
     prompt: prompt,
     conversation_id_string: CC.conversation?._id.toString() || null,
     parent_node_id_string: parent_node_id?.toString() || null,
@@ -292,8 +299,7 @@ export async function send_message(
           prompt: prompt,
           completion: completion,
         };
-
-        console.log("nodeArray in onopen: ", nodeArray); // DEV
+        console.log("nodeArray in onopen before adding new_node: ", nodeArray); // DEV
 
         //-- Add new_node to nodeArray, update parent node's children_node_ids --//
         nodeArray = produce(nodeArray, (draft) => {
@@ -303,12 +309,15 @@ export async function send_message(
             (node) => node._id === parent_node_id // TODO - check this
           );
           if (parent_node_in_draft) {
+            console.log("parent node found:", parent_node_in_draft); // DEV
             parent_node_in_draft.children_node_ids.push(new_node._id);
           }
         });
+        console.log("nodeArray in onopen after adding new_node: ", nodeArray); // DEV
 
         //-- Update rowArray --//
         let rowArray = nodeArrayToRowArray(nodeArray, new_node);
+        console.log("rowArray in onopen to be set as CC.rowArray: ", rowArray); // DEV
         CC.setRowArray(rowArray);
         //----//
       },
@@ -334,6 +343,10 @@ export async function send_message(
               return node._id === new_node_id;
             });
             if (new_node_in_draft) {
+              console.log(
+                "to overwrite completion for new_node_in_draft: ",
+                new_node_in_draft
+              ); // DEV
               new_node_in_draft.completion = completion_object;
             }
           });
@@ -346,7 +359,7 @@ export async function send_message(
             });
           });
         }
-        //-- API Req/Res Metadata (<IAPIReq></IAPIReq>ResMetadata)
+        //-- API Req/Res Metadata (IAPIResMetadata)
         else if (event.id && event.id === "api_req_res_metadata") {
           let api_req_res_metadata_object: IAPIReqResMetadata = JSON.parse(
             event.data
@@ -359,7 +372,7 @@ export async function send_message(
               }
             });
           });
-          //-- Existing conversations only - update ConversationsContext conversationsArray --//
+          //-- Existing conversations only - update conversationsArray --//
           if (!new_conversation) {
             CC.setConversationsArray((prevArray) => {
               return produce(prevArray, (draft) => {
@@ -505,7 +518,7 @@ export function change_branch(): void {
 
 //-- Utility function(s) --//
 /**
- * (5)
+ * (5) nodeArrayToRowArray
  *
  * @param nodeArray
  * @param leafNode
@@ -560,16 +573,17 @@ const nodeArrayToRowArray = (
     node = parent_node;
   }
   newRowArray = newRowArray.reverse(); //-- push + reverse --//
+  console.log("nodeArrayToRowArray newRowArray: ", newRowArray); // DEV
   return newRowArray;
 };
 
 /**
- * (6)
+ * (6) getNewestNode
  *
  * @param nodeArray
  * @returns
  */
-const getLeafNode = (nodeArray: IMessageNode[]): IMessageNode => {
+const getNewestNode = (nodeArray: IMessageNode[]): IMessageNode => {
   let newestNode: IMessageNode = nodeArray[0];
   for (const node of nodeArray) {
     if (node.created_at > newestNode.created_at) {
@@ -577,5 +591,6 @@ const getLeafNode = (nodeArray: IMessageNode[]): IMessageNode => {
     }
   }
 
+  console.log("getNewestNode: ", newestNode);
   return newestNode;
 };
