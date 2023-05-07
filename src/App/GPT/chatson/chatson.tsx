@@ -313,7 +313,6 @@ export async function send_message(
             parent_node_in_draft.children_node_ids.push(new_node._id);
           }
         });
-        console.log("nodeArray in onopen after adding new_node: ", nodeArray); // DEV
 
         //-- Update rowArray --//
         let rowArray = nodeArrayToRowArray(nodeArray, new_node);
