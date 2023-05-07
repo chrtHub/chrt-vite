@@ -21,9 +21,7 @@ import {
   IMessageNode,
   IMessageRow,
   IMessage,
-  IModel,
   IOpenAIChatCompletionRequestBody,
-  ChatCompletionResponseMessageRoleEnum,
 } from "./chatson_types";
 import { IChatContext } from "../../../Context/ChatContext";
 import { ObjectId } from "bson";
@@ -65,6 +63,7 @@ export async function list_conversations(
       }
     );
     if (res.data) {
+      console.log("conversations: ", res.data); // DEV
       return res.data;
     } else {
       return null;
@@ -102,6 +101,8 @@ export async function get_conversation_and_messages(
       }
     );
     let { conversation, message_nodes } = res.data;
+    console.log("conversation: ", conversation); // DEV
+    console.log("message_nodes: ", message_nodes); // DEV
 
     //-- Update conversation --//
     CC.setConversation(conversation);
@@ -115,8 +116,7 @@ export async function get_conversation_and_messages(
         CC.setModel(leaf_node.completion.model);
       }
       //-- Update nodeArray --//
-      // nodeArray = deserializeMessageNodes(message_nodes) // TODO
-      nodeArray = message_nodes; // DEV the type seems wrong. deserialize??
+      nodeArray = message_nodes;
       console.log("nodeArray in get convo + msgs: ", nodeArray);
       //-- Update rowArray --//
       let rowArray = nodeArrayToRowArray(message_nodes, leaf_node);
