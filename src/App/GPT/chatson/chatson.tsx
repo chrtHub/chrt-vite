@@ -118,8 +118,6 @@ export async function get_conversation_and_messages(
       }
     );
     let { conversation, message_nodes } = res.data;
-    console.log("get_conversation_and_messages conversation: ", conversation); // DEV
-    console.log("get_conversation_and_messages message_nodes: ", message_nodes); // DEV
 
     //-- Update conversation --//
     CC.setConversation(conversation);
@@ -222,8 +220,8 @@ export async function send_message(
     "Content-Type": "application/json",
   };
 
-  let new_node_id: string;
   let new_conversation: boolean = false;
+  let new_node_id: string | null;
 
   class CustomFatalError extends Error {} // TODO - build as needed
   try {
@@ -275,7 +273,7 @@ export async function send_message(
         }
 
         //-- New node --//
-        const new_node_id = res.headers.get("CHRT-new-node-id");
+        new_node_id = res.headers.get("CHRT-new-node-id");
         const new_node_created_at = res.headers.get("CHRT-new-node-created-at");
         const parent_node_id = res.headers.get("CHRT-parent-node-id");
         if (!new_node_id || !new_node_created_at || !parent_node_id) {
@@ -299,24 +297,16 @@ export async function send_message(
           prompt: prompt,
           completion: completion,
         };
-        console.log("nodeArray in onopen before adding new_node: ", nodeArray); // DEV
 
         //-- Add new_node to nodeArray, update parent node's children_node_ids --//
-        nodeArray = produce(nodeArray, (draft) => {
-          draft.push(new_node);
-
-          let parent_node_in_draft = draft.find(
-            (node) => node._id === parent_node_id // TODO - check this
-          );
-          if (parent_node_in_draft) {
-            console.log("parent node found:", parent_node_in_draft); // DEV
-            parent_node_in_draft.children_node_ids.push(new_node._id);
-          }
-        });
+        nodeArray.push(new_node);
+        let parent_node = nodeArray.find((node) => node._id === parent_node_id);
+        if (parent_node) {
+          parent_node.children_node_ids.push(new_node._id);
+        }
 
         //-- Update rowArray --//
         let rowArray = nodeArrayToRowArray(nodeArray, new_node);
-        console.log("rowArray in onopen to be set as CC.rowArray: ", rowArray); // DEV
         CC.setRowArray(rowArray);
         //----//
       },
@@ -337,18 +327,11 @@ export async function send_message(
         else if (event.id && event.id === "completion") {
           let completion_object: IMessage = JSON.parse(event.data);
           //-- Overwrite completion object in nodeArray --//
-          nodeArray = produce(nodeArray, (draft) => {
-            let new_node_in_draft = draft.find((node) => {
-              return node._id === new_node_id;
-            });
-            if (new_node_in_draft) {
-              console.log(
-                "to overwrite completion for new_node_in_draft: ",
-                new_node_in_draft
-              ); // DEV
-              new_node_in_draft.completion = completion_object;
-            }
-          });
+          let new_node = nodeArray.find((node) => node._id === new_node_id);
+          if (new_node) {
+            new_node.completion = completion_object;
+          }
+
           //-- Overwrite completion content in rowArray --//
           CC.setRowArray((prevRowArray) => {
             return produce(prevRowArray, (draft) => {
@@ -572,7 +555,6 @@ const nodeArrayToRowArray = (
     node = parent_node;
   }
   newRowArray = newRowArray.reverse(); //-- push + reverse --//
-  console.log("nodeArrayToRowArray newRowArray: ", newRowArray); // DEV
   return newRowArray;
 };
 
@@ -590,6 +572,5 @@ const getNewestNode = (nodeArray: IMessageNode[]): IMessageNode => {
     }
   }
 
-  console.log("getNewestNode: ", newestNode);
   return newestNode;
 };
