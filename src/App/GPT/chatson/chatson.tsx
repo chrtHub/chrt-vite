@@ -45,9 +45,10 @@ let nodeArray: IMessageNode[] = [];
 // (2) get_conversation_and_messages
 // (3) send_message
 // (4) change_branch
+// (5) delete_conversation_and_messages
 // Utilities
-// (5) nodeArrayToRowArray
-// (6) getNewestNode
+// (6) nodeArrayToRowArray
+// (7) getNewestNode
 //== ******* ==//
 
 /**
@@ -506,9 +507,38 @@ export function change_branch(): void {
   // };
 }
 
+/**
+ * (5) delete_conversation_and_messages causes deletion of all message nodes and the conversation object by conversation_id
+ *
+ * @param access_token
+ * @param conversation_id
+ * @param CC
+ */
+export async function delete_conversation_and_messages(
+  access_token: string,
+  conversation_id: string,
+  CC: IChatContext
+): Promise<void> {
+  try {
+    //-- Make GET request --//
+    let res = await axios.delete(
+      `${VITE_ALB_BASE_URL}/llm/delete_conversation_and_messages/${conversation_id}`,
+      {
+        headers: {
+          authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+    console.log("delete_conversation_and_messages: ", res); // DEV
+  } catch (err) {
+    console.log(err);
+  }
+  // CC.setConversationsArray() // TODO - filter out so the deleted convo is not in the array
+}
+
 //-- Utility function(s) --//
 /**
- * (5) nodeArrayToRowArray
+ * (6) nodeArrayToRowArray
  *
  * @param nodeArray
  * @param leafNode
@@ -567,7 +597,7 @@ const nodeArrayToRowArray = (
 };
 
 /**
- * (6) getNewestNode
+ * (7) getNewestNode
  *
  * @param nodeArray
  * @returns
