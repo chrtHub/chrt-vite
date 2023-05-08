@@ -399,6 +399,7 @@ export async function send_message(
           };
           getConversationsListHandler();
         }
+        CC.setCompletionLoading(false);
       },
       //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
       onerror(err) {

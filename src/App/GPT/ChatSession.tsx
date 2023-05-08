@@ -140,7 +140,6 @@ export default function ChatSession() {
             parentNodeId,
             CC
           );
-          CC.setCompletionLoading(false);
         }
       };
       submitPrompt();
@@ -180,7 +179,10 @@ export default function ChatSession() {
   const keyDownHandler = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault(); //-- Prevent default behavior (newline insertion) --//
-      submitPromptHandler();
+      //-- prevent submit while loading --//
+      if (!CC.completionLoading) {
+        submitPromptHandler();
+      }
     } //-- else "Enter" with shift will just insert a newline --//
   };
 
@@ -354,7 +356,9 @@ export default function ChatSession() {
                 onKeyDown={keyDownHandler}
                 onChange={(event) => setPromptDraft(event.target.value)}
                 className={classNames(
-                  CC.completionLoading ? "bg-zinc-300 ring-2" : "",
+                  CC.completionLoading
+                    ? "bg-zinc-300 ring-2 dark:bg-zinc-500"
+                    : "",
                   "block w-full resize-none rounded-md border-0 bg-white py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-zinc-700 dark:text-white sm:leading-6"
                 )}
               />
