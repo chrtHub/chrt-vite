@@ -88,7 +88,7 @@ export default function ChatSession() {
   // TODO - use param to load conversation
   let { conversation_id } = useParams(); // TODO, /gpt/:conversation_id
   useEffect(() => {
-    console.log("TODO - use param to load conversation");
+    console.log("TODO - use url path param to load conversation");
   }, []);
 
   //-- When conversationID is updated (a) load that conversation, or (b) if null, reset conversation --//
@@ -98,7 +98,7 @@ export default function ChatSession() {
         const accessToken = await getAccessTokenSilently();
         chatson.get_conversation_and_messages(accessToken, CC); //-- chatson.get_conversation_and_messages --//
       } else {
-        chatson.reset_conversation(); //-- chatson.reset_conversation --//
+        chatson.reset_conversation(CC); //-- chatson.reset_conversation --//
       }
     };
     lambda();
@@ -198,10 +198,10 @@ export default function ChatSession() {
   };
 
   //-- Text area placeholder handlers and string --//
-  const textareaFocusHandler = () => {
+  const textareaOnFocusHandler = () => {
     setTextAreaFocus(true);
   };
-  const textareaBlurHandler = () => {
+  const textareaOnBlurHandler = () => {
     setTextAreaFocus(false);
   };
   const textareaPlaceholder = () => {
@@ -213,6 +213,16 @@ export default function ChatSession() {
 
     return placeholder;
   };
+
+  //-- Focus textarea from another component (e.g. via "New Conversation") --//
+  useEffect(() => {
+    if (CC.focusTextarea) {
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+      }
+    }
+    CC.setFocusTextarea(false); //-- a bit janky. causes an extra render. --//
+  }, [CC.focusTextarea]);
 
   //-- Virtuoso --//
   const scrollToBottomHandler = () => {
@@ -239,7 +249,7 @@ export default function ChatSession() {
               itemContent={(index, row) => (
                 <ChatRow key={`${row.node_id}-${row.role}`} row={row} />
               )}
-              followOutput="smooth"
+              followOutput="auto"
               atBottomStateChange={(isAtBottom) => {
                 setAtBottom(isAtBottom);
               }}
@@ -337,8 +347,8 @@ export default function ChatSession() {
                 id="prompt-input"
                 name="prompt-input"
                 placeholder={textareaPlaceholder()}
-                onFocus={textareaFocusHandler}
-                onBlur={textareaBlurHandler}
+                onFocus={textareaOnFocusHandler}
+                onBlur={textareaOnBlurHandler}
                 wrap="hard"
                 value={promptDraft}
                 onKeyDown={keyDownHandler}

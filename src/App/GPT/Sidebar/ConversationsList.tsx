@@ -246,7 +246,7 @@ export default function ConversationsList() {
       <div className="flex flex-row justify-center">
         <ConversationButton
           onClick={() => {
-            console.log("TODO - start new conversation"); // TODO - start new conversation
+            chatson.reset_conversation(CC);
           }}
         >
           <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />

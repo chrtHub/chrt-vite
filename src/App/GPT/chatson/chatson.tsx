@@ -54,7 +54,7 @@ let nodeArray: IMessageNode[] = [];
  * (0) list_conversations
  *
  * @param accessToken user's access token
- * @param skip the number of documents to skip when returning results. equal to the length of the conversations array.
+ * @param skip the number of documents to skip when returning results
  * @returns
  */
 export async function list_conversations(
@@ -89,8 +89,15 @@ export async function list_conversations(
  * (1) reset_conversation
  * TODO
  */
-export function reset_conversation(): void {
-  console.log("TO BE IMPLEMENTED - chastson.reset_conversation()");
+export function reset_conversation(CC: IChatContext): void {
+  console.log("chastson.reset_conversation");
+  //-- Clear nodeArray and ChatContext values --//
+  nodeArray = [];
+  CC.setRowArray([]);
+  CC.setConversation(null);
+  CC.setConversationId(null);
+  CC.setTemperature(null);
+  CC.setFocusTextarea(true);
 }
 
 /**

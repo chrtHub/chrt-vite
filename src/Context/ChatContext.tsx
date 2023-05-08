@@ -35,6 +35,8 @@ export interface IChatContext {
   setTemperature: React.Dispatch<React.SetStateAction<number | null>>;
   completionLoading: boolean;
   setCompletionLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  focusTextarea: boolean;
+  setFocusTextarea: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ChatContext = createContext<IChatContext | undefined>(undefined);
@@ -119,16 +121,14 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   );
   const [temperature, setTemperature] = useState<number | null>(null);
   const [completionLoading, setCompletionLoading] = useState<boolean>(false);
+  const [focusTextarea, setFocusTextarea] = useState<boolean>(false);
 
   //-- Get conversations list on mount --//
   const { getAccessTokenSilently } = useAuth0();
   useEffect(() => {
     const getConversationsListHandler = async () => {
       let accessToken = await getAccessTokenSilently();
-      let list = await chatson.list_conversations(
-        accessToken,
-        conversationsArray?.length || 0
-      );
+      let list = await chatson.list_conversations(accessToken, 0);
       setConversationsArray(list);
     };
     getConversationsListHandler();
@@ -152,6 +152,8 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     model_options,
     completionLoading,
     setCompletionLoading,
+    focusTextarea,
+    setFocusTextarea,
   };
 
   return (
