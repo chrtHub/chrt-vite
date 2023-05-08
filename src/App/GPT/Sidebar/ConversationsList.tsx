@@ -159,6 +159,8 @@ export default function ConversationsList() {
 
   //-- Conversation Rows with Sticky Header Logic --//
   const ConversationRow = (index: number, row: IConversation) => {
+    const [counter, setCounter] = useState<number>(1); // TESTING
+
     //-- Build array --//
     let created_at = new Date(row.created_at);
     let currentRowDate = format(created_at, "EEE, MMM dd");
@@ -319,7 +321,8 @@ export default function ConversationsList() {
             id="virtuoso-conversations-list"
             ref={virtuosoRef}
             data={CC.conversationsArray}
-            itemContent={(index, row) => ConversationRow(index, row)} //-- Don't call hooks within this callback --//
+            // itemContent={(index, row) => ConversationRow(index, row)} //-- Don't call hooks within this callback --//
+            itemContent={ConversationRow} // TESTING
             atBottomStateChange={(isAtBottom) => {
               setAtBottom(isAtBottom);
             }}
