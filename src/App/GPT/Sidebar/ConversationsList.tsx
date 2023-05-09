@@ -14,12 +14,14 @@ import { Popover, Transition } from "@headlessui/react";
 
 //-- Icons --//
 import {
+  // ArrowPathIcon,
   CalendarDaysIcon,
   ChevronDoubleDownIcon,
   ChevronDoubleUpIcon,
   CpuChipIcon,
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, Cog8ToothIcon } from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
 import { produce } from "immer";
@@ -30,7 +32,6 @@ import classNames from "../../../Util/classNames";
 //-- Data Objects, Environment Variables --//
 import { IConversation } from "../chatson/chatson_types";
 import { useChatContext } from "../../../Context/ChatContext";
-import { Cog8ToothIcon } from "@heroicons/react/24/solid";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ConversationsList() {
@@ -217,9 +218,18 @@ export default function ConversationsList() {
       ) : (
         //-- No Conversations yet --//
         <div className="mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-700">
-          <p className="font-semibold italic text-zinc-600 dark:text-zinc-300">
-            No Conversations Yet
+          <p className="font-semibold text-zinc-600 dark:text-zinc-300">
+            No Conversations Found
           </p>
+          <button
+            className="mt-2 flex flex-col items-center justify-center"
+            onClick={listMoreConversations}
+          >
+            <ArrowPathIcon className="h-5 w-5 text-zinc-500 hover:text-green-600 dark:text-zinc-400 dark:hover:text-green-600" />
+            <p className="mt-1.5 text-sm font-semibold italic text-zinc-600 dark:text-zinc-300">
+              refresh
+            </p>
+          </button>
         </div>
       )}
     </div>

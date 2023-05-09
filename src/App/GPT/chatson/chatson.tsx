@@ -79,7 +79,6 @@ export async function list_conversations(
       console.log("conversations: ", res.data); // DEV
 
       if (writeOption === "append") {
-        console.log("append"); // DEV
         //-- Append results to array (which is sometimes empty) --//
         CC.setConversationsArray((prevArray) => {
           return produce(prevArray, (draft) => {
@@ -87,12 +86,11 @@ export async function list_conversations(
           });
         });
       } else {
-        console.log("overwrite"); // DEV
         //-- writeOption === "overwrite" --//
         CC.setConversationsArray(() => [...res.data]);
       }
     }
-    CC.setConversationsFetched(true); // NEW
+    CC.setConversationsFetched(true);
     //----//
   } catch (err) {
     console.log(err);
