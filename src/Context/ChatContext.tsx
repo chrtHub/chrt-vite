@@ -1,10 +1,4 @@
-import {
-  useState,
-  useEffect,
-  createContext,
-  useContext,
-  PropsWithChildren,
-} from "react";
+import { useState, createContext, useContext, PropsWithChildren } from "react";
 import {
   IConversation,
   IMessageRow,
@@ -121,7 +115,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   const [completionLoading, setCompletionLoading] = useState<boolean>(false);
   const [focusTextarea, setFocusTextarea] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<"last_edited" | "created_at">(
-    "last_edited"
+    "created_at"
   );
 
   //-- Bundle values into chatContextValue --//

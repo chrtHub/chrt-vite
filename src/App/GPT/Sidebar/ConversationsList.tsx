@@ -72,10 +72,13 @@ export default function ConversationsList() {
   //-- Get more conversations --//
   const listMoreConversations = useCallback(async () => {
     let accessToken = await getAccessTokenSilently();
-    let skip = CC.conversationsArray ? CC.conversationsArray.length : 0;
-
     if (CC.conversationsArray) {
-      await chatson.list_conversations(accessToken, CC, "append");
+      await chatson.list_conversations(
+        accessToken,
+        CC,
+        "append",
+        CC.conversationsArray.length
+      );
     }
   }, []);
 
@@ -154,14 +157,7 @@ export default function ConversationsList() {
                 <div>
                   <Popover.Button className="mx-2 flex items-center rounded-full align-middle text-zinc-600 hover:text-zinc-700 focus:outline-none dark:text-zinc-400 dark:hover:text-zinc-200">
                     <span className="sr-only">Conversations List Settings</span>
-                    <Cog8ToothIcon
-                      className="h-5 w-5 text-zinc-700 hover:text-green-600 dark:text-zinc-200 dark:hover:text-green-600"
-                      onClick={() => {
-                        console.log(
-                          "TODO - update sort_by for conversations list"
-                        );
-                      }}
-                    />
+                    <Cog8ToothIcon className="h-5 w-5 text-zinc-700 hover:text-green-600 dark:text-zinc-200 dark:hover:text-green-600" />
                   </Popover.Button>
                 </div>
                 <Transition

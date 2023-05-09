@@ -62,14 +62,12 @@ let nodeArray: IMessageNode[] = [];
 export async function list_conversations(
   accessToken: string,
   CC: IChatContext,
-  writeOption: "overwrite" | "append"
+  writeOption: "overwrite" | "append",
+  skip: number
 ): Promise<void> {
-  //-- For 'overwrite', skip is 0. For 'append', it's the length of conversationsArray --//
-  let skip = 0;
-  if (writeOption === "append") {
-    skip = CC.conversationsArray.length;
-  }
-
+  console.log("skip: ", skip); // DEV
+  console.log(CC.conversationsArray);
+  console.log(CC.conversationsArray.length);
   try {
     //-- Make POST request --//
     let res = await axios.get<IConversation[]>(
@@ -410,7 +408,7 @@ export async function send_message(
         //-- If new conversation, update conversations list --//
         if (new_conversation) {
           const getConversationsListHandler = async () => {
-            await list_conversations(access_token, CC, "overwrite");
+            await list_conversations(access_token, CC, "overwrite", 0);
           };
           getConversationsListHandler();
         }
