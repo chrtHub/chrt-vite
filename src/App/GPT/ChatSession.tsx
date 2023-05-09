@@ -84,14 +84,11 @@ export default function ChatSession() {
   // // call reset_conversation() with <<TODO>>
   // // // chatson <<TODO>>
 
-  console.log("1");
-  console.log(CC.conversationsArray);
-
   //-- Get conversations list on mount --//
   useEffect(() => {
     const getConversationsListHandler = async () => {
       let accessToken = await getAccessTokenSilently();
-      await chatson.list_conversations(accessToken, CC, "overwrite", 0);
+      await chatson.list_conversations(accessToken, CC, "overwrite");
     };
     getConversationsListHandler();
   }, [CC.sortBy]);

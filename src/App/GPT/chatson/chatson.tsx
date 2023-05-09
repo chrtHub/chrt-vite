@@ -62,12 +62,9 @@ let nodeArray: IMessageNode[] = [];
 export async function list_conversations(
   accessToken: string,
   CC: IChatContext,
-  writeOption: "overwrite" | "append",
-  skip: number
+  writeOption: "overwrite" | "append"
 ): Promise<void> {
-  console.log("skip: ", skip); // DEV
-  console.log(CC.conversationsArray);
-  console.log(CC.conversationsArray.length);
+  let skip = writeOption === "append" ? CC.conversationsArray.length : 0;
   try {
     //-- Make POST request --//
     let res = await axios.get<IConversation[]>(
@@ -82,6 +79,7 @@ export async function list_conversations(
       console.log("conversations: ", res.data); // DEV
 
       if (writeOption === "append") {
+        console.log("append"); // DEV
         //-- Append results to array (which is sometimes empty) --//
         CC.setConversationsArray((prevArray) => {
           return produce(prevArray, (draft) => {
@@ -89,6 +87,7 @@ export async function list_conversations(
           });
         });
       } else {
+        console.log("overwrite"); // DEV
         //-- writeOption === "overwrite" --//
         CC.setConversationsArray(() => [...res.data]);
       }
@@ -408,7 +407,7 @@ export async function send_message(
         //-- If new conversation, update conversations list --//
         if (new_conversation) {
           const getConversationsListHandler = async () => {
-            await list_conversations(access_token, CC, "overwrite", 0);
+            await list_conversations(access_token, CC, "overwrite");
           };
           getConversationsListHandler();
         }

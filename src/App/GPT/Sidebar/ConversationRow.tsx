@@ -97,7 +97,7 @@ export const ConversationRow = (
       <>
         {showStickyHeader && (
           <div className="sticky top-0 bg-zinc-50 dark:bg-zinc-800">
-            <div className="my-1 border-b-2 border-zinc-300 pb-1 pl-1 pt-1.5 text-sm font-bold text-zinc-700 dark:border-zinc-500 dark:text-zinc-200">
+            <div className="border-b-2 border-zinc-300 pb-1 pl-1 pt-1.5 text-sm font-bold text-zinc-700 dark:border-zinc-500 dark:text-zinc-200">
               <div className="flex flex-row">
                 <CalendarDaysIcon className="mr-1 h-5 w-5" />
                 {stickyHeaderText}

@@ -29,7 +29,7 @@ import classNames from "../../../Util/classNames";
 //-- Data Objects, Environment Variables --//
 import { IConversation } from "../chatson/chatson_types";
 import { useChatContext } from "../../../Context/ChatContext";
-import { Cog6ToothIcon, Cog8ToothIcon } from "@heroicons/react/24/solid";
+import { Cog8ToothIcon } from "@heroicons/react/24/solid";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ConversationsList() {
@@ -71,32 +71,28 @@ export default function ConversationsList() {
 
   //-- Get more conversations --//
   const listMoreConversations = useCallback(async () => {
-    let accessToken = await getAccessTokenSilently();
     if (CC.conversationsArray) {
-      await chatson.list_conversations(
-        accessToken,
-        CC,
-        "append",
-        CC.conversationsArray.length
-      );
+      let accessToken = await getAccessTokenSilently();
+      await chatson.list_conversations(accessToken, CC, "append");
     }
-  }, []);
+  }, [CC.conversationsArray]);
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div className="flex h-full flex-col">
       {/*-- DIVIDER --*/}
-      <div className="mb-1.5 mt-1.5">
+      <div className="mb-0.5 mt-1.5">
         <div
           className={classNames(
-            "border-t border-zinc-50 dark:border-zinc-800" // hidden - same bg as page
+            "border-t-2 border-zinc-300 dark:border-zinc-500"
           )}
           aria-hidden="true"
         />
       </div>
 
-      {/* New conversation button */}
-      <div className="flex flex-row justify-center">
+      {/* 'New Conversation' Button, 'Sort By' Button Group */}
+      <div className="mb-1.5 flex flex-col justify-center">
+        {/* 'New Conversation' Button */}
         <ConversationButton
           onClick={() => {
             chatson.reset_conversation(CC);
@@ -105,19 +101,41 @@ export default function ConversationsList() {
           <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
           New Conversation
         </ConversationButton>
+
+        {/* 'Sort By' Button Group */}
+        <div className="isolate inline-flex justify-center rounded-md">
+          <button
+            type="button"
+            className={classNames(
+              "relative inline-flex flex-grow items-center justify-center rounded-l-md px-3 py-0.5 text-xs font-semibold ring-1 ring-inset ring-zinc-300  focus:z-10",
+              CC.sortBy === "created_at"
+                ? "bg-zinc-300 text-zinc-800 dark:bg-zinc-300 dark:text-zinc-800"
+                : "text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-400 dark:hover:text-zinc-800"
+            )}
+            onClick={() => {
+              CC.setSortBy("created_at");
+            }}
+          >
+            Created At
+          </button>
+          <button
+            type="button"
+            className={classNames(
+              "relative -ml-px inline-flex flex-grow items-center justify-center rounded-r-md px-3 py-0.5 text-xs font-semibold ring-1 ring-inset ring-zinc-300 focus:z-10",
+              CC.sortBy === "last_edited"
+                ? "bg-zinc-300 text-zinc-800 dark:bg-zinc-300 dark:text-zinc-800"
+                : "text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-400 dark:hover:text-zinc-800"
+            )}
+            onClick={() => {
+              CC.setSortBy("last_edited");
+            }}
+          >
+            Last Edited
+          </button>
+        </div>
       </div>
 
-      {/*-- DIVIDER --*/}
-      <div>
-        <div
-          className={classNames(
-            "mb-0.5 mt-0.5 border-t border-zinc-50 dark:border-zinc-800" // hidden - same bg as page
-          )}
-          aria-hidden="true"
-        />
-      </div>
-
-      {CC.conversationsArray && CC.conversationsArray.length > 0 && (
+      {CC.conversationsArray && CC.conversationsArray.length > 0 ? (
         <>
           {/* Virtuoso Rows */}
           <Virtuoso
@@ -152,7 +170,6 @@ export default function ConversationsList() {
           <div className="mt-1.5 flex flex-row gap-2">
             {/* Settings Button */}
             <div className="mb-2 ml-1 mr-1.5 flex flex-col justify-center">
-              {/* DEV START */}
               <Popover as="div" className="relative inline-block text-left">
                 <div>
                   <Popover.Button className="mx-2 flex items-center rounded-full align-middle text-zinc-600 hover:text-zinc-700 focus:outline-none dark:text-zinc-400 dark:hover:text-zinc-200">
@@ -170,43 +187,15 @@ export default function ConversationsList() {
                   leaveTo="transform opacity-0 scale-95"
                 >
                   <Popover.Panel className="absolute bottom-full left-0 z-10 mb-3 ml-1 mt-2 w-52 rounded-md bg-white shadow-lg ring-1 ring-transparent ring-opacity-5 focus:outline-none dark:bg-zinc-900">
-                    <div className="flex flex-col py-1">
-                      {/* Sort By Buttons */}
-                      <div className="isolate my-1 inline-flex justify-center rounded-md shadow-sm">
-                        <button
-                          type="button"
-                          className={classNames(
-                            "relative inline-flex items-center rounded-l-md px-3 py-2 text-sm font-semibold ring-1 ring-inset ring-zinc-300  focus:z-10",
-                            CC.sortBy === "created_at"
-                              ? "bg-zinc-300 text-zinc-800"
-                              : "text-zinc-700 hover:bg-zinc-200"
-                          )}
-                          onClick={() => {
-                            CC.setSortBy("created_at");
-                          }}
-                        >
-                          Created At
-                        </button>
-                        <button
-                          type="button"
-                          className={classNames(
-                            "relative -ml-px inline-flex items-center rounded-r-md px-3 py-2 text-sm font-semibold ring-1 ring-inset ring-zinc-300 focus:z-10",
-                            CC.sortBy === "last_edited"
-                              ? "bg-zinc-300 text-zinc-800"
-                              : "text-zinc-700 hover:bg-zinc-200"
-                          )}
-                          onClick={() => {
-                            CC.setSortBy("last_edited");
-                          }}
-                        >
-                          Last Edited
-                        </button>
-                      </div>
+                    <div className="flex flex-col justify-center px-2 py-1">
+                      {/* TODO - SETTINGS */}
+                      <p>TODO - Settings, store in localStorage</p>
+                      <p>[] Show Request Count</p>
+                      <p>[] Show Time</p>
                     </div>
                   </Popover.Panel>
                 </Transition>
               </Popover>
-              {/* DEV END */}
             </div>
 
             {/* Scroll to top */}
@@ -220,6 +209,10 @@ export default function ConversationsList() {
             </UpDownButton>
           </div>
         </>
+      ) : (
+        <div>
+          <p>loading...</p>
+        </div>
       )}
     </div>
   );
