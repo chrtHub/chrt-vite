@@ -8,7 +8,7 @@ interface StyledButtonProps {
   onClick: MouseEventHandler;
   frozen: boolean;
 }
-export const StyledButton: React.FC<StyledButtonProps> = ({
+export const UpDownButton: React.FC<StyledButtonProps> = ({
   children,
   onClick,
   frozen,

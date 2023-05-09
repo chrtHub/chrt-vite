@@ -12,15 +12,11 @@ import {
   IModelFriendly,
   ModelAPINames,
 } from "../App/GPT/chatson/chatson_types";
-import { useAuth0 } from "@auth0/auth0-react";
-import * as chatson from "../App/GPT/chatson/chatson";
 
 //-- Create interface and Context --//
 export interface IChatContext {
-  conversationsArray: IConversation[] | null;
-  setConversationsArray: React.Dispatch<
-    React.SetStateAction<IConversation[] | null>
-  >;
+  conversationsArray: IConversation[];
+  setConversationsArray: React.Dispatch<React.SetStateAction<IConversation[]>>;
   rowArray: IMessageRow[] | null;
   setRowArray: React.Dispatch<React.SetStateAction<IMessageRow[] | null>>;
   conversationId: string | null;
@@ -35,6 +31,8 @@ export interface IChatContext {
   setTemperature: React.Dispatch<React.SetStateAction<number | null>>;
   completionLoading: boolean;
   setCompletionLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  sortBy: "last_edited" | "created_at";
+  setSortBy: React.Dispatch<React.SetStateAction<"last_edited" | "created_at">>;
   focusTextarea: boolean;
   setFocusTextarea: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -110,9 +108,9 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   };
 
   //-- State values --//
-  const [conversationsArray, setConversationsArray] = useState<
-    IConversation[] | null
-  >(null);
+  const [conversationsArray, setConversationsArray] = useState<IConversation[]>(
+    []
+  );
   const [rowArray, setRowArray] = useState<IMessageRow[] | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [conversation, setConversation] = useState<IConversation | null>(null);
@@ -122,17 +120,9 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   const [temperature, setTemperature] = useState<number | null>(null);
   const [completionLoading, setCompletionLoading] = useState<boolean>(false);
   const [focusTextarea, setFocusTextarea] = useState<boolean>(false);
-
-  //-- Get conversations list on mount --//
-  const { getAccessTokenSilently } = useAuth0();
-  useEffect(() => {
-    const getConversationsListHandler = async () => {
-      let accessToken = await getAccessTokenSilently();
-      let list = await chatson.list_conversations(accessToken, 0);
-      setConversationsArray(list);
-    };
-    getConversationsListHandler();
-  }, []);
+  const [sortBy, setSortBy] = useState<"last_edited" | "created_at">(
+    "last_edited"
+  );
 
   //-- Bundle values into chatContextValue --//
   const chatContextValue: IChatContext = {
@@ -154,6 +144,8 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     setCompletionLoading,
     focusTextarea,
     setFocusTextarea,
+    sortBy,
+    setSortBy,
   };
 
   return (

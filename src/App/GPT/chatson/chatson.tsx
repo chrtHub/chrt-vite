@@ -55,17 +55,25 @@ let nodeArray: IMessageNode[] = [];
  * (0) list_conversations
  *
  * @param accessToken user's access token
+ * @param CC
  * @param skip the number of documents to skip when returning results
  * @returns
  */
 export async function list_conversations(
   accessToken: string,
-  skip: number
-): Promise<IConversation[] | null> {
+  CC: IChatContext,
+  writeOption: "overwrite" | "append"
+): Promise<void> {
+  //-- For 'overwrite', skip is 0. For 'append', it's the length of conversationsArray --//
+  let skip = 0;
+  if (writeOption === "append") {
+    skip = CC.conversationsArray.length;
+  }
+
   try {
     //-- Make POST request --//
     let res = await axios.get<IConversation[]>(
-      `${VITE_ALB_BASE_URL}/llm/list_conversations/${skip}`,
+      `${VITE_ALB_BASE_URL}/llm/list_conversations/${CC.sortBy}/${skip}`,
       {
         headers: {
           authorization: `Bearer ${accessToken}`,
@@ -74,16 +82,23 @@ export async function list_conversations(
     );
     if (res.data) {
       console.log("conversations: ", res.data); // DEV
-      return res.data;
-    } else {
-      return null;
+
+      if (writeOption === "append") {
+        //-- Append results to array (which is sometimes empty) --//
+        CC.setConversationsArray((prevArray) => {
+          return produce(prevArray, (draft) => {
+            draft.push(...res.data);
+          });
+        });
+      } else {
+        //-- writeOption === "overwrite" --//
+        CC.setConversationsArray(() => [...res.data]);
+      }
     }
     //----//
   } catch (err) {
     console.log(err);
   }
-
-  return null;
 }
 
 /**
@@ -395,8 +410,7 @@ export async function send_message(
         //-- If new conversation, update conversations list --//
         if (new_conversation) {
           const getConversationsListHandler = async () => {
-            let list = await list_conversations(access_token, 0);
-            CC.setConversationsArray(list);
+            await list_conversations(access_token, CC, "overwrite");
           };
           getConversationsListHandler();
         }

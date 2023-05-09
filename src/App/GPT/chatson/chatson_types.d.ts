@@ -18,6 +18,7 @@ import { ObjectId } from "bson";
 export interface IConversation {
   _id: string; //-- {MONGOIZE} ObjectId --//
   created_at: string; //-- {MONGOIZE} Date --//
+  last_edited: string; //-- {MONGOIZE} Date --//
   api_provider_name: APIProviderNames;
   model_developer_name: ModelDeveloperNames;
   user_db_id: string;
@@ -31,6 +32,7 @@ export interface IConversation {
 export interface IConversation_Mongo {
   _id: ObjectId; //-- MONGOIZED --//
   created_at: Date; //-- MONGOIZED --//
+  last_edited: Date; //-- MONGOIZED --//
   api_provider_name: APIProviderNames;
   model_developer_name: ModelDeveloperNames;
   user_db_id: string;

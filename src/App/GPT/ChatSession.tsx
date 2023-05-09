@@ -24,7 +24,6 @@ import {
 } from "@heroicons/react/24/outline";
 
 //== NPM Functions ==//
-import axios from "axios";
 
 //== Utility Functions ==//
 import classNames from "../../Util/classNames";
@@ -84,6 +83,15 @@ export default function ChatSession() {
   // (3) chatson.reset_conversation()
   // // call reset_conversation() with <<TODO>>
   // // // chatson <<TODO>>
+
+  //-- Get conversations list on mount --//
+  useEffect(() => {
+    const getConversationsListHandler = async () => {
+      let accessToken = await getAccessTokenSilently();
+      await chatson.list_conversations(accessToken, CC, "overwrite");
+    };
+    getConversationsListHandler();
+  }, [CC.sortBy]);
 
   // TODO - use param to load conversation
   let { conversation_id } = useParams(); // TODO, /gpt/:conversation_id
