@@ -106,7 +106,7 @@ export interface IAPIReqResMetadata {
     temperature?: number | null;
     [key: string]: any; //-- Index signature for additional parameters --//
   };
-  created_at: Date;
+  created_at: string;
   request_tokens: number;
   completion_tokens: number;
   total_tokens: number;

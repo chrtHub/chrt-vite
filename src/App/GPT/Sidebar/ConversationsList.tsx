@@ -17,6 +17,7 @@ import {
   CalendarDaysIcon,
   ChevronDoubleDownIcon,
   ChevronDoubleUpIcon,
+  CpuChipIcon,
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 
@@ -135,7 +136,11 @@ export default function ConversationsList() {
         </div>
       </div>
 
-      {CC.conversationsArray && CC.conversationsArray.length > 0 ? (
+      {/* Before trying to fetch, show skeleton */}
+      {!CC.conversationsFetched ? (
+        <div className="mb-2 mt-1.5 flex h-full w-full animate-pulse flex-col items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-700" />
+      ) : //-- After fetching, either show the list or "No Conversations Yet" --//
+      CC.conversationsArray && CC.conversationsArray.length > 0 ? (
         <>
           {/* Virtuoso Rows */}
           <Virtuoso
@@ -210,8 +215,11 @@ export default function ConversationsList() {
           </div>
         </>
       ) : (
-        <div>
-          <p>loading...</p>
+        //-- No Conversations yet --//
+        <div className="mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-700">
+          <p className="font-semibold italic text-zinc-600 dark:text-zinc-300">
+            No Conversations Yet
+          </p>
         </div>
       )}
     </div>

@@ -11,6 +11,8 @@ import {
 export interface IChatContext {
   conversationsArray: IConversation[];
   setConversationsArray: React.Dispatch<React.SetStateAction<IConversation[]>>;
+  conversationsFetched: Boolean;
+  setConversationsFetched: React.Dispatch<React.SetStateAction<boolean>>;
   rowArray: IMessageRow[] | null;
   setRowArray: React.Dispatch<React.SetStateAction<IMessageRow[] | null>>;
   conversationId: string | null;
@@ -105,6 +107,8 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   const [conversationsArray, setConversationsArray] = useState<IConversation[]>(
     []
   );
+  const [conversationsFetched, setConversationsFetched] =
+    useState<boolean>(false);
   const [rowArray, setRowArray] = useState<IMessageRow[] | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [conversation, setConversation] = useState<IConversation | null>(null);
@@ -122,6 +126,8 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   const chatContextValue: IChatContext = {
     conversationsArray,
     setConversationsArray,
+    conversationsFetched,
+    setConversationsFetched,
     rowArray,
     setRowArray,
     conversationId,

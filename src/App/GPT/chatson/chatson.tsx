@@ -92,6 +92,7 @@ export async function list_conversations(
         CC.setConversationsArray(() => [...res.data]);
       }
     }
+    CC.setConversationsFetched(true); // NEW
     //----//
   } catch (err) {
     console.log(err);
