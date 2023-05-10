@@ -394,8 +394,31 @@ export default function ChatSession() {
                   />
                 </button>
               )}
+              {/* <p className="absolute font-sans text-xs italic text-zinc-500">
+                Due to the{" "}
+                <a
+                  className="underline"
+                  href="https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/"
+                  target="_blank"
+                >
+                  nature of LLMs
+                </a>
+                , ChrtGPT may produce false information. Use with human
+                discretion.
+              </p> */}
             </div>
           </div>
+          <p className="flex flex-row justify-center font-sans text-xs italic text-zinc-500">
+            Due to the&nbsp;
+            <a
+              className="underline"
+              href="https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/"
+              target="_blank"
+            >
+              nature of LLMs
+            </a>
+            , ChrtGPT may produce false information. Use with human discretion.
+          </p>
         </div>
       </div>
     </div>
