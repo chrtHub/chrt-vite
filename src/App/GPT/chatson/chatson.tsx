@@ -172,20 +172,19 @@ export async function get_conversation_and_messages(
 export async function create_title(
   access_token: string,
   conversation_id: string
-) {
+): Promise<void> {
   console.log("---- create_title -----");
 
   try {
-    let res = await axios.post<string>(
+    await axios.post<string>(
       `${VITE_ALB_BASE_URL}/openai/create_title`,
-      { conversation_id: conversation_id, prompt: "TODO", completion: "TODO" },
+      { conversation_id: conversation_id },
       {
         headers: {
           authorization: `Bearer ${access_token}`,
         },
       }
     );
-    console.log(res.data); // DEV
   } catch (err) {
     console.log(err);
   }
@@ -296,7 +295,8 @@ export async function send_message(
     "Content-Type": "application/json",
   };
 
-  let new_conversation: boolean = false;
+  let new_conversation: boolean = Boolean(!CC.conversation); // TESTING
+  let new_conversation_id: string | null = null;
   let new_node_id: string | null;
 
   class CustomFatalError extends Error {} // TODO - build as needed
@@ -310,6 +310,7 @@ export async function send_message(
       async onopen(res) {
         //-- Conversation id --//
         const conversation_id = res.headers.get("CHRT-conversation-id");
+        new_conversation_id = conversation_id; // NEW
         if (!conversation_id) {
           throw new CustomFatalError("missing conversation_id");
         }
@@ -384,6 +385,7 @@ export async function send_message(
         //-- Update rowArray --//
         let rowArray = nodeArrayToRowArray(nodeArray, new_node);
         CC.setRowArray(rowArray);
+
         //----//
       },
       //-- ***** ***** ***** ***** ONMESSAGE ***** ***** ***** ***** --//
@@ -460,14 +462,20 @@ export async function send_message(
       //-- ***** ***** ***** ***** ONCLOSE ***** ***** ***** ***** --//
       onclose() {
         console.log("Connection closed by the server"); // DEV
-        //-- If new conversation, update conversations list --//
+        CC.setCompletionLoading(false);
+
+        //-- If new conversation, create title and update conversations list --//
         if (new_conversation) {
-          const getConversationsListHandler = async () => {
+          const onCloseHandler = async () => {
+            //-- For new conversations, create title --//
+            if (new_conversation_id) {
+              await create_title(access_token, new_conversation_id);
+            }
+            //-- Get new list of conversations --//
             await list_conversations(access_token, CC, "overwrite");
           };
-          getConversationsListHandler();
+          onCloseHandler();
         }
-        CC.setCompletionLoading(false);
       },
       //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
       onerror(err) {
