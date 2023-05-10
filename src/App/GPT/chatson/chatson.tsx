@@ -66,6 +66,7 @@ export async function list_conversations(
   CC: IChatContext,
   writeOption: "overwrite" | "append"
 ): Promise<void> {
+  console.log("--- list_conversations ---"); // DEV
   let skip = writeOption === "append" ? CC.conversationsArray.length : 0;
   try {
     //-- Make POST request --//
@@ -595,8 +596,9 @@ export async function delete_conversation_and_messages(
   CC: IChatContext
 ): Promise<void> {
   try {
+    console.log("--- delete_conversations ---");
     //-- Make GET request --//
-    let res = await axios.delete(
+    await axios.delete(
       `${VITE_ALB_BASE_URL}/llm/delete_conversation_and_messages/${conversation_id}`,
       {
         headers: {
@@ -604,11 +606,11 @@ export async function delete_conversation_and_messages(
         },
       }
     );
-    console.log("delete_conversation_and_messages: ", res); // DEV
+    console.log("foo"); // DEV
+    await list_conversations(access_token, CC, "overwrite");
   } catch (err) {
     console.log(err);
   }
-  // CC.setConversationsArray() // TODO - filter out so the deleted convo is not in the array
 }
 
 //-- Utility function(s) --//

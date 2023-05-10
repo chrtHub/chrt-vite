@@ -89,6 +89,7 @@ export const ConversationRow = (
     event.stopPropagation();
     let accessToken = await getAccessTokenSilently();
     chatson.delete_conversation_and_messages(accessToken, row._id, CC);
+    setConfirmDelete(null);
   };
 
   return (
@@ -139,9 +140,9 @@ export const ConversationRow = (
           </div>
 
           {/* Delete, Edit, Request Count, and Time */}
-          <div className="flex flex-row justify-end">
+          <div className="flex flex-row justify-between">
+            {/* Conditionally render Delete and Edit Buttons based on hover state and CC */}
             <div className="flex flex-grow flex-row">
-              {/* Conditionally render Delete and Edit Buttons based on hover state and CC */}
               {[rowHoverId, CC.conversationId].includes(row._id) &&
                 !confirmDelete &&
                 !confirmEdit && (

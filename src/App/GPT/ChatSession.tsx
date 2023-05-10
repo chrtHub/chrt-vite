@@ -84,7 +84,7 @@ export default function ChatSession() {
   // // call reset_conversation() with <<TODO>>
   // // // chatson <<TODO>>
 
-  //-- Get conversations list on mount --//
+  //-- Get conversations list on mount and if conversationsArray changes, e.g. after delete_conversation --//
   useEffect(() => {
     const getConversationsListHandler = async () => {
       let accessToken = await getAccessTokenSilently();
