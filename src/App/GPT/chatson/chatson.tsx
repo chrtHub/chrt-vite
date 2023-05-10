@@ -43,12 +43,14 @@ let nodeArray: IMessageNode[] = [];
 // (0) list_conversations
 // (1) reset_conversation
 // (2) get_conversation_and_messages
-// (3) send_message
-// (4) change_branch
-// (5) delete_conversation_and_messages
+// (3) create_title
+// (3.5) retitle
+// (4) send_message
+// (5) change_branch
+// (6) delete_conversation_and_messages
 // Utilities
-// (6) nodeArrayToRowArray
-// (7) getNewestNode
+// (7) nodeArrayToRowArray
+// (8) getNewestNode
 //== ******* ==//
 
 /**
@@ -161,6 +163,61 @@ export async function get_conversation_and_messages(
   }
 }
 
+/**
+ * (3)
+ *
+ * @param access_token
+ * @param conversation_id
+ */
+export async function create_title(
+  access_token: string,
+  conversation_id: string
+) {
+  console.log("---- create_title -----");
+
+  try {
+    let res = await axios.post<string>(
+      `${VITE_ALB_BASE_URL}/openai/create_title`,
+      { conversation_id: conversation_id, prompt: "TODO", completion: "TODO" },
+      {
+        headers: {
+          authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+    console.log(res.data); // DEV
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+/**
+ * (3.5) retitle
+ *
+ */
+export async function retitle(
+  access_token: string,
+  conversation_id: string,
+  new_title: string
+) {
+  console.log("----- retitle -----");
+
+  try {
+    let res = await axios.post(
+      `${VITE_ALB_BASE_URL}/llm/retitle`,
+      { conversation_id: conversation_id, new_title: new_title },
+      {
+        headers: {
+          authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+    console.log(res.data); // DEV
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 //-- send_message() outline --//
 // (0) nodeArray available within the global scope of chatson, persists unless reset
 
@@ -199,7 +256,7 @@ export async function get_conversation_and_messages(
 // // add to conversation's api_req_res_metadata array in state
 
 /**
- * (3) send_message sends a prompt to an LLM and receives the response
+ * (4) send_message sends a prompt to an LLM and receives the response
  *
  * @param access_token (a) set as the author id, (b) sent as Bearer token in 'authorization' header
  * @param prompt_content user input to be added to the conversation

@@ -134,8 +134,7 @@ export const ConversationRow = (
                   : "text-zinc-700 dark:text-zinc-300"
               )}
             >
-              {row.title +
-                "this is the title string for the a a a a convo. what happens when it's really long like this? What's clip do? "}
+              {row.title + "--temp title--"}
             </p>
           </div>
 
