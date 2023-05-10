@@ -1,4 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
+import { RefObject } from "react";
 
 //-- TSX Components --//
 import * as chatson from "../chatson/chatson";
@@ -38,6 +39,8 @@ export const ConversationRow = (
   setRowHoverId: React.Dispatch<SetStateAction<string | null>>,
   activeDeleteRowId: string | null,
   setActiveDeleteRowId: React.Dispatch<SetStateAction<string | null>>,
+  textareaRef: RefObject<HTMLTextAreaElement>,
+  setTextareaOnFocusToggle: React.Dispatch<SetStateAction<boolean>>,
   activeEditRowId: string | null,
   setActiveEditRowId: React.Dispatch<SetStateAction<string | null>>,
   newTitleDraft: string,
@@ -101,22 +104,33 @@ export const ConversationRow = (
   //-- Edit Title Handler --//
   const editTitleHandler = async (event: React.MouseEvent) => {
     event.stopPropagation();
-    setNewTitleDraft(row.title);
+    setNewTitleDraft(row.title || "New conversation");
     setActiveEditRowId(row._id);
-    console.log("edit title handler"); // DEV
-    // TODO
-    // open textarea with current value of title || "New conversation"
-    // set the row's id in state such that we know what the conversation id is of the title being edited
+    textareaRef.current?.focus();
+  };
+
+  const confirmEditHandler = async (event?: React.MouseEvent) => {
+    event?.stopPropagation();
+    console.log("todo - confirmEditHandler with title: ", newTitleDraft); // DEV
     // on click of confirmEdit button, send the value of the textarea input to the titles endpoint
     // // while request in progress, show loading spinner
     // when request complete, reload entire conversations list
-  };
 
-  const confirmEditHandler = async (event: React.MouseEvent) => {
-    event.stopPropagation();
-    console.log("todo - confirmEditHandler"); // DEV
     // let accessToken = await getAccessTokenSilently();
     // chatson.retitle(accessToken, row._id, newTitleDraft);
+    setActiveEditRowId(null);
+  };
+
+  //-- 'Enter' to submit prompt, 'Shift + Enter' for newline --//
+  const keyDownHandler = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); //-- Prevent default behavior (newline insertion) --//
+      //-- prevent submit while title is loading --//
+      // TODO --> if (!CC.retitleLoading) {
+      if (true) {
+        confirmEditHandler();
+      }
+    } //-- else "Enter" with shift will just insert a newline --//
   };
 
   return (
@@ -156,12 +170,18 @@ export const ConversationRow = (
           <div>
             {activeEditRowId === row._id ? (
               <TextareaAutosize
+                autoFocus
+                onFocus={() =>
+                  setTextareaOnFocusToggle((prevState) => !prevState)
+                }
+                ref={textareaRef}
                 value={newTitleDraft}
                 maxRows={2}
                 wrap="hard"
                 onClick={(event) => {
                   event.stopPropagation();
                 }}
+                onKeyDown={keyDownHandler}
                 onChange={(event) => {
                   setNewTitleDraft(event.target.value);
                 }}

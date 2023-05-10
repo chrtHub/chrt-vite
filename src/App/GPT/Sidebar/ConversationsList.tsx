@@ -1,5 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { useState, useCallback, Fragment, useRef } from "react";
+import { useState, useEffect, useCallback, Fragment, useRef } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
@@ -41,6 +41,9 @@ export default function ConversationsList() {
   const [activeDeleteRowId, setActiveDeleteRowId] = useState<string | null>(
     null
   );
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [textareaOnFocusToggle, setTextareaOnFocusToggle] =
+    useState<boolean>(false);
   const [activeEditRowId, setActiveEditRowId] = useState<string | null>(null);
   const [newTitleDraft, setNewTitleDraft] = useState<string>("");
   const [atBottom, setAtBottom] = useState<boolean>(false);
@@ -81,6 +84,17 @@ export default function ConversationsList() {
       await chatson.list_conversations(accessToken, CC, "append");
     }
   }, [CC.conversationsArray]);
+
+  //-- When textarea focuses, put cursor after the last char --//
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+      textareaRef.current.setSelectionRange(
+        textareaRef.current.value.length,
+        textareaRef.current.value.length
+      );
+    }
+  }, [textareaOnFocusToggle]);
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
@@ -161,6 +175,8 @@ export default function ConversationsList() {
                 setRowHover,
                 activeDeleteRowId,
                 setActiveDeleteRowId,
+                textareaRef,
+                setTextareaOnFocusToggle,
                 activeEditRowId,
                 setActiveEditRowId,
                 newTitleDraft,
