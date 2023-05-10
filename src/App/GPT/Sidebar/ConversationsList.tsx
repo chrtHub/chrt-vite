@@ -38,8 +38,11 @@ export default function ConversationsList() {
   //-- State --//
   const CC = useChatContext();
   const [rowHover, setRowHover] = useState<string | null>(null);
-  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
-  const [confirmEdit, setConfirmEdit] = useState<string | null>(null);
+  const [activeDeleteRowId, setActiveDeleteRowId] = useState<string | null>(
+    null
+  );
+  const [activeEditRowId, setActiveEditRowId] = useState<string | null>(null);
+  const [newTitleDraft, setNewTitleDraft] = useState<string>("");
   const [atBottom, setAtBottom] = useState<boolean>(false);
   const [atTop, setAtTop] = useState<boolean>(true);
 
@@ -156,10 +159,12 @@ export default function ConversationsList() {
                 getAccessTokenSilently,
                 rowHover,
                 setRowHover,
-                confirmDelete,
-                setConfirmDelete,
-                confirmEdit,
-                setConfirmEdit
+                activeDeleteRowId,
+                setActiveDeleteRowId,
+                activeEditRowId,
+                setActiveEditRowId,
+                newTitleDraft,
+                setNewTitleDraft
               )
             } //-- Don't call hooks within this callback --//
             // itemContent={ConversationRow} // TESTING

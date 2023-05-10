@@ -4,13 +4,17 @@
 import * as chatson from "../chatson/chatson";
 
 //-- NPM Components --//
+import TextareaAutosize from "react-textarea-autosize";
 
 //-- Icons --//
-import { CalendarDaysIcon } from "@heroicons/react/24/outline";
+import { CalendarDaysIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import {
   TrashIcon,
   PencilSquareIcon,
   CheckIcon,
+  XMarkIcon,
+  CheckCircleIcon,
+  // XCircleIcon,
 } from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
@@ -32,14 +36,16 @@ export const ConversationRow = (
   getAccessTokenSilently: Function,
   rowHoverId: string | null,
   setRowHoverId: React.Dispatch<SetStateAction<string | null>>,
-  confirmDelete: string | null,
-  setConfirmDelete: React.Dispatch<SetStateAction<string | null>>,
-  confirmEdit: string | null,
-  setConfirmEdit: React.Dispatch<SetStateAction<string | null>>
+  activeDeleteRowId: string | null,
+  setActiveDeleteRowId: React.Dispatch<SetStateAction<string | null>>,
+  activeEditRowId: string | null,
+  setActiveEditRowId: React.Dispatch<SetStateAction<string | null>>,
+  newTitleDraft: string,
+  setNewTitleDraft: React.Dispatch<SetStateAction<string>>
 ) => {
   //-- Build array --//
   let created_at = new Date(row.created_at);
-  let currentRowDate = format(created_at, "EEE, MMM dd");
+  let currentRowDate = format(created_at, "EEE, MMM d");
 
   //-- Compute sticky header text --//
   let stickyHeaderText = currentRowDate;
@@ -62,7 +68,7 @@ export const ConversationRow = (
       currentRowDate !==
         format(
           new Date(CC.conversationsArray[index - 1].created_at),
-          "EEE, MMM dd"
+          "EEE, MMM d"
         );
   }
 
@@ -82,23 +88,44 @@ export const ConversationRow = (
   //-- Delete Conversation Handler --//
   const deleteConversationHandler = async (event: React.MouseEvent) => {
     event.stopPropagation();
-    setConfirmDelete(row._id);
+    setActiveDeleteRowId(row._id);
   };
 
   const confirmDeleteHandler = async (event: React.MouseEvent) => {
     event.stopPropagation();
     let accessToken = await getAccessTokenSilently();
     chatson.delete_conversation_and_messages(accessToken, row._id, CC);
-    setConfirmDelete(null);
+    setActiveDeleteRowId(null);
+  };
+
+  //-- Edit Title Handler --//
+  const editTitleHandler = async (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setNewTitleDraft(row.title);
+    setActiveEditRowId(row._id);
+    console.log("edit title handler"); // DEV
+    // TODO
+    // open textarea with current value of title || "New conversation"
+    // set the row's id in state such that we know what the conversation id is of the title being edited
+    // on click of confirmEdit button, send the value of the textarea input to the titles endpoint
+    // // while request in progress, show loading spinner
+    // when request complete, reload entire conversations list
+  };
+
+  const confirmEditHandler = async (event: React.MouseEvent) => {
+    event.stopPropagation();
+    console.log("todo - confirmEditHandler"); // DEV
+    // let accessToken = await getAccessTokenSilently();
+    // chatson.retitle(accessToken, row._id, newTitleDraft);
   };
 
   return (
     <div>
-      {/* Date Rows */}
+      {/* START OF STICKY HEADER - Date */}
       <>
         {showStickyHeader && (
           <div className="sticky top-0 bg-zinc-50 dark:bg-zinc-800">
-            <div className="border-b-2 border-zinc-300 pb-1 pl-1 pt-1.5 text-sm font-bold text-zinc-700 dark:border-zinc-500 dark:text-zinc-200">
+            <div className="mb-1 border-b-2 border-zinc-300 pb-1 pl-1 pt-1.5 text-sm font-bold text-zinc-700 dark:border-zinc-500 dark:text-zinc-200">
               <div className="flex flex-row">
                 <CalendarDaysIcon className="mr-1 h-5 w-5" />
                 {stickyHeaderText}
@@ -107,17 +134,17 @@ export const ConversationRow = (
           </div>
         )}
       </>
+      {/* END OF STICKY HEADER - Date */}
 
-      {/* Conversation Rows */}
+      {/* START OF ROWS (each is a button) */}
       <div
         className={classNames(
-          "rounded-md px-1.5 pb-1 pt-0.5",
+          "flex flex-col rounded-md px-1.5 pb-1 pt-0.5",
           CC.conversationId === row._id
             ? "bg-zinc-300 dark:bg-zinc-600"
             : "hover:bg-zinc-200 dark:hover:bg-zinc-700"
         )}
       >
-        {/* Each row is a button for selecting that conversation */}
         <button
           onMouseEnter={mouseEnterHandler}
           onMouseLeave={mouseLeaveHandler}
@@ -125,67 +152,50 @@ export const ConversationRow = (
             setConversationIdHandler(row);
           }}
         >
+          {/* Title string */}
           <div>
-            {/* Title string */}
-            <p
-              className={classNames(
-                "line-clamp-1 text-left text-sm font-semibold",
-                CC.conversationId === row._id
-                  ? "text-zinc-700 dark:text-zinc-200"
-                  : "text-zinc-700 dark:text-zinc-300"
-              )}
-            >
-              {row.title + "--temp title--"}
-            </p>
+            {activeEditRowId === row._id ? (
+              <TextareaAutosize
+                value={newTitleDraft}
+                maxRows={2}
+                wrap="hard"
+                onClick={(event) => {
+                  event.stopPropagation();
+                }}
+                onChange={(event) => {
+                  setNewTitleDraft(event.target.value);
+                }}
+                className={classNames(
+                  false // DEV, TODO - CC.retitleLoading
+                    ? "bg-zinc-300 ring-2 dark:bg-zinc-500"
+                    : "",
+                  "mb-0.5 block w-full resize-none rounded-md border-0 bg-white px-0 py-0 text-sm font-semibold text-zinc-700 ring-2 ring-green-600 focus:ring-2 focus:ring-green-600 dark:bg-zinc-700 dark:text-zinc-200"
+                )}
+              />
+            ) : (
+              <p
+                className={classNames(
+                  "line-clamp-2 text-left text-sm font-semibold",
+                  CC.conversationId === row._id
+                    ? "text-zinc-700 dark:text-zinc-200"
+                    : "text-zinc-700 dark:text-zinc-300"
+                )}
+              >
+                {row.title || "New conversation"}
+              </p>
+            )}
           </div>
 
-          {/* Delete, Edit, Request Count, and Time */}
-          <div className="flex flex-row justify-between">
-            {/* Conditionally render Delete and Edit Buttons based on hover state and CC */}
-            <div className="flex flex-grow flex-row">
-              {[rowHoverId, CC.conversationId].includes(row._id) &&
-                !confirmDelete &&
-                !confirmEdit && (
-                  <>
-                    {/* Delete Conversation Button */}
-                    <TrashIcon
-                      onClick={deleteConversationHandler}
-                      className={classNames(
-                        "mr-2 mt-0.5 h-4 w-4",
-                        CC.conversationId === row._id
-                          ? "text-zinc-500 hover:text-red-600 dark:text-zinc-400 hover:dark:text-red-600"
-                          : "text-zinc-500 hover:text-red-600 dark:text-zinc-500 hover:dark:text-red-600"
-                      )}
-                    />
-
-                    {/* Edit Title Button */}
-                    <PencilSquareIcon
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        console.log("TODO - edit title");
-                      }}
-                      className={classNames(
-                        "mt-0.5 h-4 w-4",
-                        CC.conversationId === row._id
-                          ? "text-zinc-500 hover:text-green-600 dark:text-zinc-400 hover:dark:text-green-600"
-                          : "text-zinc-500 hover:text-green-600 dark:text-zinc-500 hover:dark:text-green-600"
-                      )}
-                    />
-                  </>
-                )}
-              {confirmDelete === row._id && (
-                <CheckIcon onClick={confirmDeleteHandler} className="h-4 w-4" />
-              )}
-            </div>
-
+          {/* Start of Conversation Stats */}
+          <div className="flex flex-row">
             {/* Request count */}
             <p
               className={classNames(
-                "w-20 text-right text-sm font-semibold",
+                "text-left text-sm font-semibold",
                 CC.conversationId === row._id
                   ? "text-zinc-500 dark:text-zinc-400"
-                  : "text-zinc-500 dark:text-zinc-500",
-                row.api_req_res_metadata.length === 1 ? "mr-4" : "mr-2.5"
+                  : "text-zinc-500 dark:text-zinc-500"
+                // row.api_req_res_metadata.length === 1 ? "mr-4" : "mr-2.5"
               )}
             >
               {row.api_req_res_metadata.length === 1
@@ -196,7 +206,7 @@ export const ConversationRow = (
             {/* Time */}
             <p
               className={classNames(
-                "w-16 text-sm font-semibold",
+                "flex-grow text-right text-sm font-semibold",
                 CC.conversationId === row._id
                   ? "text-zinc-500 dark:text-zinc-400"
                   : "text-zinc-500 dark:text-zinc-500"
@@ -204,9 +214,74 @@ export const ConversationRow = (
             >
               {formattedTime}
             </p>
+
+            {/* Conditionally render Delete and Edit Buttons based on hover state and CC */}
+            <div className="flex flex-row">
+              {[rowHoverId, CC.conversationId].includes(row._id) &&
+                !activeDeleteRowId &&
+                !activeEditRowId && (
+                  <>
+                    {/* Delete Conversation Button */}
+                    <TrashIcon
+                      onClick={deleteConversationHandler}
+                      className={classNames(
+                        "ml-1 h-5 w-5",
+                        CC.conversationId === row._id
+                          ? "text-zinc-500 hover:text-red-600 dark:text-zinc-400 hover:dark:text-red-600"
+                          : "text-zinc-500 hover:text-red-600 dark:text-zinc-500 hover:dark:text-red-600"
+                      )}
+                    />
+
+                    {/* Edit Title Button */}
+                    <PencilSquareIcon
+                      onClick={editTitleHandler}
+                      className={classNames(
+                        "mx-1 h-5 w-5",
+                        CC.conversationId === row._id
+                          ? "text-zinc-500 hover:text-green-600 dark:text-zinc-400 hover:dark:text-green-600"
+                          : "text-zinc-500 hover:text-green-600 dark:text-zinc-500 hover:dark:text-green-600"
+                      )}
+                    />
+                  </>
+                )}
+              {/* Confirm / Cancel Delete */}
+              {activeDeleteRowId === row._id && (
+                <>
+                  <XCircleIcon
+                    onClick={(event) => {
+                      setActiveDeleteRowId(null);
+                      event.stopPropagation();
+                    }}
+                    className="ml-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700"
+                  />
+                  <CheckCircleIcon
+                    onClick={confirmDeleteHandler}
+                    className="mx-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700"
+                  />
+                </>
+              )}
+              {/* Confirm / Cancel Edit */}
+              {activeEditRowId === row._id && (
+                <>
+                  <XCircleIcon
+                    onClick={(event) => {
+                      setActiveEditRowId(null);
+                      event.stopPropagation();
+                    }}
+                    className="ml-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700"
+                  />
+                  <CheckCircleIcon
+                    onClick={confirmEditHandler} // DEV
+                    className="mx-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700"
+                  />
+                </>
+              )}
+            </div>
           </div>
+          {/* End of Conversation Stats */}
         </button>
       </div>
+      {/* END OF ROWS (each is a button) */}
     </div>
   );
 };

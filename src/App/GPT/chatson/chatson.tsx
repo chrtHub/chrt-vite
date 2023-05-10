@@ -465,18 +465,20 @@ export async function send_message(
         console.log("Connection closed by the server"); // DEV
         CC.setCompletionLoading(false);
 
-        //-- If new conversation, create title and update conversations list --//
-        if (new_conversation) {
-          const onCloseHandler = async () => {
+        //-- If new conversation, create title --//
+        const onCloseHandler = async () => {
+          if (new_conversation) {
             //-- For new conversations, create title --//
             if (new_conversation_id) {
               await create_title(access_token, new_conversation_id);
             }
+          } //-- If new conversation or sortyBy is last_edited, update conversations list --//
+          else if (new_conversation || CC.sortBy === "last_edited") {
             //-- Get new list of conversations --//
             await list_conversations(access_token, CC, "overwrite");
-          };
-          onCloseHandler();
-        }
+          }
+        };
+        onCloseHandler();
       },
       //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
       onerror(err) {
@@ -606,7 +608,11 @@ export async function delete_conversation_and_messages(
         },
       }
     );
-    console.log("foo"); // DEV
+    //-- If current conversation was deleted, set conversationId to null --//
+    if (CC.conversationId === conversation_id) {
+      CC.setConversationId(null);
+    }
+    //-- Fetch updated conversations list --//
     await list_conversations(access_token, CC, "overwrite");
   } catch (err) {
     console.log(err);
