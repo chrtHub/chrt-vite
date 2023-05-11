@@ -189,7 +189,6 @@ export default function ChatRow(props: { row: IMessageRow }) {
         <div className="flex flex-row items-center justify-between py-2 pl-2 pr-2">
           <Author mobile={true} />
           <VersionSelector />
-
           <CopyToClipboardButton />
           <RowData />
         </div>
