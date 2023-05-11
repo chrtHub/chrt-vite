@@ -1,5 +1,5 @@
 //== react, react-router-dom, recoil, Auth0 ==//
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useChatContext } from "../../Context/ChatContext";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -8,13 +8,16 @@ import { useAuth0 } from "@auth0/auth0-react";
 //== NPM Components ==//
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import TextareaAutosize from "react-textarea-autosize";
 
 //== Icons ==//
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import {
+  CheckCircleIcon,
   ClipboardDocumentIcon,
   CpuChipIcon,
   PencilSquareIcon,
+  XCircleIcon,
 } from "@heroicons/react/24/outline";
 
 //== NPM Functions ==//
@@ -35,6 +38,10 @@ export default function ChatRow(props: { row: IMessageRow }) {
   const [clipboardValue, copyToClipboard] = useCopyToClipboard();
 
   //-- Edit prompt --//
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [textareaOnFocusToggle, setTextareaOnFocusToggle] =
+    useState<boolean>(false);
+  const [prompt, setPrompt] = useState<string>(row.content);
   const [editing, setEditing] = useState<boolean>(false);
   const EditButton = () => {
     return (
@@ -48,10 +55,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
       >
         <button
           onClick={() => {
-            setEditing(true); // TODO - open textarea
-            setTimeout(() => {
-              setEditing(false);
-            }, 2000); // DEV
+            setEditing(true);
           }}
         >
           <PencilSquareIcon className="h-5 w-5" aria-hidden="true" />
@@ -59,6 +63,28 @@ export default function ChatRow(props: { row: IMessageRow }) {
       </div>
     );
   };
+  //-- 'Enter' w/o 'Shift' to submit prompt, 'Shift + Enter' for newline --//
+  const keyDownHandler = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); //-- Prevent default behavior (newline insertion) --//
+      textareaRef.current?.blur();
+      // TODO - prevent submit if loading new completion?
+    } //-- else "Enter" with shift will just insert a newline --//
+  };
+  //-- Submit edited prompt, create new branch --//
+  const submitEditedPrompt = () => {
+    console.log("todo - sumbit edited prompt, create new branch");
+  };
+  //-- When textarea focuses, put cursor after the last char --//
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+      textareaRef.current.setSelectionRange(
+        textareaRef.current.value.length,
+        textareaRef.current.value.length
+      );
+    }
+  }, [textareaOnFocusToggle]);
 
   //-- Copy to Clipboard --//
   const [copying, setCopied] = useState<boolean>(false);
@@ -264,19 +290,37 @@ export default function ChatRow(props: { row: IMessageRow }) {
         className="mx-auto flex w-full max-w-prose lg:mx-0"
       >
         <article className="prose prose-zinc w-full max-w-prose dark:prose-invert dark:text-white max-lg:pl-2.5">
-          <li key={row.role}>
-            <ReactMarkdown
-              children={row.content}
-              remarkPlugins={[remarkGfm]}
-              components={{
-                p: ({ node, children }) => (
-                  <p className="max-lg:m-0 max-lg:p-0 max-lg:pb-2">
-                    {children}
-                  </p>
-                ),
-              }}
+          {editing ? (
+            <TextareaAutosize
+              autoFocus
+              onFocus={() =>
+                setTextareaOnFocusToggle((prevState) => !prevState)
+              }
+              ref={textareaRef}
+              value={prompt}
+              maxRows={42} //-- arbitrary number --//
+              onChange={(event) => setPrompt(event.target.value)}
+              onKeyDown={keyDownHandler}
+              // onBlur={() => setEditing(false)}
+              className={classNames(
+                "mb-2 mt-5 block w-full resize-none rounded-md border-0 bg-white px-0 py-0 text-zinc-900 ring-2 ring-green-600 focus:ring-2 focus:ring-green-600 dark:bg-zinc-700 dark:text-zinc-100"
+              )}
             />
-          </li>
+          ) : (
+            <li key={row.role}>
+              <ReactMarkdown
+                children={row.content}
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  p: ({ node, children }) => (
+                    <p className="max-lg:m-0 max-lg:p-0 max-lg:pb-2">
+                      {children}
+                    </p>
+                  ),
+                }}
+              />
+            </li>
+          )}
         </article>
       </div>
 
@@ -288,10 +332,27 @@ export default function ChatRow(props: { row: IMessageRow }) {
         <div className="flex flex-col justify-end">
           <Timestamp />
           <div className="flex flex-row justify-center">
-            {hover && (
+            {hover && !editing && (
               <>
                 {row.role === "user" && <EditButton />}
                 <CopyToClipboardButton />
+              </>
+            )}
+            {editing && (
+              <>
+                <XCircleIcon
+                  onClick={() => {
+                    setEditing(false);
+                  }}
+                  className="ml-1 h-6 w-6 cursor-pointer rounded-full text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
+                />
+                <CheckCircleIcon
+                  onClick={() => {
+                    submitEditedPrompt();
+                    setEditing(false);
+                  }}
+                  className="mx-1 h-6 w-6 cursor-pointer rounded-full text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
+                />
               </>
             )}
           </div>

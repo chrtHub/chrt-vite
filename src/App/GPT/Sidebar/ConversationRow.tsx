@@ -121,7 +121,7 @@ export const ConversationRow = (
     setActiveEditRowId(null);
   };
 
-  //-- 'Enter' to submit prompt, 'Shift + Enter' for newline --//
+  //-- 'Enter' w/o 'Shift' to submit prompt, 'Shift + Enter' for newline --//
   const keyDownHandler = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault(); //-- Prevent default behavior (newline insertion) --//
@@ -274,11 +274,11 @@ export const ConversationRow = (
                       setActiveDeleteRowId(null);
                       event.stopPropagation();
                     }}
-                    className="ml-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
+                    className="ml-1 h-5 w-5 cursor-pointer rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
                   />
                   <CheckCircleIcon
                     onClick={confirmDeleteHandler}
-                    className="mx-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
+                    className="mx-1 h-5 w-5 cursor-pointer rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
                   />
                 </>
               )}
@@ -290,11 +290,11 @@ export const ConversationRow = (
                       setActiveEditRowId(null);
                       event.stopPropagation();
                     }}
-                    className="ml-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
+                    className="ml-1 h-5 w-5 cursor-pointer rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
                   />
                   <CheckCircleIcon
-                    onClick={confirmEditHandler} // DEV
-                    className="mx-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
+                    onClick={confirmEditHandler}
+                    className="mx-1 h-5 w-5 cursor-pointer rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
                   />
                 </>
               )}
