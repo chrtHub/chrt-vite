@@ -1,5 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { Fragment, useMemo, useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useRecoilState } from "recoil";
@@ -29,11 +29,9 @@ import {
   SunIcon,
   XMarkIcon,
   CodeBracketIcon,
-  PlusIcon,
 } from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
-import { format, formatDistanceToNow } from "date-fns";
 
 //-- Utility Functions --//
 import classNames from "../Util/classNames";
@@ -187,7 +185,7 @@ export default function AppLayout({ infoMode }: IProps) {
     <div
       id="app-layout-top-level-div"
       //-- With use of 'overflow-hidden', scroll behavior is to be handles by Outlet components (?) --//
-      className="fixed h-full w-full overflow-hidden overscroll-none bg-zinc-50 dark:bg-zinc-800"
+      className="fixed h-full w-full overflow-hidden overscroll-none bg-zinc-50 dark:bg-zinc-950"
     >
       {/* START OF MOBILE SIDEBAR */}
       <Transition.Root show={sidebarOpen} as={Fragment}>
@@ -206,7 +204,7 @@ export default function AppLayout({ infoMode }: IProps) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-zinc-600 bg-opacity-75 dark:bg-zinc-600" />
+            <div className="fixed inset-0 bg-zinc-600 bg-opacity-50 dark:bg-zinc-900 dark:bg-opacity-75" />
           </Transition.Child>
 
           <div className="fixed inset-0 z-40 flex">
@@ -219,7 +217,7 @@ export default function AppLayout({ infoMode }: IProps) {
               leaveFrom="translate-x-0"
               leaveTo="-translate-x-full"
             >
-              <Dialog.Panel className="relative flex w-full max-w-sm flex-1 flex-col bg-zinc-50 pb-4 pt-5 dark:bg-zinc-800">
+              <Dialog.Panel className="relative flex w-full max-w-sm flex-1 flex-col bg-zinc-50 pb-4 pt-5 dark:bg-zinc-950">
                 <Transition.Child
                   as={Fragment}
                   enter="ease-in-out duration-300"
@@ -298,7 +296,7 @@ export default function AppLayout({ infoMode }: IProps) {
       >
         <div
           id="sidebar-primary-items-list"
-          className="flex h-full flex-col overflow-y-auto bg-zinc-50 pt-3 dark:bg-zinc-800"
+          className="flex h-full flex-col overflow-y-auto bg-zinc-50 pt-3 dark:bg-zinc-950"
         >
           {/* START OF CHRT LOGO */}
           <div className="flex flex-shrink-0 items-center px-6">
@@ -365,7 +363,7 @@ export default function AppLayout({ infoMode }: IProps) {
           className="mx-auto flex h-full max-w-screen-2xl flex-col px-4 xl:px-6"
         >
           {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
-          <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-zinc-50 dark:bg-zinc-800">
+          <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-zinc-50 dark:bg-zinc-950">
             {/* START OF HAMBURGER BUTTON */}
             <button
               type="button"

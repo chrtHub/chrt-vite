@@ -198,9 +198,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
     <div
       id="chat-row"
       className={classNames(
-        row.role === "user"
-          ? "rounded-lg bg-zinc-200 dark:bg-zinc-900"
-          : "rounded-lg bg-zinc-50 dark:bg-zinc-800",
+        row.role === "user" ? "" : "rounded-md bg-zinc-200 dark:bg-zinc-900",
         "w-full justify-center lg:flex"
       )}
     >

@@ -138,7 +138,7 @@ export const ConversationRow = (
       {/* START OF STICKY HEADER - Date */}
       <>
         {showStickyHeader && (
-          <div className="sticky top-0 bg-zinc-50 dark:bg-zinc-800">
+          <div className="sticky top-0 bg-zinc-50 dark:bg-zinc-950">
             <div className="mb-1 border-b-2 border-zinc-300 pb-1 pl-1 pt-1.5 text-sm font-semibold text-zinc-500 dark:border-zinc-500 dark:text-zinc-400">
               <div className="flex flex-row">
                 <CalendarDaysIcon className="mr-1 h-5 w-5" />
@@ -155,8 +155,8 @@ export const ConversationRow = (
         className={classNames(
           "mt-0.5 flex flex-col rounded-md px-1.5 pb-1 pt-0.5",
           CC.conversationId === row._id
-            ? "bg-zinc-300 dark:bg-zinc-600"
-            : "hover:bg-zinc-200 dark:hover:bg-zinc-700"
+            ? "bg-zinc-300 dark:bg-zinc-800"
+            : "hover:bg-zinc-200 dark:hover:bg-zinc-900"
         )}
       >
         <button

@@ -14,17 +14,13 @@ import { Popover, Transition } from "@headlessui/react";
 
 //-- Icons --//
 import {
-  // ArrowPathIcon,
-  CalendarDaysIcon,
   ChevronDoubleDownIcon,
   ChevronDoubleUpIcon,
-  CpuChipIcon,
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { ArrowPathIcon, Cog8ToothIcon } from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
-import { produce } from "immer";
 
 //-- Utility Functions --//
 import classNames from "../../../Util/classNames";
@@ -158,7 +154,7 @@ export default function ConversationsList() {
 
       {/* Before trying to fetch, show skeleton */}
       {!CC.conversationsFetched ? (
-        <div className="mb-2 mt-1.5 flex h-full w-full animate-pulse flex-col items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-700" />
+        <div className="mb-2 mt-1.5 flex h-full w-full animate-pulse flex-col items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-900" />
       ) : //-- After fetching, either show the list or "No Conversations Yet" --//
       CC.conversationsArray && CC.conversationsArray.length > 0 ? (
         <>
@@ -242,16 +238,16 @@ export default function ConversationsList() {
         </>
       ) : (
         //-- No Conversations yet --//
-        <div className="mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-700">
+        <div className="mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-900">
           <p className="font-semibold text-zinc-600 dark:text-zinc-300">
             No Conversations Found
           </p>
           <button
-            className="mt-2 flex flex-col items-center justify-center"
+            className="mt-2 flex flex-col items-center justify-center rounded-full p-3 hover:bg-zinc-200 dark:hover:bg-zinc-800"
             onClick={listMoreConversations}
           >
-            <ArrowPathIcon className="h-5 w-5 text-zinc-500 hover:text-green-600 dark:text-zinc-400 dark:hover:text-green-600" />
-            <p className="mt-1.5 text-sm font-semibold italic text-zinc-600 dark:text-zinc-300">
+            <ArrowPathIcon className="h-5 w-5 text-zinc-500  dark:text-zinc-400" />
+            <p className="mt-0.5 text-sm font-semibold italic text-zinc-600 dark:text-zinc-300">
               refresh
             </p>
           </button>
