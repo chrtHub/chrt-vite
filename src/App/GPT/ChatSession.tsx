@@ -366,9 +366,9 @@ export default function ChatSession() {
                 onChange={(event) => setPromptDraft(event.target.value)}
                 className={classNames(
                   CC.completionLoading
-                    ? "bg-zinc-300 ring-2 dark:bg-zinc-500"
-                    : "",
-                  "block w-full resize-none rounded-md border-0 bg-white py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-zinc-700 dark:text-white sm:leading-6"
+                    ? "animate-pulse bg-zinc-300 ring-2 dark:bg-zinc-500"
+                    : "dark:bg-zinc-700",
+                  "block w-full resize-none rounded-md border-0 bg-white py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:text-white sm:leading-6"
                 )}
               />
 

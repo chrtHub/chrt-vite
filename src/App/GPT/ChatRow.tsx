@@ -13,6 +13,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import {
   ClipboardDocumentIcon,
   CpuChipIcon,
+  PencilSquareIcon,
 } from "@heroicons/react/24/outline";
 
 //== NPM Functions ==//
@@ -31,6 +32,25 @@ export default function ChatRow(props: { row: IMessageRow }) {
   let CC = useChatContext();
   const { user } = useAuth0();
   const [clipboardValue, copyToClipboard] = useCopyToClipboard();
+
+  const EditButton = () => {
+    return (
+      <div>
+        <button
+          onClick={() => {
+            console.log("todo - edit prompt");
+          }}
+        >
+          <div className="rounded-full p-1 dark:hover:bg-zinc-500">
+            <PencilSquareIcon
+              className="h-5 w-5 rounded-md text-zinc-400 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
+              aria-hidden="true"
+            />
+          </div>
+        </button>
+      </div>
+    );
+  };
 
   const CopyToClipboardButton = () => {
     return (
@@ -189,6 +209,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
         <div className="flex flex-row items-center justify-between py-2 pl-2 pr-2">
           <Author mobile={true} />
           <VersionSelector />
+          <EditButton />
           <CopyToClipboardButton />
           <RowData />
         </div>
@@ -201,6 +222,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
       >
         <Author mobile={false} />
         <VersionSelector />
+        <EditButton />
       </div>
 
       {/* MESSAGE - always visible */}

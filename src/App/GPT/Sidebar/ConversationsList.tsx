@@ -132,7 +132,7 @@ export default function ConversationsList() {
                 : "text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-400 dark:hover:text-zinc-800"
             )}
             onClick={() => {
-              localStorage.setItem("sortBy", "last_edited"); // NEW
+              localStorage.setItem("sortBy", "last_edited");
               CC.setSortBy("last_edited");
             }}
           >
@@ -147,7 +147,7 @@ export default function ConversationsList() {
                 : "text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-400 dark:hover:text-zinc-800"
             )}
             onClick={() => {
-              localStorage.setItem("sortBy", "created_at"); // NEW
+              localStorage.setItem("sortBy", "created_at");
               CC.setSortBy("created_at");
             }}
           >
