@@ -118,14 +118,14 @@ export default function ConversationsList() {
         </ConversationButton>
 
         {/* 'Sort By' Button Group */}
-        <div className="isolate inline-flex justify-center rounded-md">
+        <div className="isolate inline-flex justify-center rounded-md shadow-sm">
           <button
             type="button"
             className={classNames(
-              "relative inline-flex flex-grow items-center justify-center rounded-l-md px-3 py-0.5 text-xs font-semibold ring-1 ring-inset ring-zinc-300  focus:z-10",
+              "relative inline-flex flex-grow items-center justify-center rounded-l-md px-3 py-0.5 text-xs font-semibold ring-1 ring-inset ring-zinc-300 focus:z-10",
               CC.sortBy === "last_edited"
-                ? "bg-zinc-300 text-zinc-800 dark:bg-zinc-300 dark:text-zinc-800"
-                : "text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-400 dark:hover:text-zinc-800"
+                ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-700 dark:text-zinc-200"
+                : "text-zinc-500 hover:bg-zinc-200 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
             )}
             onClick={() => {
               localStorage.setItem("sortBy", "last_edited");
@@ -139,8 +139,8 @@ export default function ConversationsList() {
             className={classNames(
               "relative -ml-px inline-flex flex-grow items-center justify-center rounded-r-md px-3 py-0.5 text-xs font-semibold ring-1 ring-inset ring-zinc-300 focus:z-10",
               CC.sortBy === "created_at"
-                ? "bg-zinc-300 text-zinc-800 dark:bg-zinc-300 dark:text-zinc-800"
-                : "text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-400 dark:hover:text-zinc-800"
+                ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-700 dark:text-zinc-200"
+                : "text-zinc-500 hover:bg-zinc-200 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
             )}
             onClick={() => {
               localStorage.setItem("sortBy", "created_at");
