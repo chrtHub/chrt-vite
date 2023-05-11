@@ -29,6 +29,7 @@ import classNames from "../../../Util/classNames";
 import { IConversation } from "../chatson/chatson_types";
 import { IChatContext } from "../../../Context/ChatContext";
 import { SetStateAction } from "react";
+import is420 from "../../../Util/is420";
 
 //-- Conversation Rows with Sticky Header Logic --//
 export const ConversationRow = (
@@ -49,33 +50,34 @@ export const ConversationRow = (
   retitleLoading: boolean,
   setRetitleLoading: React.Dispatch<SetStateAction<boolean>>
 ) => {
-  //-- Build array --//
-  let created_at = new Date(row.created_at);
-  let currentRowDate = format(created_at, "EEE, MMM d");
-
   //-- Compute sticky header text --//
-  let stickyHeaderText = currentRowDate;
-  if (isToday(created_at)) {
+  let sortByDate = new Date(row[CC.sortBy]);
+
+  let stickyHeaderText = format(sortByDate, "EEE, MMM d");
+  if (isToday(sortByDate)) {
     stickyHeaderText += " - Today";
-  } else if (isYesterday(created_at)) {
+  } else if (isYesterday(sortByDate)) {
     stickyHeaderText += " - Yesterday";
+  }
+  //-- Strategically Significant --//
+  else if (is420(sortByDate)) {
+    stickyHeaderText += " - :)";
   }
 
   //-- Format timestamps --//
-  const formattedTime: string = created_at
-    ? format(created_at, "h:mm aaa")
+  const formattedTime: string = sortByDate
+    ? format(sortByDate, "h:mm aaa")
     : "";
 
   //-- Show sticky header for first item and when date changes --//
   let showStickyHeader: boolean = false;
-  if (CC.conversationsArray) {
-    showStickyHeader =
-      index === 0 ||
-      currentRowDate !==
-        format(
-          new Date(CC.conversationsArray[index - 1].created_at),
-          "EEE, MMM d"
-        );
+  if (index > 0) {
+    let previousRowSortByDate = new Date(
+      CC.conversationsArray[index - 1][CC.sortBy]
+    );
+    showStickyHeader = sortByDate.getDate() != previousRowSortByDate.getDate();
+  } else {
+    showStickyHeader = true;
   }
 
   //-- Set conversationId --//
