@@ -44,7 +44,9 @@ export const ConversationRow = (
   activeEditRowId: string | null,
   setActiveEditRowId: React.Dispatch<SetStateAction<string | null>>,
   newTitleDraft: string,
-  setNewTitleDraft: React.Dispatch<SetStateAction<string>>
+  setNewTitleDraft: React.Dispatch<SetStateAction<string>>,
+  retitleLoading: boolean,
+  setRetitleLoading: React.Dispatch<SetStateAction<boolean>>
 ) => {
   //-- Build array --//
   let created_at = new Date(row.created_at);
@@ -113,11 +115,10 @@ export const ConversationRow = (
     event?.stopPropagation();
     console.log("todo - confirmEditHandler with title: ", newTitleDraft); // DEV
     // on click of confirmEdit button, send the value of the textarea input to the titles endpoint
-    // // while request in progress, show loading spinner
-    // when request complete, reload entire conversations list
-
-    // let accessToken = await getAccessTokenSilently();
-    // chatson.retitle(accessToken, row._id, newTitleDraft);
+    let accessToken = await getAccessTokenSilently();
+    setRetitleLoading(true);
+    await chatson.retitle(accessToken, CC, row._id, newTitleDraft);
+    setRetitleLoading(false);
     setActiveEditRowId(null);
   };
 
@@ -125,9 +126,9 @@ export const ConversationRow = (
   const keyDownHandler = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault(); //-- Prevent default behavior (newline insertion) --//
+      textareaRef.current?.blur();
       //-- prevent submit while title is loading --//
-      // TODO --> if (!CC.retitleLoading) {
-      if (true) {
+      if (!retitleLoading) {
         confirmEditHandler();
       }
     } //-- else "Enter" with shift will just insert a newline --//
@@ -186,8 +187,8 @@ export const ConversationRow = (
                   setNewTitleDraft(event.target.value);
                 }}
                 className={classNames(
-                  false // DEV, TODO - CC.retitleLoading
-                    ? "bg-zinc-300 ring-2 dark:bg-zinc-500"
+                  retitleLoading
+                    ? "animate-pulse bg-zinc-300 dark:bg-zinc-500"
                     : "",
                   "mb-0.5 block w-full resize-none rounded-md border-0 bg-white px-0 py-0 text-sm font-semibold text-zinc-700 ring-2 ring-green-600 focus:ring-2 focus:ring-green-600 dark:bg-zinc-700 dark:text-zinc-200"
                 )}
@@ -215,7 +216,6 @@ export const ConversationRow = (
                 CC.conversationId === row._id
                   ? "text-zinc-500 dark:text-zinc-400"
                   : "text-zinc-500 dark:text-zinc-500"
-                // row.api_req_res_metadata.length === 1 ? "mr-4" : "mr-2.5"
               )}
             >
               {row.api_req_res_metadata.length === 1
@@ -237,9 +237,10 @@ export const ConversationRow = (
 
             {/* Conditionally render Delete and Edit Buttons based on hover state and CC */}
             <div className="flex flex-row">
-              {[rowHoverId, CC.conversationId].includes(row._id) &&
+              {rowHoverId === row._id &&
                 !activeDeleteRowId &&
-                !activeEditRowId && (
+                !activeEditRowId &&
+                !retitleLoading && (
                   <>
                     {/* Delete Conversation Button */}
                     <TrashIcon
@@ -265,7 +266,7 @@ export const ConversationRow = (
                   </>
                 )}
               {/* Confirm / Cancel Delete */}
-              {activeDeleteRowId === row._id && (
+              {activeDeleteRowId === row._id && !retitleLoading && (
                 <>
                   <XCircleIcon
                     onClick={(event) => {
@@ -281,7 +282,7 @@ export const ConversationRow = (
                 </>
               )}
               {/* Confirm / Cancel Edit */}
-              {activeEditRowId === row._id && (
+              {activeEditRowId === row._id && !retitleLoading && (
                 <>
                   <XCircleIcon
                     onClick={(event) => {

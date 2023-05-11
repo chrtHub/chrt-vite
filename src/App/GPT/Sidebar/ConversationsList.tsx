@@ -46,6 +46,7 @@ export default function ConversationsList() {
     useState<boolean>(false);
   const [activeEditRowId, setActiveEditRowId] = useState<string | null>(null);
   const [newTitleDraft, setNewTitleDraft] = useState<string>("");
+  const [retitleLoading, setRetitleLoading] = useState<boolean>(false);
   const [atBottom, setAtBottom] = useState<boolean>(false);
   const [atTop, setAtTop] = useState<boolean>(true);
 
@@ -180,7 +181,9 @@ export default function ConversationsList() {
                 activeEditRowId,
                 setActiveEditRowId,
                 newTitleDraft,
-                setNewTitleDraft
+                setNewTitleDraft,
+                retitleLoading,
+                setRetitleLoading
               )
             } //-- Don't call hooks within this callback --//
             // itemContent={ConversationRow} // TESTING

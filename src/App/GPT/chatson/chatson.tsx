@@ -193,13 +193,18 @@ export async function create_title(
 
 /**
  * (3.5) retitle
- *
+ * @param access_token
+ * @param CC
+ * @param conversation_id
+ * @param new_title
+ * @return Promise<void>
  */
 export async function retitle(
   access_token: string,
+  CC: IChatContext,
   conversation_id: string,
   new_title: string
-) {
+): Promise<void> {
   console.log("----- retitle -----");
 
   try {
@@ -212,7 +217,7 @@ export async function retitle(
         },
       }
     );
-    console.log(res.data); // DEV
+    await list_conversations(access_token, CC, "overwrite");
   } catch (err) {
     console.log(err);
   }
