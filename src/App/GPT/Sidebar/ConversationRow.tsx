@@ -143,7 +143,7 @@ export const ConversationRow = (
       <>
         {showStickyHeader && (
           <div className="sticky top-0 bg-zinc-50 dark:bg-zinc-800">
-            <div className="mb-1 border-b-2 border-zinc-300 pb-1 pl-1 pt-1.5 text-sm font-bold text-zinc-700 dark:border-zinc-500 dark:text-zinc-200">
+            <div className="mb-1 border-b-2 border-zinc-300 pb-1 pl-1 pt-1.5 text-sm font-semibold text-zinc-500 dark:border-zinc-500 dark:text-zinc-400">
               <div className="flex flex-row">
                 <CalendarDaysIcon className="mr-1 h-5 w-5" />
                 {stickyHeaderText}
@@ -193,16 +193,16 @@ export const ConversationRow = (
                   retitleLoading
                     ? "animate-pulse bg-zinc-300 dark:bg-zinc-500"
                     : "",
-                  "mb-0.5 block w-full resize-none rounded-md border-0 bg-white px-0 py-0 text-sm font-semibold text-zinc-700 ring-2 ring-green-600 focus:ring-2 focus:ring-green-600 dark:bg-zinc-700 dark:text-zinc-200"
+                  "mb-0.5 block w-full resize-none rounded-md border-0 bg-white px-0 py-0 text-sm font-normal text-zinc-900 ring-2 ring-green-600 focus:ring-2 focus:ring-green-600 dark:bg-zinc-700 dark:text-zinc-100"
                 )}
               />
             ) : (
               <p
                 className={classNames(
-                  "line-clamp-2 text-left text-sm font-semibold",
+                  "line-clamp-2 text-left text-sm font-normal",
                   CC.conversationId === row._id
-                    ? "text-zinc-700 dark:text-zinc-200"
-                    : "text-zinc-700 dark:text-zinc-300"
+                    ? "text-zinc-900 dark:text-zinc-100"
+                    : "text-zinc-900 dark:text-zinc-200"
                 )}
               >
                 {row.title && !/^\s*$/.test(row.title)
@@ -231,7 +231,7 @@ export const ConversationRow = (
             {/* Time */}
             <p
               className={classNames(
-                "flex-grow text-right text-sm font-semibold",
+                "flex-grow text-right text-sm font-medium",
                 CC.conversationId === row._id
                   ? "text-zinc-500 dark:text-zinc-400"
                   : "text-zinc-500 dark:text-zinc-500"

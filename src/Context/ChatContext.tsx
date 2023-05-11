@@ -118,8 +118,9 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   const [temperature, setTemperature] = useState<number | null>(null);
   const [completionLoading, setCompletionLoading] = useState<boolean>(false);
   const [focusTextarea, setFocusTextarea] = useState<boolean>(false);
+  const localStorage_sortBy = localStorage.getItem("sortBy");
   const [sortBy, setSortBy] = useState<"last_edited" | "created_at">(
-    "created_at"
+    localStorage_sortBy === "created_at" ? "created_at" : "last_edited"
   );
 
   //-- Bundle values into chatContextValue --//
