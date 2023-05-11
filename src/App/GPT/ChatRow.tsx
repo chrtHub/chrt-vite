@@ -10,9 +10,13 @@ import remarkGfm from "remark-gfm";
 
 //== Icons ==//
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-import { CpuChipIcon } from "@heroicons/react/24/outline";
+import {
+  ClipboardDocumentIcon,
+  CpuChipIcon,
+} from "@heroicons/react/24/outline";
 
 //== NPM Functions ==//
+import { useCopyToClipboard } from "usehooks-ts";
 
 //== Utility Functions ==//
 import classNames from "../../Util/classNames";
@@ -21,31 +25,74 @@ import getFriendly from "./chatson/getFriendly";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { IMessageRow } from "./chatson/chatson_types";
 
+//-- Exported Component --//
 export default function ChatRow(props: { row: IMessageRow }) {
   let { row } = props;
   let CC = useChatContext();
   const { user } = useAuth0();
+  const [clipboardValue, copyToClipboard] = useCopyToClipboard();
 
-  const Author = () => {
+  const CopyToClipboardButton = () => {
+    return (
+      <div className="flex flex-row justify-center">
+        <button
+          onClick={() => {
+            copyToClipboard(row.content);
+          }}
+        >
+          <ClipboardDocumentIcon
+            className="h-6 w-6 rounded-md text-zinc-400 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
+            aria-hidden="true"
+          />
+        </button>
+      </div>
+    );
+  };
+
+  const Author = ({ mobile }: { mobile: boolean }) => {
     //-- If author is the current user, display their profile photo --//
     if (row.author === user?.sub) {
       if (user?.picture) {
         return (
-          <img
-            src={user?.picture}
-            alt={user?.name}
-            className="h-10 w-10 rounded-full"
-          />
+          <div
+            className={classNames(
+              mobile
+                ? "flex w-14 flex-col items-center"
+                : "flex w-16 flex-col items-center"
+            )}
+          >
+            <img
+              src={user?.picture}
+              alt={user?.name}
+              className={classNames(
+                mobile ? "h-8 w-8 rounded-full" : "h-10 w-10 rounded-full"
+              )}
+            />
+          </div>
         );
       } else {
-        <div>{user.name}</div>;
+        <div
+          className={classNames(
+            mobile
+              ? "flex w-14 flex-col items-center"
+              : "flex w-16 flex-col items-center"
+          )}
+        >
+          {user.name}
+        </div>;
       }
     }
 
     //-- If author is a model, display name of the model --//
     if (row.author === row.model.model_api_name) {
       return (
-        <div className="flex flex-col items-center">
+        <div
+          className={classNames(
+            mobile
+              ? "flex w-14 flex-col items-center"
+              : "flex w-16 flex-col items-center"
+          )}
+        >
           <CpuChipIcon className="h-8 w-8 text-zinc-500 dark:text-zinc-400" />
           <div className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
             {getFriendly(
@@ -59,25 +106,35 @@ export default function ChatRow(props: { row: IMessageRow }) {
     }
 
     return (
-      <div className="flex flex-col items-center">
-        <CpuChipIcon className="mt-1 h-8 w-8 text-zinc-500 dark:text-zinc-400" />
+      <div
+        className={classNames(
+          mobile
+            ? "flex w-14 flex-col items-center"
+            : "flex w-16 flex-col items-center"
+        )}
+      >
+        <CpuChipIcon
+          className={classNames(
+            mobile
+              ? "mt-1 h-8 w-8 text-zinc-500 dark:text-zinc-400"
+              : "mt-1 h-8 w-8 text-zinc-500 dark:text-zinc-400"
+          )}
+        />
       </div>
     );
   };
 
   //-- Message Row MessageData --//
   const RowData = () => {
-    // let friendlyDate = format(date, "hh:mm:ss");
-    // let friendlyDate = new Intl.DateTimeFormat("en-US", {
-    //   hour: "numeric",
-    //   minute: "2-digit",
-    //   second: "2-digit",
-    // }).format(message.created_at);
+    let friendlyDate = new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      // second: "2-digit",
+    }).format(new Date(row.created_at));
 
     return (
       <div className="text-sm text-zinc-500 dark:text-zinc-400">
-        {/* TODO - implement new metatdata ui for rows */}
-        {/* {friendlyDate} */}
+        {friendlyDate}
       </div>
     );
   };
@@ -85,13 +142,34 @@ export default function ChatRow(props: { row: IMessageRow }) {
   //-- Version Selector --//
   const VersionSelector = () => {
     return (
-      <div className="flex flex-row">
-        <ChevronLeftIcon className="h-5 w-5 text-zinc-400" aria-hidden="true" />
-        <p className="text-zinc-400">1/2</p>
-        <ChevronRightIcon
-          className="h-5 w-5 text-zinc-400"
-          aria-hidden="true"
-        />
+      <div className="my-1 flex flex-row">
+        <button
+          className="flex flex-col justify-end pb-0.5"
+          onClick={() => {
+            console.log("todo - change branch");
+          }}
+        >
+          <ChevronLeftIcon
+            className="h-4 w-4 rounded-full text-zinc-400 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
+            aria-hidden="true"
+          />
+        </button>
+
+        <p className="text-sm text-zinc-400">
+          {`1`} / {`2`}
+        </p>
+
+        <button
+          className="flex flex-col justify-end pb-0.5"
+          onClick={() => {
+            console.log("todo - change branch");
+          }}
+        >
+          <ChevronRightIcon
+            className="h-4 w-4 rounded-full text-zinc-400 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
+            aria-hidden="true"
+          />
+        </button>
       </div>
     );
   };
@@ -100,17 +178,20 @@ export default function ChatRow(props: { row: IMessageRow }) {
     <div
       id="chat-row"
       className={classNames(
-        row.role === "user" ? "rounded-lg bg-zinc-200 dark:bg-zinc-900" : "",
+        row.role === "user"
+          ? "rounded-lg bg-zinc-200 dark:bg-zinc-900"
+          : "rounded-lg bg-zinc-50 dark:bg-zinc-800",
         "w-full justify-center lg:flex"
       )}
     >
       {/* Mobile Row Top - visible until 'lg' */}
       <div className="lg:hidden">
-        <div className="flex flex-row items-center justify-center py-2 pl-2 pr-2">
+        <div className="flex flex-row items-center justify-between py-2 pl-2 pr-2">
+          <Author mobile={true} />
+          <VersionSelector />
+
+          <CopyToClipboardButton />
           <RowData />
-          <div className="ml-auto">
-            <Author />
-          </div>
         </div>
       </div>
 
@@ -119,7 +200,8 @@ export default function ChatRow(props: { row: IMessageRow }) {
         id="chat-author-content"
         className="my-3.5 hidden w-full flex-col items-center justify-start lg:flex lg:w-24"
       >
-        <Author />
+        <Author mobile={false} />
+        <VersionSelector />
       </div>
 
       {/* MESSAGE - always visible */}
@@ -149,9 +231,9 @@ export default function ChatRow(props: { row: IMessageRow }) {
         id="chat-MessageData-content-lg"
         className="mt-5 hidden w-full flex-col pr-2 lg:flex lg:w-24"
       >
-        <div className="flex flex-row justify-end">
+        <div className="flex flex-col justify-end">
           <RowData />
-          <VersionSelector />
+          <CopyToClipboardButton />
         </div>
       </div>
     </div>
