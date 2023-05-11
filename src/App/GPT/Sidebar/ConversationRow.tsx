@@ -20,6 +20,7 @@ import {
 
 //-- NPM Functions --//
 import { format, isToday, isYesterday } from "date-fns";
+import { isEmpty } from "lodash";
 
 //-- Utility Functions --//
 import classNames from "../../../Util/classNames";
@@ -154,7 +155,7 @@ export const ConversationRow = (
       {/* START OF ROWS (each is a button) */}
       <div
         className={classNames(
-          "flex flex-col rounded-md px-1.5 pb-1 pt-0.5",
+          "mt-0.5 flex flex-col rounded-md px-1.5 pb-1 pt-0.5",
           CC.conversationId === row._id
             ? "bg-zinc-300 dark:bg-zinc-600"
             : "hover:bg-zinc-200 dark:hover:bg-zinc-700"
@@ -202,7 +203,9 @@ export const ConversationRow = (
                     : "text-zinc-700 dark:text-zinc-300"
                 )}
               >
-                {row.title || "New conversation"}
+                {row.title && !/^\s*$/.test(row.title)
+                  ? row.title
+                  : "New conversation"}
               </p>
             )}
           </div>
@@ -212,7 +215,7 @@ export const ConversationRow = (
             {/* Request count */}
             <p
               className={classNames(
-                "text-left text-sm font-semibold",
+                "text-left text-sm italic",
                 CC.conversationId === row._id
                   ? "text-zinc-500 dark:text-zinc-400"
                   : "text-zinc-500 dark:text-zinc-500"
@@ -273,11 +276,11 @@ export const ConversationRow = (
                       setActiveDeleteRowId(null);
                       event.stopPropagation();
                     }}
-                    className="ml-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700"
+                    className="ml-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
                   />
                   <CheckCircleIcon
                     onClick={confirmDeleteHandler}
-                    className="mx-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700"
+                    className="mx-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
                   />
                 </>
               )}
@@ -289,11 +292,11 @@ export const ConversationRow = (
                       setActiveEditRowId(null);
                       event.stopPropagation();
                     }}
-                    className="ml-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700"
+                    className="ml-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
                   />
                   <CheckCircleIcon
                     onClick={confirmEditHandler} // DEV
-                    className="mx-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700"
+                    className="mx-1 h-5 w-5 rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
                   />
                 </>
               )}

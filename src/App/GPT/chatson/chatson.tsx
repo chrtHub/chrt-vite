@@ -477,11 +477,9 @@ export async function send_message(
             if (new_conversation_id) {
               await create_title(access_token, new_conversation_id);
             }
-          } //-- If new conversation or sortyBy is last_edited, update conversations list --//
-          else if (new_conversation || CC.sortBy === "last_edited") {
-            //-- Get new list of conversations --//
-            await list_conversations(access_token, CC, "overwrite");
           }
+          //-- Upate conversations list --//
+          await list_conversations(access_token, CC, "overwrite");
         };
         onCloseHandler();
       },
