@@ -18,6 +18,7 @@ import TextareaAutosize from "react-textarea-autosize";
 //== Icons ==//
 import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import {
+  ArrowUpRightIcon,
   ChevronDoubleDownIcon,
   CpuChipIcon,
   StopIcon,
@@ -408,16 +409,35 @@ export default function ChatSession() {
               </p> */}
             </div>
           </div>
-          <p className="flex flex-row justify-center font-sans text-xs italic text-zinc-500">
+          <p className="flex-row justify-center text-center font-sans text-xs italic text-zinc-500 dark:text-zinc-400 lg:hidden">
             Due to the&nbsp;
-            <a
-              className="underline"
-              href="https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/"
-              target="_blank"
-            >
-              nature of LLMs
-            </a>
-            , ChrtGPT may produce false information. Use with human discretion.
+            <span className="inline-block">
+              <a
+                className="underline"
+                href="https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/"
+                target="_blank"
+              >
+                nature of LLMs
+              </a>
+            </span>
+            , ChrtGPT may produce false information.
+            <br />
+            Use with human discretion.
+          </p>
+          <p className="hidden flex-row justify-center text-center font-sans text-xs italic text-zinc-500 dark:text-zinc-400 lg:flex">
+            Due to the&nbsp;
+            <span className="inline-block">
+              <a
+                className="underline"
+                href="https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/"
+                target="_blank"
+              >
+                nature of LLMs
+              </a>
+            </span>
+            , ChrtGPT may produce false information.&nbsp;
+            {/* <br /> */}
+            Use with human discretion.
           </p>
         </div>
       </div>
