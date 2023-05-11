@@ -1,4 +1,5 @@
 //== react, react-router-dom, recoil, Auth0 ==//
+import { useState } from "react";
 import { useChatContext } from "../../Context/ChatContext";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -33,37 +34,54 @@ export default function ChatRow(props: { row: IMessageRow }) {
   const { user } = useAuth0();
   const [clipboardValue, copyToClipboard] = useCopyToClipboard();
 
+  //-- Edit prompt --//
+  const [editing, setEditing] = useState<boolean>(false);
   const EditButton = () => {
     return (
-      <div>
+      <div
+        className={classNames(
+          "flex flex-row justify-center rounded-full p-1 text-zinc-600 dark:text-zinc-300",
+          editing
+            ? "bg-green-300 text-green-900 dark:bg-green-800 dark:text-green-200"
+            : "dark:hover:bg-text-200 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700"
+        )}
+      >
         <button
           onClick={() => {
-            console.log("todo - edit prompt");
+            setEditing(true); // TODO - open textarea
+            setTimeout(() => {
+              setEditing(false);
+            }, 2000); // DEV
           }}
         >
-          <div className="rounded-full p-1 dark:hover:bg-zinc-500">
-            <PencilSquareIcon
-              className="h-5 w-5 rounded-md text-zinc-400 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
-              aria-hidden="true"
-            />
-          </div>
+          <PencilSquareIcon className="h-5 w-5" aria-hidden="true" />
         </button>
       </div>
     );
   };
 
+  //-- Copy to Clipboard --//
+  const [copying, setCopied] = useState<boolean>(false);
   const CopyToClipboardButton = () => {
     return (
-      <div className="flex flex-row justify-center">
+      <div
+        className={classNames(
+          "flex flex-row justify-center rounded-full p-1 text-zinc-600 dark:text-zinc-300",
+          copying
+            ? "bg-green-300 text-green-900 dark:bg-green-800 dark:text-green-200"
+            : "dark:hover:bg-text-200 hover:bg-zinc-300 hover:text-zinc-700 dark:hover:bg-zinc-700"
+        )}
+      >
         <button
           onClick={() => {
             copyToClipboard(row.content);
+            setCopied(true);
+            setTimeout(() => {
+              setCopied(false);
+            }, 750);
           }}
         >
-          <ClipboardDocumentIcon
-            className="h-6 w-6 rounded-md text-zinc-400 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
-            aria-hidden="true"
-          />
+          <ClipboardDocumentIcon className="h-6 w-6" aria-hidden="true" />
         </button>
       </div>
     );
@@ -145,7 +163,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
   };
 
   //-- Message Row MessageData --//
-  const RowData = () => {
+  const Timestamp = () => {
     let friendlyDate = new Intl.DateTimeFormat("en-US", {
       hour: "numeric",
       minute: "2-digit",
@@ -153,7 +171,14 @@ export default function ChatRow(props: { row: IMessageRow }) {
     }).format(new Date(row.created_at));
 
     return (
-      <div className="text-sm text-zinc-500 dark:text-zinc-400">
+      <div
+        className={classNames(
+          "flex flex-row justify-center text-sm",
+          hover
+            ? "text-zinc-600 dark:text-zinc-300"
+            : "text-zinc-500 dark:text-zinc-400"
+        )}
+      >
         {friendlyDate}
       </div>
     );
@@ -194,6 +219,15 @@ export default function ChatRow(props: { row: IMessageRow }) {
     );
   };
 
+  //-- Track row hover state --//
+  const [hover, setHover] = useState<boolean>(false);
+  const mouseEnterHandler = () => {
+    setHover(true);
+  };
+  const mouseLeaveHandler = () => {
+    setHover(false);
+  };
+
   return (
     <div
       id="chat-row"
@@ -201,6 +235,8 @@ export default function ChatRow(props: { row: IMessageRow }) {
         row.role === "user" ? "" : "rounded-md bg-zinc-200 dark:bg-zinc-900",
         "w-full justify-center lg:flex"
       )}
+      onMouseEnter={mouseEnterHandler}
+      onMouseLeave={mouseLeaveHandler}
     >
       {/* Mobile Row Top - visible until 'lg' */}
       <div className="lg:hidden">
@@ -209,7 +245,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
           <VersionSelector />
           <EditButton />
           <CopyToClipboardButton />
-          <RowData />
+          <Timestamp />
         </div>
       </div>
 
@@ -220,7 +256,6 @@ export default function ChatRow(props: { row: IMessageRow }) {
       >
         <Author mobile={false} />
         <VersionSelector />
-        <EditButton />
       </div>
 
       {/* MESSAGE - always visible */}
@@ -251,8 +286,15 @@ export default function ChatRow(props: { row: IMessageRow }) {
         className="mt-5 hidden w-full flex-col pr-2 lg:flex lg:w-24"
       >
         <div className="flex flex-col justify-end">
-          <RowData />
-          <CopyToClipboardButton />
+          <Timestamp />
+          <div className="flex flex-row justify-center">
+            {hover && (
+              <>
+                {row.role === "user" && <EditButton />}
+                <CopyToClipboardButton />
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
