@@ -113,6 +113,8 @@ export default function ChatSession() {
     lambda();
   }, [CC.conversationId]);
 
+  console.log("CC.rowArray: ", CC.rowArray); // DEV
+
   //-- chatson.send_message() --//
   const submitPromptHandler = () => {
     //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
@@ -131,12 +133,10 @@ export default function ChatSession() {
 
       //-- If first message, parentNodeId is null --//
       let parentNodeId: string | null = null;
-      //-- If continuing branch, parentNodeId is last node's id --//
+      //-- Else parentNodeId is current leaf node's id --//
       if (CC.rowArray && CC.rowArray.length > 0) {
         parentNodeId = CC.rowArray[CC.rowArray.length - 1].node_id;
       }
-
-      // TODO - if (new branch) {parentNodeId = row before last row}
 
       const submitPrompt = async () => {
         const accessToken = await getAccessTokenSilently();

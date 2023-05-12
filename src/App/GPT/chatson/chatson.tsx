@@ -79,8 +79,6 @@ export async function list_conversations(
       }
     );
     if (res.data) {
-      console.log("conversations: ", res.data); // DEV
-
       if (writeOption === "append") {
         //-- Append results to array (which is sometimes empty) --//
         CC.setConversationsArray((prevArray) => {
@@ -559,6 +557,8 @@ const nodeArrayToRowArray = (
   nodeArray: IMessageNode[],
   leafNode: IMessageNode
 ): IMessageRow[] => {
+  console.log("nodeArray: ", nodeArray); // DEV
+
   //-- Build Node Map --//
   let nodeMap: Record<string, IMessageNode> = {};
   nodeArray.forEach((node) => {
@@ -587,6 +587,7 @@ const nodeArrayToRowArray = (
         ...node.completion,
         prompt_or_completion: "completion",
         node_id: node._id,
+        parent_node_id: parent_node._id, // NEW
         sibling_node_ids: [], //-- Use prompt_row for this --//
       };
       newRowArray.push(completion_row);
@@ -596,6 +597,7 @@ const nodeArrayToRowArray = (
       ...node.prompt,
       prompt_or_completion: "prompt",
       node_id: node._id,
+      parent_node_id: parent_node._id, // NEW
       sibling_node_ids: [...sibling_ids_timestamp_asc],
     };
     newRowArray.push(prompt_row);

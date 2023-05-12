@@ -4,6 +4,7 @@ import { useChatContext } from "../../Context/ChatContext";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //== TSX Components ==//
+import * as chatson from "./chatson/chatson";
 
 //== NPM Components ==//
 import ReactMarkdown from "react-markdown";
@@ -34,14 +35,14 @@ import { IMessageRow } from "./chatson/chatson_types";
 export default function ChatRow(props: { row: IMessageRow }) {
   let { row } = props;
   let CC = useChatContext();
-  const { user } = useAuth0();
+  const { getAccessTokenSilently, user } = useAuth0();
   const [clipboardValue, copyToClipboard] = useCopyToClipboard();
 
   //-- Edit prompt --//
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [textareaOnFocusToggle, setTextareaOnFocusToggle] =
     useState<boolean>(false);
-  const [prompt, setPrompt] = useState<string>(row.content);
+  const [promptContent, setPromptContent] = useState<string>(row.content);
   const [editing, setEditing] = useState<boolean>(false);
   const EditButton = () => {
     return (
@@ -68,12 +69,24 @@ export default function ChatRow(props: { row: IMessageRow }) {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault(); //-- Prevent default behavior (newline insertion) --//
       textareaRef.current?.blur();
+      submitEditedPrompt();
       // TODO - prevent submit if loading new completion?
     } //-- else "Enter" with shift will just insert a newline --//
   };
   //-- Submit edited prompt, create new branch --//
   const submitEditedPrompt = () => {
     console.log("todo - sumbit edited prompt, create new branch");
+
+    //-- parentNodeId is parent of current node --//
+    // let parentNodeId: string  = row.parent_node_id; // TODO
+
+    const submitPrompt = async () => {
+      const accessToken = await getAccessTokenSilently();
+
+      //-- Send prompt as chat message --//
+      // await chatson.send_message(accessToken, promptContent, parentNodeId, CC);
+    };
+    submitPrompt();
   };
   //-- When textarea focuses, put cursor after the last char --//
   useEffect(() => {
@@ -297,9 +310,9 @@ export default function ChatRow(props: { row: IMessageRow }) {
                 setTextareaOnFocusToggle((prevState) => !prevState)
               }
               ref={textareaRef}
-              value={prompt}
+              value={promptContent}
               maxRows={42} //-- arbitrary number --//
-              onChange={(event) => setPrompt(event.target.value)}
+              onChange={(event) => setPromptContent(event.target.value)}
               onKeyDown={keyDownHandler}
               // onBlur={() => setEditing(false)}
               className={classNames(

@@ -77,6 +77,7 @@ export interface IMessage {
 export interface IMessageRow extends IMessage {
   prompt_or_completion: "prompt" | "completion";
   node_id: string; //-- ObjectId --//
+  parent_node_id: string; //-- ObjectId --//
   sibling_node_ids: string[]; //-- ObjectId[] --//
   // author: string;
   // model: IModel;
