@@ -30,6 +30,7 @@ import getFriendly from "./chatson/getFriendly";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { IMessageRow } from "./chatson/chatson_types";
+import { ArrowPathIcon } from "@heroicons/react/24/solid";
 
 //-- Exported Component --//
 export default function ChatRow(props: { row: IMessageRow }) {
@@ -43,6 +44,29 @@ export default function ChatRow(props: { row: IMessageRow }) {
     const node_index = row.sibling_node_ids.indexOf(row.node_id);
     const new_leaf_node_id = row.sibling_node_ids[node_index + increment];
     chatson.change_branch(new_leaf_node_id, CC);
+  };
+
+  //-- Regenerate Response --//
+  const RegenerateButton = () => {
+    return (
+      <div className="dark:hover:bg-text-200 flex flex-row justify-center rounded-full p-1 text-zinc-600 hover:bg-zinc-300 hover:text-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700">
+        <button onClick={regenerateResponse}>
+          <ArrowPathIcon className="h-5 w-5" />
+        </button>
+      </div>
+    );
+  };
+  //-- Submit edited prompt, create new branch --//
+  const regenerateResponse = async () => {
+    const accessToken = await getAccessTokenSilently();
+
+    //-- Send prompt as chat message --//
+    await chatson.send_message(
+      accessToken,
+      row.content,
+      row.parent_node_id,
+      CC
+    );
   };
 
   //-- Edit prompt --//
@@ -369,6 +393,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
             {hover && !editing && (
               <>
                 {row.prompt_or_completion === "prompt" && <EditButton />}
+                {row.prompt_or_completion === "prompt" && <RegenerateButton />}
                 <CopyToClipboardButton />
               </>
             )}
