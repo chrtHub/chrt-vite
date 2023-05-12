@@ -40,8 +40,11 @@ export default function ChatRow(props: { row: IMessageRow }) {
 
   //-- chatson.change_branch() --//
   const changeBranchHandler = (increment: number) => {
+    console.log("row.sibling_node_ids: ", row.sibling_node_ids); // DEV
     const node_index = row.sibling_node_ids.indexOf(row.node_id);
+    console.log("node_index: ", node_index); // DEV
     const new_leaf_node_id = row.sibling_node_ids[node_index + increment];
+    console.log("new_leaf_node_id: ", new_leaf_node_id); // DEV
     chatson.change_branch(new_leaf_node_id, CC);
   };
 
@@ -231,34 +234,51 @@ export default function ChatRow(props: { row: IMessageRow }) {
   //-- Version Selector --//
   const VersionSelector = () => {
     return (
-      <div className="my-1 flex flex-row">
-        <button
-          className="flex flex-col justify-end pb-0.5"
-          onClick={() => {
-            changeBranchHandler(-1);
-          }}
-        >
-          <ChevronLeftIcon
-            className="h-4 w-4 rounded-full text-zinc-400 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
-            aria-hidden="true"
-          />
-        </button>
+      <div className="my-1 flex w-full flex-row justify-center">
+        {/*-- If current node is > sibling 1, allow decrement --*/}
+        {row.sibling_node_ids.indexOf(row.node_id) > 0 ? (
+          <button
+            className="flex flex-col justify-end pb-0.5"
+            onClick={() => {
+              changeBranchHandler(-1); //-- Decrement sibling --//
+            }}
+          >
+            <ChevronLeftIcon
+              className="h-4 w-4 rounded-full text-zinc-400 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
+              aria-hidden="true"
+            />
+          </button>
+        ) : (
+          //-- placeholder --//
+          <span className="h-4 w-4" />
+        )}
 
-        <p className="text-sm text-zinc-400">
-          {`1`} / {`2`}
-        </p>
+        {/*-- If multiple siblings, show version numbers --*/}
+        {row.sibling_node_ids.length > 1 && (
+          <p className="text-sm text-zinc-400">
+            {`${row.sibling_node_ids.indexOf(row.node_id) + 1}`} /{" "}
+            {`${row.sibling_node_ids.length}`}
+          </p>
+        )}
 
-        <button
-          className="flex flex-col justify-end pb-0.5"
-          onClick={() => {
-            changeBranchHandler(1);
-          }}
-        >
-          <ChevronRightIcon
-            className="h-4 w-4 rounded-full text-zinc-400 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
-            aria-hidden="true"
-          />
-        </button>
+        {/*-- If current node is < final sibling, allow increment --*/}
+        {row.sibling_node_ids.indexOf(row.node_id) + 1 <
+        row.sibling_node_ids.length ? (
+          <button
+            className="flex flex-col justify-end pb-0.5"
+            onClick={() => {
+              changeBranchHandler(1); //-- Increment sibling --//
+            }}
+          >
+            <ChevronRightIcon
+              className="h-4 w-4 rounded-full text-zinc-400 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
+              aria-hidden="true"
+            />
+          </button>
+        ) : (
+          //-- placeholder --//
+          <span className="h-4 w-4" />
+        )}
       </div>
     );
   };

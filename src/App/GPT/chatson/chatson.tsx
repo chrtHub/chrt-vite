@@ -507,9 +507,9 @@ export function change_branch(
   new_leaf_node_id: string,
   CC: IChatContext
 ): void {
-  console.log(nodeArray); // DEV
+  console.log("--- change branch ---"); // DEV
   const leaf_node = nodeArray.find((node) => node._id === new_leaf_node_id);
-  console.log(leaf_node); // DEV
+  console.log("leaf_node: ", leaf_node); // DEV
   if (leaf_node) {
     const rowArray = nodeArrayToRowArray(nodeArray, leaf_node);
     CC.setRowArray(rowArray);
