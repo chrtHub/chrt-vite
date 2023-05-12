@@ -40,11 +40,8 @@ export default function ChatRow(props: { row: IMessageRow }) {
 
   //-- chatson.change_branch() --//
   const changeBranchHandler = (increment: number) => {
-    console.log("row.sibling_node_ids: ", row.sibling_node_ids); // DEV
     const node_index = row.sibling_node_ids.indexOf(row.node_id);
-    console.log("node_index: ", node_index); // DEV
     const new_leaf_node_id = row.sibling_node_ids[node_index + increment];
-    console.log("new_leaf_node_id: ", new_leaf_node_id); // DEV
     chatson.change_branch(new_leaf_node_id, CC);
   };
 
@@ -85,7 +82,6 @@ export default function ChatRow(props: { row: IMessageRow }) {
   };
   //-- Submit edited prompt, create new branch --//
   const submitEditedPrompt = async () => {
-    console.log("todo - sumbit edited prompt, create new branch");
     const accessToken = await getAccessTokenSilently();
 
     //-- Send prompt as chat message --//

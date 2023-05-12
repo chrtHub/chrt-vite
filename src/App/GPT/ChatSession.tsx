@@ -113,8 +113,6 @@ export default function ChatSession() {
     lambda();
   }, [CC.conversationId]);
 
-  console.log("CC.rowArray: ", CC.rowArray); // DEV
-
   //-- chatson.send_message() --//
   const submitPromptHandler = () => {
     //-- Update state and trigger prompt submission to occur afterwards as a side effect --//

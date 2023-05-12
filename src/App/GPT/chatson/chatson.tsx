@@ -586,8 +586,6 @@ const nodeArrayToRowArray = (
   nodeArray: IMessageNode[],
   leafNode: IMessageNode
 ): IMessageRow[] => {
-  console.log("nodeArray: ", nodeArray); // DEV
-
   //-- Build Node Map --//
   let nodeMap: Record<string, IMessageNode> = {};
   nodeArray.forEach((node) => {
