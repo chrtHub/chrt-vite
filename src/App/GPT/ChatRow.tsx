@@ -74,19 +74,17 @@ export default function ChatRow(props: { row: IMessageRow }) {
     } //-- else "Enter" with shift will just insert a newline --//
   };
   //-- Submit edited prompt, create new branch --//
-  const submitEditedPrompt = () => {
+  const submitEditedPrompt = async () => {
     console.log("todo - sumbit edited prompt, create new branch");
+    const accessToken = await getAccessTokenSilently();
 
-    //-- parentNodeId is parent of current node --//
-    // let parentNodeId: string  = row.parent_node_id; // TODO
-
-    const submitPrompt = async () => {
-      const accessToken = await getAccessTokenSilently();
-
-      //-- Send prompt as chat message --//
-      // await chatson.send_message(accessToken, promptContent, parentNodeId, CC);
-    };
-    submitPrompt();
+    //-- Send prompt as chat message --//
+    await chatson.send_message(
+      accessToken,
+      promptContent,
+      row.parent_node_id,
+      CC
+    );
   };
   //-- When textarea focuses, put cursor after the last char --//
   useEffect(() => {
