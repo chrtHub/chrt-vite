@@ -301,11 +301,12 @@ export async function send_message(
     "Content-Type": "application/json",
   };
 
-  let new_conversation: boolean = Boolean(!CC.conversation); // TESTING
+  let new_conversation: boolean = Boolean(!CC.conversation);
   let new_conversation_id: string | null = null;
   let new_node_id: string | null;
 
-  class CustomFatalError extends Error {} // TODO - build as needed
+  class CustomFatalError extends Error {} // TODO - implement error handling
+
   try {
     fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
       method: "POST",
@@ -316,7 +317,6 @@ export async function send_message(
       async onopen(res) {
         //-- Conversation id --//
         const conversation_id = res.headers.get("CHRT-conversation-id");
-        new_conversation_id = conversation_id; // NEW
         if (!conversation_id) {
           throw new CustomFatalError("missing conversation_id");
         }
@@ -333,6 +333,7 @@ export async function send_message(
           root_node_created_at !== "none"
         ) {
           new_conversation = true;
+          new_conversation_id = conversation_id; // TESTING - moved here instead of below get header
           //-- Build root node --//
           const root_node: IMessageNode = {
             _id: root_node_id,
@@ -499,93 +500,17 @@ export async function send_message(
 }
 
 /**
- * Change branch -
+ * Change branch - rebuilds rowArray by updating the leaf node as a node from among the siblings of the current message
  *
- * @param
+ * @param new_leaf_node_id
  */
 export function change_branch(): void {
-  // Something like this?
-  //-- On 'direct' updates to leaf node - via user selecting new conversation branch --//
-  // const branchChangeHandler = (
-  //   node_id: string,
-  //   sibling_node_ids: string[],
-  //   increment: 1 | -1
-  // ) => {
-  //   // for a prompt row, display prompt's "sibling_node_ids.indexOf(node_id) + 1 / sibling_node_ids.length", i.e. "1 / 3"
-  //   //-- Current node --//
-  //   let node_id_idx: number = sibling_node_ids.indexOf(node_id);
-  //   //-- New version node --//
-  //   let new_version_node_id: string =
-  //     sibling_node_ids[node_id_idx + increment];
-  //   let new_version_node: IMessageNode =
-  //     node_map[new_version_node_id.toString()];
-  //   //-- Find leaf node --//
-  //   let new_leaf_node_id = findLeafNodeId(new_version_node);
-  //   //-- Update leaf node state --//
-  //   // DEV - this state never consumed before updated inside chatson?
-  //   CC.setLeafNodeIdString((prevState) =>
-  //     produce(prevState, (draft) => {
-  //       draft = new_leaf_node_id.toString();
-  //     })
-  //   );
-  //   //-- Call updateRowsArray (not relying on ChatContext state here) --//
-  //   buildRowArray(new_leaf_node_id.toString());
-  // };
-  // function findLeafNodeId(node: IMessageNode): string {
-  //   //-- Leaf node (only searching "1st child history") --//
-  //   if (node.children_node_ids.length === 0) {
-  //     return node._id;
-  //   }
-  //   //-- Not leaf node --//
-  //   else {
-  //     const first_child_node = node_map[node.children_node_ids[0].toString()];
-  //     return findLeafNodeId(first_child_node);
-  //   }
-  // }
-  // const buildRowArray = (newLeafNodeIdString: string) => {
-  //   //-- initialize stuff --//
-  //   let node: IMessageNode;
-  //   let parent_node: IMessageNode;
-  //   let new_rows_array: IMessageRow[] = [];
-  //   //-- Start with new leaf node --//
-  //   node = node_map[newLeafNodeIdString];
-  //   //-- Loop until reaching the root node where parent_node_id is null --//
-  //   while (node.parent_node_id) {
-  //     parent_node = node_map[node.parent_node_id.toString()];
-  //     //-- Sort parent's children by timestamp ascending --//
-  //     let sibling_ids_timestamp_asc: string[] = [
-  //       ...parent_node.children_node_ids.sort(
-  //         (a, b) => a.getTimestamp().getTime() - b.getTimestamp().getTime()
-  //       ),
-  //     ];
-  //     //-- Build completion row, add to new_rows_array --//
-  //     let completion_row: IMessageRow;
-  //     if (node.completion) {
-  //       completion_row = {
-  //         ...node.completion,
-  //         node_id: node._id,
-  //         sibling_node_ids: [], //-- Use prompt_row for this --//
-  //       };
-  //       new_rows_array.push(completion_row);
-  //     }
-  //     //-- Build prompt row, add to new_rows_array --//
-  //     let prompt_row: IMessageRow = {
-  //       ...node.prompt,
-  //       node_id: node._id,
-  //       sibling_node_ids: [...sibling_ids_timestamp_asc],
-  //     };
-  //     new_rows_array.push(prompt_row);
-  //     //-- Update node --//
-  //     node = parent_node;
-  //   }
-  //   //-- Update state --//
-  //   CC.setRowArray((prevRowArray) => {
-  //     new_rows_array = new_rows_array.reverse(); //-- push + reverse --//
-  //     return produce(prevRowArray, (draft) => {
-  //       draft = new_rows_array;
-  //     });
-  //   });
-  // };
+  // receive a new_leaf_node_id
+  // // leaf_node_id determined by the ChatRow component based on the date ascending siblings of the current node and an increment of +1 or -1
+  // use nodeArray to get the IMessageNode based on its id
+  // using that IMessageNode as the new leaf node, build new rowArray by calling nodeArrayToRowArray
+  // let rowArray = nodeArrayToRowArray(message_nodes, leaf_node);
+  // CC.setRowArray(rowArray);
 }
 
 /**
@@ -675,7 +600,6 @@ const nodeArrayToRowArray = (
     };
     newRowArray.push(prompt_row);
     //-- Update node --//
-
     node = parent_node;
   }
   newRowArray = newRowArray.reverse(); //-- push + reverse --//

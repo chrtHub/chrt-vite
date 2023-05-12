@@ -268,8 +268,8 @@ export default function ChatRow(props: { row: IMessageRow }) {
       <div className="lg:hidden">
         <div className="flex flex-row items-center justify-between py-2 pl-2 pr-2">
           <Author mobile={true} />
-          <VersionSelector />
-          <EditButton />
+          {row.prompt_or_completion === "prompt" && <VersionSelector />}
+          {row.prompt_or_completion === "prompt" && <EditButton />}
           <CopyToClipboardButton />
           <Timestamp />
         </div>
@@ -281,7 +281,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
         className="my-3.5 hidden w-full flex-col items-center justify-start lg:flex lg:w-24"
       >
         <Author mobile={false} />
-        <VersionSelector />
+        {row.prompt_or_completion === "prompt" && <VersionSelector />}
       </div>
 
       {/* MESSAGE - always visible */}
@@ -334,7 +334,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
           <div className="flex flex-row justify-center">
             {hover && !editing && (
               <>
-                {row.role === "user" && <EditButton />}
+                {row.prompt_or_completion === "prompt" && <EditButton />}
                 <CopyToClipboardButton />
               </>
             )}
