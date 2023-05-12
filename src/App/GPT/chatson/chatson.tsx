@@ -501,14 +501,19 @@ export async function send_message(
  * Change branch - rebuilds rowArray by updating the leaf node as a node from among the siblings of the current message
  *
  * @param new_leaf_node_id
+ * @param CC
  */
-export function change_branch(): void {
-  // receive a new_leaf_node_id
-  // // leaf_node_id determined by the ChatRow component based on the date ascending siblings of the current node and an increment of +1 or -1
-  // use nodeArray to get the IMessageNode based on its id
-  // using that IMessageNode as the new leaf node, build new rowArray by calling nodeArrayToRowArray
-  // let rowArray = nodeArrayToRowArray(message_nodes, leaf_node);
-  // CC.setRowArray(rowArray);
+export function change_branch(
+  new_leaf_node_id: string,
+  CC: IChatContext
+): void {
+  console.log(nodeArray); // DEV
+  const leaf_node = nodeArray.find((node) => node._id === new_leaf_node_id);
+  console.log(leaf_node); // DEV
+  if (leaf_node) {
+    const rowArray = nodeArrayToRowArray(nodeArray, leaf_node);
+    CC.setRowArray(rowArray);
+  }
 }
 
 /**

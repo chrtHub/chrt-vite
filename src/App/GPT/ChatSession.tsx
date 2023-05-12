@@ -157,12 +157,6 @@ export default function ChatSession() {
     }
   }, [promptReadyToSend]);
 
-  //-- chatson.change_branch() --//
-  // TODO
-
-  //-- chatson.reset_conversation() --//
-  // TODO
-
   //-- ***** ***** ***** ***** end of chatson ***** ***** ***** ***** --//
 
   //== Side Effects ==//

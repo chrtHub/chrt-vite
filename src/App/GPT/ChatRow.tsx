@@ -38,6 +38,13 @@ export default function ChatRow(props: { row: IMessageRow }) {
   const { getAccessTokenSilently, user } = useAuth0();
   const [clipboardValue, copyToClipboard] = useCopyToClipboard();
 
+  //-- chatson.change_branch() --//
+  const changeBranchHandler = (increment: number) => {
+    const node_index = row.sibling_node_ids.indexOf(row.node_id);
+    const new_leaf_node_id = row.sibling_node_ids[node_index + increment];
+    chatson.change_branch(new_leaf_node_id, CC);
+  };
+
   //-- Edit prompt --//
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [textareaOnFocusToggle, setTextareaOnFocusToggle] =
@@ -228,7 +235,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
         <button
           className="flex flex-col justify-end pb-0.5"
           onClick={() => {
-            console.log("todo - change branch");
+            changeBranchHandler(-1);
           }}
         >
           <ChevronLeftIcon
@@ -244,7 +251,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
         <button
           className="flex flex-col justify-end pb-0.5"
           onClick={() => {
-            console.log("todo - change branch");
+            changeBranchHandler(1);
           }}
         >
           <ChevronRightIcon
