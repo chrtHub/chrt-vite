@@ -360,12 +360,12 @@ export default function ChatSession() {
                   CC.completionLoading
                     ? "animate-pulse bg-zinc-300 ring-2 dark:bg-zinc-500"
                     : "dark:bg-zinc-700",
-                  "block w-full resize-none rounded-md border-0 bg-white py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:text-white sm:leading-6"
+                  "block w-full resize-none rounded-sm border-0 bg-white py-3 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:text-white sm:leading-6"
                 )}
               />
 
               {CC.completionLoading ? (
-                <button className="absolute bottom-0 right-0 flex cursor-wait items-center p-1.5 focus:outline-green-600">
+                <button className="absolute bottom-0 right-0 flex cursor-wait items-center px-1.5 py-3 focus:outline-green-600">
                   <CpuChipIcon className="text h-6 w-6 animate-spin text-green-500" />
                 </button>
               ) : (
@@ -375,7 +375,7 @@ export default function ChatSession() {
                   disabled={!promptDraft}
                   className={classNames(
                     !promptDraft ? "cursor-not-allowed" : "cursor-pointer",
-                    "absolute bottom-0 right-0 flex items-center p-1.5 focus:outline-green-600"
+                    "absolute bottom-0 right-0 flex items-center px-1.5 py-3 focus:outline-green-600"
                   )}
                 >
                   <ArrowUpCircleIcon
