@@ -217,7 +217,7 @@ export default function AppLayout({ infoMode }: IProps) {
               leaveFrom="translate-x-0"
               leaveTo="-translate-x-full"
             >
-              <Dialog.Panel className="relative flex w-full max-w-sm flex-1 flex-col bg-zinc-50 pb-4 pt-5 dark:bg-zinc-950">
+              <Dialog.Panel className="flex w-full max-w-sm flex-col justify-start bg-zinc-50 pb-4 pt-5 dark:bg-zinc-950">
                 <Transition.Child
                   as={Fragment}
                   enter="ease-in-out duration-300"
@@ -241,7 +241,8 @@ export default function AppLayout({ infoMode }: IProps) {
                     </button>
                   </div>
                 </Transition.Child>
-                <div className="flex flex-shrink-0 items-center px-4">
+                {/* START OF CHRT LOGO */}
+                <div className="flex px-4">
                   <a
                     href={window.location.origin}
                     className="h-8 w-auto px-2 font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500"
@@ -249,8 +250,11 @@ export default function AppLayout({ infoMode }: IProps) {
                     chrt
                   </a>
                 </div>
-                <div className="mt-5 h-0 flex-1 overflow-y-auto">
-                  <nav className="space-y-1 px-2">
+                {/* END OF CHRT LOGO */}
+
+                {/* START OF NAVIGATION ITEMS */}
+                <div className="mb-2 mt-4 flex flex-col">
+                  <nav className="flex-1 space-y-1 px-2">
                     {navigationItems.map((item) => (
                       <NavLink
                         key={item.name}
@@ -261,8 +265,8 @@ export default function AppLayout({ infoMode }: IProps) {
                         }}
                         className={classNames(
                           item.to === currentNavItem
-                            ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:text-white"
-                            : "hover:text-zinc:800 text-zinc-700 hover:bg-zinc-200 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white",
+                            ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-800 dark:text-white"
+                            : "text-zinc-700 hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-white",
                           "group flex items-center rounded-md px-2 py-2 text-base font-medium"
                         )}
                       >
@@ -280,6 +284,15 @@ export default function AppLayout({ infoMode }: IProps) {
                     ))}
                   </nav>
                 </div>
+                {/* END OF NAVIGATION ITEMS */}
+                {/* START OF SECONDARY ITEMS */}
+                <div
+                  id="secondary-items-list"
+                  className="mx-2 flex-grow overflow-y-auto"
+                >
+                  {pathname.startsWith("/gpt") && <ConversationsList />}
+                </div>
+                {/* END OF SECONDARY ITEMS */}
               </Dialog.Panel>
             </Transition.Child>
             {/* SPACER FOR 'CLOSE' ICON */}
@@ -320,8 +333,8 @@ export default function AppLayout({ infoMode }: IProps) {
                   }}
                   className={classNames(
                     item.to === currentNavItem
-                      ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:text-white"
-                      : "text-zinc-700 hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white",
+                      ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-800 dark:text-white"
+                      : "text-zinc-700 hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-white",
                     "group flex items-center rounded-md px-2 py-1.5 text-sm font-medium"
                   )}
                 >

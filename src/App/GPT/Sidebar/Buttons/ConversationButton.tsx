@@ -22,7 +22,7 @@ export const ConversationButton: React.FC<ConversationButtonProps> = ({
         //-- Focus --//
         "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600",
         //-- Dark --//
-        "dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-600"
+        "dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-600"
       )}
       onClick={onClick}
     >
