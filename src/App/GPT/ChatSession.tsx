@@ -62,29 +62,6 @@ export default function ChatSession() {
   const OS_NAME = useOSName();
 
   //-- ***** ***** ***** ***** start of chatson ***** ***** ***** ***** --//
-  //-- ChatSession calls chatson --> chatson updates CC.rowArray --> ChatSession renders CC.rowArray --//
-
-  // TODO - update these
-  //-- chatson function calls: --//
-  // (1a) chatson.send_message() for first message in a new conversation
-  // // use parentNodeId of null
-  // // // chatsion <<TODO>>
-
-  // (1b) chatson.send_message() to continue conversation on SAME branch
-  // // use parentNodeId of current sibling
-  // // // chatson appends new node to nodeArray and rowArray
-
-  // (1c) chatson.send_message() to continue conversation on NEW branch
-  // // use parentNodeId of current sibling's parent
-  // // // chatson appends new node to nodeArray, pops current sibling from rowArray, appends new node to rowArray. Also, update all siblings' sibling_node_ids array.
-
-  // (2) chatson.change_branch()
-  // // current sibling node id and incrementer or 1 or -1
-  // // // chatson removes current sibling and ancestor nodes from rowArray, appends new sibling, and traverses first-child ancestry, appending each row to rowArray
-
-  // (3) chatson.reset_conversation()
-  // // call reset_conversation() with <<TODO>>
-  // // // chatson <<TODO>>
 
   //-- Get conversations list on mount and if conversationsArray changes, e.g. after delete_conversation --//
   useEffect(() => {
@@ -96,15 +73,22 @@ export default function ChatSession() {
   }, [CC.sortBy]);
 
   // TODO - use param to load conversation
-  let { conversation_id } = useParams(); // TODO, /gpt/:conversation_id
+  let { conversation_id_param } = useParams();
   useEffect(() => {
-    console.log("TODO - use url path param to load conversation");
+    if (conversation_id_param) {
+      CC.setConversationId(conversation_id_param); // does this load conversation?
+      console.log(
+        "TODO - use url path param to load conversation: ",
+        conversation_id_param
+      );
+    }
   }, []);
 
   //-- When conversationID is updated (a) load that conversation, or (b) if null, reset conversation --//
   useEffect(() => {
     const lambda = async () => {
       if (CC.conversationId) {
+        console.log("CC.conversationID updated - loading: ", CC.conversationId); // DEV
         const accessToken = await getAccessTokenSilently();
         chatson.get_conversation_and_messages(accessToken, CC); //-- chatson.get_conversation_and_messages --//
       } else {

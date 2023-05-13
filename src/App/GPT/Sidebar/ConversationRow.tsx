@@ -246,7 +246,7 @@ export const ConversationRow = (
                     {/* Delete Conversation Button */}
                     <div
                       className={classNames(
-                        "-mt-1 ml-1 flex cursor-pointer flex-row justify-center rounded-full p-0.5",
+                        "-mt-0.5 ml-1 flex cursor-pointer flex-row justify-center rounded-full p-0.5",
                         "text-zinc-500 hover:bg-red-600 hover:bg-opacity-20 hover:text-red-600",
                         " dark:text-zinc-500 dark:hover:bg-red-600 dark:hover:bg-opacity-20 dark:hover:text-red-600"
                       )}
@@ -274,19 +274,16 @@ export const ConversationRow = (
                 <>
                   <div
                     className={classNames(
-                      "-mt-1 ml-1 flex flex-row justify-center rounded-full p-0.5",
+                      "-mt-1 ml-1 flex cursor-pointer flex-row justify-center rounded-full p-0.5",
                       "text-zinc-500 hover:text-blue-500",
                       "dark:text-zinc-500 dark:hover:text-blue-500"
                     )}
+                    onClick={(event) => {
+                      setActiveDeleteRowId(null);
+                      event.stopPropagation();
+                    }}
                   >
-                    <button
-                      onClick={(event) => {
-                        setActiveDeleteRowId(null);
-                        event.stopPropagation();
-                      }}
-                    >
-                      <XCircleIcon className="h-5 w-5" />
-                    </button>
+                    <XCircleIcon className="h-5 w-5" />
                   </div>
                   <div
                     className={classNames(
