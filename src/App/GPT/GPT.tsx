@@ -1,5 +1,6 @@
 //-- react, react-router-dom, recoil, Auth0 --//
 import { useAuth0 } from "@auth0/auth0-react";
+import { useParams } from "react-router-dom";
 
 //-- TSX Components --//
 import ChatSession from "./ChatSession";
@@ -18,6 +19,7 @@ import ChatSession from "./ChatSession";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function GPT() {
   //-- React State --//
+  const { conversation_id } = useParams();
 
   //-- Recoil State --//
 
@@ -32,6 +34,8 @@ export default function GPT() {
   //-- Side Effects --//
 
   //-- Click Handlers --//
+
+  console.log(conversation_id); // DEV
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (

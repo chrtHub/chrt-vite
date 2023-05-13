@@ -246,27 +246,25 @@ export const ConversationRow = (
                     {/* Delete Conversation Button */}
                     <div
                       className={classNames(
-                        "-mt-1 ml-1 flex flex-row justify-center rounded-full p-0.5",
+                        "-mt-1 ml-1 flex cursor-pointer flex-row justify-center rounded-full p-0.5",
                         "text-zinc-500 hover:bg-red-600 hover:bg-opacity-20 hover:text-red-600",
                         " dark:text-zinc-500 dark:hover:bg-red-600 dark:hover:bg-opacity-20 dark:hover:text-red-600"
                       )}
+                      onClick={deleteConversationHandler}
                     >
-                      <button onClick={deleteConversationHandler}>
-                        <TrashIcon className="h-4 w-4" />
-                      </button>
+                      <TrashIcon className="h-4 w-4" />
                     </div>
 
                     {/* Edit Title Button */}
                     <div
                       className={classNames(
-                        "-mt-1 ml-1 flex flex-row justify-center rounded-full p-0.5",
+                        "-mt-1 ml-1 flex cursor-pointer flex-row justify-center rounded-full p-0.5",
                         "text-zinc-500 hover:bg-green-600 hover:bg-opacity-20 hover:text-green-600",
                         " dark:text-zinc-500 dark:hover:bg-green-600 dark:hover:bg-opacity-20 dark:hover:text-green-600"
                       )}
+                      onClick={editTitleHandler}
                     >
-                      <button onClick={editTitleHandler}>
-                        <PencilSquareIcon className="h-5 w-5" />
-                      </button>
+                      <PencilSquareIcon className="h-5 w-5" />
                     </div>
                   </>
                 )}
@@ -292,14 +290,13 @@ export const ConversationRow = (
                   </div>
                   <div
                     className={classNames(
-                      "-mt-1 flex flex-row justify-center rounded-full p-0.5",
+                      "-mt-1 flex cursor-pointer flex-row justify-center rounded-full p-0.5",
                       "text-zinc-500 hover:text-blue-500",
                       "dark:text-zinc-500 dark:hover:text-blue-500"
                     )}
+                    onClick={confirmDeleteHandler}
                   >
-                    <button onClick={confirmDeleteHandler}>
-                      <CheckCircleIcon className="h-5 w-5" />
-                    </button>
+                    <CheckCircleIcon className="h-5 w-5" />
                   </div>
                 </>
               )}
@@ -308,30 +305,26 @@ export const ConversationRow = (
                 <>
                   <div
                     className={classNames(
-                      "-mt-0.5 ml-1 flex flex-row justify-center rounded-full p-0.5",
+                      "-mt-0.5 ml-1 flex cursor-pointer flex-row justify-center rounded-full p-0.5",
                       "text-zinc-500 hover:text-blue-500",
                       "dark:text-zinc-500 dark:hover:text-blue-500"
                     )}
+                    onClick={(event) => {
+                      setActiveEditRowId(null);
+                      event.stopPropagation();
+                    }}
                   >
-                    <button
-                      onClick={(event) => {
-                        setActiveEditRowId(null);
-                        event.stopPropagation();
-                      }}
-                    >
-                      <XCircleIcon className="h-5 w-5" />
-                    </button>
+                    <XCircleIcon className="h-5 w-5" />
                   </div>
                   <div
                     className={classNames(
-                      "-mt-0.5 flex flex-row justify-center rounded-full p-0.5",
+                      "-mt-0.5 flex cursor-pointer flex-row justify-center rounded-full p-0.5",
                       "text-zinc-500 hover:text-blue-500",
                       "dark:text-zinc-500 dark:hover:text-blue-500"
                     )}
+                    onClick={confirmEditHandler}
                   >
-                    <button onClick={confirmEditHandler}>
-                      <CheckCircleIcon className="h-5 w-5" />
-                    </button>
+                    <CheckCircleIcon className="h-5 w-5" />
                   </div>
                 </>
               )}
