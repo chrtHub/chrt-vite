@@ -156,6 +156,26 @@ export default function ChatSession() {
     }
   }, [promptReadyToSend]);
 
+  //-- Submit edited prompt, create new branch --//
+  const regenerateResponse = async () => {
+    const accessToken = await getAccessTokenSilently();
+    if (CC.rowArray) {
+      let last_prompt_row = [...CC.rowArray]
+        .reverse()
+        .find((row) => row.prompt_or_completion === "prompt");
+
+      if (last_prompt_row) {
+        //-- Send prompt as chat message --//
+        await chatson.send_message(
+          accessToken,
+          last_prompt_row.content,
+          last_prompt_row.parent_node_id,
+          CC
+        );
+      }
+    }
+  };
+
   //-- ***** ***** ***** ***** end of chatson ***** ***** ***** ***** --//
 
   //== Side Effects ==//
@@ -317,10 +337,11 @@ export default function ChatSession() {
                     </button>
                   </>
                 )}
-                {!CC.completionLoading && (
+                {!CC.completionLoading && CC.rowArray && (
                   <button
                     onClick={() => {
                       console.log("TODO - regenerate response");
+                      regenerateResponse();
                     }}
                     className="flex flex-row rounded-md border-2 border-zinc-600 px-2.5 py-1 text-sm font-semibold text-zinc-600 shadow-sm hover:border-zinc-400 hover:bg-zinc-400 hover:text-zinc-50 hover:shadow-md dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-zinc-600 dark:hover:bg-zinc-600"
                   >
