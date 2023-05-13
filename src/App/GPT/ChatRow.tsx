@@ -49,7 +49,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
   //-- Regenerate Response --//
   const RegenerateButton = () => {
     return (
-      <div className="dark:hover:bg-text-200 flex flex-row justify-center rounded-full p-1 text-zinc-600 hover:bg-zinc-300 hover:text-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700">
+      <div className="flex flex-row justify-center rounded-full p-1 text-zinc-600 hover:bg-zinc-300 hover:text-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700">
         <button onClick={regenerateResponse}>
           <ArrowPathIcon className="h-5 w-5" />
         </button>
@@ -264,7 +264,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
             }}
           >
             <ChevronLeftIcon
-              className="h-4 w-4 rounded-full text-zinc-400 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
+              className="h-4 w-4 rounded-full text-zinc-400 hover:bg-zinc-300 hover:text-zinc-700 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
               aria-hidden="true"
             />
           </button>
@@ -291,7 +291,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
             }}
           >
             <ChevronRightIcon
-              className="h-4 w-4 rounded-full text-zinc-400 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
+              className="h-4 w-4 rounded-full text-zinc-400 hover:bg-zinc-300 hover:text-zinc-700 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
               aria-hidden="true"
             />
           </button>

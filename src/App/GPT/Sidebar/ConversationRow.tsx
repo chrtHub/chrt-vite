@@ -244,58 +244,95 @@ export const ConversationRow = (
                 !retitleLoading && (
                   <>
                     {/* Delete Conversation Button */}
-                    <TrashIcon
-                      onClick={deleteConversationHandler}
+                    <div
                       className={classNames(
-                        "ml-1 h-5 w-5",
-                        CC.conversationId === row._id
-                          ? "text-zinc-500 hover:text-red-600 dark:text-zinc-400 hover:dark:text-red-600"
-                          : "text-zinc-500 hover:text-red-600 dark:text-zinc-500 hover:dark:text-red-600"
+                        "-mt-1 ml-1 flex flex-row justify-center rounded-full p-0.5",
+                        "text-zinc-500 hover:bg-red-600 hover:bg-opacity-20 hover:text-red-600",
+                        " dark:text-zinc-500 dark:hover:bg-red-600 dark:hover:bg-opacity-20 dark:hover:text-red-600"
                       )}
-                    />
+                    >
+                      <button onClick={deleteConversationHandler}>
+                        <TrashIcon className="h-4 w-4" />
+                      </button>
+                    </div>
 
                     {/* Edit Title Button */}
-                    <PencilSquareIcon
-                      onClick={editTitleHandler}
+                    <div
                       className={classNames(
-                        "mx-1 h-5 w-5",
-                        CC.conversationId === row._id
-                          ? "text-zinc-500 hover:text-green-600 dark:text-zinc-400 hover:dark:text-green-600"
-                          : "text-zinc-500 hover:text-green-600 dark:text-zinc-500 hover:dark:text-green-600"
+                        "-mt-1 ml-1 flex flex-row justify-center rounded-full p-0.5",
+                        "text-zinc-500 hover:bg-green-600 hover:bg-opacity-20 hover:text-green-600",
+                        " dark:text-zinc-500 dark:hover:bg-green-600 dark:hover:bg-opacity-20 dark:hover:text-green-600"
                       )}
-                    />
+                    >
+                      <button onClick={editTitleHandler}>
+                        <PencilSquareIcon className="h-5 w-5" />
+                      </button>
+                    </div>
                   </>
                 )}
+
               {/* Confirm / Cancel Delete */}
               {activeDeleteRowId === row._id && !retitleLoading && (
                 <>
-                  <XCircleIcon
-                    onClick={(event) => {
-                      setActiveDeleteRowId(null);
-                      event.stopPropagation();
-                    }}
-                    className="ml-1 h-5 w-5 cursor-pointer rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
-                  />
-                  <CheckCircleIcon
-                    onClick={confirmDeleteHandler}
-                    className="mx-1 h-5 w-5 cursor-pointer rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
-                  />
+                  <div
+                    className={classNames(
+                      "-mt-1 ml-1 flex flex-row justify-center rounded-full p-0.5",
+                      "text-zinc-500 hover:text-blue-500",
+                      "dark:text-zinc-500 dark:hover:text-blue-500"
+                    )}
+                  >
+                    <button
+                      onClick={(event) => {
+                        setActiveDeleteRowId(null);
+                        event.stopPropagation();
+                      }}
+                    >
+                      <XCircleIcon className="h-5 w-5" />
+                    </button>
+                  </div>
+                  <div
+                    className={classNames(
+                      "-mt-1 flex flex-row justify-center rounded-full p-0.5",
+                      "text-zinc-500 hover:text-blue-500",
+                      "dark:text-zinc-500 dark:hover:text-blue-500"
+                    )}
+                  >
+                    <button onClick={confirmDeleteHandler}>
+                      <CheckCircleIcon className="h-5 w-5" />
+                    </button>
+                  </div>
                 </>
               )}
               {/* Confirm / Cancel Edit */}
               {activeEditRowId === row._id && !retitleLoading && (
                 <>
-                  <XCircleIcon
-                    onClick={(event) => {
-                      setActiveEditRowId(null);
-                      event.stopPropagation();
-                    }}
-                    className="ml-1 h-5 w-5 cursor-pointer rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
-                  />
-                  <CheckCircleIcon
-                    onClick={confirmEditHandler}
-                    className="mx-1 h-5 w-5 cursor-pointer rounded-sm text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
-                  />
+                  <div
+                    className={classNames(
+                      "-mt-0.5 ml-1 flex flex-row justify-center rounded-full p-0.5",
+                      "text-zinc-500 hover:text-blue-500",
+                      "dark:text-zinc-500 dark:hover:text-blue-500"
+                    )}
+                  >
+                    <button
+                      onClick={(event) => {
+                        setActiveEditRowId(null);
+                        event.stopPropagation();
+                      }}
+                    >
+                      <XCircleIcon className="h-5 w-5" />
+                    </button>
+                  </div>
+                  <div
+                    className={classNames(
+                      "-mt-0.5 flex flex-row justify-center rounded-full p-0.5",
+                      "text-zinc-500 hover:text-blue-500",
+                      "dark:text-zinc-500 dark:hover:text-blue-500"
+                    )}
+                  >
+                    <button onClick={confirmEditHandler}>
+                      <CheckCircleIcon className="h-5 w-5" />
+                    </button>
+                  </div>
                 </>
               )}
             </div>
