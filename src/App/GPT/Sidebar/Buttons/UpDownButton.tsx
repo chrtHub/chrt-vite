@@ -22,7 +22,7 @@ export const UpDownButton: React.FC<StyledButtonProps> = ({
         //-- Hover --//
         frozen
           ? "cursor-not-allowed border-zinc-300 text-zinc-300 dark:text-zinc-600"
-          : "border-zinc-600 text-zinc-600 hover:border-green-600 hover:bg-green-600 hover:text-white dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-green-700 dark:hover:bg-green-700",
+          : "border-zinc-600 text-zinc-600 hover:border-zinc-400 hover:bg-zinc-400 hover:text-zinc-50 hover:shadow-md dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-zinc-600 dark:hover:bg-zinc-600",
         //-- Focus --//
         "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
       )}
