@@ -1,4 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
+import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
 import ChatSession from "./ChatSession";
@@ -21,6 +22,10 @@ export default function GPT() {
   //-- Recoil State --//
 
   //-- Auth --//
+  // TESTING - want to redirect to sign in if token is expired
+  const { getAccessTokenSilently } = useAuth0(); // NEW
+  let accessToken = getAccessTokenSilently(); // NEW
+  //
 
   //-- Other [] --//
 
@@ -31,20 +36,9 @@ export default function GPT() {
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div id="gpt-grid-div" className="grid h-full grid-cols-12 gap-2">
-      <div
-        id="gpt-chat-current"
-        // DEV - overflow-y-auto
-        className="col-span-12 h-full"
-      >
+      <div id="gpt-chat-current" className="col-span-12 h-full">
         <ChatSession />
       </div>
-
-      {/* <div
-          id="gpt-chat-history"
-          className="col-span-3 h-full overflow-y-auto"
-        >
-          <ChatHistory />
-        </div> */}
     </div>
   );
 }

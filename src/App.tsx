@@ -69,7 +69,7 @@ export default function App({}: IAppProps) {
 
   //-- ***** ***** ***** Authenticated Users ***** ***** ***** --//
   //-- Check for authenticated user --//
-  const { isLoading, isAuthenticated, user } = useAuth0();
+  const { isLoading, isAuthenticated } = useAuth0();
   let auth0Stuff = false;
 
   //-- Check for desktop of mobile --//
