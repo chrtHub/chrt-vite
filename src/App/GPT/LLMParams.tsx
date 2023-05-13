@@ -35,7 +35,7 @@ export default function LLMParams() {
   return (
     <Popover as="div" className="relative inline-block text-left">
       <div>
-        <Popover.Button className="mx-2 flex items-center rounded-full align-middle text-zinc-600 hover:text-zinc-700 focus:outline-none dark:text-zinc-400 dark:hover:text-zinc-200">
+        <Popover.Button className="flex items-center rounded-full align-middle text-zinc-600 hover:text-zinc-700 focus:outline-none dark:text-zinc-400 dark:hover:text-zinc-200">
           <span className="sr-only">LLM params settings</span>
           <AdjustmentsHorizontalIcon className="h-6 w-6" aria-hidden="true" />
         </Popover.Button>

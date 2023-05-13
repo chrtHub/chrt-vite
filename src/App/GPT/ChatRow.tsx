@@ -13,8 +13,8 @@ import TextareaAutosize from "react-textarea-autosize";
 
 //== Icons ==//
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import {
-  CheckCircleIcon,
   ClipboardDocumentIcon,
   CpuChipIcon,
   PencilSquareIcon,
@@ -359,7 +359,6 @@ export default function ChatRow(props: { row: IMessageRow }) {
               maxRows={42} //-- arbitrary number --//
               onChange={(event) => setPromptContent(event.target.value)}
               onKeyDown={keyDownHandler}
-              // onBlur={() => setEditing(false)}
               className={classNames(
                 "mb-2 mt-5 block w-full resize-none rounded-md border-0 bg-white px-0 py-0 text-zinc-900 ring-2 ring-green-600 focus:ring-2 focus:ring-green-600 dark:bg-zinc-700 dark:text-zinc-100"
               )}
@@ -399,19 +398,25 @@ export default function ChatRow(props: { row: IMessageRow }) {
             )}
             {editing && (
               <>
-                <XCircleIcon
-                  onClick={() => {
-                    setEditing(false);
-                  }}
-                  className="ml-1 h-6 w-6 cursor-pointer rounded-full text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
-                />
-                <CheckCircleIcon
-                  onClick={() => {
-                    submitEditedPrompt();
-                    setEditing(false);
-                  }}
-                  className="mx-1 h-6 w-6 cursor-pointer rounded-full text-indigo-500 hover:text-indigo-700 dark:text-indigo-500 dark:hover:text-indigo-400"
-                />
+                <div className="flex items-center rounded-full p-1 text-zinc-500 hover:bg-blue-500 hover:bg-opacity-20 hover:text-blue-500 dark:text-zinc-500 dark:hover:text-blue-500">
+                  <button
+                    onClick={() => {
+                      setEditing(false);
+                    }}
+                  >
+                    <XCircleIcon className="h-5 w-5" />
+                  </button>
+                </div>
+                <div className="flex items-center rounded-full p-1 text-zinc-500 hover:bg-blue-500 hover:bg-opacity-20 hover:text-blue-500 dark:text-zinc-500 dark:hover:text-blue-500">
+                  <button
+                    onClick={() => {
+                      submitEditedPrompt();
+                      setEditing(false);
+                    }}
+                  >
+                    <CheckCircleIcon className="h-5 w-5" />
+                  </button>
+                </div>
               </>
             )}
           </div>

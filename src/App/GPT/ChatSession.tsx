@@ -18,6 +18,7 @@ import TextareaAutosize from "react-textarea-autosize";
 //== Icons ==//
 import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import {
+  ArrowPathIcon,
   ArrowUpRightIcon,
   ChevronDoubleDownIcon,
   CpuChipIcon,
@@ -272,53 +273,65 @@ export default function ChatSession() {
         </div>
 
         {/* CONTROL BAR */}
-        <div className="flex justify-center">
+        <div className="flex flex-row justify-center">
           <div
             id="chat-session-control-bar"
             className="flex w-full max-w-prose flex-row"
           >
-            {/*-- Start of LHS --*/}
-            <div className="flex w-full items-center justify-start">
+            <div
+              id="control-bar-LHS"
+              className="ml-2 flex w-0 flex-shrink-0 flex-grow flex-row items-center justify-start gap-3"
+            >
               {/* Conversation stats */}
-              {/* TODO */}
               <ConversationStats rowArrayLength={CC.rowArray?.length || 0} />
             </div>
-            {/*-- End of LHS --*/}
 
-            {/*-- Start of Center --*/}
-            <div className="flex w-full items-center justify-center">
+            <div
+              id="control-bar-CENTER"
+              className="flex w-0 flex-shrink-0 flex-grow flex-row items-center justify-center gap-2.5"
+            >
               {/* Select LLM Model */}
               <ModelSelector />
-
               {/* LLM param settings */}
               <LLMParams />
             </div>
-            {/*-- End of Center --*/}
 
-            {/*-- Start of RHS --*/}
-            <div className="flex w-full justify-end">
-              {/* Stop Response Generation */}
-              {/* DEV - always 'false' for now, when streaming in use, add logic here to allow user to stop response generation */}
-              {/* {false && CC.completionLoading && ( */}
-              {false && (
-                <>
+            <div
+              id="control-bar-RHS"
+              className="mr-2 flex w-0 flex-shrink-0 flex-grow flex-row items-center justify-end gap-3"
+            >
+              {/* Regnerate and Stop Generation Buttons */}
+              <div className="flex flex-row justify-center">
+                {/* Stop Response Generation */}
+                {/* DEV - always 'false' for now, when streaming in use, add logic here to allow user to stop response generation */}
+                {CC.completionLoading && (
+                  <>
+                    <button
+                      onClick={() => {
+                        console.log("TODO - stop generating response");
+                      }}
+                      className="flex flex-row rounded-md border-2 border-zinc-600 px-2.5 py-1 text-sm font-semibold text-zinc-600 shadow-sm hover:border-zinc-400 hover:bg-zinc-400 hover:text-zinc-50 hover:shadow-md dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-zinc-600 dark:hover:bg-zinc-600"
+                    >
+                      <StopIcon className="mr-2 h-5 w-5" />
+                      <p>Stop</p>
+                    </button>
+                  </>
+                )}
+                {!CC.completionLoading && (
                   <button
-                    onClick={() => console.log("stop button clicked")} // TODO - add logic
-                    type="button"
-                    className="mr-2.5 inline-flex items-center gap-x-1.5 rounded-md bg-zinc-600 px-2.5 py-1.5 font-semibold text-white shadow-sm hover:bg-zinc-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
+                    onClick={() => {
+                      console.log("TODO - regenerate response");
+                    }}
+                    className="flex flex-row rounded-md border-2 border-zinc-600 px-2.5 py-1 text-sm font-semibold text-zinc-600 shadow-sm hover:border-zinc-400 hover:bg-zinc-400 hover:text-zinc-50 hover:shadow-md dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-zinc-600 dark:hover:bg-zinc-600"
                   >
-                    <StopIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-                    <p className="text-sm">Stop</p>
+                    <ArrowPathIcon className="mr-2 h-5 w-5" />
+                    <p>Regenerate</p>
                   </button>
-                </>
-              )}
+                )}
+              </div>
 
               {/* Scroll to Bottom */}
-              <button
-                className="pr-1.5"
-                disabled={!showButton}
-                onClick={scrollToBottomHandler}
-              >
+              <button disabled={!showButton} onClick={scrollToBottomHandler}>
                 <ChevronDoubleDownIcon
                   className={classNames(
                     showButton
@@ -329,7 +342,6 @@ export default function ChatSession() {
                 />
               </button>
             </div>
-            {/*-- End of RHS --*/}
           </div>
         </div>
 
