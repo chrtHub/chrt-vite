@@ -331,8 +331,36 @@ export default function ChatRow(props: { row: IMessageRow }) {
           </div>
           <div className="flex flex-grow flex-row items-center justify-end">
             {row.prompt_or_completion === "prompt" && <EditButton />}
-            {row.prompt_or_completion === "prompt" && <RegenerateButton />}
-            <CopyToClipboardButton />
+            {/* Cancel or Confirm Edit buttons */}
+            {editing && (
+              <div className="flex flex-row">
+                <div className="ml-1 flex items-center rounded-full text-blue-500 dark:text-blue-500">
+                  <button
+                    onClick={() => {
+                      setEditing(false);
+                    }}
+                  >
+                    <XCircleIcon className="h-6 w-6" />
+                  </button>
+                </div>
+                <div className="mx-1 flex items-center rounded-full text-blue-500 dark:text-blue-500">
+                  <button
+                    onClick={() => {
+                      submitEditedPrompt();
+                      setEditing(false);
+                    }}
+                  >
+                    <CheckCircleIcon className="h-6 w-6" />
+                  </button>
+                </div>
+              </div>
+            )}
+            {!editing && (
+              <>
+                {row.prompt_or_completion === "prompt" && <RegenerateButton />}
+                <CopyToClipboardButton />
+              </>
+            )}
             <div className="w-16">
               <Timestamp />
             </div>
@@ -388,7 +416,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
         </article>
       </div>
 
-      {/* MessageData - visible for 'lg' and larger */}
+      {/* Timestamp, Edit, Regenerate, Copy - visible for 'lg' and larger */}
       <div
         id="chat-MessageData-content-lg"
         className="mt-5 hidden w-full flex-col pr-2 lg:flex lg:w-24"
