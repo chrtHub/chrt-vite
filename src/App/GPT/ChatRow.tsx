@@ -395,7 +395,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
               onChange={(event) => setPromptContent(event.target.value)}
               onKeyDown={keyDownHandler}
               className={classNames(
-                "mb-2 mt-5 block w-full resize-none rounded-md border-0 bg-white px-0 py-0 text-zinc-900 ring-2 ring-green-600 focus:ring-2 focus:ring-green-600 dark:bg-zinc-700 dark:text-zinc-100"
+                "mb-2.5 mt-0.5 block w-full resize-none rounded-md border-0 bg-white px-0 py-0 text-zinc-900 ring-2 ring-green-600 focus:ring-2 focus:ring-green-600 dark:bg-zinc-700 dark:text-zinc-100 lg:mb-0 lg:mt-6"
               )}
             />
           ) : (
