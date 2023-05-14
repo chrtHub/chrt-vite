@@ -406,6 +406,7 @@ export default function ChatSession() {
             </div>
           </div>
           <div className="mb-0.5 lg:mb-1">
+            {/* Smaller than large screens */}
             <p className="flex-row justify-center text-center font-sans text-xs italic text-zinc-500 dark:text-zinc-400 lg:hidden">
               Due to the&nbsp;
               <span className="inline-block">
@@ -417,10 +418,10 @@ export default function ChatSession() {
                   nature of LLMs
                 </a>
               </span>
-              , ChrtGPT may produce false information.
-              <br />
-              Use with human discretion.
+              , ChrtGPT may produce false information. Use with human
+              discretion.
             </p>
+            {/* Large screens and up */}
             <p className="hidden flex-row justify-center text-center font-sans text-xs italic text-zinc-500 dark:text-zinc-400 lg:flex">
               Due to the&nbsp;
               <span className="inline-block">
