@@ -1,6 +1,7 @@
 //-- react, react-router-dom, recoil, Auth0 --//
 import { useState, useEffect, useCallback, Fragment, useRef } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from "react-router-dom";
 
 //-- TSX Components --//
 import * as chatson from "../chatson/chatson";
@@ -45,7 +46,8 @@ export default function ConversationsList() {
   const [atBottom, setAtBottom] = useState<boolean>(false);
   const [atTop, setAtTop] = useState<boolean>(true);
 
-  //-- Auth --//
+  //-- Auth, react-router-dom --//
+  const navigate = useNavigate();
   const { getAccessTokenSilently } = useAuth0();
 
   //-- Virutoso --//
@@ -110,7 +112,7 @@ export default function ConversationsList() {
         {/* 'New Conversation' Button */}
         <ConversationButton
           onClick={() => {
-            chatson.reset_conversation(CC);
+            chatson.reset_conversation(CC, navigate);
           }}
         >
           <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
@@ -180,7 +182,8 @@ export default function ConversationsList() {
                 newTitleDraft,
                 setNewTitleDraft,
                 retitleLoading,
-                setRetitleLoading
+                setRetitleLoading,
+                navigate
               )
             } //-- Don't call hooks within this callback --//
             atBottomStateChange={(isAtBottom) => {

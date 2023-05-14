@@ -1,6 +1,6 @@
 //== react, react-router-dom, recoil, Auth0 ==//
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useChatContext } from "../../Context/ChatContext";
 
@@ -19,7 +19,6 @@ import TextareaAutosize from "react-textarea-autosize";
 import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import {
   ArrowPathIcon,
-  ArrowUpRightIcon,
   ChevronDoubleDownIcon,
   CpuChipIcon,
   StopIcon,
@@ -34,12 +33,11 @@ import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import ConversationStats from "./ConversationStats";
 
-let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
-
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
   //== React State (+ Context, Refs) ==//
   let CC = useChatContext();
+  let navigate = useNavigate();
 
   //-- Prompt stuff --//
   const [promptDraft, setPromptDraft] = useState<string>("");
@@ -63,7 +61,7 @@ export default function ChatSession() {
 
   //-- ***** ***** ***** ***** start of chatson ***** ***** ***** ***** --//
 
-  //-- Get conversations list on mount and if conversationsArray changes, e.g. after delete_conversation --//
+  //-- Get conversations list on mount and if sorBy changes --//
   useEffect(() => {
     const getConversationsListHandler = async () => {
       let accessToken = await getAccessTokenSilently();
@@ -72,31 +70,29 @@ export default function ChatSession() {
     getConversationsListHandler();
   }, [CC.sortBy]);
 
-  // TODO - use param to load conversation
-  let { conversation_id_param } = useParams();
-  useEffect(() => {
-    if (conversation_id_param) {
-      CC.setConversationId(conversation_id_param); // does this load conversation?
-      console.log(
-        "TODO - use url path param to load conversation: ",
-        conversation_id_param
-      );
-    }
-  }, []);
-
-  //-- When conversationID is updated (a) load that conversation, or (b) if null, reset conversation --//
+  //-- When conversation_id is updated, load that conversation --//
+  let { entity_type, conversation_id } = useParams();
   useEffect(() => {
     const lambda = async () => {
-      if (CC.conversationId) {
-        console.log("CC.conversationID updated - loading: ", CC.conversationId); // DEV
+      if (entity_type === "c" && conversation_id) {
+        CC.setConversationId(conversation_id);
         const accessToken = await getAccessTokenSilently();
-        chatson.get_conversation_and_messages(accessToken, CC); //-- chatson.get_conversation_and_messages --//
+        chatson.get_conversation_and_messages(accessToken, conversation_id, CC);
       } else {
-        chatson.reset_conversation(CC); //-- chatson.reset_conversation --//
+        navigate("/gpt");
       }
+      // else if (CC.conversationId) {
+      //   const accessToken = await getAccessTokenSilently();
+      //   chatson.get_conversation_and_messages(
+      //     accessToken,
+      //     CC.conversationId,
+      //     CC
+      //   );
+      // }
     };
     lambda();
-  }, [CC.conversationId]);
+  }, [conversation_id]);
+  // }, [CC.conversationId, conversation_id]);
 
   //-- chatson.send_message() --//
   const submitPromptHandler = () => {
@@ -321,18 +317,19 @@ export default function ChatSession() {
                     </button>
                   </>
                 )}
-                {!CC.completionLoading && CC.rowArray && (
-                  <button
-                    onClick={() => {
-                      console.log("TODO - regenerate response");
-                      regenerateResponse();
-                    }}
-                    className="flex flex-row rounded-md border-2 border-zinc-600 px-2.5 py-1 text-sm font-semibold text-zinc-600 shadow-sm hover:border-zinc-400 hover:bg-zinc-400 hover:text-zinc-50 hover:shadow-md dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-zinc-600 dark:hover:bg-zinc-600"
-                  >
-                    <ArrowPathIcon className="mr-2 h-5 w-5" />
-                    <p>Regenerate</p>
-                  </button>
-                )}
+                {!CC.completionLoading &&
+                  CC.rowArray &&
+                  CC.rowArray.length > 0 && (
+                    <button
+                      onClick={() => {
+                        regenerateResponse();
+                      }}
+                      className="flex flex-row rounded-md border-2 border-zinc-600 px-2.5 py-1 text-sm font-semibold text-zinc-600 shadow-sm hover:border-zinc-400 hover:bg-zinc-400 hover:text-zinc-50 hover:shadow-md dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-zinc-600 dark:hover:bg-zinc-600"
+                    >
+                      <ArrowPathIcon className="mr-2 h-5 w-5" />
+                      <p>Regenerate</p>
+                    </button>
+                  )}
               </div>
 
               {/* Scroll to Bottom */}

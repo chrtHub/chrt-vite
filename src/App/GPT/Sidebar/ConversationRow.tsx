@@ -1,5 +1,5 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { RefObject } from "react";
+import { RefObject, SetStateAction } from "react";
 
 //-- TSX Components --//
 import * as chatson from "../chatson/chatson";
@@ -20,12 +20,14 @@ import { format, isToday, isYesterday } from "date-fns";
 
 //-- Utility Functions --//
 import classNames from "../../../Util/classNames";
+import is420 from "../../../Util/is420";
 
 //-- Data Objects, Environment Variables --//
+
+//-- Types --//
 import { IConversation } from "../chatson/chatson_types";
 import { IChatContext } from "../../../Context/ChatContext";
-import { SetStateAction } from "react";
-import is420 from "../../../Util/is420";
+import { NavigateFunction } from "react-router-dom";
 
 //-- Conversation Rows with Sticky Header Logic --//
 export const ConversationRow = (
@@ -44,7 +46,8 @@ export const ConversationRow = (
   newTitleDraft: string,
   setNewTitleDraft: React.Dispatch<SetStateAction<string>>,
   retitleLoading: boolean,
-  setRetitleLoading: React.Dispatch<SetStateAction<boolean>>
+  setRetitleLoading: React.Dispatch<SetStateAction<boolean>>,
+  navigate: NavigateFunction
 ) => {
   //-- Compute sticky header text --//
   let sortByDate = new Date(row[CC.sortBy]);
@@ -78,7 +81,8 @@ export const ConversationRow = (
 
   //-- Set conversationId --//
   const setConversationIdHandler = async (row: IConversation) => {
-    CC.setConversationId(row._id);
+    navigate(`/gpt/c/${row._id}`); // NEW
+    // CC.setConversationId(row._id);
   };
 
   //-- Hover handlers --//
@@ -98,7 +102,12 @@ export const ConversationRow = (
   const confirmDeleteHandler = async (event: React.MouseEvent) => {
     event.stopPropagation();
     let accessToken = await getAccessTokenSilently();
-    chatson.delete_conversation_and_messages(accessToken, row._id, CC);
+    chatson.delete_conversation_and_messages(
+      accessToken,
+      row._id,
+      CC,
+      navigate
+    );
     setActiveDeleteRowId(null);
   };
 

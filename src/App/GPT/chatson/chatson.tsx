@@ -25,6 +25,7 @@ import {
 } from "./chatson_types";
 import { IChatContext } from "../../../Context/ChatContext";
 import { ObjectId } from "bson";
+import { NavigateFunction } from "react-router-dom";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- Chatson stuff --//
@@ -102,8 +103,11 @@ export async function list_conversations(
  * (1) reset_conversation
  * TODO
  */
-export function reset_conversation(CC: IChatContext): void {
-  console.log("chastson.reset_conversation");
+export function reset_conversation(
+  CC: IChatContext,
+  navigate: NavigateFunction
+): void {
+  console.log("reset_conversation"); // DEV
   //-- Clear nodeArray and ChatContext values --//
   nodeArray = [];
   CC.setRowArray([]);
@@ -111,6 +115,7 @@ export function reset_conversation(CC: IChatContext): void {
   CC.setConversationId(null);
   CC.setTemperature(null);
   CC.setFocusTextarea(true);
+  navigate("/gpt"); // NEW
 }
 
 /**
@@ -122,6 +127,7 @@ export function reset_conversation(CC: IChatContext): void {
  */
 export async function get_conversation_and_messages(
   access_token: string,
+  conversation_id: string,
   CC: IChatContext
 ): Promise<void> {
   try {
@@ -130,7 +136,7 @@ export async function get_conversation_and_messages(
       conversation: IConversation;
       message_nodes: IMessageNode[];
     }>(
-      `${VITE_ALB_BASE_URL}/llm/get_conversation_and_messages/${CC.conversationId}`,
+      `${VITE_ALB_BASE_URL}/llm/get_conversation_and_messages/${conversation_id}`,
       {
         headers: {
           authorization: `Bearer ${access_token}`,
@@ -320,6 +326,7 @@ export async function send_message(
         }
 
         //-- Root node (new conversations only) --//
+        CC.setConversationId(conversation_id);
         const root_node_id = res.headers.get("CHRT-root-node-id");
         const root_node_created_at = res.headers.get(
           "CHRT-root-node-created-at"
@@ -331,7 +338,7 @@ export async function send_message(
           root_node_created_at !== "none"
         ) {
           new_conversation = true;
-          new_conversation_id = conversation_id; // TESTING - moved here instead of below get header
+          new_conversation_id = conversation_id;
           //-- Build root node --//
           const root_node: IMessageNode = {
             _id: root_node_id,
@@ -405,6 +412,8 @@ export async function send_message(
           //-- Note - this is only sent for new conversations --//
           let data: IConversation = JSON.parse(event.data);
           CC.setConversation(data);
+          // TODO - set conversation id as path param??
+          //
         }
         //-- Completion object (IMessage) --//
         else if (event.id && event.id === "completion") {
@@ -550,7 +559,8 @@ function finalFirstborn(node: IMessageNode): IMessageNode {
 export async function delete_conversation_and_messages(
   access_token: string,
   conversation_id: string,
-  CC: IChatContext
+  CC: IChatContext,
+  navigate: NavigateFunction
 ): Promise<void> {
   try {
     console.log("--- delete_conversations ---");
@@ -563,9 +573,9 @@ export async function delete_conversation_and_messages(
         },
       }
     );
-    //-- If current conversation was deleted, set conversationId to null --//
+    //-- If current conversation was deleted, reset conversation --//
     if (CC.conversationId === conversation_id) {
-      CC.setConversationId(null);
+      reset_conversation(CC, navigate);
     }
     //-- Fetch updated conversations list --//
     await list_conversations(access_token, CC, "overwrite");

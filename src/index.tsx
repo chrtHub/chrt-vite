@@ -53,7 +53,7 @@ const router = createBrowserRouter(
         <Route path="/journal" element={<AuthGuard component={Journal} />} />
         <Route path="/files" element={<AuthGuard component={JournalFiles} />} />
         <Route
-          path="/gpt/:conversation_id?"
+          path="gpt/:entity_type?/:conversation_id?"
           element={<AuthGuard component={GPT} />}
         />
         <Route path="/profile" element={<AuthGuard component={Profile} />} />
