@@ -46,9 +46,9 @@ interface IProps {
 export default function AppLayout({ infoMode }: IProps) {
   //== React State ==//
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [currentNavItem, setCurrentNavItem] = useState<string>(
-    window.location.pathname
-  );
+
+  //-- Synchronize with current pathname: (1) highlighted nav item, (2) secondary items in sidebar --//
+  const { pathname } = useLocation();
 
   //-- Auth0 --//
   const { logout, user } = useAuth0();
@@ -179,8 +179,6 @@ export default function AppLayout({ infoMode }: IProps) {
 
   //-- ************************* --//
   //== Secondary List components ==//
-  const { pathname } = useLocation();
-
   return (
     <div
       id="app-layout-top-level-div"
@@ -260,11 +258,11 @@ export default function AppLayout({ infoMode }: IProps) {
                         key={item.name}
                         to={item.to}
                         onClick={() => {
-                          setCurrentNavItem(item.to);
+                          // setCurrentNavItem(item.to);
                           setSidebarOpen(false);
                         }}
                         className={classNames(
-                          item.to === currentNavItem
+                          pathname.match(/^\/([^/]+)/)?.[0] === item.to //-- First param of pathname --//
                             ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-800 dark:text-white"
                             : "text-zinc-700 hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-white",
                           "group flex items-center rounded-md px-2 py-2 text-base font-medium"
@@ -272,7 +270,7 @@ export default function AppLayout({ infoMode }: IProps) {
                       >
                         <item.icon
                           className={classNames(
-                            item.to === currentNavItem
+                            pathname.match(/^\/([^/]+)/)?.[0] === item.to //-- First param of pathname --//
                               ? "text-zinc-800 dark:text-zinc-300"
                               : "text-zinc-900 group-hover:text-zinc-600  dark:text-zinc-400 dark:group-hover:text-zinc-300",
                             "mr-4 h-6 w-6 flex-shrink-0"
@@ -329,10 +327,10 @@ export default function AppLayout({ infoMode }: IProps) {
                   key={item.name}
                   to={item.to}
                   onClick={() => {
-                    setCurrentNavItem(item.to);
+                    // setCurrentNavItem(item.to);
                   }}
                   className={classNames(
-                    item.to === currentNavItem
+                    pathname.match(/^\/([^/]+)/)?.[0] === item.to //-- First param of pathname --//
                       ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-800 dark:text-white"
                       : "text-zinc-700 hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-white",
                     "group flex items-center rounded-md px-2 py-1.5 text-sm font-medium"
@@ -340,7 +338,7 @@ export default function AppLayout({ infoMode }: IProps) {
                 >
                   <item.icon
                     className={classNames(
-                      item.to === currentNavItem
+                      pathname.match(/^\/([^/]+)/)?.[0] === item.to //-- First param of pathname --//
                         ? "text-zinc-900 dark:text-white"
                         : "text-zinc-700 group-hover:text-zinc-800 dark:text-zinc-400 dark:group-hover:text-zinc-300",
                       "mr-3 h-6 w-6 flex-shrink-0"
@@ -522,7 +520,7 @@ export default function AppLayout({ infoMode }: IProps) {
                             {({ active }) => (
                               <NavLink
                                 to={item.to}
-                                onClick={() => setCurrentNavItem(item.to)}
+                                // onClick={() => setCurrentNavItem(item.to)}
                                 className={classNames(
                                   active ? "bg-zinc-100 dark:bg-zinc-800" : "",
                                   "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
