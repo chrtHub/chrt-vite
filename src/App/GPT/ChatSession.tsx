@@ -312,8 +312,9 @@ export default function ChatSession() {
                       }}
                       className="flex flex-row rounded-md border-2 border-zinc-600 px-2.5 py-1 text-sm font-semibold text-zinc-600 shadow-sm hover:border-zinc-400 hover:bg-zinc-400 hover:text-zinc-50 hover:shadow-md dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-zinc-600 dark:hover:bg-zinc-600"
                     >
-                      <StopIcon className="mr-2 h-5 w-5" />
-                      <p>Stop</p>
+                      {/* NOTE - Managing space here on small screens */}
+                      <StopIcon className="h-5 w-5 lg:mr-2" />
+                      <p className="hidden lg:flex">Stop</p>
                     </button>
                   </>
                 )}
@@ -326,8 +327,9 @@ export default function ChatSession() {
                       }}
                       className="flex flex-row rounded-md border-2 border-zinc-600 px-2.5 py-1 text-sm font-semibold text-zinc-600 shadow-sm hover:border-zinc-400 hover:bg-zinc-400 hover:text-zinc-50 hover:shadow-md dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-zinc-600 dark:hover:bg-zinc-600"
                     >
-                      <ArrowPathIcon className="mr-2 h-5 w-5" />
-                      <p>Regenerate</p>
+                      {/* NOTE - Managing space here on small screens */}
+                      <ArrowPathIcon className="h-5 w-5 lg:mr-2" />
+                      <p className="hidden lg:flex">Regenerate</p>
                     </button>
                   )}
               </div>
