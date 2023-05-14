@@ -254,7 +254,7 @@ export default function ChatRow(props: { row: IMessageRow }) {
   //-- Version Selector --//
   const VersionSelector = () => {
     return (
-      <div className="my-1 flex w-full flex-row justify-center">
+      <div className="my-1 flex flex-row justify-center">
         {/*-- If current node is > sibling 1, allow decrement --*/}
         {row.sibling_node_ids.indexOf(row.node_id) > 0 ? (
           <button
@@ -324,12 +324,19 @@ export default function ChatRow(props: { row: IMessageRow }) {
     >
       {/* Mobile Row Top - visible until 'lg' */}
       <div className="lg:hidden">
-        <div className="flex flex-row items-center justify-between py-2 pl-2 pr-2">
-          <Author mobile={true} />
-          {row.prompt_or_completion === "prompt" && <VersionSelector />}
-          {row.prompt_or_completion === "prompt" && <EditButton />}
-          <CopyToClipboardButton />
-          <Timestamp />
+        <div className="flex flex-row items-center py-2 pl-2 pr-2">
+          <div className="flex flex-row items-center">
+            <Author mobile={true} />
+            {row.prompt_or_completion === "prompt" && <VersionSelector />}
+          </div>
+          <div className="flex flex-grow flex-row items-center justify-end">
+            {row.prompt_or_completion === "prompt" && <EditButton />}
+            {row.prompt_or_completion === "prompt" && <RegenerateButton />}
+            <CopyToClipboardButton />
+            <div className="w-16">
+              <Timestamp />
+            </div>
+          </div>
         </div>
       </div>
 
