@@ -197,7 +197,7 @@ export default function Hero() {
 
       {/* START OF MAIN */}
       <main>
-        <div className="relative bg-zinc-50 py-24 dark:bg-zinc-800 sm:py-32 lg:pb-40">
+        <div className="relative bg-zinc-50 py-24 dark:bg-zinc-950 sm:py-32 lg:pb-40">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             {/* START OF TITLE & SUBTITLE */}
             <div className="mx-auto max-w-2xl text-center">
