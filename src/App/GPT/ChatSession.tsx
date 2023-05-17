@@ -1,5 +1,5 @@
 //== react, react-router-dom, recoil, Auth0 ==//
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, FocusEvent } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useChatContext } from "../../Context/ChatContext";
@@ -44,7 +44,6 @@ export default function ChatSession() {
   const [promptContent, setPromptContent] = useState<string>("");
   const [promptReadyToSend, setPromptReadyToSend] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [textAreaFocus, setTextAreaFocus] = useState<boolean>(true);
 
   //-- Virtualized rows stuff --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
@@ -81,14 +80,6 @@ export default function ChatSession() {
       } else {
         navigate("/gpt");
       }
-      // else if (CC.conversationId) {
-      //   const accessToken = await getAccessTokenSilently();
-      //   chatson.get_conversation_and_messages(
-      //     accessToken,
-      //     CC.conversationId,
-      //     CC
-      //   );
-      // }
     };
     lambda();
   }, [conversation_id]);
@@ -202,19 +193,12 @@ export default function ChatSession() {
   };
 
   //-- Text area placeholder handlers and string --//
-  const textareaOnFocusHandler = () => {
-    setTextAreaFocus(true);
-  };
-  const textareaOnBlurHandler = () => {
-    setTextAreaFocus(false);
-  };
   const textareaPlaceholder = () => {
     let placeholder = "Input prompt...";
-
-    if (!textAreaFocus && OS_NAME === "Mac OS") {
-      placeholder = "⌘ +  /  to input prompt...";
-    }
-
+    // TODO - find way to implement without onBlur
+    // if (!textareaFocused && OS_NAME === "Mac OS") {
+    //   placeholder = "⌘ +  /  to input prompt...";
+    // }
     return placeholder;
   };
 
@@ -251,7 +235,13 @@ export default function ChatSession() {
               ref={virtuosoRef}
               data={CC.rowArray}
               itemContent={(index, row) => (
-                <ChatRow key={`${row.node_id}-${row.role}`} row={row} />
+                <ChatRow
+                  key={`${row.node_id}-${row.role}`}
+                  row={row}
+                  prevRow={
+                    CC.rowArray && index > 0 ? CC.rowArray[index - 1] : null
+                  }
+                />
               )}
               followOutput="auto"
               atBottomStateChange={(isAtBottom) => {
@@ -335,7 +325,10 @@ export default function ChatSession() {
               </div>
 
               {/* Scroll to Bottom */}
-              <button disabled={!showButton} onClick={scrollToBottomHandler}>
+              <button
+                // disabled={!showButton}
+                onClick={scrollToBottomHandler}
+              >
                 <ChevronDoubleDownIcon
                   className={classNames(
                     showButton
@@ -366,8 +359,6 @@ export default function ChatSession() {
                 id="prompt-input"
                 name="prompt-input"
                 placeholder={textareaPlaceholder()}
-                onFocus={textareaOnFocusHandler}
-                onBlur={textareaOnBlurHandler}
                 wrap="hard"
                 value={promptDraft}
                 onKeyDown={keyDownHandler}

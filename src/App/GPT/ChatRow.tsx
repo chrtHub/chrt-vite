@@ -31,10 +31,14 @@ import getFriendly from "./chatson/getFriendly";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { IMessageRow } from "./chatson/chatson_types";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
+import Tooltip from "../../Components/Tooltip";
 
 //-- Exported Component --//
-export default function ChatRow(props: { row: IMessageRow }) {
-  let { row } = props;
+interface IProps {
+  row: IMessageRow;
+  prevRow: IMessageRow | null;
+}
+export default function ChatRow({ row, prevRow }: IProps) {
   let CC = useChatContext();
   const { getAccessTokenSilently, user } = useAuth0();
   const [clipboardValue, copyToClipboard] = useCopyToClipboard();
@@ -50,9 +54,11 @@ export default function ChatRow(props: { row: IMessageRow }) {
   const RegenerateButton = () => {
     return (
       <div className="flex flex-row justify-center rounded-full p-1 text-zinc-600 hover:bg-zinc-300 hover:text-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700">
-        <button onClick={regenerateResponse}>
-          <ArrowPathIcon className="h-5 w-5" />
-        </button>
+        <Tooltip content="Regenerate" placement="top">
+          <button onClick={regenerateResponse}>
+            <ArrowPathIcon className="h-5 w-5" />
+          </button>
+        </Tooltip>
       </div>
     );
   };
@@ -60,13 +66,15 @@ export default function ChatRow(props: { row: IMessageRow }) {
   const regenerateResponse = async () => {
     const accessToken = await getAccessTokenSilently();
 
-    //-- Send prompt as chat message --//
-    await chatson.send_message(
-      accessToken,
-      row.content,
-      row.parent_node_id,
-      CC
-    );
+    if (prevRow) {
+      //-- Send prompt as chat message --//
+      await chatson.send_message(
+        accessToken,
+        prevRow.content, // need to send the prompt, not the complation
+        prevRow.parent_node_id,
+        CC
+      );
+    }
   };
 
   //-- Edit prompt --//
@@ -85,13 +93,15 @@ export default function ChatRow(props: { row: IMessageRow }) {
             : "dark:hover:bg-text-200 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700"
         )}
       >
-        <button
-          onClick={() => {
-            setEditing(true);
-          }}
-        >
-          <PencilSquareIcon className="h-5 w-5" aria-hidden="true" />
-        </button>
+        <Tooltip content="Edit" placement="top">
+          <button
+            onClick={() => {
+              setEditing(true);
+            }}
+          >
+            <PencilSquareIcon className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </Tooltip>
       </div>
     );
   };
@@ -139,17 +149,19 @@ export default function ChatRow(props: { row: IMessageRow }) {
             : "dark:hover:bg-text-200 hover:bg-zinc-300 hover:text-zinc-700 dark:hover:bg-zinc-700"
         )}
       >
-        <button
-          onClick={() => {
-            copyToClipboard(row.content);
-            setCopied(true);
-            setTimeout(() => {
-              setCopied(false);
-            }, 750);
-          }}
-        >
-          <ClipboardDocumentIcon className="h-6 w-6" aria-hidden="true" />
-        </button>
+        <Tooltip content="Copy" placement="top">
+          <button
+            onClick={() => {
+              copyToClipboard(row.content);
+              setCopied(true);
+              setTimeout(() => {
+                setCopied(false);
+              }, 750);
+            }}
+          >
+            <ClipboardDocumentIcon className="h-6 w-6" aria-hidden="true" />
+          </button>
+        </Tooltip>
       </div>
     );
   };
@@ -357,7 +369,9 @@ export default function ChatRow(props: { row: IMessageRow }) {
             )}
             {!editing && (
               <>
-                {row.prompt_or_completion === "prompt" && <RegenerateButton />}
+                {row.prompt_or_completion === "completion" && (
+                  <RegenerateButton />
+                )}
                 <CopyToClipboardButton />
               </>
             )}
@@ -427,7 +441,9 @@ export default function ChatRow(props: { row: IMessageRow }) {
             {hover && !editing && (
               <>
                 {row.prompt_or_completion === "prompt" && <EditButton />}
-                {row.prompt_or_completion === "prompt" && <RegenerateButton />}
+                {row.prompt_or_completion === "completion" && (
+                  <RegenerateButton />
+                )}
                 <CopyToClipboardButton />
               </>
             )}
