@@ -6,6 +6,7 @@ import { useRecoilState } from "recoil";
 
 //-- TSX Components --//
 import ConversationsList from "../App/GPT/Sidebar/ConversationsList";
+import ConfirmSignOutModal from "./ConfirmSignOutModal";
 
 //-- NPM Components --//
 import { Dialog, Menu, Transition } from "@headlessui/react";
@@ -46,12 +47,14 @@ interface IProps {
 export default function AppLayout({ infoMode }: IProps) {
   //== React State ==//
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [confirmSignOutModalOpen, setConfirmSignOutModalOpen] =
+    useState<boolean>(false);
 
   //-- Synchronize with current pathname: (1) highlighted nav item, (2) secondary items in sidebar --//
   const { pathname } = useLocation();
 
   //-- Auth0 --//
-  const { logout, user } = useAuth0();
+  const { user } = useAuth0();
 
   //--- Navigation array depend on infoMode --//
   interface INavigationItem {
@@ -177,14 +180,20 @@ export default function AppLayout({ infoMode }: IProps) {
       .removeEventListener("change", handleThemeChange);
   }, []);
 
-  //-- ************************* --//
-  //== Secondary List components ==//
+  //-- *********** Component Return ************** --//
   return (
     <div
       id="app-layout-top-level-div"
       //-- With use of 'overflow-hidden', scroll behavior is to be handles by Outlet components (?) --//
       className="fixed h-full w-full overflow-hidden overscroll-none bg-zinc-50 dark:bg-zinc-950"
     >
+      {/* START OF CONFIRM SIGN OUT MODAL */}
+      <ConfirmSignOutModal
+        confirmSignOutModalOpen={confirmSignOutModalOpen}
+        setConfirmSignOutModalOpen={setConfirmSignOutModalOpen}
+      />
+      {/* END OF CONFIRM SIGN OUT MODAL */}
+
       {/* START OF MOBILE SIDEBAR */}
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog
@@ -574,12 +583,8 @@ export default function AppLayout({ infoMode }: IProps) {
                               // localStorage.clear()
                               localStorage.removeItem("theme");
                               localStorage.removeItem("sortBy");
-                              //-- Logout --//
-                              logout({
-                                logoutParams: {
-                                  returnTo: window.location.origin,
-                                },
-                              });
+                              //-- Open "Confirm Sign Out" Modal --//
+                              setConfirmSignOutModalOpen(true);
                             }}
                             className={classNames(
                               active ? "bg-zinc-100 dark:bg-zinc-800" : "",

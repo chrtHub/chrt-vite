@@ -8,14 +8,13 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import App from "./App";
-
-//-- JSX Components: Home --//
+//-- TSX Components: Home --//
 import Home from "./App/Home/Home";
 import AuthProviderWithNavigateAndRecoil from "./Auth/AuthProviderWithNavigateAndRecoil";
 import AuthGuard from "./Auth/AuthGuard";
 
-//-- JSX Components: App --//
+//-- TSX Components: App --//
+import App from "./App";
 import Data from "./App/DataService/Data";
 import Journal from "./App/JournalService/Journal";
 import JournalFiles from "./App/JournalFiles/JournalFiles";
@@ -23,7 +22,7 @@ import GPT from "./App/GPT/GPT";
 import Profile from "./App/Profile/Profile";
 import Settings from "./App/Settings/Settings";
 
-//-- JSX Components: Info --//
+//-- TSX Components: Info --//
 import Cookies from "./Info/Cookies/Cookies";
 import FAQ from "./Info/FAQ/FAQ";
 import Info from "./Info/Info";
@@ -33,8 +32,11 @@ import SystemRequirements from "./Info/SystemRequirements/SystemRequirements";
 import Terms from "./Info/Terms/Terms";
 import Updates from "./Info/Updates/Updates";
 
-//-- JSX Components: Navigation --//
+//-- TSX Components: Navigation --//
 import NotFoundPage from "./Navigation/NotFoundPage";
+
+//-- TSX Components: Errors --//
+import IndexErrorBoundary from "./App/Errors/IndexErrorBoundary";
 
 //-- Other --//
 
@@ -46,7 +48,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<AuthProviderWithNavigateAndRecoil />}>
       {/* App */}
-      <Route path="/" element={<App />}>
+      <Route path="/" element={<App />} errorElement={<IndexErrorBoundary />}>
         <Route index element={<Home />} />
 
         <Route path="/data" element={<AuthGuard component={Data} />} />
