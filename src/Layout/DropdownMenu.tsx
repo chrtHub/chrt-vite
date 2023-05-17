@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useRecoilState } from "recoil";
 
 //-- TSX Components --//
+import Tooltip from "../Components/Tooltip";
 
 //-- NPM Components --//
 import { useRef } from "react";
@@ -47,17 +48,17 @@ export default function DropdownMenu({
   ];
 
   //-- Tooltips (via react-popper) --//
-  const [lightModeTooltipVisible, setLightModeTooltipVisible] =
-    useState<boolean>(false);
-  const [lightModeButton, setLightModeButton] = useState<HTMLElement | null>(
-    null
-  );
-  const [lightModeTooltip, setLightModeTooltip] = useState<HTMLElement | null>(
-    null
-  );
-  const { styles, attributes } = usePopper(lightModeButton, lightModeTooltip, {
-    placement: "top",
-  });
+  //   const [lightModeTooltipVisible, setLightModeTooltipVisible] =
+  //     useState<boolean>(false);
+  //   const [lightModeButton, setLightModeButton] = useState<HTMLElement | null>(
+  //     null
+  //   );
+  //   const [lightModeTooltip, setLightModeTooltip] = useState<HTMLElement | null>(
+  //     null
+  //   );
+  //   const { styles, attributes } = usePopper(lightModeButton, lightModeTooltip, {
+  //     placement: "top",
+  //   });
 
   //-- Theming - Light Mode, Dark Mode, Match OS Mode --//
   let theme: string | null = localStorage.getItem("theme");
@@ -177,36 +178,22 @@ export default function DropdownMenu({
                 )}
               >
                 <span className="isolate inline-flex rounded-md shadow-sm">
-                  {/* Light Mode Button + Tooltip */}
-                  <button
-                    ref={setLightModeButton}
-                    type="button"
-                    onClick={useManualLightMode}
-                    onMouseEnter={() => {
-                      setLightModeTooltipVisible(true);
-                    }}
-                    onMouseLeave={() => {
-                      setLightModeTooltipVisible(false);
-                    }}
-                    className={classNames(
-                      themeButtonSelection === "light"
-                        ? "bg-zinc-400 text-white"
-                        : "bg-white text-zinc-700",
-                      "relative inline-flex items-center rounded-l-md border border-zinc-400 px-4 py-2 text-sm font-medium hover:bg-zinc-300 focus:z-10 focus:outline-none dark:border-zinc-700 "
-                    )}
-                  >
-                    <span className="sr-only">Light Mode</span>
-                    <SunIcon className="h-5 w-5" aria-hidden="true" />
-                  </button>
-                  {lightModeTooltipVisible && (
-                    <div
-                      ref={setLightModeTooltip}
-                      style={styles.popper}
-                      {...attributes.popper}
+                  {/* Light Mode Button */}
+                  <Tooltip placement="top" content="Light Mode">
+                    <button
+                      type="button"
+                      onClick={useManualLightMode}
+                      className={classNames(
+                        themeButtonSelection === "light"
+                          ? "bg-zinc-400 text-white"
+                          : "bg-white text-zinc-700",
+                        "relative inline-flex items-center rounded-l-md border border-zinc-400 px-4 py-2 text-sm font-medium hover:bg-zinc-300 focus:z-10 focus:outline-none dark:border-zinc-700 "
+                      )}
                     >
-                      LIGHT MODE POPOVER
-                    </div>
-                  )}
+                      <span className="sr-only">Light Mode</span>
+                      <SunIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                  </Tooltip>
 
                   {/* Match System Mode Button + Tooltip */}
                   <button
