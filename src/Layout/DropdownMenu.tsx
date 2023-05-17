@@ -196,38 +196,42 @@ export default function DropdownMenu({
                   </Tooltip>
 
                   {/* Match System Mode Button + Tooltip */}
-                  <button
-                    type="button"
-                    onClick={useOSTheme}
-                    className={classNames(
-                      !themeButtonSelection
-                        ? "bg-zinc-400 text-white"
-                        : "bg-white text-zinc-700",
-                      "relative -ml-px inline-flex items-center border border-zinc-400 px-4 py-2 text-sm font-medium hover:bg-zinc-300 focus:z-10 focus:outline-none  dark:border-zinc-700 "
-                    )}
-                  >
-                    <span className="sr-only">Match OS Mode</span>
-                    <ComputerDesktopIcon
-                      className="h-5 w-5"
-                      aria-hidden="true"
-                    />
-                  </button>
+                  <Tooltip placement="top" content="System Mode">
+                    <button
+                      type="button"
+                      onClick={useOSTheme}
+                      className={classNames(
+                        !themeButtonSelection
+                          ? "bg-zinc-400 text-white"
+                          : "bg-white text-zinc-700",
+                        "relative -ml-px inline-flex items-center border border-zinc-400 px-4 py-2 text-sm font-medium hover:bg-zinc-300 focus:z-10 focus:outline-none  dark:border-zinc-700 "
+                      )}
+                    >
+                      <span className="sr-only">Match OS Mode</span>
+                      <ComputerDesktopIcon
+                        className="h-5 w-5"
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </Tooltip>
 
                   {/* Dark Mode Button + Tooltip */}
-                  <button
-                    type="button"
-                    onClick={useManualDarkMode}
-                    data-tooltip="Dark Mode"
-                    className={classNames(
-                      themeButtonSelection === "dark"
-                        ? "bg-zinc-700 text-white"
-                        : "bg-white text-zinc-700",
-                      "relative -ml-px inline-flex items-center rounded-r-md border border-zinc-400 px-4 py-2 text-sm font-medium hover:bg-zinc-300 focus:z-10 focus:outline-none  dark:border-zinc-700 "
-                    )}
-                  >
-                    <span className="sr-only">Dark Mode</span>
-                    <MoonIcon className="h-5 w-5" aria-hidden="true" />
-                  </button>
+                  <Tooltip placement="top" content="Dark Mode">
+                    <button
+                      type="button"
+                      onClick={useManualDarkMode}
+                      data-tooltip="Dark Mode"
+                      className={classNames(
+                        themeButtonSelection === "dark"
+                          ? "bg-zinc-700 text-white"
+                          : "bg-white text-zinc-700",
+                        "relative -ml-px inline-flex items-center rounded-r-md border border-zinc-400 px-4 py-2 text-sm font-medium hover:bg-zinc-300 focus:z-10 focus:outline-none  dark:border-zinc-700 "
+                      )}
+                    >
+                      <span className="sr-only">Dark Mode</span>
+                      <MoonIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                  </Tooltip>
                 </span>
               </a>
             )}

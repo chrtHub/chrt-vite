@@ -36,7 +36,7 @@ export default function Tooltip({ placement, content, children }: IProps) {
           ref={setTooltipRef}
           style={styles.popper}
           {...attributes.popper}
-          className="z-20 rounded bg-zinc-500 px-3 py-1 text-sm text-white shadow-lg"
+          className="z-20 rounded bg-zinc-500 px-3 py-1 text-xs text-white shadow-lg"
         >
           {content}
         </div>
