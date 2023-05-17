@@ -7,22 +7,18 @@ import {
 import { useAuth0 } from "@auth0/auth0-react";
 
 interface IProps {
-  confirmSignOutModalOpen: boolean;
-  setConfirmSignOutModalOpen: React.Dispatch<SetStateAction<boolean>>;
+  signOutModalOpen: boolean;
+  setSignOutModalOpen: React.Dispatch<SetStateAction<boolean>>;
 }
 export default function ConfirmSignOutModal({
-  confirmSignOutModalOpen,
-  setConfirmSignOutModalOpen,
+  signOutModalOpen,
+  setSignOutModalOpen,
 }: IProps) {
   const { logout, user } = useAuth0();
 
   return (
-    <Transition.Root show={confirmSignOutModalOpen} as={Fragment}>
-      <Dialog
-        as="div"
-        className="relative z-10"
-        onClose={setConfirmSignOutModalOpen}
-      >
+    <Transition.Root show={signOutModalOpen} as={Fragment}>
+      <Dialog as="div" className="relative z-10" onClose={setSignOutModalOpen}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -51,7 +47,7 @@ export default function ConfirmSignOutModal({
                   <button
                     type="button"
                     className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick={() => setConfirmSignOutModalOpen(false)}
+                    onClick={() => setSignOutModalOpen(false)}
                   >
                     <span className="sr-only">Close</span>
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
@@ -82,7 +78,7 @@ export default function ConfirmSignOutModal({
                   <button
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                    onClick={() => setConfirmSignOutModalOpen(false)}
+                    onClick={() => setSignOutModalOpen(false)}
                   >
                     Cancel
                   </button>
