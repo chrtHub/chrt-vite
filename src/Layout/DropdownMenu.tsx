@@ -7,7 +7,9 @@ import { useRecoilState } from "recoil";
 //-- TSX Components --//
 
 //-- NPM Components --//
+import { useRef } from "react";
 import { Menu, Transition } from "@headlessui/react";
+import { usePopper } from "react-popper";
 
 //-- Icons --//
 import { UserCircleIcon, MoonIcon } from "@heroicons/react/20/solid";
@@ -31,6 +33,7 @@ export default function DropdownMenu({
   setSignOutModalOpen,
   infoMode,
 }: IProps) {
+  //-- Auth0 --//
   const { user } = useAuth0();
 
   //-- userNavigationItems array depend on infoMode --//
@@ -42,6 +45,19 @@ export default function DropdownMenu({
     { name: "Profile", to: "/profile" },
     { name: "Settings", to: "/settings" },
   ];
+
+  //-- Tooltips (via react-popper) --//
+  const [lightModeTooltipVisible, setLightModeTooltipVisible] =
+    useState<boolean>(false);
+  const [lightModeButton, setLightModeButton] = useState<HTMLElement | null>(
+    null
+  );
+  const [lightModeTooltip, setLightModeTooltip] = useState<HTMLElement | null>(
+    null
+  );
+  const { styles, attributes } = usePopper(lightModeButton, lightModeTooltip, {
+    placement: "top",
+  });
 
   //-- Theming - Light Mode, Dark Mode, Match OS Mode --//
   let theme: string | null = localStorage.getItem("theme");
@@ -117,12 +133,13 @@ export default function DropdownMenu({
       .matchMedia("(prefers-color-scheme: dark)")
       .removeEventListener("change", handleThemeChange);
   }, []);
+  //-- END OF THEMES --//
 
+  //-- ***** COMPONENT RETURN ***** --//
   return (
     <Menu id="app-layout-dropdown-menu" as="div" className="relative ml-3">
+      {/* START OF PROFILE PICTURE */}
       <div>
-        {/* START OF PROFILE PICTURE */}
-
         <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm hover:outline-none hover:ring-2 hover:ring-green-500 hover:ring-offset-2">
           <span className="sr-only">Open user menu</span>
           {user?.picture ? (
@@ -136,8 +153,10 @@ export default function DropdownMenu({
             <UserCircleIcon className="h-8 w-8 rounded-full" />
           )}
         </Menu.Button>
-        {/* END OF PROFILE PICTURE */}
       </div>
+      {/* END OF PROFILE PICTURE */}
+
+      {/* START OF MENU ITEMS */}
       <Transition
         as={Fragment}
         enter="transition ease-out duration-100"
@@ -158,10 +177,17 @@ export default function DropdownMenu({
                 )}
               >
                 <span className="isolate inline-flex rounded-md shadow-sm">
-                  {/* Light Mode */}
+                  {/* Light Mode Button + Tooltip */}
                   <button
+                    ref={setLightModeButton}
                     type="button"
                     onClick={useManualLightMode}
+                    onMouseEnter={() => {
+                      setLightModeTooltipVisible(true);
+                    }}
+                    onMouseLeave={() => {
+                      setLightModeTooltipVisible(false);
+                    }}
                     className={classNames(
                       themeButtonSelection === "light"
                         ? "bg-zinc-400 text-white"
@@ -172,8 +198,17 @@ export default function DropdownMenu({
                     <span className="sr-only">Light Mode</span>
                     <SunIcon className="h-5 w-5" aria-hidden="true" />
                   </button>
+                  {lightModeTooltipVisible && (
+                    <div
+                      ref={setLightModeTooltip}
+                      style={styles.popper}
+                      {...attributes.popper}
+                    >
+                      LIGHT MODE POPOVER
+                    </div>
+                  )}
 
-                  {/* Match System Mode */}
+                  {/* Match System Mode Button + Tooltip */}
                   <button
                     type="button"
                     onClick={useOSTheme}
@@ -191,7 +226,7 @@ export default function DropdownMenu({
                     />
                   </button>
 
-                  {/* Dark Mode */}
+                  {/* Dark Mode Button + Tooltip */}
                   <button
                     type="button"
                     onClick={useManualDarkMode}
@@ -282,6 +317,7 @@ export default function DropdownMenu({
           </Menu.Item>
         </Menu.Items>
       </Transition>
+      {/* END OF MENU ITEMS */}
     </Menu>
   );
 }

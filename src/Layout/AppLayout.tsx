@@ -1,7 +1,6 @@
 //-- react, react-router-dom, recoil, Auth0 --//
 import { Fragment, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
 import ConversationsList from "../App/GPT/Sidebar/ConversationsList";
@@ -46,9 +45,6 @@ export default function AppLayout({ infoMode }: IProps) {
   //-- Synchronize with current pathname: (1) highlighted nav item, (2) secondary items in sidebar --//
   const { pathname } = useLocation();
 
-  //-- Auth0 --//
-  const { user } = useAuth0();
-
   //--- Navigation array depend on infoMode --//
   interface INavigationItem {
     name: string;
@@ -88,81 +84,6 @@ export default function AppLayout({ infoMode }: IProps) {
           // { name: "Market Data", to: "/data", icon: PresentationChartLineIcon },
         ]);
   }
-
-  // //-- Theming - Light Mode, Dark Mode, Match OS Mode --//
-  // let theme: string | null = localStorage.getItem("theme");
-  // const [themeButtonSelection, setThemeButtonSelection] = useState<
-  //   string | null
-  // >(theme); //-- light || dark || null (OS match) --//
-  // const [echartsTheme, setEchartsTheme] = useRecoilState(echartsThemeState);
-
-  // //-- NOTES ABOUT THEMES: --//
-  // //-- OS theme changes are listened for in index.html --//
-  // //-- Manual theme overrides are listened for here --//
-  // //-- In both cases, the documentElement's classList is modified --//
-  // //-- The localStorage 'theme' value nullifies any OS theme change events --//
-  // //-- (the event listener in index.html only works if there's no 'theme' value) --//
-
-  // //-- The ECharts Theme is set here to follow the application theme --//
-  // //-- When no localStorage 'theme' value is set, OS theme is listened to --//
-  // //-- When localStorage 'theme' value is set, that's used --//
-
-  // const useManualDarkMode = () => {
-  //   //-- Set theme to dark in localStorage --//
-  //   localStorage.setItem("theme", "dark");
-  //   //-- Update theme to dark mode --//
-  //   document.documentElement.classList.add("dark");
-  //   setEchartsTheme("dark");
-  //   //-- Update themeButtonSelection --//
-  //   setThemeButtonSelection("dark");
-  // };
-
-  // const useOSTheme = () => {
-  //   //-- Remove theme from localStorage --//
-  //   localStorage.removeItem("theme");
-  //   //-- Update theme to match current OS theme --//
-  //   if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-  //     document.documentElement.classList.add("dark");
-  //     setEchartsTheme("dark");
-  //   } else {
-  //     document.documentElement.classList.remove("dark");
-  //     setEchartsTheme("light");
-  //   }
-  //   //-- Update themeButtonSelection --//
-  //   setThemeButtonSelection(null);
-  // };
-
-  // const useManualLightMode = () => {
-  //   //-- Set theme to light in localStorage --//
-  //   localStorage.setItem("theme", "light");
-  //   //-- Update theme to light mode --//
-  //   document.documentElement.classList.remove("dark");
-  //   setEchartsTheme("light");
-  //   //-- Update themeButtonSelection --//
-  //   setThemeButtonSelection("light");
-  // };
-
-  // useEffect(() => {
-  //   const handleThemeChange = ({ matches }: MediaQueryListEvent) => {
-  //     //-- Only react to OS theme changes if no 'theme' value is set in localStorage --//
-  //     if (!("theme" in localStorage)) {
-  //       if (matches) {
-  //         setEchartsTheme("dark");
-  //       } else {
-  //         setEchartsTheme("light");
-  //       }
-  //     }
-  //   };
-
-  //   //-- Listen for OS theme changes --//
-  //   window
-  //     .matchMedia("(prefers-color-scheme: dark)")
-  //     .addEventListener("change", handleThemeChange);
-
-  //   return window
-  //     .matchMedia("(prefers-color-scheme: dark)")
-  //     .removeEventListener("change", handleThemeChange);
-  // }, []);
 
   //-- *********** Component Return ************** --//
   return (
