@@ -15,6 +15,7 @@ import {
   ClockIcon,
   CodeBracketSquareIcon,
   CpuChipIcon,
+  XCircleIcon,
 } from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
@@ -111,16 +112,74 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
     },
   ];
 
+  const StatsRows = () => {
+    return (
+      <>
+        {statsArray.map((item, index) => {
+          return (
+            <div key={index} className="mx-2 my-1 flex flex-row">
+              {/*-- Icon --*/}
+              <div>
+                <div
+                  className={classNames(
+                    item.iconBG,
+                    item.iconDarkBG,
+                    "rounded-lg p-3"
+                  )}
+                >
+                  <item.icon
+                    className="h-7 w-7 text-white"
+                    aria-hidden="true"
+                  />
+                </div>
+              </div>
+
+              {/*-- Title and Value --*/}
+              <div>
+                {/* Title */}
+                <div>
+                  <p className="ml-3 truncate text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                    {item.title}
+                  </p>
+                </div>
+
+                {/* Value */}
+                <div className={classNames("ml-3 flex-col")}>
+                  <p
+                    className={classNames(
+                      item.valueTextSize,
+                      "font-semibold text-zinc-900 dark:text-white"
+                    )}
+                  >
+                    {item.value2}
+                  </p>
+                  <p
+                    className={classNames(
+                      item.valueTextSize,
+                      "font-semibold text-zinc-900 dark:text-white"
+                    )}
+                  >
+                    {item?.value}
+                  </p>
+                </div>
+              </div>
+              {/*  */}
+            </div>
+          );
+        })}
+      </>
+    );
+  };
+
   //-- Click Handlers --//
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <Popover as="div" className="relative inline-block text-left">
-      <div>
-        <Popover.Button className="flex items-center rounded-full align-middle text-zinc-600 hover:text-zinc-700 focus:outline-none dark:text-zinc-400 dark:hover:text-zinc-200">
-          <span className="sr-only">LLM params settings</span>
-          <CircleStackIcon className="h-6 w-6" aria-hidden="true" />
-        </Popover.Button>
-      </div>
+      <Popover.Button className="flex items-center rounded-full align-middle text-zinc-600 hover:text-zinc-700 focus:outline-none dark:text-zinc-400 dark:hover:text-zinc-200">
+        <span className="sr-only">LLM params settings</span>
+        <CircleStackIcon className="h-6 w-6" aria-hidden="true" />
+      </Popover.Button>
+
       <Transition
         as={Fragment}
         enter="transition ease-out duration-100"
@@ -130,65 +189,30 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Popover.Panel className="absolute bottom-full left-0 z-10 mb-3 ml-1 mt-2 w-52 rounded-md bg-white shadow-lg ring-1 ring-transparent ring-opacity-5 focus:outline-none dark:bg-zinc-900">
-          <div className="flex flex-col py-1">
-            {/* Stats Array items */}
-            {statsArray.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  className="flex flex-row bg-white px-2 py-1 dark:bg-zinc-900"
+        <Popover.Panel className="absolute bottom-full left-0 z-10 mb-3 ml-1 mt-2 w-52 rounded-md bg-white pb-1 shadow-lg ring-1 ring-transparent ring-opacity-5 focus:outline-none dark:bg-zinc-900">
+          {({ close }) => (
+            <div className="flex flex-col">
+              {/* Header row */}
+              <div className="mb-1 flex flex-row items-center justify-start rounded-t-md bg-zinc-200 py-2 pl-3 pr-2 text-sm font-semibold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+                {/* Title */}
+                <p>Conversation Stats</p>
+                {/* Spacer */}
+                <div className="flex-grow" />
+                {/* Close menu button */}
+                <button
+                  className="text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+                  onClick={() => {
+                    close();
+                  }}
                 >
-                  {/*-- Icon --*/}
-                  <div>
-                    <div
-                      className={classNames(
-                        item.iconBG,
-                        item.iconDarkBG,
-                        "rounded-lg p-3"
-                      )}
-                    >
-                      <item.icon
-                        className="h-7 w-7 text-white"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>
+                  <XCircleIcon className="h-6 w-6" />
+                </button>
+              </div>
 
-                  {/*-- Title and Value --*/}
-                  <div>
-                    {/* Title */}
-                    <div>
-                      <p className="ml-3 truncate text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                        {item.title}
-                      </p>
-                    </div>
-
-                    {/* Value */}
-                    <div className={classNames("ml-3 flex-col")}>
-                      <p
-                        className={classNames(
-                          item.valueTextSize,
-                          "font-semibold text-zinc-900 dark:text-white"
-                        )}
-                      >
-                        {item.value2}
-                      </p>
-                      <p
-                        className={classNames(
-                          item.valueTextSize,
-                          "font-semibold text-zinc-900 dark:text-white"
-                        )}
-                      >
-                        {item?.value}
-                      </p>
-                    </div>
-                  </div>
-                  {/*  */}
-                </div>
-              );
-            })}
-          </div>
+              {/* Stats Rows */}
+              <StatsRows />
+            </div>
+          )}
         </Popover.Panel>
       </Transition>
     </Popover>
