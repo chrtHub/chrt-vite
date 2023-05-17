@@ -1,6 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { Placement } from "@popperjs/core";
 import { usePopper } from "react-popper";
+
+import "./Tooltip.css";
 
 interface IProps {
   placement: Placement;
@@ -8,15 +10,32 @@ interface IProps {
   children: React.ReactElement;
 }
 export default function Tooltip({ placement, content, children }: IProps) {
+  //-- State and Refs --//
   const [tooltipVisible, setTooltipVisible] = useState(false);
-
   const [buttonRef, setButtonRef] = useState<HTMLElement | null>(null);
   const [tooltipRef, setTooltipRef] = useState<HTMLElement | null>(null);
+  const [arrowRef, setArrowRef] = useState<HTMLElement | null>(null);
 
+  //-- Popper --//
   const { styles, attributes } = usePopper(buttonRef, tooltipRef, {
     placement,
+    modifiers: [
+      {
+        name: "offset",
+        options: {
+          offset: [0, 8],
+        },
+      },
+      {
+        name: "arrow",
+        options: {
+          element: arrowRef,
+        },
+      },
+    ],
   });
 
+  //-- Hover handlers --//
   const handleMouseEnter = () => {
     setTooltipVisible(true);
   };
@@ -24,6 +43,7 @@ export default function Tooltip({ placement, content, children }: IProps) {
     setTooltipVisible(false);
   };
 
+  //-- Component Return --//
   return (
     <>
       {React.cloneElement(children, {
@@ -33,12 +53,15 @@ export default function Tooltip({ placement, content, children }: IProps) {
       })}
       {tooltipVisible && (
         <div
+          id="tooltip"
+          role="tooltip"
           ref={setTooltipRef}
           style={styles.popper}
           {...attributes.popper}
           className="z-20 rounded bg-zinc-500 px-3 py-1 text-xs text-white shadow-lg"
         >
           {content}
+          <div id="arrow" ref={setArrowRef} style={styles.arrow} />
         </div>
       )}
     </>
