@@ -579,10 +579,6 @@ export default function AppLayout({ infoMode }: IProps) {
                         {({ active }) => (
                           <a
                             onClick={() => {
-                              //-- Remove localStorage items --//
-                              // localStorage.clear()
-                              localStorage.removeItem("theme");
-                              localStorage.removeItem("sortBy");
                               //-- Open "Confirm Sign Out" Modal --//
                               setConfirmSignOutModalOpen(true);
                             }}
