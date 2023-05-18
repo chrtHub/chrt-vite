@@ -2,7 +2,7 @@
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components --//
-import DevSandbox from "./DevSandbox";
+import DevSandbox from "./DevSandbox/DevSandbox";
 
 //-- NPM Components --//
 
@@ -19,7 +19,9 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 export default function Settings() {
   return (
     <>
-      <div>Settings</div>
+      <h2 className="border-b-2 border-zinc-300 pb-5 text-3xl font-bold text-zinc-900">
+        Settings
+      </h2>
       <DevSandbox />
     </>
   );

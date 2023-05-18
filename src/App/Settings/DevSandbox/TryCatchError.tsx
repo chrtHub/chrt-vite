@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/24/solid";
 
 //-- Error Button --//
-const ErrorButton = () => {
+const ComponentWithError = () => {
   const { showBoundary } = useErrorBoundary();
   //-- Throw error and pass the error to showBoundary --//
   const throwErrorHandler = () => {
@@ -19,7 +19,7 @@ const ErrorButton = () => {
   return (
     <div className="flex w-full flex-col items-center justify-center gap-2 rounded-md bg-zinc-200 p-2">
       {/* Title */}
-      <p>Try-Catch Error Section</p>
+      <p className="text-md">Try-Catch Error Section</p>
 
       {/* Button */}
       <button
@@ -38,13 +38,13 @@ const ErrorButton = () => {
 };
 
 //-- Error Button Fallback --//
-const ErrorButtonFallback = () => {
+const Fallback = () => {
   const { resetBoundary } = useErrorBoundary();
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-2 rounded-md bg-orange-200 p-2">
       {/* Title */}
-      <p>Try-Catch Error Caught</p>
+      <p className="text-md">Try-Catch Error Caught</p>
 
       {/* Button */}
       <button
@@ -62,8 +62,8 @@ const ErrorButtonFallback = () => {
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function TryCatchError() {
   return (
-    <ErrorBoundary FallbackComponent={ErrorButtonFallback}>
-      <ErrorButton />
+    <ErrorBoundary FallbackComponent={Fallback}>
+      <ComponentWithError />
     </ErrorBoundary>
   );
 }

@@ -1,4 +1,5 @@
-import TryCatchError from "./TryCatchError";
+import TryCatchError from "../DevSandbox/TryCatchError";
+import Backend500Error from "./Backend500Error";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function DevSandbox() {
@@ -6,7 +7,7 @@ export default function DevSandbox() {
     <>
       <div className="md:flex md:items-center md:justify-between">
         <div className="min-w-0 flex-1">
-          <h2 className="text-2xl font-bold leading-7 text-zinc-900 sm:truncate sm:text-3xl sm:tracking-tight">
+          <h2 className="truncate text-2xl font-semibold leading-7 tracking-tight text-zinc-900">
             Developer Sandbox
           </h2>
         </div>
@@ -30,8 +31,7 @@ export default function DevSandbox() {
           <TryCatchError />
         </div>
         <div className="flex-grow">
-          {/* TODO - replace with other types of errors */}
-          <TryCatchError />
+          <Backend500Error />
         </div>
         <div className="flex-grow">
           {/* TODO - replace with other types of errors */}
@@ -41,3 +41,4 @@ export default function DevSandbox() {
     </>
   );
 }
+1;
