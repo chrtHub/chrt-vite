@@ -37,8 +37,7 @@ import Updates from "./Info/Updates/Updates";
 import NotFoundPage from "./Navigation/NotFoundPage";
 
 //-- TSX Components: Errors --//
-import RouteProviderErrorBoundary from "./App/Errors/RouteProviderErrorBoundary";
-import AppErrorBoundary from "./App/Errors/AppErrorBoundary";
+import Error from "./App/Errors/Error";
 
 //-- Other --//
 
@@ -50,7 +49,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
       element={<AuthProviderWithNavigateAndRecoil />}
-      errorElement={<AppErrorBoundary />}
+      errorElement={<Error routeTitle="Auth provider outside /" />}
     >
       {/* App */}
       <Route path="/" element={<App />}>
@@ -64,7 +63,11 @@ const router = createBrowserRouter(
           element={<AuthGuard component={GPT} />}
         />
         <Route path="/profile" element={<AuthGuard component={Profile} />} />
-        <Route path="/settings" element={<AuthGuard component={Settings} />} />
+        <Route
+          path="/settings"
+          element={<AuthGuard component={Settings} />}
+          errorElement={<Error routeTitle="/settings" />}
+        />
 
         {/* Info */}
         <Route path="/info" element={<Info />} />
@@ -87,9 +90,14 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ErrorBoundary
-      FallbackComponent={RouteProviderErrorBoundary}
-      // onError={() => {}}
-      // onReset={() => {}}
+      FallbackComponent={() => {
+        return <p>ErrorBoundary</p>;
+      }}
+      // DEV BELOW
+      // onError={(error, componentStack) => {
+      // logToErrorMonitoring(error, componentStack)
+      // }}
+      // onReset={(details) => {}}
     >
       <RouterProvider router={router} />
     </ErrorBoundary>

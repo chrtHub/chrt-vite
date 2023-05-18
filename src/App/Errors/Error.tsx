@@ -1,30 +1,33 @@
-import { Link, useRouteError } from "react-router-dom";
+import { Link, useNavigate, useRouteError } from "react-router-dom";
 import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { useErrorBoundary } from "react-error-boundary";
 
-export default function AppErrorBoundary() {
+interface IProps {
+  routeTitle: string;
+}
+export default function Error({ routeTitle }: IProps) {
+  const [open, setOpen] = useState(true); // DEV - not needed? Always open?
+  const homeButtonRef = useRef(null);
+
+  //-- react-router --//
+  const navigate = useNavigate();
   let error = useRouteError(); // TODO - what type is this?
-  const { resetBoundary } = useErrorBoundary();
 
-  const [open, setOpen] = useState(true);
-
-  const cancelButtonRef = useRef(null);
-
-  const resetErrorHandler = () => {
-    resetBoundary(); // TODO - what's this for?
-  };
+  //-- react-error-boundary --//
+  const { resetBoundary } = useErrorBoundary(); // (when) is this useful??
 
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition.Root show={true} as={Fragment}>
+      {/* <Transition.Root show={open} as={Fragment}> */}
       <Dialog
         as="div"
         className="relative z-10"
-        initialFocus={cancelButtonRef}
+        initialFocus={homeButtonRef}
         onClose={() => {
           setOpen(false);
-          resetErrorHandler();
+          resetBoundary(); // DEV - needed??
         }}
       >
         <Transition.Child
@@ -66,10 +69,10 @@ export default function AppErrorBoundary() {
                       Sorry, an error occured
                     </Dialog.Title>
                     <div className="mt-2">
-                      <p className="mb-2 text-sm text-zinc-500 dark:text-zinc-300">
+                      {/* <p className="mb-2 text-sm text-zinc-500 dark:text-zinc-300">
                         First, try resetting the application by clicking the
                         button below.
-                      </p>
+                      </p> */}
                       <p className="text-sm text-zinc-500 dark:text-zinc-300">
                         If problems persist, please email{" "}
                         <span>
@@ -84,28 +87,29 @@ export default function AppErrorBoundary() {
                     </div>
                   </div>
                 </div>
-                <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                  <button
+                <div className="mt-4 flex flex-row justify-end">
+                  <Link
+                    type="button"
+                    className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
+                    to="/"
+                    ref={homeButtonRef}
+                  >
+                    Home
+                  </Link>
+                  {/* <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
                     onClick={() => {
                       setOpen(false);
-                      resetErrorHandler();
+                      resetBoundary(); // DEV - needed??
                     }}
                   >
                     Reset App
-                  </button>
-                  {/* <button
-                    type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 hover:bg-zinc-50 sm:mt-0 sm:w-auto"
-                    onClick={() => setOpen(false)}
-                    ref={cancelButtonRef}
-                  >
-                    Cancel
                   </button> */}
                 </div>
                 <div className="bg-blue-200 font-mono">
                   <p>TODO - Error details</p>
+                  <p>{routeTitle}</p>
                 </div>
               </Dialog.Panel>
             </Transition.Child>
