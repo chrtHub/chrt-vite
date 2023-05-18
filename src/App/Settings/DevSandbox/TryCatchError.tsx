@@ -1,8 +1,8 @@
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
 import {
+  ArrowPathIcon,
   ExclamationTriangleIcon,
-  InformationCircleIcon,
 } from "@heroicons/react/24/solid";
 
 //-- Error Button --//
@@ -52,7 +52,7 @@ const Fallback = () => {
         onClick={resetBoundary}
         className="inline-flex items-center gap-x-1.5 rounded-md bg-zinc-100 px-2.5 py-1.5 text-sm font-semibold text-zinc-600 shadow-sm hover:bg-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
       >
-        <InformationCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+        <ArrowPathIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
         Reset Error State
       </button>
     </div>
