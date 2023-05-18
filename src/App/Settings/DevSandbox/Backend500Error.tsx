@@ -55,29 +55,37 @@ export default function Backend500Error() {
     );
   };
 
+  const getErrorDetails = (error: Error | AxiosError) => {
+    const errorMessage = error.message;
+    const isAxiosError = error instanceof AxiosError ? "true" : "false";
+    const data =
+      error instanceof AxiosError
+        ? typeof error.response?.data === "object"
+          ? JSON.stringify(error.response?.data) || ""
+          : String(error.response?.data || "")
+        : "";
+    const httpStatus =
+      error instanceof AxiosError
+        ? error.response?.status.toString() || ""
+        : "";
+    const httpStatusText =
+      error instanceof AxiosError ? error.response?.statusText || "" : "";
+
+    return { errorMessage, isAxiosError, data, httpStatus, httpStatusText };
+  };
+
   //-- Error Button Fallback --//
   const Fallback = ({ error }: { error: Error | AxiosError }) => {
     const { resetBoundary } = useErrorBoundary();
 
-    const errorMessage = error.message;
-    const data = error instanceof AxiosError ? error.response?.data : "";
-    const httpStatus =
-      error instanceof AxiosError ? error.response?.status : "";
-    const httpStatusText =
-      error instanceof AxiosError ? error.response?.statusText : "";
-
-    // DEV - test this
-    console.log(errorMessage);
-    console.log(data);
-    console.log(httpStatus);
-    console.log(httpStatusText);
+    const { errorMessage, isAxiosError, data, httpStatus, httpStatusText } =
+      getErrorDetails(error);
 
     return (
       <div className="flex w-full flex-col items-center justify-center gap-2 rounded-md bg-orange-200 p-2">
         {/* Title */}
         <p className="text-md">Backend 500 Error Caught</p>
-
-        {/* TODO  */}
+        {/* Error details */}
         <div className="text-md flex w-full flex-col justify-start font-mono">
           <div>
             <p className="text-zinc-600">
@@ -85,13 +93,23 @@ export default function Backend500Error() {
               {errorMessage}
             </p>
           </div>
+
+          <div>
+            <p className="text-zinc-600">
+              <span className="font-semibold text-zinc-900">AxiosError: </span>
+              {isAxiosError}
+            </p>
+          </div>
+
           <p className="text-zinc-600">
-            <span className="font-semibold text-zinc-900">data: </span> {data}
+            <span className="font-semibold text-zinc-900">Data: </span> {data}
           </p>
+
           <p className="text-zinc-600">
             <span className="font-semibold text-zinc-900">HTTP Status: </span>
             {httpStatus}
           </p>
+
           <p className="text-zinc-600">
             <span className="font-semibold text-zinc-900">
               HTTP Status Text:{" "}
@@ -99,7 +117,6 @@ export default function Backend500Error() {
             {httpStatusText}
           </p>
         </div>
-
         {/* Button */}
         <button
           type="button"
