@@ -17,11 +17,14 @@ import { useErrorBoundary } from "react-error-boundary";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Settings() {
-  // const { showBoundary } = useErrorBoundary();
+  const { showBoundary } = useErrorBoundary();
 
   const showErrorHandler = () => {
-    console.log("invoke error");
-    // throw new Error("test error");
+    try {
+      throw new Error("Foo - This is a test error");
+    } catch (err) {
+      showBoundary(err);
+    }
   };
 
   return (

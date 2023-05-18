@@ -7,6 +7,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
+import { ErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components: Home --//
 import Home from "./App/Home/Home";
@@ -36,7 +37,8 @@ import Updates from "./Info/Updates/Updates";
 import NotFoundPage from "./Navigation/NotFoundPage";
 
 //-- TSX Components: Errors --//
-import IndexErrorBoundary from "./App/Errors/IndexErrorBoundary";
+import RouteProviderErrorBoundary from "./App/Errors/RouteProviderErrorBoundary";
+import AppErrorBoundary from "./App/Errors/AppErrorBoundary";
 
 //-- Other --//
 
@@ -46,9 +48,12 @@ import "./index.css";
 //-- Create router object --//
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route element={<AuthProviderWithNavigateAndRecoil />}>
+    <Route
+      element={<AuthProviderWithNavigateAndRecoil />}
+      errorElement={<AppErrorBoundary />}
+    >
       {/* App */}
-      <Route path="/" element={<App />} errorElement={<IndexErrorBoundary />}>
+      <Route path="/" element={<App />}>
         <Route index element={<Home />} />
 
         <Route path="/data" element={<AuthGuard component={Data} />} />
@@ -81,6 +86,12 @@ const router = createBrowserRouter(
 //-- ***** ***** ***** Root Element ***** ***** ***** --//
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ErrorBoundary
+      FallbackComponent={RouteProviderErrorBoundary}
+      // onError={() => {}}
+      // onReset={() => {}}
+    >
+      <RouterProvider router={router} />
+    </ErrorBoundary>
   </React.StrictMode>
 );
