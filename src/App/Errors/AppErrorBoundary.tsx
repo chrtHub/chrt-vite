@@ -2,16 +2,18 @@ import { Link, useRouteError } from "react-router-dom";
 import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { useErrorBoundary } from "react-error-boundary";
 
 export default function AppErrorBoundary() {
-  let error = useRouteError();
-  console.error(error); // DEV
+  let error = useRouteError(); // TODO - what type is this?
+  const { resetBoundary } = useErrorBoundary();
+
   const [open, setOpen] = useState(true);
 
   const cancelButtonRef = useRef(null);
 
   const resetErrorHandler = () => {
-    //TODO
+    resetBoundary(); // TODO - what's this for?
   };
 
   return (
@@ -22,7 +24,6 @@ export default function AppErrorBoundary() {
         initialFocus={cancelButtonRef}
         onClose={() => {
           setOpen(false);
-          // TODO - reset error state stuff
           resetErrorHandler();
         }}
       >
@@ -86,10 +87,9 @@ export default function AppErrorBoundary() {
                 <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                   <button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 sm:ml-3 sm:w-auto"
+                    className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
                     onClick={() => {
                       setOpen(false);
-                      // TODO - reset error state stuff
                       resetErrorHandler();
                     }}
                   >
@@ -103,6 +103,9 @@ export default function AppErrorBoundary() {
                   >
                     Cancel
                   </button> */}
+                </div>
+                <div className="bg-blue-200 font-mono">
+                  <p>TODO - Error details</p>
                 </div>
               </Dialog.Panel>
             </Transition.Child>
