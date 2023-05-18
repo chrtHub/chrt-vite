@@ -1,13 +1,12 @@
 //-- react, react-router-dom, Auth0 --//
-import { useEffect } from "react";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
-import { useErrorBoundary } from "react-error-boundary";
+import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components --//
 
 //-- NPM Components --//
 
 //-- Icons --//
+import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
 
@@ -17,22 +16,24 @@ import { useErrorBoundary } from "react-error-boundary";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Settings() {
-  const { showBoundary } = useErrorBoundary();
+  //-- Button that causes an error --//
+  const ButtonCausingError = () => {
+    //-- NOTE - `showBoundary` must be destructed and called within `ButtonCausingError`, not `Settings`, otherwise the error boundary for `Settings` will be called --//
+    const { showBoundary } = useErrorBoundary();
 
-  const showErrorHandler = () => {
-    try {
-      throw new Error("Foo - This is a test error");
-    } catch (err) {
-      showBoundary(err);
-    }
-  };
+    //-- Throw error and pass the error to showBoundary --//
+    const throwErrorHandler = () => {
+      try {
+        throw new Error("Foo - This is a test error");
+      } catch (err) {
+        showBoundary(err);
+      }
+    };
 
-  return (
-    <>
-      <div>settings</div>
+    return (
       <button
         type="button"
-        onClick={showErrorHandler}
+        onClick={throwErrorHandler}
         className="inline-flex items-center gap-x-1.5 rounded-md bg-orange-100 px-2.5 py-1.5 text-sm font-semibold text-orange-600 shadow-sm hover:bg-orange-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
       >
         <ExclamationTriangleIcon
@@ -41,6 +42,22 @@ export default function Settings() {
         />
         Invoke Test Error
       </button>
-    </>
+    );
+  };
+
+  //-- Error Fallback Component --//
+  const Fallback = () => {
+    return (
+      <div>
+        <p>Error!</p>
+      </div>
+    );
+  };
+
+  return (
+    <ErrorBoundary FallbackComponent={Fallback}>
+      <div>Settings</div>
+      <ButtonCausingError />
+    </ErrorBoundary>
   );
 }
