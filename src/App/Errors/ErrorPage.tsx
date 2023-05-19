@@ -1,22 +1,27 @@
 import { Link, useNavigate, useRouteError } from "react-router-dom";
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { useErrorBoundary } from "react-error-boundary";
+// import { useErrorBoundary } from "react-error-boundary";
 
-interface IProps {
-  routeTitle: string;
-}
-export default function ErrorPage({ routeTitle }: IProps) {
-  const [open, setOpen] = useState(true); // DEV - not needed? Always open?
+export default function ErrorPage() {
+  const navigate = useNavigate();
+
   const homeButtonRef = useRef(null);
 
   //-- react-router --//
-  const navigate = useNavigate();
-  let error = useRouteError(); // TODO - what type is this?
+  let error = useRouteError();
+  let errorString: string = "";
+  if (error) {
+    try {
+      errorString = error.toString();
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   //-- react-error-boundary --//
-  const { resetBoundary } = useErrorBoundary(); // (when) is this useful??
+  // const { resetBoundary } = useErrorBoundary(); // DEV - (when) is this useful??
 
   return (
     <Transition.Root show={true} as={Fragment}>
@@ -26,8 +31,7 @@ export default function ErrorPage({ routeTitle }: IProps) {
         className="relative z-10"
         initialFocus={homeButtonRef}
         onClose={() => {
-          setOpen(false);
-          resetBoundary(); // DEV - needed??
+          navigate("/");
         }}
       >
         <Transition.Child
@@ -90,7 +94,7 @@ export default function ErrorPage({ routeTitle }: IProps) {
                 <div className="mt-4 flex flex-row justify-end">
                   <Link
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
+                    className="inline-flex w-full justify-center rounded-md bg-blue-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
                     to="/"
                     ref={homeButtonRef}
                   >
@@ -107,9 +111,9 @@ export default function ErrorPage({ routeTitle }: IProps) {
                     Reset App
                   </button> */}
                 </div>
-                <div className="bg-blue-200 font-mono">
-                  <p>TODO - Error details</p>
-                  <p>{routeTitle}</p>
+                <div className="mt-4 border-t-2 border-zinc-500" />
+                <div className="mt-4 rounded-md  bg-zinc-950 p-4 font-mono text-sm text-zinc-50">
+                  <p>{errorString}</p>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

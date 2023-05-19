@@ -49,7 +49,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
       element={<AuthProviderWithNavigateAndRecoil />}
-      errorElement={<ErrorPage routeTitle="Auth provider outside /" />}
+      errorElement={<ErrorPage />}
     >
       {/* App */}
       <Route path="/" element={<App />}>
@@ -66,7 +66,7 @@ const router = createBrowserRouter(
         <Route
           path="/settings"
           element={<AuthGuard component={Settings} />}
-          errorElement={<ErrorPage routeTitle="/settings" />}
+          errorElement={<ErrorPage />}
         />
 
         {/* Info */}
