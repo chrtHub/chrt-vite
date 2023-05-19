@@ -7,7 +7,7 @@ import { useErrorBoundary } from "react-error-boundary";
 interface IProps {
   routeTitle: string;
 }
-export default function Error({ routeTitle }: IProps) {
+export default function ErrorPage({ routeTitle }: IProps) {
   const [open, setOpen] = useState(true); // DEV - not needed? Always open?
   const homeButtonRef = useRef(null);
 

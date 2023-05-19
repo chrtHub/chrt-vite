@@ -37,7 +37,7 @@ import Updates from "./Info/Updates/Updates";
 import NotFoundPage from "./Navigation/NotFoundPage";
 
 //-- TSX Components: Errors --//
-import Error from "./App/Errors/Error";
+import ErrorPage from "./App/Errors/ErrorPage";
 
 //-- Other --//
 
@@ -49,7 +49,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
       element={<AuthProviderWithNavigateAndRecoil />}
-      errorElement={<Error routeTitle="Auth provider outside /" />}
+      errorElement={<ErrorPage routeTitle="Auth provider outside /" />}
     >
       {/* App */}
       <Route path="/" element={<App />}>
@@ -66,7 +66,7 @@ const router = createBrowserRouter(
         <Route
           path="/settings"
           element={<AuthGuard component={Settings} />}
-          errorElement={<Error routeTitle="/settings" />}
+          errorElement={<ErrorPage routeTitle="/settings" />}
         />
 
         {/* Info */}

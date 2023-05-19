@@ -1,6 +1,5 @@
 import { useState } from "react";
-import TryCatchError from "../DevSandbox/TryCatchError";
-import Backend500Error from "./Backend500Error";
+import InvokeErrors from "./InvokeErrors";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function DevSandbox() {
@@ -8,10 +7,11 @@ export default function DevSandbox() {
   const [showSandbox, setShowSandbox] = useState(DEV_MODE_BOOLEAN);
 
   return (
-    <>
-      <div className="md:flex md:items-center md:justify-between">
+    <div>
+      {/* Section Title and Show/Hide Buttons */}
+      <div className="flex items-center justify-between">
         <div className="min-w-0 flex-1">
-          <h2 className="truncate text-2xl font-semibold leading-7 tracking-tight text-zinc-900">
+          <h2 className="truncate text-2xl font-semibold leading-7 tracking-tight text-zinc-900 dark:text-zinc-200">
             Developer Sandbox
           </h2>
         </div>
@@ -34,13 +34,12 @@ export default function DevSandbox() {
           </button>
         </div>
       </div>
-      {showSandbox && (
-        <div className="flex flex-row items-stretch justify-start gap-2">
-          <TryCatchError />
-          <Backend500Error />
-        </div>
-      )}
-    </>
+
+      {/* Content Section(s) */}
+      <div className="flex flex-col items-center">
+        {showSandbox && <InvokeErrors />}
+      </div>
+    </div>
   );
 }
 1;
