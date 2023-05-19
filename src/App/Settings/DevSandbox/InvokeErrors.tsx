@@ -56,8 +56,8 @@ const ErrorTypes: ErrorType[] = [
 export default function InvokeErrors() {
   return (
     <div className="flex w-full max-w-prose flex-col gap-2">
-      {ErrorTypes.map((errorType) => {
-        return <ErrorComponentWithFallback errorType={errorType} />;
+      {ErrorTypes.map((errorType, index) => {
+        return <ErrorComponentWithFallback errorType={errorType} key={index} />;
       })}
     </div>
   );
