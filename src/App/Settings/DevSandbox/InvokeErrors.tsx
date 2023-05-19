@@ -9,27 +9,47 @@ let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 export interface ErrorType {
   name: string;
-  httpStatus: string | null;
-  bubbleUp: boolean;
+  httpStatus?: string;
+  networkError?: boolean;
+  fakeRoute?: boolean;
+  useRouteBoundary?: boolean;
 }
 const ErrorTypes: ErrorType[] = [
   {
     name: "try-catch + route's error boundary",
-    httpStatus: null,
-    bubbleUp: true,
+    useRouteBoundary: true,
   },
   {
     name: "try-catch",
-    httpStatus: null,
-    bubbleUp: false,
   },
-  { name: "Bad Request", httpStatus: "400", bubbleUp: false },
-  { name: "Unauthorized", httpStatus: "401", bubbleUp: false },
-  { name: "Forbidden", httpStatus: "403", bubbleUp: false },
-  { name: "Not Found", httpStatus: "404", bubbleUp: false },
-  { name: "Request Timeout", httpStatus: "408", bubbleUp: false },
-  { name: "I'm a teapot", httpStatus: "418", bubbleUp: false },
-  { name: "Internal Server Error", httpStatus: "500", bubbleUp: false },
+  {
+    name: "Bad Request",
+    httpStatus: "400",
+  },
+  {
+    name: "Unauthorized",
+    httpStatus: "401",
+  },
+  {
+    name: "Forbidden",
+    httpStatus: "403",
+  },
+  {
+    name: "I'm a teapot",
+    httpStatus: "418",
+  },
+  {
+    name: "Internal Server Error",
+    httpStatus: "500",
+  },
+  {
+    name: "Non-existent Route",
+    fakeRoute: true,
+  },
+  {
+    name: "Network Error (request to non-existent server)",
+    networkError: true,
+  },
 ];
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
@@ -79,6 +99,7 @@ const ErrorComponentWithFallback = ({ errorType }: IProps) => {
         try {
           //-- Get access token from memory or request new token --//
           let accessToken = await getAccessTokenSilently();
+
           //-- Make GET request --//
           let res = await axios.get(
             `${VITE_ALB_BASE_URL}/error/${errorType.httpStatus}`,
@@ -93,12 +114,27 @@ const ErrorComponentWithFallback = ({ errorType }: IProps) => {
           showBoundary(err);
         }
       }
+      //-- Else is fake route error, call a non-existent route --//
+      else if (errorType.fakeRoute) {
+        try {
+          await axios.get(`${VITE_ALB_BASE_URL}/this_route_does_not_exist`);
+        } catch (err) {
+          showBoundary(err);
+        }
+      }
+      //-- Else is network error, call a non-existent server --//
+      else if (errorType.networkError) {
+        try {
+          await axios.get(`https://NotARealServer.chrt.com/`);
+        } catch (err) {
+          showBoundary(err);
+        }
+      }
       //-- Else if no errorType has no httpStatus, directly throw error --//
       else {
         try {
           throw new Error("hello, this is an example of a try-catch error");
         } catch (err) {
-          // TODO - if errorType.bubbleUp === true, use the route's error boundary
           showBoundary(err);
         }
       }
@@ -200,10 +236,16 @@ const ErrorComponentWithFallback = ({ errorType }: IProps) => {
   };
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
-
-  return (
-    <ErrorBoundary FallbackComponent={Fallback}>
-      <ComponentWithError />
-    </ErrorBoundary>
-  );
+  //-- Use route's error boundary --//
+  if (errorType.useRouteBoundary === true) {
+    return <ComponentWithError />;
+  }
+  //-- Use component's error boundary --//
+  else {
+    return (
+      <ErrorBoundary FallbackComponent={Fallback}>
+        <ComponentWithError />
+      </ErrorBoundary>
+    );
+  }
 };
