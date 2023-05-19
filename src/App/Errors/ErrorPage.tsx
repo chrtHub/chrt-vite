@@ -30,9 +30,10 @@ export default function ErrorPage() {
         as="div"
         className="relative z-10"
         initialFocus={homeButtonRef}
-        onClose={() => {
-          navigate("/");
-        }}
+        onClose={() => {}}
+        // onClose={() => {
+        //   navigate("/");
+        // }}
       >
         <Transition.Child
           as={Fragment}
