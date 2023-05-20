@@ -11,6 +11,7 @@ import {
   IModel,
   IModelFriendly,
   ModelAPINames,
+  TokenLimit,
 } from "../App/GPT/chatson/chatson_types";
 
 //-- Create interface and Context --//
@@ -111,18 +112,15 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   };
 
   //-- Token Limit per model --//
-  type TokenLimit = {
-    [key in ModelAPINames]: number;
-  };
+  const BUFFER: number = 96;
   const TOKEN_LIMITS: TokenLimit = {
-    "gpt-3.5-turbo": 4096,
-    "gpt-4": 4096,
+    "gpt-3.5-turbo": 4096 - BUFFER,
+    "gpt-4": 4096 - BUFFER,
     "gpt-4-32k": 0,
     claude: 0,
     "jurrasic-2": 0,
     "amazon-titan": 0,
   };
-  const BUFFER = 96;
 
   //-- State values --//
   const [conversationsArray, setConversationsArray] = useState<IConversation[]>(

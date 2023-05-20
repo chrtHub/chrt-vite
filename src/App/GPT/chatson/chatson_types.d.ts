@@ -122,6 +122,10 @@ export interface IChatCompletionRequestBody_OpenAI {
   temperature: number | null; //-- between 0 and 2, inclusive --//
 }
 
+export type TokenLimit = {
+  [key in ModelAPINames]: number;
+};
+
 /** These lists is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */
 export type APIProviderNames = "openai" | "amazon_bedrock";
 
@@ -131,7 +135,6 @@ export type ModelDeveloperNames =
   | "anthropic"
   | "stability_ai"
   | "amazon";
-// export type ModelDeveloperFriendlyName = "OpenAI" | "AI21 Labs" | "Anthropic" | "stability.ai" | "Amazon"
 
 export type ModelAPINames =
   | "gpt-3.5-turbo"

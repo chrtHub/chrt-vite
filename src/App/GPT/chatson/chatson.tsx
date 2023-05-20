@@ -322,7 +322,8 @@ export async function send_message(
     //-- ***** ***** ***** ***** ------ ***** ***** ***** ***** --//
     async onopen(res) {
       if (res.status !== 200) {
-        throw new FatalError(res.status.toString());
+        const errorMessage = await res.text();
+        throw new FatalError(errorMessage);
       }
 
       //-- Conversation id --//
@@ -502,6 +503,8 @@ export async function send_message(
     },
     //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
     onerror(err) {
+      console.log("fetchEventSource onerror"); // DEV
+      console.log(err); // DEV - this has the error status but not the error message
       if (err instanceof FatalError) {
         CC.setCompletionLoading(false); //-- End completion loading --//
         throw new Error(err.message); //-- Rethrow error to end request --//
