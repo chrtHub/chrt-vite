@@ -10,14 +10,20 @@ import * as chatson from "./chatson/chatson";
 import ChatRow from "./ChatRow";
 import ChatLanding from "./ChatLanding";
 import LLMParams from "./LLMParams";
-import { fourCharTokens } from "./chatson/fourCharTokens";
+import { countTokens } from "./chatson/countTokens";
 
 //== NPM Components ==//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import TextareaAutosize from "react-textarea-autosize";
+import { ToastContainer, toast } from "react-toastify"; // NEW
+import "react-toastify/dist/ReactToastify.css"; // NEW
 
 //== Icons ==//
-import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowUpCircleIcon,
+  ExclamationTriangleIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/solid";
 import {
   ArrowPathIcon,
   ChevronDoubleDownIcon,
@@ -45,11 +51,13 @@ export default function ChatSession() {
   const [disableSubmitPrompt, setDisableSubmitPrompt] = useState<boolean>(true);
   const [promptDraft, setPromptDraft] = useState<string>("");
   const [promptTooLong, setPromptTooLong] = useState<boolean>(false);
-  const [prompt3XTooLong, setPrompt3XTooLong] = useState<boolean>(false);
+  const [prompt2XTooLong, setPrompt2XTooLong] = useState<boolean>(false);
   const [approxTokenCount, setApproxTokenCount] = useState<number>(0);
   const [promptContent, setPromptContent] = useState<string>("");
   const [promptReadyToSend, setPromptReadyToSend] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const [showError, setShowError] = useState<string | null>(null);
 
   //-- Virtualized rows stuff --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
@@ -95,10 +103,10 @@ export default function ChatSession() {
   const submitPromptHandler = () => {
     //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
     setPromptContent(promptDraft);
-    setPromptDraft("");
     CC.setCompletionLoading(true);
     setPromptReadyToSend(true); //-- Invokes useEffect() below --//
   };
+
   useEffect(() => {
     if (promptReadyToSend) {
       //-- Refocus textarea after submitting a prompt (unless on mobile) --//
@@ -124,15 +132,16 @@ export default function ChatSession() {
               accessToken,
               promptContent,
               parentNodeId,
-              CC
+              CC,
+              setPromptDraft
             );
           } catch (err) {
-            console.log("submitPrompt error"); // DEV
-            console.log(err);
             if (err instanceof Error) {
-              console.log((err as Error).message);
+              setShowError(err.message);
+              setTimeout(() => {
+                setShowError(null);
+              }, 3000);
             }
-            // TODO - implement showBoundary here
           }
         }
       };
@@ -173,9 +182,9 @@ export default function ChatSession() {
   //== Side Effects ==//
   //-- On promptDraft updates, update promptTooLong and disableSubmitPrompt  --//
   useEffect(() => {
-    let tokens = fourCharTokens(promptDraft);
+    let tokens = countTokens(promptDraft);
 
-    if (!promptDraft || tokens > CC.modelTokenLimit * 3) {
+    if (!promptDraft || tokens > CC.modelTokenLimit * 2) {
       setDisableSubmitPrompt(true);
     } else {
       setDisableSubmitPrompt(false);
@@ -189,11 +198,11 @@ export default function ChatSession() {
       }
     }
 
-    if (tokens > CC.modelTokenLimit * 3) {
-      setPrompt3XTooLong(true);
+    if (tokens > CC.modelTokenLimit * 2) {
+      setPrompt2XTooLong(true);
     } else {
-      if (prompt3XTooLong) {
-        setPrompt3XTooLong(false);
+      if (prompt2XTooLong) {
+        setPrompt2XTooLong(false);
       }
     }
 
@@ -308,38 +317,71 @@ export default function ChatSession() {
       {/* STICKY INPUT SECTION */}
       <div className="sticky bottom-0 flex h-auto flex-col justify-center bg-zinc-50 pb-3 pt-1 dark:bg-zinc-950">
         {/* ABOVE DIVIDER */}
+
+        {/* Error Alert */}
+        <div className="flex flex-row justify-center">
+          {showError && (
+            <div className="mb-1 w-full max-w-prose rounded-md bg-red-100 p-2 dark:bg-red-900">
+              <div className="flex flex-row justify-between">
+                <div>
+                  <ExclamationTriangleIcon
+                    className="h-5 w-5 text-red-500 dark:text-red-100"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-red-800 dark:text-red-100">
+                    {showError}
+                  </p>
+                </div>
+                <div className="pl-3">
+                  <div className="-mx-1.5 -my-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setShowError(null)}
+                      className="inline-flex rounded-full p-1.5 text-red-500 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-red-50 dark:text-red-100 dark:hover:bg-red-950"
+                    >
+                      <span className="sr-only">Dismiss</span>
+                      <XCircleIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Token count warning */}
         <div className="flex flex-row justify-center">
           <div
             className={classNames(
-              "flex w-full max-w-prose flex-row justify-center bg-gradient-to-t",
-              promptTooLong ? "from-orange-200 to-orange-50" : "",
-              prompt3XTooLong ? "from-red-200 to-red-50" : ""
+              "mb-1 flex w-full max-w-prose flex-row justify-center rounded-full text-white",
+              promptTooLong && !prompt2XTooLong
+                ? "bg-orange-500  dark:bg-orange-800"
+                : prompt2XTooLong
+                ? "bg-red-500  dark:bg-red-800"
+                : ""
             )}
           >
-            {/* Prompt is way too long */}
-            {prompt3XTooLong && (
+            {/* Prompt may be too long */}
+            {promptTooLong && !prompt2XTooLong && (
               <>
-                <p className="py-1 text-sm font-medium italic text-red-600">
-                  Prompt is way too long:{" "}
-                </p>
-                <p className="px-2 py-1 text-sm text-red-600">
+                <p className="py-1 text-sm italic">Prompt may be too long: </p>
+                <p className="px-2 py-1 text-sm font-medium">
                   ~{numeral(approxTokenCount).format("0,0")} tokens{" "}
-                  <span className="text-zinc-700">
+                  <span className="">
                     (Limit: {numeral(CC.modelTokenLimit).format("0,0")})
                   </span>
                 </p>
               </>
             )}
-            {/* Prompt may be too long */}
-            {promptTooLong && !prompt3XTooLong && (
+            {/* Prompt is way too long */}
+            {prompt2XTooLong && (
               <>
-                <p className="py-1 text-sm font-medium italic text-orange-600">
-                  Prompt may be too long:{" "}
-                </p>
-                <p className="px-2 py-1 text-sm text-orange-600">
+                <p className="py-1 text-sm italic">Prompt is way too long: </p>
+                <p className="px-2 py-1 text-sm font-medium">
                   ~{numeral(approxTokenCount).format("0,0")} tokens{" "}
-                  <span className="text-zinc-700">
+                  <span className="">
                     (Limit: {numeral(CC.modelTokenLimit).format("0,0")})
                   </span>
                 </p>
@@ -460,10 +502,10 @@ export default function ChatSession() {
                   "focus:ring-2 focus:ring-inset focus:ring-green-600",
                   CC.completionLoading
                     ? "animate-pulse bg-zinc-300 dark:bg-zinc-500"
-                    : prompt3XTooLong
-                    ? "bg-red-300 ring-red-400 focus:ring-2 focus:ring-red-400"
-                    : promptTooLong
-                    ? "bg-orange-300 ring-orange-400 focus:ring-2 focus:ring-orange-400"
+                    : promptTooLong && !prompt2XTooLong
+                    ? "bg-orange-300 ring-1 ring-orange-400 focus:ring-2 focus:ring-orange-400 dark:ring-orange-600 dark:focus:ring-orange-600"
+                    : prompt2XTooLong
+                    ? "bg-red-300 ring-1 ring-red-400 focus:ring-2 focus:ring-red-400 dark:ring-red-600 dark:focus:ring-red-600"
                     : "bg-white ring-1 ring-inset ring-zinc-300 dark:bg-zinc-700 dark:text-white"
                 )}
               />

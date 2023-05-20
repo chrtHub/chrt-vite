@@ -71,7 +71,7 @@ export default function ChatRow({ row, prevRow }: IProps) {
         //-- Send prompt as chat message --//
         await chatson.send_message(
           accessToken,
-          prevRow.content, // need to send the prompt, not the complation
+          prevRow.content,
           prevRow.parent_node_id,
           CC
         );

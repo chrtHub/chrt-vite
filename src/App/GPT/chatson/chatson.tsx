@@ -276,7 +276,8 @@ export async function send_message(
   access_token: string,
   prompt_content: string,
   parent_node_id: string | null,
-  CC: IChatContext
+  CC: IChatContext,
+  setPromptDraft?: React.Dispatch<React.SetStateAction<string>>
 ): Promise<void> {
   console.log(" ----- SEND MESSAGE ----- "); // DEV
   //-- Get user_db_id from access token --//
@@ -324,6 +325,10 @@ export async function send_message(
       if (res.status !== 200) {
         const errorMessage = await res.text();
         throw new FatalError(errorMessage);
+      }
+      //-- If res.status is 200, clear the textarea --//
+      else if (setPromptDraft) {
+        setPromptDraft("");
       }
 
       //-- Conversation id --//
@@ -503,11 +508,9 @@ export async function send_message(
     },
     //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
     onerror(err) {
-      console.log("fetchEventSource onerror"); // DEV
-      console.log(err); // DEV - this has the error status but not the error message
       if (err instanceof FatalError) {
         CC.setCompletionLoading(false); //-- End completion loading --//
-        throw new Error(err.message); //-- Rethrow error to end request --//
+        throw err; //-- Rethrow error to end request --//
       } else {
         //-- Do nothing to automatically retry. Or implement retry strategy here --//
         CC.setCompletionLoading(false); //-- End completion loading --//

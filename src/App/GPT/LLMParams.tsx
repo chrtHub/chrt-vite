@@ -50,7 +50,7 @@ export default function LLMParams() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Popover.Panel className="absolute bottom-full left-1/2 z-10 mb-3 mt-2 w-56 origin-top-right -translate-x-1/2 transform rounded-md shadow-lg ring-1 ring-transparent focus:outline-none dark:bg-zinc-900">
+        <Popover.Panel className="absolute bottom-full left-1/2 z-10 mb-3 mt-2 w-56 origin-top-right -translate-x-1/2 transform rounded-md bg-white shadow-lg ring-1 ring-transparent focus:outline-none dark:bg-zinc-900">
           {({ close }) => (
             <div className="flex flex-col">
               {/* Header row */}
