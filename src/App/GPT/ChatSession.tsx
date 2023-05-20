@@ -430,19 +430,19 @@ export default function ChatSession() {
                 onKeyDown={keyDownHandler}
                 onChange={(event) => setPromptDraft(event.target.value)}
                 className={classNames(
+                  "block w-full resize-none rounded-sm border-0 py-3 pr-10 text-base ring-1 ring-inset ring-zinc-300 sm:leading-6",
+                  "bg-white text-zinc-900 placeholder:text-zinc-400 dark:bg-zinc-700 dark:text-white",
+                  "focus:ring-2 focus:ring-inset focus:ring-green-600",
                   CC.completionLoading
                     ? "animate-pulse bg-zinc-300 dark:bg-zinc-500"
-                    : "bg-white dark:bg-zinc-700",
-                  "text-zinc-900 placeholder:text-zinc-400",
-                  "dark:text-white",
-                  "block w-full resize-none rounded-sm border-0 py-3 pr-10 text-base ring-1 ring-inset ring-zinc-300 sm:leading-6",
-                  "focus:ring-2 focus:ring-inset focus:ring-green-600",
-                  promptTooLong
-                    ? "bg-orange-300 ring-orange-400 focus:ring-2 focus:ring-orange-400"
                     : "",
-                  prompt10XTooLong
-                    ? "bg-red-300 ring-red-400 focus:ring-2 focus:ring-red-400"
+                  // promptTooLong
+                  true
+                    ? "bg-orange-300 ring-orange-400 focus:ring-2 focus:ring-orange-400"
                     : ""
+                  // prompt10XTooLong
+                  //   ? "bg-red-300 ring-red-400 focus:ring-2 focus:ring-red-400"
+                  //   : ""
                 )}
               />
 
