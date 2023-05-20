@@ -1,4 +1,10 @@
-import { useState, createContext, useContext, PropsWithChildren } from "react";
+import {
+  useState,
+  createContext,
+  useContext,
+  PropsWithChildren,
+  useEffect,
+} from "react";
 import {
   IConversation,
   IMessageRow,
@@ -21,6 +27,7 @@ export interface IChatContext {
   setConversation: React.Dispatch<React.SetStateAction<IConversation | null>>;
   model: IModel;
   setModel: React.Dispatch<React.SetStateAction<IModel>>;
+  modelTokenLimit: number;
   model_friendly_names: Partial<Record<ModelAPINames, Object>>;
   model_options: Partial<Record<ModelAPINames, IModel>>;
   temperature: number | null;
@@ -103,6 +110,20 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     // },
   };
 
+  //-- Token Limit per model --//
+  type TokenLimit = {
+    [key in ModelAPINames]: number;
+  };
+  const TOKEN_LIMITS: TokenLimit = {
+    "gpt-3.5-turbo": 4096,
+    "gpt-4": 4096,
+    "gpt-4-32k": 0,
+    claude: 0,
+    "jurrasic-2": 0,
+    "amazon-titan": 0,
+  };
+  const BUFFER = 96;
+
   //-- State values --//
   const [conversationsArray, setConversationsArray] = useState<IConversation[]>(
     []
@@ -115,6 +136,9 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   const [model, setModel] = useState<IModel>(
     model_options["gpt-3.5-turbo"] as IModel
   );
+  const [modelTokenLimit, setModelTokenLimit] = useState<number>(
+    TOKEN_LIMITS[model.model_api_name]
+  );
   const [temperature, setTemperature] = useState<number | null>(null);
   const [completionLoading, setCompletionLoading] = useState<boolean>(false);
   const [focusTextarea, setFocusTextarea] = useState<boolean>(false);
@@ -122,6 +146,10 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   const [sortBy, setSortBy] = useState<"last_edited" | "created_at">(
     localStorage_sortBy === "created_at" ? "created_at" : "last_edited"
   );
+
+  useEffect(() => {
+    setModelTokenLimit(TOKEN_LIMITS[model.model_api_name]);
+  }, [model]);
 
   //-- Bundle values into chatContextValue --//
   const chatContextValue: IChatContext = {
@@ -137,6 +165,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     setConversation,
     model,
     setModel,
+    modelTokenLimit,
     model_friendly_names,
     temperature,
     setTemperature,

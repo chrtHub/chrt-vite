@@ -35,7 +35,7 @@ const ErrorTypes: ErrorType[] = [
     httpStatus: "403",
   },
   {
-    name: "I'm a teapot",
+    name: "I'm a Teapot",
     httpStatus: "418",
   },
   {

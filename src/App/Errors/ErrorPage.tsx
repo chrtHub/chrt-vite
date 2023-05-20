@@ -5,7 +5,7 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 // import { useErrorBoundary } from "react-error-boundary";
 
 export default function ErrorPage() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const homeButtonRef = useRef(null);
 

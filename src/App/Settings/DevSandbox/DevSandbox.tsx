@@ -42,4 +42,3 @@ export default function DevSandbox() {
     </div>
   );
 }
-1;

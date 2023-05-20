@@ -10,6 +10,7 @@ import * as chatson from "./chatson/chatson";
 import ChatRow from "./ChatRow";
 import ChatLanding from "./ChatLanding";
 import LLMParams from "./LLMParams";
+import { fourCharTokens } from "./chatson/fourCharTokens";
 
 //== NPM Components ==//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
@@ -25,6 +26,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 //== NPM Functions ==//
+import numeral from "numeral";
 
 //== Utility Functions ==//
 import classNames from "../../Util/classNames";
@@ -40,7 +42,11 @@ export default function ChatSession() {
   let navigate = useNavigate();
 
   //-- Prompt stuff --//
+  const [disableSubmitPrompt, setDisableSubmitPrompt] = useState<boolean>(true); // NEW
   const [promptDraft, setPromptDraft] = useState<string>("");
+  const [promptTooLong, setPromptTooLong] = useState<boolean>(true); // NEW
+  const [prompt10XTooLong, setPrompt10XTooLong] = useState<boolean>(true); // NEW
+  const [approxTokenCount, setApproxTokenCount] = useState<number>(0); //  NEW
   const [promptContent, setPromptContent] = useState<string>("");
   const [promptReadyToSend, setPromptReadyToSend] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -150,6 +156,27 @@ export default function ChatSession() {
   //-- ***** ***** ***** ***** end of chatson ***** ***** ***** ***** --//
 
   //== Side Effects ==//
+  //-- On promptDraft updates, update promptTooLong and disableSubmitPrompt  --//
+  useEffect(() => {
+    let tokens = fourCharTokens(promptDraft);
+
+    if (!promptDraft || tokens > CC.modelTokenLimit * 10) {
+      setDisableSubmitPrompt(true);
+    } else {
+      setDisableSubmitPrompt(false);
+    }
+
+    if (tokens > 3000) {
+      setPromptTooLong(true);
+    }
+
+    if (tokens > CC.modelTokenLimit * 10) {
+      setPrompt10XTooLong(true);
+    }
+
+    setApproxTokenCount(tokens);
+  }, [promptDraft]);
+
   //-- Listener for keyboard shortcuts --//
   useEffect(() => {
     document.addEventListener("keydown", globalKeyDownHandler);
@@ -257,9 +284,48 @@ export default function ChatSession() {
 
       {/* STICKY INPUT SECTION */}
       <div className="sticky bottom-0 flex h-auto flex-col justify-center bg-zinc-50 pb-3 pt-1 dark:bg-zinc-950">
+        {/* ABOVE DIVIDER */}
+        {/* Token count warning */}
+        <div className="flex flex-row justify-center">
+          <div
+            className={classNames(
+              "flex w-full max-w-prose flex-row justify-center bg-gradient-to-t",
+              promptTooLong ? "from-orange-200 to-orange-50" : "",
+              prompt10XTooLong ? "from-red-200 to-red-50" : ""
+            )}
+          >
+            {prompt10XTooLong && (
+              <>
+                <p className="py-1 text-sm font-medium italic text-red-600">
+                  Prompt is way too long:{" "}
+                </p>
+                <p className="px-2 py-1 text-sm text-red-600">
+                  ~{approxTokenCount} tokens{" "}
+                  <span className="text-zinc-700">
+                    (Limit: {numeral(CC.modelTokenLimit).format("0,0")})
+                  </span>
+                </p>
+              </>
+            )}
+            {promptTooLong && !prompt10XTooLong && (
+              <>
+                <p className="py-1 text-sm font-medium italic text-orange-600">
+                  Prompt may be too long:{" "}
+                </p>
+                <p className="px-2 py-1 text-sm text-orange-600">
+                  ~{approxTokenCount} tokens{" "}
+                  <span className="text-zinc-700">
+                    (Limit: {numeral(CC.modelTokenLimit).format("0,0")})
+                  </span>
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+
         {/* DIVIDER */}
         <div className="flex justify-center">
-          <div className="mb-2 w-full max-w-prose border-t-2 border-zinc-300 dark:border-zinc-600"></div>
+          <div className="mb-2 w-full max-w-prose border-t-2 border-zinc-300 dark:border-zinc-600" />
         </div>
 
         {/* CONTROL BAR */}
@@ -365,9 +431,18 @@ export default function ChatSession() {
                 onChange={(event) => setPromptDraft(event.target.value)}
                 className={classNames(
                   CC.completionLoading
-                    ? "animate-pulse bg-zinc-300 ring-2 dark:bg-zinc-500"
-                    : "dark:bg-zinc-700",
-                  "block w-full resize-none rounded-sm border-0 bg-white py-3 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:text-white sm:leading-6"
+                    ? "animate-pulse bg-zinc-300 dark:bg-zinc-500"
+                    : "bg-white dark:bg-zinc-700",
+                  "text-zinc-900 placeholder:text-zinc-400",
+                  "dark:text-white",
+                  "block w-full resize-none rounded-sm border-0 py-3 pr-10 text-base ring-1 ring-inset ring-zinc-300 sm:leading-6",
+                  "focus:ring-2 focus:ring-inset focus:ring-green-600",
+                  promptTooLong
+                    ? "bg-orange-300 ring-orange-400 focus:ring-2 focus:ring-orange-400"
+                    : "",
+                  prompt10XTooLong
+                    ? "bg-red-300 ring-red-400 focus:ring-2 focus:ring-red-400"
+                    : ""
                 )}
               />
 
@@ -379,15 +454,17 @@ export default function ChatSession() {
                 <button
                   id="submit-prompt-button"
                   onClick={submitPromptHandler}
-                  disabled={!promptDraft}
+                  disabled={disableSubmitPrompt}
                   className={classNames(
-                    !promptDraft ? "cursor-not-allowed" : "cursor-pointer",
+                    disableSubmitPrompt
+                      ? "cursor-not-allowed"
+                      : "cursor-pointer",
                     "absolute bottom-0 right-0 flex items-center px-1.5 py-3 focus:outline-green-600"
                   )}
                 >
                   <ArrowUpCircleIcon
                     className={classNames(
-                      promptDraft ? "text-green-600" : "text-zinc-300",
+                      disableSubmitPrompt ? "text-zinc-400" : "text-green-600",
                       "h-6 w-6"
                     )}
                     aria-hidden="true"
