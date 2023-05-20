@@ -67,13 +67,18 @@ export default function ChatRow({ row, prevRow }: IProps) {
     const accessToken = await getAccessTokenSilently();
 
     if (prevRow) {
-      //-- Send prompt as chat message --//
-      await chatson.send_message(
-        accessToken,
-        prevRow.content, // need to send the prompt, not the complation
-        prevRow.parent_node_id,
-        CC
-      );
+      try {
+        //-- Send prompt as chat message --//
+        await chatson.send_message(
+          accessToken,
+          prevRow.content, // need to send the prompt, not the complation
+          prevRow.parent_node_id,
+          CC
+        );
+      } catch (err) {
+        console.log(err);
+        // TODO - implement showBoundary here
+      }
     }
   };
 
@@ -118,13 +123,18 @@ export default function ChatRow({ row, prevRow }: IProps) {
   const submitEditedPrompt = async () => {
     const accessToken = await getAccessTokenSilently();
 
-    //-- Send prompt as chat message --//
-    await chatson.send_message(
-      accessToken,
-      promptContent,
-      row.parent_node_id,
-      CC
-    );
+    try {
+      //-- Send prompt as chat message --//
+      await chatson.send_message(
+        accessToken,
+        promptContent,
+        row.parent_node_id,
+        CC
+      );
+    } catch (err) {
+      console.log(err);
+      // TODO - implement showBoundary here
+    }
   };
   //-- When textarea focuses, put cursor after the last char --//
   useEffect(() => {

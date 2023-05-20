@@ -42,11 +42,11 @@ export default function ChatSession() {
   let navigate = useNavigate();
 
   //-- Prompt stuff --//
-  const [disableSubmitPrompt, setDisableSubmitPrompt] = useState<boolean>(true); // NEW
+  const [disableSubmitPrompt, setDisableSubmitPrompt] = useState<boolean>(true);
   const [promptDraft, setPromptDraft] = useState<string>("");
-  const [promptTooLong, setPromptTooLong] = useState<boolean>(true); // NEW
-  const [prompt10XTooLong, setPrompt10XTooLong] = useState<boolean>(true); // NEW
-  const [approxTokenCount, setApproxTokenCount] = useState<number>(0); //  NEW
+  const [promptTooLong, setPromptTooLong] = useState<boolean>(false);
+  const [prompt3XTooLong, setPrompt3XTooLong] = useState<boolean>(false);
+  const [approxTokenCount, setApproxTokenCount] = useState<number>(0);
   const [promptContent, setPromptContent] = useState<string>("");
   const [promptReadyToSend, setPromptReadyToSend] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -119,12 +119,17 @@ export default function ChatSession() {
 
         //-- Send prompt as chat message --//
         if (user?.sub) {
-          await chatson.send_message(
-            accessToken,
-            promptContent,
-            parentNodeId,
-            CC
-          );
+          try {
+            await chatson.send_message(
+              accessToken,
+              promptContent,
+              parentNodeId,
+              CC
+            );
+          } catch (err) {
+            console.log(err);
+            // TODO - implement showBoundary here
+          }
         }
       };
       submitPrompt();
@@ -143,12 +148,17 @@ export default function ChatSession() {
 
       if (last_prompt_row) {
         //-- Send prompt as chat message --//
-        await chatson.send_message(
-          accessToken,
-          last_prompt_row.content,
-          last_prompt_row.parent_node_id,
-          CC
-        );
+        try {
+          await chatson.send_message(
+            accessToken,
+            last_prompt_row.content,
+            last_prompt_row.parent_node_id,
+            CC
+          );
+        } catch (err) {
+          console.log(err);
+          // TODO - implement showBoundary here
+        }
       }
     }
   };
@@ -160,18 +170,26 @@ export default function ChatSession() {
   useEffect(() => {
     let tokens = fourCharTokens(promptDraft);
 
-    if (!promptDraft || tokens > CC.modelTokenLimit * 10) {
+    if (!promptDraft || tokens > CC.modelTokenLimit * 3) {
       setDisableSubmitPrompt(true);
     } else {
       setDisableSubmitPrompt(false);
     }
 
-    if (tokens > 3000) {
+    if (tokens > CC.modelTokenLimit) {
       setPromptTooLong(true);
+    } else {
+      if (promptTooLong) {
+        setPromptTooLong(false);
+      }
     }
 
-    if (tokens > CC.modelTokenLimit * 10) {
-      setPrompt10XTooLong(true);
+    if (tokens > CC.modelTokenLimit * 3) {
+      setPrompt3XTooLong(true);
+    } else {
+      if (prompt3XTooLong) {
+        setPrompt3XTooLong(false);
+      }
     }
 
     setApproxTokenCount(tokens);
@@ -199,8 +217,8 @@ export default function ChatSession() {
   const keyDownHandler = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault(); //-- Prevent default behavior (newline insertion) --//
-      //-- prevent submit while loading --//
-      if (!CC.completionLoading) {
+      //-- prevent submit while loading or if `disableSubmitPrompt` is true --//
+      if (!CC.completionLoading && !disableSubmitPrompt) {
         submitPromptHandler();
       }
     } //-- else "Enter" with shift will just insert a newline --//
@@ -291,29 +309,31 @@ export default function ChatSession() {
             className={classNames(
               "flex w-full max-w-prose flex-row justify-center bg-gradient-to-t",
               promptTooLong ? "from-orange-200 to-orange-50" : "",
-              prompt10XTooLong ? "from-red-200 to-red-50" : ""
+              prompt3XTooLong ? "from-red-200 to-red-50" : ""
             )}
           >
-            {prompt10XTooLong && (
+            {/* Prompt is way too long */}
+            {prompt3XTooLong && (
               <>
                 <p className="py-1 text-sm font-medium italic text-red-600">
                   Prompt is way too long:{" "}
                 </p>
                 <p className="px-2 py-1 text-sm text-red-600">
-                  ~{approxTokenCount} tokens{" "}
+                  ~{numeral(approxTokenCount).format("0,0")} tokens{" "}
                   <span className="text-zinc-700">
                     (Limit: {numeral(CC.modelTokenLimit).format("0,0")})
                   </span>
                 </p>
               </>
             )}
-            {promptTooLong && !prompt10XTooLong && (
+            {/* Prompt may be too long */}
+            {promptTooLong && !prompt3XTooLong && (
               <>
                 <p className="py-1 text-sm font-medium italic text-orange-600">
                   Prompt may be too long:{" "}
                 </p>
                 <p className="px-2 py-1 text-sm text-orange-600">
-                  ~{approxTokenCount} tokens{" "}
+                  ~{numeral(approxTokenCount).format("0,0")} tokens{" "}
                   <span className="text-zinc-700">
                     (Limit: {numeral(CC.modelTokenLimit).format("0,0")})
                   </span>
@@ -430,22 +450,18 @@ export default function ChatSession() {
                 onKeyDown={keyDownHandler}
                 onChange={(event) => setPromptDraft(event.target.value)}
                 className={classNames(
-                  "block w-full resize-none rounded-sm border-0 py-3 pr-10 text-base ring-1 ring-inset ring-zinc-300 sm:leading-6",
-                  "bg-white text-zinc-900 placeholder:text-zinc-400 dark:bg-zinc-700 dark:text-white",
+                  "block w-full resize-none rounded-sm border-0 py-3 pr-10 text-base leading-6",
+                  "text-zinc-900 placeholder:text-zinc-400",
                   "focus:ring-2 focus:ring-inset focus:ring-green-600",
                   CC.completionLoading
                     ? "animate-pulse bg-zinc-300 dark:bg-zinc-500"
-                    : "",
-                  // promptTooLong
-                  true
+                    : prompt3XTooLong
+                    ? "bg-red-300 ring-red-400 focus:ring-2 focus:ring-red-400"
+                    : promptTooLong
                     ? "bg-orange-300 ring-orange-400 focus:ring-2 focus:ring-orange-400"
-                    : ""
-                  // prompt10XTooLong
-                  //   ? "bg-red-300 ring-red-400 focus:ring-2 focus:ring-red-400"
-                  //   : ""
+                    : "bg-white ring-1 ring-inset ring-zinc-300 dark:bg-zinc-700 dark:text-white"
                 )}
               />
-
               {CC.completionLoading ? (
                 <button className="absolute bottom-0 right-0 flex cursor-wait items-center px-1.5 py-3 focus:outline-green-600">
                   <CpuChipIcon className="text h-6 w-6 animate-spin text-green-500" />

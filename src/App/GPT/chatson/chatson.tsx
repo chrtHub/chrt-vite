@@ -309,201 +309,200 @@ export async function send_message(
   let new_conversation_id: string | null = null;
   let new_node_id: string | null;
 
-  class CustomFatalError extends Error {} // TODO - implement error handling
+  //-- Custom error classes for retry / failure logic --//
+  class RetriableError extends Error {}
+  class FatalError extends Error {}
 
-  try {
-    fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
-      method: "POST",
-      headers: request_headers,
-      body: JSON.stringify(request_body),
-      //-- ***** ***** ***** ***** ONOPEN ***** ***** ***** ***** --//
-      //-- ***** ***** ***** ***** ------ ***** ***** ***** ***** --//
-      async onopen(res) {
-        //-- Conversation id --//
-        const conversation_id = res.headers.get("CHRT-conversation-id");
-        if (!conversation_id) {
-          throw new CustomFatalError("missing conversation_id");
-        }
+  await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
+    method: "POST",
+    headers: request_headers,
+    body: JSON.stringify(request_body),
+    openWhenHidden: true, //-- Keep connection open when Page Visibility API notices tab is hidden --//
+    //-- ***** ***** ***** ***** ONOPEN ***** ***** ***** ***** --//
+    //-- ***** ***** ***** ***** ------ ***** ***** ***** ***** --//
+    async onopen(res) {
+      if (res.status !== 200) {
+        throw new FatalError(res.status.toString());
+      }
 
-        //-- Root node (new conversations only) --//
-        CC.setConversationId(conversation_id);
-        const root_node_id = res.headers.get("CHRT-root-node-id");
-        const root_node_created_at = res.headers.get(
-          "CHRT-root-node-created-at"
-        );
-        if (
-          root_node_id &&
-          root_node_id !== "none" &&
-          root_node_created_at &&
-          root_node_created_at !== "none"
-        ) {
-          new_conversation = true;
-          new_conversation_id = conversation_id;
-          //-- Build root node --//
-          const root_node: IMessageNode = {
-            _id: root_node_id,
-            user_db_id: user_db_id,
-            created_at: root_node_created_at,
-            conversation_id: conversation_id,
-            parent_node_id: null,
-            children_node_ids: [],
-            prompt: {
-              author: "chrt",
-              model: CC.model,
-              created_at: root_node_created_at,
-              role: "system",
-              content: "(server-side only)",
-            },
-            completion: null,
-          };
+      //-- Conversation id --//
+      const conversation_id = res.headers.get("CHRT-conversation-id");
+      if (!conversation_id) {
+        throw new FatalError("missing conversation_id");
+      }
 
-          //-- Add root node to nodeArray --//
-          nodeArray.push(root_node);
-        }
-
-        //-- New node --//
-        new_node_id = res.headers.get("CHRT-new-node-id");
-        const new_node_created_at = res.headers.get("CHRT-new-node-created-at");
-        const parent_node_id = res.headers.get("CHRT-parent-node-id");
-        if (!new_node_id || !new_node_created_at || !parent_node_id) {
-          throw new CustomFatalError("missing header(s)");
-        }
-        //-- Build prompt node --//
-        const completion: IMessage = {
-          author: CC.model.model_api_name,
-          model: CC.model,
-          created_at: new Date().toISOString(),
-          role: "assistant",
-          content: "", //-- overwritten in CC.rowArray during SSE --//
-        };
-        const new_node: IMessageNode = {
-          _id: new_node_id,
+      //-- Root node (new conversations only) --//
+      CC.setConversationId(conversation_id);
+      const root_node_id = res.headers.get("CHRT-root-node-id");
+      const root_node_created_at = res.headers.get("CHRT-root-node-created-at");
+      if (
+        root_node_id &&
+        root_node_id !== "none" &&
+        root_node_created_at &&
+        root_node_created_at !== "none"
+      ) {
+        new_conversation = true;
+        new_conversation_id = conversation_id;
+        //-- Build root node --//
+        const root_node: IMessageNode = {
+          _id: root_node_id,
           user_db_id: user_db_id,
-          created_at: new_node_created_at,
+          created_at: root_node_created_at,
           conversation_id: conversation_id,
-          parent_node_id: parent_node_id,
+          parent_node_id: null,
           children_node_ids: [],
-          prompt: prompt,
-          completion: completion,
+          prompt: {
+            author: "chrt",
+            model: CC.model,
+            created_at: root_node_created_at,
+            role: "system",
+            content: "(server-side only)",
+          },
+          completion: null,
         };
 
-        //-- Add new_node to nodeArray, update parent node's children_node_ids --//
-        nodeArray.push(new_node);
-        let parent_node = nodeArray.find((node) => node._id === parent_node_id);
-        if (parent_node) {
-          parent_node.children_node_ids.push(new_node._id);
+        //-- Add root node to nodeArray --//
+        nodeArray.push(root_node);
+      }
+
+      //-- New node --//
+      new_node_id = res.headers.get("CHRT-new-node-id");
+      const new_node_created_at = res.headers.get("CHRT-new-node-created-at");
+      const parent_node_id = res.headers.get("CHRT-parent-node-id");
+      if (!new_node_id || !new_node_created_at || !parent_node_id) {
+        throw new FatalError("missing header(s)");
+      }
+      //-- Build prompt node --//
+      const completion: IMessage = {
+        author: CC.model.model_api_name,
+        model: CC.model,
+        created_at: new Date().toISOString(),
+        role: "assistant",
+        content: "", //-- overwritten in CC.rowArray during SSE --//
+      };
+      const new_node: IMessageNode = {
+        _id: new_node_id,
+        user_db_id: user_db_id,
+        created_at: new_node_created_at,
+        conversation_id: conversation_id,
+        parent_node_id: parent_node_id,
+        children_node_ids: [],
+        prompt: prompt,
+        completion: completion,
+      };
+
+      //-- Add new_node to nodeArray, update parent node's children_node_ids --//
+      nodeArray.push(new_node);
+      let parent_node = nodeArray.find((node) => node._id === parent_node_id);
+      if (parent_node) {
+        parent_node.children_node_ids.push(new_node._id);
+      }
+
+      //-- Update rowArray --//
+      let rowArray = nodeArrayToRowArray(nodeArray, new_node);
+      CC.setRowArray(rowArray);
+
+      //----//
+    },
+    //-- ***** ***** ***** ***** ONMESSAGE ***** ***** ***** ***** --//
+    //-- ***** ***** ***** ***** --------- ***** ***** ***** ***** --//
+    onmessage(event) {
+      //-- Error --//
+      if (event.id && event.id === "error") {
+        throw new FatalError('event.id === "error"');
+      }
+      //-- Conversation object (IConversation) --//
+      else if (event.id && event.id === "conversation") {
+        //-- Note - this is only sent for new conversations --//
+        let data: IConversation = JSON.parse(event.data);
+        CC.setConversation(data);
+      }
+      //-- Completion object (IMessage) --//
+      else if (event.id && event.id === "completion") {
+        let completion_object: IMessage = JSON.parse(event.data);
+        //-- Overwrite completion object in nodeArray --//
+        let new_node = nodeArray.find((node) => node._id === new_node_id);
+        if (new_node) {
+          new_node.completion = completion_object;
         }
 
-        //-- Update rowArray --//
-        let rowArray = nodeArrayToRowArray(nodeArray, new_node);
-        CC.setRowArray(rowArray);
-
-        //----//
-      },
-      //-- ***** ***** ***** ***** ONMESSAGE ***** ***** ***** ***** --//
-      //-- ***** ***** ***** ***** --------- ***** ***** ***** ***** --//
-      onmessage(event) {
-        //-- Error --//
-        if (event.id && event.id === "error") {
-          // TODO - implement error handling
-        }
-        //-- Conversation object (IConversation) --//
-        else if (event.id && event.id === "conversation") {
-          //-- Note - this is only sent for new conversations --//
-          let data: IConversation = JSON.parse(event.data);
-          CC.setConversation(data);
-          // TODO - set conversation id as path param??
-          //
-        }
-        //-- Completion object (IMessage) --//
-        else if (event.id && event.id === "completion") {
-          let completion_object: IMessage = JSON.parse(event.data);
-          //-- Overwrite completion object in nodeArray --//
-          let new_node = nodeArray.find((node) => node._id === new_node_id);
-          if (new_node) {
-            new_node.completion = completion_object;
-          }
-
-          //-- Overwrite completion content in rowArray --//
-          CC.setRowArray((prevRowArray) => {
-            return produce(prevRowArray, (draft) => {
-              if (draft) {
-                draft[draft.length - 1].content = completion_object.content;
-              }
-            });
-          });
-        }
-        //-- API Req/Res Metadata (IAPIResMetadata)
-        else if (event.id && event.id === "api_req_res_metadata") {
-          let api_req_res_metadata_object: IAPIReqResMetadata = JSON.parse(
-            event.data
-          );
-          //-- Add api_req_res_metadata_object to conversation object --//
-          CC.setConversation((prevConversation) => {
-            return produce(prevConversation, (draft) => {
-              if (draft) {
-                draft.api_req_res_metadata.push(api_req_res_metadata_object);
-              }
-            });
-          });
-          //-- Existing conversations only - update conversationsArray --//
-          if (!new_conversation) {
-            CC.setConversationsArray((prevArray) => {
-              return produce(prevArray, (draft) => {
-                if (draft) {
-                  draft[0].api_req_res_metadata.push(
-                    api_req_res_metadata_object
-                  );
-                }
-              });
-            });
-          }
-        }
-        //-- SSE completion content chunks --//
-        else {
-          const uriDecodedData = decodeURIComponent(event.data);
-          CC.setRowArray((prevRowArray) => {
-            return produce(prevRowArray, (draft) => {
-              if (draft) {
-                //-- Add message chunk to `content` of last row in rowArray --//
-                draft[draft.length - 1].content =
-                  draft[draft.length - 1].content + uriDecodedData;
-              }
-            });
-          });
-        }
-      },
-      //-- ***** ***** ***** ***** ONCLOSE ***** ***** ***** ***** --//
-      onclose() {
-        console.log("Connection closed by the server"); // DEV
-        CC.setCompletionLoading(false);
-
-        //-- If new conversation, create title --//
-        const onCloseHandler = async () => {
-          if (new_conversation) {
-            //-- For new conversations, create title --//
-            if (new_conversation_id) {
-              await create_title(access_token, new_conversation_id);
+        //-- Overwrite completion content in rowArray --//
+        CC.setRowArray((prevRowArray) => {
+          return produce(prevRowArray, (draft) => {
+            if (draft) {
+              draft[draft.length - 1].content = completion_object.content;
             }
-          }
-          //-- Upate conversations list --//
-          await list_conversations(access_token, CC, "overwrite");
-        };
-        onCloseHandler();
-      },
-      //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
-      onerror(err) {
-        if (err instanceof CustomFatalError) {
-          console.error(err.message);
-          throw err; //-- Rethrow error to end request --//
-        } else {
-          console.log("There was an error:", err);
+          });
+        });
+      }
+      //-- API Req/Res Metadata (IAPIResMetadata)
+      else if (event.id && event.id === "api_req_res_metadata") {
+        let api_req_res_metadata_object: IAPIReqResMetadata = JSON.parse(
+          event.data
+        );
+        //-- Add api_req_res_metadata_object to conversation object --//
+        CC.setConversation((prevConversation) => {
+          return produce(prevConversation, (draft) => {
+            if (draft) {
+              draft.api_req_res_metadata.push(api_req_res_metadata_object);
+            }
+          });
+        });
+        //-- Existing conversations only - update conversationsArray --//
+        if (!new_conversation) {
+          CC.setConversationsArray((prevArray) => {
+            return produce(prevArray, (draft) => {
+              if (draft) {
+                draft[0].api_req_res_metadata.push(api_req_res_metadata_object);
+              }
+            });
+          });
         }
-      },
-    });
-  } catch (err) {
-    console.log(err);
-  }
+      }
+      //-- SSE completion content chunks --//
+      else {
+        const uriDecodedData = decodeURIComponent(event.data);
+        CC.setRowArray((prevRowArray) => {
+          return produce(prevRowArray, (draft) => {
+            if (draft) {
+              //-- Add message chunk to `content` of last row in rowArray --//
+              draft[draft.length - 1].content =
+                draft[draft.length - 1].content + uriDecodedData;
+            }
+          });
+        });
+      }
+    },
+    //-- ***** ***** ***** ***** ONCLOSE ***** ***** ***** ***** --//
+    onclose() {
+      console.log("Connection closed by the server"); // DEV
+      CC.setCompletionLoading(false);
+
+      //-- If new conversation, create title --//
+      const onCloseHandler = async () => {
+        if (new_conversation) {
+          //-- For new conversations, create title --//
+          if (new_conversation_id) {
+            await create_title(access_token, new_conversation_id);
+          }
+        }
+        //-- Upate conversations list --//
+        await list_conversations(access_token, CC, "overwrite");
+      };
+      onCloseHandler();
+    },
+    //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
+    onerror(err) {
+      if (err instanceof FatalError) {
+        CC.setCompletionLoading(false); //-- End completion loading --//
+        throw err; //-- Rethrow error to end request --//
+      } else {
+        //-- Do nothing to automatically retry. Or implement retry strategy here --//
+        CC.setCompletionLoading(false); //-- End completion loading --//
+        throw err; //-- Rethrow error to end request --//
+      }
+    },
+  });
 }
 
 /**
