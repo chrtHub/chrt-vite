@@ -409,6 +409,15 @@ export async function send_message(
     onmessage(event) {
       //-- Error --//
       if (event.id && event.id === "error") {
+        // TODO
+        // // get err from event's data and console.log it
+        // // get err to the error boundary
+        const data = JSON.parse(event.data);
+        const message = JSON.stringify(data.message);
+        const error = JSON.stringify(data.error);
+        console.log(message);
+        console.log(error);
+
         throw new FatalError('event.id === "error"');
       }
       //-- Conversation object (IConversation) --//
@@ -495,7 +504,7 @@ export async function send_message(
     onerror(err) {
       if (err instanceof FatalError) {
         CC.setCompletionLoading(false); //-- End completion loading --//
-        throw err; //-- Rethrow error to end request --//
+        throw new Error(err.message); //-- Rethrow error to end request --//
       } else {
         //-- Do nothing to automatically retry. Or implement retry strategy here --//
         CC.setCompletionLoading(false); //-- End completion loading --//

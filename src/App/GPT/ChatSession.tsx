@@ -127,7 +127,11 @@ export default function ChatSession() {
               CC
             );
           } catch (err) {
+            console.log("normal"); // DEV
             console.log(err);
+            if (err instanceof Error) {
+              console.log((err as Error).message);
+            }
             // TODO - implement showBoundary here
           }
         }
@@ -156,6 +160,7 @@ export default function ChatSession() {
             CC
           );
         } catch (err) {
+          console.log("regenerate"); // DEV
           console.log(err);
           // TODO - implement showBoundary here
         }
