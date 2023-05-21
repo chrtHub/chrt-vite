@@ -15,8 +15,6 @@ import { countTokens } from "./chatson/countTokens";
 //== NPM Components ==//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import TextareaAutosize from "react-textarea-autosize";
-import { ToastContainer, toast } from "react-toastify"; // NEW
-import "react-toastify/dist/ReactToastify.css"; // NEW
 
 //== Icons ==//
 import {
@@ -40,6 +38,8 @@ import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import ConversationStats from "./ConversationStats";
+import { ProgressBar } from "../../Components/ProgressBar";
+import "../../Components/ProgressBar.css";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
@@ -58,6 +58,8 @@ export default function ChatSession() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [showError, setShowError] = useState<string | null>(null);
+  const [animationKey, setAnimationKey] = useState<number>(0);
+  let errorTimeoutRef = useRef<number | null>(null);
 
   //-- Virtualized rows stuff --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
@@ -97,7 +99,6 @@ export default function ChatSession() {
     };
     lambda();
   }, [conversation_id]);
-  // }, [CC.conversationId, conversation_id]);
 
   //-- chatson.send_message() --//
   const submitPromptHandler = () => {
@@ -137,10 +138,18 @@ export default function ChatSession() {
             );
           } catch (err) {
             if (err instanceof Error) {
+              //-- Show error --//
               setShowError(err.message);
-              setTimeout(() => {
+              //-- Clear old timeout --//
+              if (errorTimeoutRef.current) {
+                clearTimeout(errorTimeoutRef.current);
+              }
+              //-- Set new timeout --//
+              errorTimeoutRef.current = setTimeout(() => {
                 setShowError(null);
               }, 3000);
+              //-- Cause error alert progress bar animation to restart --//
+              setAnimationKey((prevKey) => prevKey + 1);
             }
           }
         }
@@ -169,9 +178,15 @@ export default function ChatSession() {
             CC
           );
         } catch (err) {
-          console.log("(regenerate) submitPrompt error"); // DEV
-          console.log(err);
-          // TODO - implement showBoundary here
+          if (err instanceof Error) {
+            setShowError(err.message);
+            // if (errorTimeout) {
+            //   clearTimeout(errorTimeout);
+            // }
+            setTimeout(() => {
+              setShowError(null);
+            }, 3000);
+          }
         }
       }
     }
@@ -321,8 +336,9 @@ export default function ChatSession() {
         {/* Error Alert */}
         <div className="flex flex-row justify-center">
           {showError && (
-            <div className="mb-1 w-full max-w-prose rounded-md bg-red-100 p-2 dark:bg-red-900">
-              <div className="flex flex-row justify-between">
+            <div className="mb-1 w-full max-w-prose rounded-md bg-red-100 dark:bg-red-800">
+              {/* Content */}
+              <div className="flex flex-row justify-between px-2 pb-1 pt-2">
                 <div>
                   <ExclamationTriangleIcon
                     className="h-5 w-5 text-red-500 dark:text-red-100"
@@ -338,7 +354,9 @@ export default function ChatSession() {
                   <div className="-mx-1.5 -my-1.5">
                     <button
                       type="button"
-                      onClick={() => setShowError(null)}
+                      onClick={() => {
+                        setShowError(null);
+                      }}
                       className="inline-flex rounded-full p-1.5 text-red-500 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-red-50 dark:text-red-100 dark:hover:bg-red-950"
                     >
                       <span className="sr-only">Dismiss</span>
@@ -346,6 +364,14 @@ export default function ChatSession() {
                     </button>
                   </div>
                 </div>
+              </div>
+              {/* Progress Bar */}
+              <div className="h-1.5 w-full rounded-b bg-red-100 dark:bg-red-900">
+                <div
+                  key={animationKey}
+                  className="h-full w-full rounded-b bg-red-500 dark:bg-red-200"
+                  style={{ animation: "progress 3s linear" }}
+                />
               </div>
             </div>
           )}
