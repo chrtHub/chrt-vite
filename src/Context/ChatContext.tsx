@@ -20,6 +20,7 @@ export interface IChatContext {
   setConversationsArray: React.Dispatch<React.SetStateAction<IConversation[]>>;
   conversationsFetched: Boolean;
   setConversationsFetched: React.Dispatch<React.SetStateAction<boolean>>;
+  // DEV - rowArray per leafNodeId?
   rowArray: IMessageRow[] | null;
   setRowArray: React.Dispatch<React.SetStateAction<IMessageRow[] | null>>;
   conversationId: string | null;
@@ -72,6 +73,11 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     //   model_developer_name: "amazon",
     //   model_api_name: "amazon-titan",
     // },
+    // "google-palm-2": {
+    //   api_provider_name: "google",
+    //   model_developer_name: "google",
+    //   model_api_name: "google-palm-2",
+    // },
   };
   const model_friendly_names: Partial<Record<ModelAPINames, IModelFriendly>> = {
     "gpt-3.5-turbo": {
@@ -109,6 +115,13 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     //   model_friendly_name: "Titan",
     //   model_description: "General purpose LLM",
     // },
+    // "google-palm-2": {
+    //   api_provider_friendly_name: "Google PaLM 2",
+    //   model_developer_friendly_name: "Google",
+    //   model_developer_link: "https://ai.google/discover/palm2",
+    //   model_friendly_name: "PaLM 2",
+    //   model_description: "General purpose LLM",
+    // },
   };
 
   //-- Token Limit per model --//
@@ -120,6 +133,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     claude: 0,
     "jurrasic-2": 0,
     "amazon-titan": 0,
+    "google-palm-2": 0,
   };
 
   //-- State values --//
@@ -128,6 +142,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   );
   const [conversationsFetched, setConversationsFetched] =
     useState<boolean>(false);
+  // DEV - rowArray per leafNodeId?
   const [rowArray, setRowArray] = useState<IMessageRow[] | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [conversation, setConversation] = useState<IConversation | null>(null);
@@ -145,6 +160,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     localStorage_sortBy === "created_at" ? "created_at" : "last_edited"
   );
 
+  //-- Update modelTokenLimit when model is updated --//
   useEffect(() => {
     setModelTokenLimit(TOKEN_LIMITS[model.model_api_name]);
   }, [model]);
@@ -155,6 +171,7 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     setConversationsArray,
     conversationsFetched,
     setConversationsFetched,
+    // DEV - rowArray per leafNodeId?
     rowArray,
     setRowArray,
     conversationId,

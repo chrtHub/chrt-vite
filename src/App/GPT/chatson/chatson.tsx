@@ -131,6 +131,7 @@ export async function get_conversation_and_messages(
   CC: IChatContext
 ): Promise<void> {
   try {
+    console.log("get_conversation_and_messages"); // DEV
     //-- Make GET request --//
     let res = await axios.get<{
       conversation: IConversation;
@@ -164,7 +165,15 @@ export async function get_conversation_and_messages(
     }
     //----//
   } catch (err) {
+    // if status === 400?
+    // if conversation not found or no permission, throw error indicating that
+    console.log("get_conversation_and_messages catch"); // DEV
     console.log(err);
+
+    // if status !== 400?
+    // TODO if network error...what to do? automatically retry? show user button to refresh page?
+    // // perhaps use an error boundary where the chatlanding is for this case
+    // // perhaps use a toast or modal?
   }
 }
 
@@ -309,6 +318,7 @@ export async function send_message(
   let new_conversation: boolean = Boolean(!CC.conversation);
   let new_conversation_id: string | null = null;
   let new_node_id: string | null;
+  let completion_content: string = ""; // NEW
 
   //-- Custom error classes for retry / failure logic --//
   class RetriableError extends Error {}
@@ -319,6 +329,7 @@ export async function send_message(
     headers: request_headers,
     body: JSON.stringify(request_body),
     openWhenHidden: true, //-- Keep connection open when Page Visibility API notices tab is hidden --//
+
     //-- ***** ***** ***** ***** ONOPEN ***** ***** ***** ***** --//
     //-- ***** ***** ***** ***** ------ ***** ***** ***** ***** --//
     async onopen(res) {
@@ -336,9 +347,9 @@ export async function send_message(
       if (!conversation_id) {
         throw new FatalError("missing conversation_id");
       }
-
-      //-- Root node (new conversations only) --//
       CC.setConversationId(conversation_id);
+
+      //-- (new conversations only) Root node --//
       const root_node_id = res.headers.get("CHRT-root-node-id");
       const root_node_created_at = res.headers.get("CHRT-root-node-created-at");
       if (
@@ -424,7 +435,7 @@ export async function send_message(
         console.log(message);
         console.log(error);
 
-        throw new FatalError('event.id === "error"');
+        throw new FatalError(`event.id === "error", message: ${message}`); // DEV - test this
       }
       //-- Conversation object (IConversation) --//
       else if (event.id && event.id === "conversation") {
@@ -477,12 +488,18 @@ export async function send_message(
       //-- SSE completion content chunks --//
       else {
         const uriDecodedData = decodeURIComponent(event.data);
+
+        completion_content += uriDecodedData; //-- Accumulate full completion --//
+
         CC.setRowArray((prevRowArray) => {
           return produce(prevRowArray, (draft) => {
             if (draft) {
-              //-- Add message chunk to `content` of last row in rowArray --//
-              draft[draft.length - 1].content =
-                draft[draft.length - 1].content + uriDecodedData;
+              //-- If rowArray's last row's node id matches the completion's node id, update --//
+              if (draft[draft.length - 1].node_id === new_node_id) {
+                //-- Set accumulated completion content as content --//
+                draft[draft.length - 1].content = completion_content;
+                // draft[draft.length - 1].content + uriDecodedData; //-- Add message chunk to `content` of last row in rowArray --//
+              }
             }
           });
         });
@@ -513,6 +530,7 @@ export async function send_message(
         throw err; //-- Rethrow error to end request --//
       } else {
         //-- Do nothing to automatically retry. Or implement retry strategy here --//
+        //-- Retry Strategy: end loading state, end request --//
         CC.setCompletionLoading(false); //-- End completion loading --//
         throw err; //-- Rethrow error to end request --//
       }
@@ -530,14 +548,13 @@ export function change_branch(
   new_sibling_node_id: string,
   CC: IChatContext
 ): void {
-  console.log("--- change branch ---"); // DEV
+  //-- Find the new sibling node in the nodeArray --//
   const new_sibling_node = nodeArray.find(
     (node) => node._id === new_sibling_node_id
   );
 
   if (new_sibling_node) {
     let new_leaf_node: IMessageNode;
-
     //-- If new sibling has no children, it's the leaf node --//
     if (new_sibling_node.children_node_ids.length === 0) {
       new_leaf_node = new_sibling_node;

@@ -92,7 +92,16 @@ export default function ChatSession() {
       if (entity_type === "c" && conversation_id) {
         CC.setConversationId(conversation_id);
         const accessToken = await getAccessTokenSilently();
-        chatson.get_conversation_and_messages(accessToken, conversation_id, CC);
+        try {
+          await chatson.get_conversation_and_messages(
+            accessToken,
+            conversation_id,
+            CC
+          );
+        } catch (err) {
+          console.log("lambda, catch"); // DEV
+          // TODO - react-toastify
+        }
       } else {
         navigate("/gpt");
       }

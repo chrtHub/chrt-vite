@@ -127,14 +127,15 @@ export type TokenLimit = {
 };
 
 /** These lists is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */
-export type APIProviderNames = "openai" | "amazon_bedrock";
+export type APIProviderNames = "openai" | "amazon_bedrock" | "google";
 
 export type ModelDeveloperNames =
   | "openai"
   | "ai21labs"
   | "anthropic"
   | "stability_ai"
-  | "amazon";
+  | "amazon"
+  | "google";
 
 export type ModelAPINames =
   | "gpt-3.5-turbo"
@@ -142,7 +143,8 @@ export type ModelAPINames =
   | "gpt-4-32k"
   | "claude"
   | "jurrasic-2"
-  | "amazon-titan";
+  | "amazon-titan"
+  | "google-palm-2"; // CHECK WITH GOOGLE'S API DOCUMENTATION
 
 //----//
 export interface IOpenAILLMParams
