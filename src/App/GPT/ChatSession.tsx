@@ -15,6 +15,8 @@ import { countTokens } from "./chatson/countTokens";
 //== NPM Components ==//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import TextareaAutosize from "react-textarea-autosize";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //== Icons ==//
 import {
@@ -100,7 +102,10 @@ export default function ChatSession() {
           );
         } catch (err) {
           console.log("lambda, catch"); // DEV
-          // TODO - react-toastify
+          if (err instanceof Error) {
+            console.log(err.message);
+            toast(err.message);
+          }
         }
       } else {
         navigate("/gpt");
@@ -189,9 +194,6 @@ export default function ChatSession() {
         } catch (err) {
           if (err instanceof Error) {
             setShowError(err.message);
-            // if (errorTimeout) {
-            //   clearTimeout(errorTimeout);
-            // }
             setTimeout(() => {
               setShowError(null);
             }, 3000);
@@ -309,6 +311,15 @@ export default function ChatSession() {
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
+      {/* TOAST */}
+      <ToastContainer
+        position="top-right"
+        autoClose={4200}
+        closeOnClick
+        pauseOnHover
+        pauseOnFocusLoss
+        theme={true ? "light" : "dark"} // TODO - implement theme
+      />
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
       {CC.rowArray && CC.rowArray.length > 0 ? (
         <div id="llm-current-chat" className="flex flex-grow">

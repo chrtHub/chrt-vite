@@ -7,7 +7,7 @@
 //== Icons ==//
 
 //== NPM Functions ==//
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { produce } from "immer";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 
@@ -165,15 +165,21 @@ export async function get_conversation_and_messages(
     }
     //----//
   } catch (err) {
-    // if status === 400?
-    // if conversation not found or no permission, throw error indicating that
     console.log("get_conversation_and_messages catch"); // DEV
-    console.log(err);
-
-    // if status !== 400?
-    // TODO if network error...what to do? automatically retry? show user button to refresh page?
-    // // perhaps use an error boundary where the chatlanding is for this case
-    // // perhaps use a toast or modal?
+    if (err instanceof AxiosError) {
+      const axiosError = err as AxiosError;
+      const status = axiosError.response?.status;
+      const message = axiosError.response?.data?.toString();
+      console.log(status, message); // DEv
+      if (status === 400) {
+        throw new Error(message);
+      }
+      // else if (status === 500) {}
+      // else if network error??
+      // // what to do? automatically retry? show user button to refresh page?
+      // // perhaps use an error boundary where the chatlanding is for this case
+      // // perhaps use a toast or modal?
+    }
   }
 }
 
