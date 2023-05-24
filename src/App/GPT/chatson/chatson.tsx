@@ -115,7 +115,7 @@ export function reset_conversation(
   CC.setConversationId(null);
   CC.setTemperature(null);
   CC.setFocusTextarea(true);
-  navigate("/gpt"); // NEW
+  navigate("/gpt");
 }
 
 /**
@@ -168,17 +168,26 @@ export async function get_conversation_and_messages(
     console.log("get_conversation_and_messages catch"); // DEV
     if (err instanceof AxiosError) {
       const axiosError = err as AxiosError;
-      const status = axiosError.response?.status;
-      const message = axiosError.response?.data?.toString();
-      console.log(status, message); // DEv
+      const status = axiosError?.response?.status;
+      const message = axiosError?.response?.data?.toString();
+      const code = axiosError?.code;
+      console.log(status, message); // DEV
       if (status === 400) {
         throw new Error(message);
+      } else if (status === 500) {
+        throw new Error("server error, please try again"); // TODO - review this
+      } else if (code === "ERR_NETWORK") {
+        console.log("Hello network error");
+        console.log(err);
+        throw new Error(
+          "Network error, please check your connection and try again."
+        );
+        // // what to do? automatically retry? show user button to refresh page?
+        // // perhaps use an error boundary where the chatlanding is for this case
+        // // perhaps use a toast or modal?
       }
-      // else if (status === 500) {}
-      // else if network error??
-      // // what to do? automatically retry? show user button to refresh page?
-      // // perhaps use an error boundary where the chatlanding is for this case
-      // // perhaps use a toast or modal?
+    } else {
+      console.log(err);
     }
   }
 }
@@ -286,13 +295,16 @@ export async function retitle(
  * @param prompt_content user input to be added to the conversation
  * @param parent_node_id For new conversations, the parent_node is null. For creating a message on the same branch, the parent_node is the current leaf node. For creating a message on a new branch, the parent_node is the parent of the current leaf node.
  * @param CC chat context
+ * @param setPromptDraft clears prompt draft if the request to Express returns a 200 onopen
+ * @param navigate function returned by react-router v6 useNavigate hook
  */
 export async function send_message(
   access_token: string,
   prompt_content: string,
   parent_node_id: string | null,
   CC: IChatContext,
-  setPromptDraft?: React.Dispatch<React.SetStateAction<string>>
+  setPromptDraft?: React.Dispatch<React.SetStateAction<string>>,
+  navigate?: NavigateFunction
 ): Promise<void> {
   console.log(" ----- SEND MESSAGE ----- "); // DEV
   //-- Get user_db_id from access token --//
@@ -514,11 +526,16 @@ export async function send_message(
     //-- ***** ***** ***** ***** ONCLOSE ***** ***** ***** ***** --//
     onclose() {
       console.log("Connection closed by the server"); // DEV
+
       CC.setCompletionLoading(false);
 
       //-- If new conversation, create title --//
       const onCloseHandler = async () => {
         if (new_conversation) {
+          //-- Navigate to new conversation id's path --//
+          if (navigate) {
+            navigate(`/gpt/c/${new_conversation_id}`);
+          }
           //-- For new conversations, create title --//
           if (new_conversation_id) {
             await create_title(access_token, new_conversation_id);

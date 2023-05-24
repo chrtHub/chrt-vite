@@ -1,5 +1,5 @@
 //== react, react-router-dom, recoil, Auth0 ==//
-import { useState, useEffect, useRef, FocusEvent } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useChatContext } from "../../Context/ChatContext";
@@ -15,7 +15,7 @@ import { countTokens } from "./chatson/countTokens";
 //== NPM Components ==//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import TextareaAutosize from "react-textarea-autosize";
-import { ToastContainer, toast } from "react-toastify";
+import { Slide, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 //== Icons ==//
@@ -40,7 +40,6 @@ import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import ConversationStats from "./ConversationStats";
-import { ProgressBar } from "../../Components/ProgressBar";
 import "../../Components/ProgressBar.css";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
@@ -101,13 +100,12 @@ export default function ChatSession() {
             CC
           );
         } catch (err) {
-          console.log("lambda, catch"); // DEV
           if (err instanceof Error) {
-            console.log(err.message);
             toast(err.message);
           }
         }
       } else {
+        // TODO - move this logic higher up, probably close to where the outlet in AppLayout is rendered
         navigate("/gpt");
       }
     };
@@ -148,7 +146,8 @@ export default function ChatSession() {
               promptContent,
               parentNodeId,
               CC,
-              setPromptDraft
+              setPromptDraft,
+              navigate
             );
           } catch (err) {
             if (err instanceof Error) {
@@ -313,12 +312,23 @@ export default function ChatSession() {
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
       {/* TOAST */}
       <ToastContainer
+        role="alert" //-- aria --//
+        icon={<ExclamationTriangleIcon className="text-yellow-500" />}
         position="top-right"
-        autoClose={4200}
+        autoClose={5000}
         closeOnClick
         pauseOnHover
         pauseOnFocusLoss
-        theme={true ? "light" : "dark"} // TODO - implement theme
+        toastClassName={"dark:bg-zinc-800 dark:text-zinc-100"}
+        progressClassName={"bg-yellow-500 dark:bg-yellow-500"}
+        closeButton={
+          <div className="flex flex-col justify-start text-zinc-500 hover:text-zinc-600 dark:text-zinc-300 dark:hover:text-zinc-200">
+            <XCircleIcon className="ml-1 mt-1 h-5 w-5" />
+          </div>
+        }
+        transition={Slide}
+        limit={3}
+        theme={"colored"}
       />
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
       {CC.rowArray && CC.rowArray.length > 0 ? (
