@@ -28,10 +28,10 @@ export default function ChatLanding() {
             What is ChrtGPT?
           </p>
           <p className="mb-0 mt-1.5 font-sans font-medium italic">
-            How to be a good day trader?
+            What are some risks of day trading?
           </p>
           <p className="mb-0 mt-1.5 font-sans font-medium italic">
-            What are some risks of day trading?
+            What are ways to be a good day trader?
           </p>
         </div>
       </article>
