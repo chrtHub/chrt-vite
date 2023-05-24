@@ -321,11 +321,16 @@ export default function ChatSession() {
         pauseOnFocusLoss
         toastClassName={"dark:bg-zinc-800 dark:text-zinc-100"}
         progressClassName={"bg-yellow-500 dark:bg-yellow-500"}
-        closeButton={
-          <div className="flex flex-col justify-start text-zinc-500 hover:text-zinc-600 dark:text-zinc-300 dark:hover:text-zinc-200">
-            <XCircleIcon className="ml-1 mt-1 h-5 w-5" />
-          </div>
-        }
+        closeButton={({ closeToast }) => {
+          return (
+            <div
+              onClick={closeToast}
+              className="flex flex-col justify-start text-zinc-500 hover:text-zinc-600 dark:text-zinc-300 dark:hover:text-zinc-200"
+            >
+              <XCircleIcon className="ml-1 mt-1 h-5 w-5" />
+            </div>
+          );
+        }}
         transition={Slide}
         limit={3}
         theme={"colored"}
