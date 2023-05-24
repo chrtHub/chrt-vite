@@ -29,10 +29,11 @@ import {
 } from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { saveAs } from "file-saver";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import { format, parseISO } from "date-fns";
+import { toast } from "react-toastify";
 
 //-- Utility Functions --//
 import orderBy from "lodash/orderBy";
@@ -42,6 +43,7 @@ import classNames from "../../Util/classNames";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 import { filesListState } from "./atoms";
 import { IFileMetadata } from "./atoms";
+import { ToastError, axiosErrorHandler } from "../../Util/axiosErrorHandler";
 
 interface IBrokerage {
   id: number;
@@ -104,12 +106,16 @@ export default function JournalFiles({}: IProps) {
   //-- Auth --//
   const { getAccessTokenSilently } = useAuth0();
 
+  //-- Error Boundary --//
+  const { showBoundary } = useErrorBoundary();
+
   //-- Data Fetching --//
   const listFiles = async () => {
     //-- Get access token from memory or request new token --//
     let accessToken = await getAccessTokenSilently();
 
     setListFilesLoading(true);
+
     try {
       //-- Make GET request --//
       let res = await axios.get(
@@ -122,7 +128,11 @@ export default function JournalFiles({}: IProps) {
       );
       setFilesList(res.data);
       //----//
-    } catch (error) {}
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        axiosErrorHandler(err, "List Files");
+      }
+    }
     setListFilesLoading(false);
   };
 
@@ -145,7 +155,12 @@ export default function JournalFiles({}: IProps) {
       let blob = new Blob([res.data], { type: "text/plain;charset=utf-8" });
       saveAs(blob, tableSelectionFile?.filename);
       //----//
-    } catch (error) {}
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        axiosErrorHandler(err, "Get File");
+      }
+    }
+
     setGetFileLoading(false);
   };
 
@@ -172,9 +187,13 @@ export default function JournalFiles({}: IProps) {
         }
       );
       //----//
-    } catch (error: any) {
-      if (error?.response?.status === 415) {
-        alert("File type not supported. Please upload a CSV file."); // DEV
+    } catch (err: any) {
+      if (err instanceof AxiosError) {
+        if (err.response?.status === 415) {
+          toast("File type not supported. Please upload a CSV file.");
+        } else {
+          axiosErrorHandler(err, "Put File");
+        }
       }
     }
     setPutFileLoading(false);
@@ -193,7 +212,7 @@ export default function JournalFiles({}: IProps) {
       let accessToken = await getAccessTokenSilently();
 
       //-- Make DELETE request --//
-      let res = await axios.delete(
+      await axios.delete(
         `${VITE_ALB_BASE_URL}/journal_files/delete_file/${selectedBrokerage.name}/${tableSelectionFile?.file_uuid}_${tableSelectionFile?.filename}`,
         {
           headers: {
@@ -202,7 +221,11 @@ export default function JournalFiles({}: IProps) {
         }
       );
       //----//
-    } catch (error) {}
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        axiosErrorHandler(err, "Delete File");
+      }
+    }
     setDeleteFileLoading(false);
     setTableSelectionFile(null);
     setDeleteModalOpen(false);

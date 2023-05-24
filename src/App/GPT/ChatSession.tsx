@@ -15,8 +15,6 @@ import { countTokens } from "./chatson/countTokens";
 //== NPM Components ==//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import TextareaAutosize from "react-textarea-autosize";
-import { Slide, ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 //== Icons ==//
 import {
@@ -33,6 +31,7 @@ import {
 
 //== NPM Functions ==//
 import numeral from "numeral";
+import { toast } from "react-toastify";
 
 //== Utility Functions ==//
 import classNames from "../../Util/classNames";
@@ -41,6 +40,7 @@ import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import ConversationStats from "./ConversationStats";
 import "../../Components/ProgressBar.css";
+import { ToastError } from "../../Util/axiosErrorHandler";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
@@ -81,7 +81,13 @@ export default function ChatSession() {
   useEffect(() => {
     const getConversationsListHandler = async () => {
       let accessToken = await getAccessTokenSilently();
-      await chatson.list_conversations(accessToken, CC, "overwrite");
+      try {
+        await chatson.list_conversations(accessToken, CC, "overwrite");
+      } catch (err) {
+        if (err instanceof ToastError) {
+          toast(err.message);
+        }
+      }
     };
     getConversationsListHandler();
   }, [CC.sortBy]);
@@ -100,7 +106,7 @@ export default function ChatSession() {
             CC
           );
         } catch (err) {
-          if (err instanceof Error) {
+          if (err instanceof ToastError) {
             toast(err.message);
           }
         }
@@ -192,11 +198,26 @@ export default function ChatSession() {
           );
         } catch (err) {
           if (err instanceof Error) {
+            //-- Show error --//
             setShowError(err.message);
-            setTimeout(() => {
+            //-- Clear old timeout --//
+            if (errorTimeoutRef.current) {
+              clearTimeout(errorTimeoutRef.current);
+            }
+            //-- Set new timeout --//
+            errorTimeoutRef.current = setTimeout(() => {
               setShowError(null);
             }, 3000);
+            //-- Cause error alert progress bar animation to restart --//
+            setAnimationKey((prevKey) => prevKey + 1);
           }
+          // DEV - cleanup
+          // if (err instanceof Error) {
+          //   setShowError(err.message);
+          //   setTimeout(() => {
+          //     setShowError(null);
+          //   }, 3000);
+          // }
         }
       }
     }
@@ -310,31 +331,6 @@ export default function ChatSession() {
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
-      {/* TOAST */}
-      <ToastContainer
-        role="alert" //-- aria --//
-        icon={<ExclamationTriangleIcon className="text-yellow-500" />}
-        position="top-right"
-        autoClose={5000}
-        closeOnClick
-        pauseOnHover
-        pauseOnFocusLoss
-        toastClassName={"dark:bg-zinc-800 dark:text-zinc-100"}
-        progressClassName={"bg-yellow-500 dark:bg-yellow-500"}
-        closeButton={({ closeToast }) => {
-          return (
-            <div
-              onClick={closeToast}
-              className="flex flex-col justify-start text-zinc-500 hover:text-zinc-600 dark:text-zinc-300 dark:hover:text-zinc-200"
-            >
-              <XCircleIcon className="ml-1 mt-1 h-5 w-5" />
-            </div>
-          );
-        }}
-        transition={Slide}
-        limit={3}
-        theme={"colored"}
-      />
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
       {CC.rowArray && CC.rowArray.length > 0 ? (
         <div id="llm-current-chat" className="flex flex-grow">

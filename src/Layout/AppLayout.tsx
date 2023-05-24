@@ -9,6 +9,8 @@ import DropdownMenu from "./DropdownMenu";
 
 //-- NPM Components --//
 import { Dialog, Transition } from "@headlessui/react";
+import { Slide, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //-- Icons --//
 // import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
@@ -25,6 +27,10 @@ import {
   XMarkIcon,
   CodeBracketIcon,
 } from "@heroicons/react/24/outline";
+import {
+  ExclamationTriangleIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
 
@@ -98,6 +104,33 @@ export default function AppLayout({ infoMode }: IProps) {
         setSignOutModalOpen={setSignOutModalOpen}
       />
       {/* END OF CONFIRM SIGN OUT MODAL */}
+
+      {/* START OF TOAST CONTAINER */}
+      <ToastContainer
+        role="alert" //-- aria --//
+        icon={<ExclamationTriangleIcon className="text-yellow-500" />}
+        position="top-right"
+        autoClose={5000}
+        closeOnClick
+        pauseOnHover
+        pauseOnFocusLoss
+        toastClassName={"dark:bg-zinc-800 dark:text-zinc-100"}
+        progressClassName={"bg-yellow-500 dark:bg-yellow-500"}
+        closeButton={({ closeToast }) => {
+          return (
+            <div
+              onClick={closeToast}
+              className="flex flex-col justify-start text-zinc-500 hover:text-zinc-600 dark:text-zinc-300 dark:hover:text-zinc-200"
+            >
+              <XCircleIcon className="ml-1 mt-1 h-5 w-5" />
+            </div>
+          );
+        }}
+        transition={Slide}
+        limit={3}
+        theme={"colored"}
+      />
+      {/* END OF TOAST CONTAINER */}
 
       {/* START OF MOBILE SIDEBAR */}
       <Transition.Root show={sidebarOpen} as={Fragment}>

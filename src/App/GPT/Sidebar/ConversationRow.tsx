@@ -17,6 +17,7 @@ import {
 
 //-- NPM Functions --//
 import { format, isToday, isYesterday } from "date-fns";
+import { toast } from "react-toastify";
 
 //-- Utility Functions --//
 import classNames from "../../../Util/classNames";
@@ -28,6 +29,7 @@ import is420 from "../../../Util/is420";
 import { IConversation } from "../chatson/chatson_types";
 import { IChatContext } from "../../../Context/ChatContext";
 import { NavigateFunction } from "react-router-dom";
+import { ToastError } from "../../../Util/axiosErrorHandler";
 
 //-- Conversation Rows with Sticky Header Logic --//
 export const ConversationRow = (
@@ -102,12 +104,18 @@ export const ConversationRow = (
   const confirmDeleteHandler = async (event: React.MouseEvent) => {
     event.stopPropagation();
     let accessToken = await getAccessTokenSilently();
-    chatson.delete_conversation_and_messages(
-      accessToken,
-      row._id,
-      CC,
-      navigate
-    );
+    try {
+      await chatson.delete_conversation_and_messages(
+        accessToken,
+        row._id,
+        CC,
+        navigate
+      );
+    } catch (err) {
+      if (err instanceof ToastError) {
+        toast(err.message);
+      }
+    }
     setActiveDeleteRowId(null);
   };
 
@@ -125,7 +133,13 @@ export const ConversationRow = (
     // on click of confirmEdit button, send the value of the textarea input to the titles endpoint
     let accessToken = await getAccessTokenSilently();
     setRetitleLoading(true);
-    await chatson.retitle(accessToken, CC, row._id, newTitleDraft);
+    try {
+      await chatson.retitle(accessToken, CC, row._id, newTitleDraft);
+    } catch (err) {
+      if (err instanceof ToastError) {
+        toast(err.message);
+      }
+    }
     setRetitleLoading(false);
     setActiveEditRowId(null);
   };

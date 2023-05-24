@@ -96,7 +96,11 @@ export async function list_conversations(
     CC.setConversationsFetched(true);
     //----//
   } catch (err) {
-    console.log(err);
+    if (err instanceof AxiosError) {
+      axiosErrorHandler(err, "List conversations");
+    } else {
+      console.log(err);
+    }
   }
 }
 
@@ -167,7 +171,7 @@ export async function get_conversation_and_messages(
     //----//
   } catch (err) {
     if (err instanceof AxiosError) {
-      axiosErrorHandler(err);
+      axiosErrorHandler(err, "Get conversation");
     } else {
       console.log(err);
     }
@@ -197,7 +201,11 @@ export async function create_title(
       }
     );
   } catch (err) {
-    console.log(err);
+    if (err instanceof AxiosError) {
+      axiosErrorHandler(err, "Create title");
+    } else {
+      console.log(err);
+    }
   }
 }
 
@@ -218,7 +226,7 @@ export async function retitle(
   console.log("----- retitle -----");
 
   try {
-    let res = await axios.post(
+    await axios.post(
       `${VITE_ALB_BASE_URL}/llm/retitle`,
       { conversation_id: conversation_id, new_title: new_title },
       {
@@ -229,7 +237,11 @@ export async function retitle(
     );
     await list_conversations(access_token, CC, "overwrite");
   } catch (err) {
-    console.log(err);
+    if (err instanceof AxiosError) {
+      axiosErrorHandler(err, "Retitle");
+    } else {
+      console.log(err);
+    }
   }
 }
 
@@ -616,7 +628,11 @@ export async function delete_conversation_and_messages(
     //-- Fetch updated conversations list --//
     await list_conversations(access_token, CC, "overwrite");
   } catch (err) {
-    console.log(err);
+    if (err instanceof AxiosError) {
+      axiosErrorHandler(err, "Delete conversation");
+    } else {
+      console.log(err);
+    }
   }
 }
 

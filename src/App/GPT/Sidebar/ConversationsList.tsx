@@ -22,12 +22,14 @@ import {
 import { ArrowPathIcon, Cog8ToothIcon } from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
+import { toast } from "react-toastify";
 
 //-- Utility Functions --//
 import classNames from "../../../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 import { useChatContext } from "../../../Context/ChatContext";
+import { ToastError } from "../../../Util/axiosErrorHandler";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ConversationsList() {
@@ -79,7 +81,13 @@ export default function ConversationsList() {
   const listMoreConversations = useCallback(async () => {
     if (CC.conversationsArray) {
       let accessToken = await getAccessTokenSilently();
-      await chatson.list_conversations(accessToken, CC, "append");
+      try {
+        await chatson.list_conversations(accessToken, CC, "append");
+      } catch (err) {
+        if (err instanceof ToastError) {
+          toast(err.message);
+        }
+      }
     }
   }, [CC.conversationsArray]);
 
