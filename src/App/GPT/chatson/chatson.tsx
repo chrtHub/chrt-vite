@@ -1,6 +1,7 @@
 //== react, react-router-dom, recoil, Auth0 ==//
 
 //== TSX Components ==//
+import { axiosErrorHandler } from "../../../Util/axiosErrorHandler";
 
 //== NPM Components ==//
 
@@ -165,27 +166,8 @@ export async function get_conversation_and_messages(
     }
     //----//
   } catch (err) {
-    console.log("get_conversation_and_messages catch"); // DEV
     if (err instanceof AxiosError) {
-      const axiosError = err as AxiosError;
-      const status = axiosError?.response?.status;
-      const message = axiosError?.response?.data?.toString();
-      const code = axiosError?.code;
-      console.log(status, message); // DEV
-      if (status === 400) {
-        throw new Error(message);
-      } else if (status === 500) {
-        throw new Error("server error, please try again"); // TODO - review this
-      } else if (code === "ERR_NETWORK") {
-        console.log("Hello network error");
-        console.log(err);
-        throw new Error(
-          "Network error, please check your connection and try again."
-        );
-        // // what to do? automatically retry? show user button to refresh page?
-        // // perhaps use an error boundary where the chatlanding is for this case
-        // // perhaps use a toast or modal?
-      }
+      axiosErrorHandler(err);
     } else {
       console.log(err);
     }
