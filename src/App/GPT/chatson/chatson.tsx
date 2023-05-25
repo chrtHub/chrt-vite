@@ -1,7 +1,8 @@
 //== react, react-router-dom, recoil, Auth0 ==//
 
 //== TSX Components ==//
-import { axiosErrorHandler } from "../../../Util/axiosErrorHandler";
+import { axiosErrorHandler } from "../../../Errors/axiosErrorHandler";
+import { ErrorForBoundary, ErrorForToast } from "../../../Errors/ErrorClasses";
 
 //== NPM Components ==//
 
@@ -27,6 +28,7 @@ import {
 import { IChatContext } from "../../../Context/ChatContext";
 import { ObjectId } from "bson";
 import { NavigateFunction } from "react-router-dom";
+import { toast } from "react-toastify";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- Chatson stuff --//
@@ -332,10 +334,6 @@ export async function send_message(
   let new_node_id: string | null;
   let completion_content: string = ""; // NEW
 
-  //-- Custom error classes for retry / failure logic --//
-  class RetriableError extends Error {}
-  class FatalError extends Error {}
-
   await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
     method: "POST",
     headers: request_headers,
@@ -347,7 +345,7 @@ export async function send_message(
     async onopen(res) {
       if (res.status !== 200) {
         const errorMessage = await res.text();
-        throw new FatalError(errorMessage);
+        throw new ErrorForBoundary(errorMessage);
       }
       //-- If res.status is 200, clear the textarea --//
       else if (setPromptDraft) {
@@ -357,7 +355,7 @@ export async function send_message(
       //-- Conversation id --//
       const conversation_id = res.headers.get("CHRT-conversation-id");
       if (!conversation_id) {
-        throw new FatalError("missing conversation_id");
+        throw new ErrorForToast("missing conversation_id");
       }
       CC.setConversationId(conversation_id);
 
@@ -399,7 +397,7 @@ export async function send_message(
       const new_node_created_at = res.headers.get("CHRT-new-node-created-at");
       const parent_node_id = res.headers.get("CHRT-parent-node-id");
       if (!new_node_id || !new_node_created_at || !parent_node_id) {
-        throw new FatalError("missing header(s)");
+        throw new ErrorForToast("missing header(s)");
       }
       //-- Build prompt node --//
       const completion: IMessage = {
@@ -438,16 +436,9 @@ export async function send_message(
     onmessage(event) {
       //-- Error --//
       if (event.id && event.id === "error") {
-        // TODO
-        // // get err from event's data and console.log it
-        // // get err to the error boundary
         const data = JSON.parse(event.data);
-        const message = JSON.stringify(data.message);
-        const error = JSON.stringify(data.error);
-        console.log(message);
-        console.log(error);
-
-        throw new FatalError(`event.id === "error", message: ${message}`); // DEV - test this
+        // const message = JSON.stringify(data.message);
+        throw new ErrorForToast(data.message); // DEV - test this
       }
       //-- Conversation object (IConversation) --//
       else if (event.id && event.id === "conversation") {
@@ -542,7 +533,8 @@ export async function send_message(
     },
     //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
     onerror(err) {
-      if (err instanceof FatalError) {
+      if (err instanceof ErrorForToast) {
+        console.log(err); // DEV
         CC.setCompletionLoading(false); //-- End completion loading --//
         throw err; //-- Rethrow error to end request --//
       } else {

@@ -11,6 +11,7 @@ import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
+import { axiosErrorHandler } from "../../Errors/axiosErrorHandler";
 
 //-- NPM Components --//
 import { Listbox, Dialog, Transition } from "@headlessui/react";
@@ -43,7 +44,7 @@ import classNames from "../../Util/classNames";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 import { filesListState } from "./atoms";
 import { IFileMetadata } from "./atoms";
-import { ToastError, axiosErrorHandler } from "../../Util/axiosErrorHandler";
+import { ErrorForBoundary, ErrorForToast } from "../../Errors/ErrorClasses";
 
 interface IBrokerage {
   id: number;
@@ -105,9 +106,6 @@ export default function JournalFiles({}: IProps) {
 
   //-- Auth --//
   const { getAccessTokenSilently } = useAuth0();
-
-  //-- Error Boundary --//
-  const { showBoundary } = useErrorBoundary();
 
   //-- Data Fetching --//
   const listFiles = async () => {

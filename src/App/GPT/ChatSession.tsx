@@ -40,7 +40,7 @@ import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import ConversationStats from "./ConversationStats";
 import "../../Components/ProgressBar.css";
-import { ToastError } from "../../Util/axiosErrorHandler";
+import { ErrorForBoundary, ErrorForToast } from "../../Errors/ErrorClasses";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
@@ -84,7 +84,7 @@ export default function ChatSession() {
       try {
         await chatson.list_conversations(accessToken, CC, "overwrite");
       } catch (err) {
-        if (err instanceof ToastError) {
+        if (err instanceof ErrorForToast) {
           toast(err.message);
         }
       }
@@ -106,7 +106,7 @@ export default function ChatSession() {
             CC
           );
         } catch (err) {
-          if (err instanceof ToastError) {
+          if (err instanceof ErrorForToast) {
             toast(err.message);
           }
         }
@@ -156,7 +156,11 @@ export default function ChatSession() {
               navigate
             );
           } catch (err) {
-            if (err instanceof Error) {
+            if (err instanceof ErrorForToast) {
+              console.log("ErrorForToast"); // DEV
+              toast(err.message); // NEW - test
+            } else if (err instanceof Error) {
+              console.log("Error"); // DEV
               //-- Show error --//
               setShowError(err.message);
               //-- Clear old timeout --//
@@ -166,7 +170,7 @@ export default function ChatSession() {
               //-- Set new timeout --//
               errorTimeoutRef.current = setTimeout(() => {
                 setShowError(null);
-              }, 3000);
+              }, 4000);
               //-- Cause error alert progress bar animation to restart --//
               setAnimationKey((prevKey) => prevKey + 1);
             }
@@ -197,7 +201,9 @@ export default function ChatSession() {
             CC
           );
         } catch (err) {
-          if (err instanceof Error) {
+          if (err instanceof ErrorForToast) {
+            toast(err.message); // NEW - test
+          } else if (err instanceof ErrorForBoundary) {
             //-- Show error --//
             setShowError(err.message);
             //-- Clear old timeout --//
@@ -207,17 +213,10 @@ export default function ChatSession() {
             //-- Set new timeout --//
             errorTimeoutRef.current = setTimeout(() => {
               setShowError(null);
-            }, 3000);
+            }, 4000);
             //-- Cause error alert progress bar animation to restart --//
             setAnimationKey((prevKey) => prevKey + 1);
           }
-          // DEV - cleanup
-          // if (err instanceof Error) {
-          //   setShowError(err.message);
-          //   setTimeout(() => {
-          //     setShowError(null);
-          //   }, 3000);
-          // }
         }
       }
     }
@@ -401,7 +400,7 @@ export default function ChatSession() {
                 <div
                   key={animationKey}
                   className="h-full w-full rounded-b bg-red-500 dark:bg-red-200"
-                  style={{ animation: "progress 3s linear" }}
+                  style={{ animation: "progress 4s linear" }}
                 />
               </div>
             </div>

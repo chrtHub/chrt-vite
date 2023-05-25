@@ -29,7 +29,7 @@ import classNames from "../../../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 import { useChatContext } from "../../../Context/ChatContext";
-import { ToastError } from "../../../Util/axiosErrorHandler";
+import { ErrorForBoundary, ErrorForToast } from "../../../Errors/ErrorClasses";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function ConversationsList() {
@@ -84,7 +84,7 @@ export default function ConversationsList() {
       try {
         await chatson.list_conversations(accessToken, CC, "append");
       } catch (err) {
-        if (err instanceof ToastError) {
+        if (err instanceof ErrorForToast) {
           toast(err.message);
         }
       }

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
 //-- TSX Components --//
-
+import { axiosErrorHandler } from "../Errors/axiosErrorHandler";
 //-- NPM Components --//
 
 //-- Icons --//
@@ -14,7 +14,7 @@ import axios from "axios";
 //-- Utility Functions --//
 
 //-- Data Objects --//
-
+import { AxiosError } from "axios";
 interface IAnimal {
   type: string;
   url: string;
@@ -38,13 +38,19 @@ export default function NotFoundPage({}: IProps) {
   //-- Fetch image of randomAnimal from S3 bucket --//
   useEffect(() => {
     const fetchImage = async () => {
-      const response = await axios.get(randomAnimal.url, {
-        responseType: "blob",
-      });
-      const imageBlob: Blob = await response.data;
-      const imageURL: string = URL.createObjectURL(imageBlob);
-      setImageSrc(imageURL);
-      setImageLoaded(true);
+      try {
+        const response = await axios.get(randomAnimal.url, {
+          responseType: "blob",
+        });
+        const imageBlob: Blob = await response.data;
+        const imageURL: string = URL.createObjectURL(imageBlob);
+        setImageSrc(imageURL);
+        setImageLoaded(true);
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          axiosErrorHandler(err, "Cute Animal Photo Fetching");
+        }
+      }
     };
     fetchImage();
   }, []);
@@ -77,14 +83,12 @@ export default function NotFoundPage({}: IProps) {
         </main>
         {imageLoaded ? (
           <img
-            className="my-10 aspect-auto rounded-sm" //-- 640x640 using current images --//
+            className="my-10 aspect-auto rounded-2xl" //-- 640x640 using current images --//
             src={imageSrc}
             alt={randomAnimal.type}
           />
         ) : (
-          <div
-            className={`my-10 h-[300px] w-[300px] animate-pulse bg-zinc-200 dark:bg-zinc-950 md:h-[640px] md:w-[640px]`}
-          ></div>
+          <div className="my-10 h-[300px] w-[300px] animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-950 md:h-[640px] md:w-[640px]"></div>
         )}
       </div>
     </div>

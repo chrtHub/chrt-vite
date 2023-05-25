@@ -5,13 +5,13 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
 import EChart from "../EChart/EChart";
+import { axiosErrorHandler } from "../../Errors/axiosErrorHandler";
 
 //-- NPM Components --//
-
 //-- Icons --//
 
 //-- NPM Functions --//
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { format, parseISO } from "date-fns";
 import numeral from "numeral";
 
@@ -147,8 +147,12 @@ export default function PL_45_Days() {
 
         //-- Set Recoil state --//
         setJournalPL45Days(reversedDatesAndProfits);
-      } catch (e) {
-        console.log(e);
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          axiosErrorHandler(err);
+        } else {
+          console.log(err);
+        }
       }
       setLoading(false);
     };

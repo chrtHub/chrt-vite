@@ -2,8 +2,6 @@ import { AxiosError } from "axios";
 
 import { toast } from "react-toastify";
 
-export class ToastError extends Error {}
-
 /**
  * @description handles status 400, status 500, and NetworkError
  * @param err error instanceof AxiosError
@@ -20,14 +18,22 @@ export const axiosErrorHandler = (err: AxiosError, toastTitle?: string) => {
     } else {
       throw new Error(message);
     }
-  } //-- 500 --//
+  } //-- 401 --//
+  else if (status === 401) {
+    if (toastTitle) {
+      toast(`${toastTitle}: ${message}`);
+    } else {
+      throw new Error(message);
+    }
+  }
+  //-- 500 --//
   else if (status === 500) {
     if (toastTitle) {
       toast(`${toastTitle}: server error, please try again`);
     } else {
       throw new Error("Server error, please try again");
     }
-  } //-- Network ToastError --//
+  } //-- Network Error --//
   else if (err.code === "ERR_NETWORK") {
     if (toastTitle) {
       toast(

@@ -29,7 +29,7 @@ import is420 from "../../../Util/is420";
 import { IConversation } from "../chatson/chatson_types";
 import { IChatContext } from "../../../Context/ChatContext";
 import { NavigateFunction } from "react-router-dom";
-import { ToastError } from "../../../Util/axiosErrorHandler";
+import { ErrorForBoundary, ErrorForToast } from "../../../Errors/ErrorClasses";
 
 //-- Conversation Rows with Sticky Header Logic --//
 export const ConversationRow = (
@@ -112,7 +112,7 @@ export const ConversationRow = (
         navigate
       );
     } catch (err) {
-      if (err instanceof ToastError) {
+      if (err instanceof ErrorForToast) {
         toast(err.message);
       }
     }
@@ -136,7 +136,7 @@ export const ConversationRow = (
     try {
       await chatson.retitle(accessToken, CC, row._id, newTitleDraft);
     } catch (err) {
-      if (err instanceof ToastError) {
+      if (err instanceof ErrorForToast) {
         toast(err.message);
       }
     }

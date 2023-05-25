@@ -1,6 +1,7 @@
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios, { AxiosError } from "axios";
+import { toast } from "react-toastify";
 import {
   ArrowPathIcon,
   ExclamationTriangleIcon,
@@ -13,14 +14,19 @@ export interface ErrorType {
   networkError?: boolean;
   fakeRoute?: boolean;
   useRouteBoundary?: boolean;
+  toast?: boolean;
 }
 const ErrorTypes: ErrorType[] = [
   {
-    name: "try-catch + route's error boundary",
+    name: "try-catch --> route's error boundary",
     useRouteBoundary: true,
   },
   {
-    name: "try-catch",
+    name: "try-catch --> component's error boundary",
+  },
+  {
+    name: "try-catch --> toast",
+    toast: true,
   },
   {
     name: "Bad Request",
@@ -130,12 +136,21 @@ const ErrorComponentWithFallback = ({ errorType }: IProps) => {
           showBoundary(err);
         }
       }
+
       //-- Else if no errorType has no httpStatus, directly throw error --//
       else {
         try {
           throw new Error("hello, this is an example of a try-catch error");
         } catch (err) {
-          showBoundary(err);
+          //-- Toast --//
+          if (errorType.toast) {
+            if (err instanceof Error) {
+              toast(err.message);
+            }
+          } //-- Error Boundary --//
+          else {
+            showBoundary(err);
+          }
         }
       }
     };

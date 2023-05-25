@@ -1,7 +1,10 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
-import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
+import { axiosErrorHandler } from "../Errors/axiosErrorHandler";
+
+import axios, { AxiosError } from "axios";
+
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 const { getAccessTokenSilently } = useAuth0();
@@ -23,4 +26,7 @@ try {
 } catch (err) {
   // console.log(err)
   // showBoundary(err)
+  if (err instanceof AxiosError) {
+    axiosErrorHandler(err, "");
+  }
 }

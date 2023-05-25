@@ -37,7 +37,7 @@ import Updates from "./Info/Updates/Updates";
 import NotFoundPage from "./Navigation/NotFoundPage";
 
 //-- TSX Components: Errors --//
-import ErrorPage from "./App/Errors/ErrorPage";
+import ErrorPage from "./Errors/ErrorPage";
 
 //-- Other --//
 
@@ -93,7 +93,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       FallbackComponent={() => {
         return <p>ErrorBoundary</p>;
       }}
-      // DEV BELOW
+      // DEV BELOW - option for error logging
       // onError={(error, componentStack) => {
       // logToErrorMonitoring(error, componentStack)
       // }}
