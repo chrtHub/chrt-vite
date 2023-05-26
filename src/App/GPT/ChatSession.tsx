@@ -164,7 +164,10 @@ export default function ChatSession() {
           } catch (err) {
             if (err instanceof ErrorForToast) {
               toast(err.message);
-            } else if (err instanceof ErrorForChatToast) {
+            } else if (
+              err instanceof ErrorForChatToast ||
+              err instanceof TypeError
+            ) {
               chatToast(err.message);
             } else if (err instanceof ErrorForBoundary) {
               showBoundary(err);
@@ -197,20 +200,14 @@ export default function ChatSession() {
           );
         } catch (err) {
           if (err instanceof ErrorForToast) {
-            toast(err.message); // NEW - test
+            toast(err.message);
+          } else if (
+            err instanceof ErrorForChatToast ||
+            err instanceof TypeError
+          ) {
+            chatToast(err.message);
           } else if (err instanceof ErrorForBoundary) {
-            //-- Show error --//
-            setShowError(err.message);
-            //-- Clear old timeout --//
-            if (errorTimeoutRef.current) {
-              clearTimeout(errorTimeoutRef.current);
-            }
-            //-- Set new timeout --//
-            errorTimeoutRef.current = setTimeout(() => {
-              setShowError(null);
-            }, 4000);
-            //-- Cause error alert progress bar animation to restart --//
-            setAnimationKey((prevKey) => prevKey + 1);
+            showBoundary(err);
           }
         }
       }
