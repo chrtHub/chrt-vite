@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, Fragment, useRef } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
+import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components --//
 import * as chatson from "../chatson/chatson";
@@ -12,7 +13,6 @@ import { UpDownButton } from "./Buttons/UpDownButton";
 //-- NPM Components --//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import { Popover, Transition } from "@headlessui/react";
-
 //-- Icons --//
 import {
   ChevronDoubleDownIcon,
@@ -48,9 +48,10 @@ export default function ConversationsList() {
   const [atBottom, setAtBottom] = useState<boolean>(false);
   const [atTop, setAtTop] = useState<boolean>(true);
 
-  //-- Auth, react-router-dom --//
+  //-- Auth, react-router-dom, react-error-boundary --//
   const navigate = useNavigate();
   const { getAccessTokenSilently } = useAuth0();
+  const { showBoundary } = useErrorBoundary();
 
   //-- Virutoso --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);

@@ -2,7 +2,11 @@
 
 //== TSX Components ==//
 import { axiosErrorHandler } from "../../../Errors/axiosErrorHandler";
-import { ErrorForBoundary, ErrorForToast } from "../../../Errors/ErrorClasses";
+import {
+  ErrorForBoundary,
+  ErrorForToast,
+  ErrorForChatToast,
+} from "../../../Errors/ErrorClasses";
 
 //== NPM Components ==//
 
@@ -28,7 +32,6 @@ import {
 import { IChatContext } from "../../../Context/ChatContext";
 import { ObjectId } from "bson";
 import { NavigateFunction } from "react-router-dom";
-import { toast } from "react-toastify";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- Chatson stuff --//
@@ -37,11 +40,9 @@ let nodeArray: IMessageNode[] = [];
 //== DATA STRUCTURES ==//
 // `nodeArray` - IMessageNode[] stored locally in this chatson.tsx file
 // // use: used to store all IMessageNode objects for the current conversation, no particular order
-// // updated: (1) overwritten by the message_nodes received during get_conversation_and_messages, (2) send_message onopen and onmessage
 
 // `CC.rowArray` - IMessageRow[] | null stored in ChatContext in correct conversation branch order
 // // use: directly rendered as <ChatRow /> components by the Virtuoso list
-// // updated: set by (1) get_conversation_and_messages, (2) send_message onopen, (3) send_message onmessage for both SSE chunks and 'completion' event
 
 //== METHODS ==//
 // (0) list_conversations
@@ -98,6 +99,7 @@ export async function list_conversations(
     CC.setConversationsFetched(true);
     //----//
   } catch (err) {
+    CC.setConversationsFetched(true);
     if (err instanceof AxiosError) {
       axiosErrorHandler(err, "List conversations");
     } else {
@@ -247,43 +249,6 @@ export async function retitle(
   }
 }
 
-//-- send_message() outline --//
-// (0) nodeArray available within the global scope of chatson, persists unless reset
-
-// (1) Receive: prompt content, parent node id (existing conversation), CC.rowArray
-
-// (2) Build prompt IMessage object and request_body IChatCompletionRequestBody object, call fetchEventSource with request_body.
-
-// (3a) All conversations - onopen
-// // get headers for conversation id
-// (3b) New conversations - onopen
-// // get headers for root node, build root node, add it to nodeArray
-// (3c) All conversations - onopen
-// // get headers for new node and parent_node_id
-// // build completion IMessage object and new_node IMessageNode object
-// // add new_node to nodeArray
-// // add new_node's id to parent node's children node ids in nodeArray
-
-// (4) build newRowArray
-// // starting from new_node, find each parent node, stopping when the next parent node is root node
-// // for each prompt row, find the parent node's children and add them to prompt row's sibling_node_ids
-// // build completion IMessageRow and push onto newRowArray
-// // build prompt IMessageRow and push onto newRowArray
-// // reverse newRowArray and set at CC.rowArray
-
-// (5a) New Conversations - onmessage
-// // (i) set the conversation object in ChatContext state
-// (5b) All conversastions - onmessage
-// // (i) message chunk events
-// // URI decode the content and append to last message's content in rowArray via setState
-// // (ii) completion event
-// // parse stringified JSON into completion IMessage object
-// // overwrite completion IMessage object in nodeArray
-// // overwrite completion content in rowArray
-// // (iii) api_req_res_metadata event
-// // parse stringified JSON into api_req_res_metadata_object
-// // add to conversation's api_req_res_metadata array in state
-
 /**
  * (4) send_message sends a prompt to an LLM and receives the response
  *
@@ -345,7 +310,7 @@ export async function send_message(
     async onopen(res) {
       if (res.status !== 200) {
         const errorMessage = await res.text();
-        throw new ErrorForBoundary(errorMessage);
+        throw new ErrorForChatToast(errorMessage); //-- prompt size error and other errors --//
       }
       //-- If res.status is 200, clear the textarea --//
       else if (setPromptDraft) {
@@ -355,7 +320,9 @@ export async function send_message(
       //-- Conversation id --//
       const conversation_id = res.headers.get("CHRT-conversation-id");
       if (!conversation_id) {
-        throw new ErrorForToast("missing conversation_id");
+        throw new ErrorForToast(
+          "response was missing conversation_id, please try again"
+        );
       }
       CC.setConversationId(conversation_id);
 
@@ -397,7 +364,9 @@ export async function send_message(
       const new_node_created_at = res.headers.get("CHRT-new-node-created-at");
       const parent_node_id = res.headers.get("CHRT-parent-node-id");
       if (!new_node_id || !new_node_created_at || !parent_node_id) {
-        throw new ErrorForToast("missing header(s)");
+        throw new ErrorForToast(
+          "response was missing header(s), please try again"
+        );
       }
       //-- Build prompt node --//
       const completion: IMessage = {
@@ -533,8 +502,7 @@ export async function send_message(
     },
     //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
     onerror(err) {
-      if (err instanceof ErrorForToast) {
-        console.log(err); // DEV
+      if (err instanceof ErrorForToast || ErrorForChatToast) {
         CC.setCompletionLoading(false); //-- End completion loading --//
         throw err; //-- Rethrow error to end request --//
       } else {

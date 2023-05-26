@@ -4,7 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 // import { useErrorBoundary } from "react-error-boundary";
 
-export default function ErrorPage() {
+export default function RouteErrorBoundary() {
   // const navigate = useNavigate();
 
   const homeButtonRef = useRef(null);

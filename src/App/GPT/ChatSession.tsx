@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useChatContext } from "../../Context/ChatContext";
+import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
 //== TSX Components ==//
 import ModelSelector from "./ModelSelector";
@@ -40,13 +41,18 @@ import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import ConversationStats from "./ConversationStats";
 import "../../Components/ProgressBar.css";
-import { ErrorForBoundary, ErrorForToast } from "../../Errors/ErrorClasses";
+import {
+  ErrorForBoundary,
+  ErrorForToast,
+  ErrorForChatToast,
+} from "../../Errors/ErrorClasses";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
   //== React State (+ Context, Refs) ==//
   let CC = useChatContext();
   let navigate = useNavigate();
+  const { showBoundary } = useErrorBoundary();
 
   //-- Prompt stuff --//
   const [disableSubmitPrompt, setDisableSubmitPrompt] = useState<boolean>(true);
@@ -157,22 +163,11 @@ export default function ChatSession() {
             );
           } catch (err) {
             if (err instanceof ErrorForToast) {
-              console.log("ErrorForToast"); // DEV
-              toast(err.message); // NEW - test
-            } else if (err instanceof Error) {
-              console.log("Error"); // DEV
-              //-- Show error --//
-              setShowError(err.message);
-              //-- Clear old timeout --//
-              if (errorTimeoutRef.current) {
-                clearTimeout(errorTimeoutRef.current);
-              }
-              //-- Set new timeout --//
-              errorTimeoutRef.current = setTimeout(() => {
-                setShowError(null);
-              }, 4000);
-              //-- Cause error alert progress bar animation to restart --//
-              setAnimationKey((prevKey) => prevKey + 1);
+              toast(err.message);
+            } else if (err instanceof ErrorForChatToast) {
+              chatToast(err.message);
+            } else if (err instanceof ErrorForBoundary) {
+              showBoundary(err);
             }
           }
         }
@@ -223,6 +218,22 @@ export default function ChatSession() {
   };
 
   //-- ***** ***** ***** ***** end of chatson ***** ***** ***** ***** --//
+
+  //-- Chat Toast --//
+  const chatToast = (message: string) => {
+    //-- Show error --//
+    setShowError(message);
+    //-- Clear old timeout --//
+    if (errorTimeoutRef.current) {
+      clearTimeout(errorTimeoutRef.current);
+    }
+    //-- Set new timeout --//
+    errorTimeoutRef.current = setTimeout(() => {
+      setShowError(null);
+    }, 4000);
+    //-- Cause error alert progress bar animation to restart --//
+    setAnimationKey((prevKey) => prevKey + 1);
+  };
 
   //== Side Effects ==//
   //-- On promptDraft updates, update promptTooLong and disableSubmitPrompt  --//

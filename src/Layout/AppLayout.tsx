@@ -114,6 +114,7 @@ export default function AppLayout({ infoMode }: IProps) {
         closeOnClick
         pauseOnHover
         pauseOnFocusLoss
+        className={"z-20 mt-11"}
         toastClassName={"dark:bg-zinc-800 dark:text-zinc-100"}
         progressClassName={"bg-yellow-500 dark:bg-yellow-500"}
         closeButton={({ closeToast }) => {
@@ -321,8 +322,8 @@ export default function AppLayout({ infoMode }: IProps) {
           className="mx-auto flex h-full max-w-screen-2xl flex-col px-4 xl:px-6"
         >
           {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
-          <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-zinc-50 dark:bg-zinc-950">
-            {/* START OF HAMBURGER BUTTON */}
+          <div className="sticky top-0 z-30 flex h-16 flex-shrink-0 bg-zinc-50 dark:bg-zinc-950">
+            {/* START OF HAMBURGER BUTTON (hidden after lg) */}
             <button
               type="button"
               className="pr-4 text-zinc-500 hover:text-green-600 hover:outline-none hover:ring-2 hover:ring-inset hover:ring-transparent lg:hidden"
@@ -331,7 +332,7 @@ export default function AppLayout({ infoMode }: IProps) {
               <span className="sr-only">Open sidebar</span>
               <Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
             </button>
-            {/* END OF HAMBURGER BUTTON */}
+            {/* END OF HAMBURGER BUTTON (hidden after lg) */}
 
             {/* START OF SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
             <div className="flex flex-1 justify-between">
