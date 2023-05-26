@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 //== TSX Components ==//
 import * as chatson from "./chatson/chatson";
+import { countTokens } from "./chatson/countTokens";
 
 //== NPM Components ==//
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
@@ -47,6 +48,7 @@ interface IProps {
   chatToast: Function;
 }
 export default function ChatRow({ row, prevRow, chatToast }: IProps) {
+  //-- Context, State, Auth, Error Boundary, Custom Hooks --//
   let CC = useChatContext();
   const { getAccessTokenSilently, user } = useAuth0();
   const { showBoundary } = useErrorBoundary();
@@ -59,20 +61,48 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
     chatson.change_branch(new_leaf_node_id, CC);
   };
 
-  //-- Regenerate Response --//
-  const RegenerateButton = () => {
-    return (
-      <div className="flex flex-row justify-center rounded-full p-1 text-zinc-600 hover:bg-zinc-300 hover:text-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700">
-        <Tooltip content="Regenerate" placement="top">
-          <button onClick={regenerateResponse}>
-            <ArrowPathIcon className="h-5 w-5" />
-          </button>
-        </Tooltip>
-      </div>
-    );
-  };
-  //-- Submit edited prompt, create new branch --//
-  const regenerateResponse = async () => {
+  //-- Prompt Stuff --//
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [textareaOnFocusToggle, setTextareaOnFocusToggle] =
+    useState<boolean>(false);
+  const [disableSubmitPrompt, setDisableSubmitPrompt] = useState<boolean>(true);
+  const [promptContent, setPromptContent] = useState<string>(row.content);
+  const [promptTooLong, setPromptTooLong] = useState<boolean>(false); // NEW
+  const [prompt2XTooLong, setPrompt2XTooLong] = useState<boolean>(false); // NEW
+  const [approxTokenCount, setApproxTokenCount] = useState<number>(0);
+  const [editing, setEditing] = useState<boolean>(false);
+
+  //-- On promptDraft updates, update promptTooLong and disableSubmitPrompt  --//
+  useEffect(() => {
+    let tokens = countTokens(promptContent);
+
+    if (!promptContent || tokens > CC.modelTokenLimit * 2) {
+      setDisableSubmitPrompt(true);
+    } else {
+      setDisableSubmitPrompt(false);
+    }
+
+    if (tokens > CC.modelTokenLimit) {
+      setPromptTooLong(true);
+    } else {
+      if (promptTooLong) {
+        setPromptTooLong(false);
+      }
+    }
+
+    if (tokens > CC.modelTokenLimit * 2) {
+      setPrompt2XTooLong(true);
+    } else {
+      if (prompt2XTooLong) {
+        setPrompt2XTooLong(false);
+      }
+    }
+
+    setApproxTokenCount(tokens);
+  }, [promptContent]);
+
+  //-- Regenerate Completion Function --//
+  const regenerateCompletion = async () => {
     const accessToken = await getAccessTokenSilently();
 
     if (prevRow) {
@@ -98,13 +128,20 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
       }
     }
   };
+  //-- Regnerate Completion Button --//
+  const RegenerateButton = () => {
+    return (
+      <div className="flex flex-row justify-center rounded-full p-1 text-zinc-600 hover:bg-zinc-300 hover:text-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700">
+        <Tooltip content="Regenerate" placement="top">
+          <button onClick={regenerateCompletion}>
+            <ArrowPathIcon className="h-5 w-5" />
+          </button>
+        </Tooltip>
+      </div>
+    );
+  };
 
-  //-- Edit prompt --//
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [textareaOnFocusToggle, setTextareaOnFocusToggle] =
-    useState<boolean>(false);
-  const [promptContent, setPromptContent] = useState<string>(row.content);
-  const [editing, setEditing] = useState<boolean>(false);
+  //-- Edit Prompt
   const EditButton = () => {
     return (
       <div
@@ -127,15 +164,18 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
       </div>
     );
   };
+
   //-- 'Enter' w/o 'Shift' to submit prompt, 'Shift + Enter' for newline --//
   const keyDownHandler = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault(); //-- Prevent default behavior (newline insertion) --//
-      textareaRef.current?.blur();
-      submitEditedPrompt();
+      // textareaRef.current?.blur(); // removed
+      //-- prevent submit while loading or if `disableSubmitPrompt` is true --//
+      if (!CC.completionLoading && !disableSubmitPrompt) submitEditedPrompt();
       // TODO - prevent submit if loading new completion?
     } //-- else "Enter" with shift will just insert a newline --//
   };
+
   //-- Submit edited prompt, create new branch --//
   const submitEditedPrompt = async () => {
     const accessToken = await getAccessTokenSilently();
@@ -437,11 +477,19 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
               }
               ref={textareaRef}
               value={promptContent}
-              maxRows={42} //-- arbitrary number --//
+              maxRows={25} //-- arbitrary number --//
               onChange={(event) => setPromptContent(event.target.value)}
               onKeyDown={keyDownHandler}
               className={classNames(
-                "mb-2.5 mt-0.5 block w-full resize-none rounded-md border-0 bg-white px-0 py-0 text-zinc-900 ring-2 ring-green-600 focus:ring-2 focus:ring-green-600 dark:bg-zinc-700 dark:text-zinc-100 lg:mb-0 lg:mt-6"
+                "mb-2.5 mt-0.5 block w-full resize-none rounded-sm border-0 px-3 py-3 text-base leading-6 ring-2 focus:ring-2 lg:mb-4 lg:mt-6",
+                "text-zinc-900 ring-green-600 focus:ring-green-600",
+                CC.completionLoading
+                  ? "animate-pulse bg-zinc-300 dark:bg-zinc-500"
+                  : promptTooLong && !prompt2XTooLong
+                  ? "bg-orange-300 ring-1 ring-orange-400 focus:ring-2 focus:ring-orange-400 dark:ring-orange-600 dark:focus:ring-orange-600"
+                  : prompt2XTooLong
+                  ? "bg-red-300 ring-1 ring-red-400 focus:ring-2 focus:ring-red-400 dark:ring-red-600 dark:focus:ring-red-600"
+                  : "bg-white ring-1 ring-inset ring-zinc-300 dark:bg-zinc-700 dark:text-white"
               )}
             />
           ) : (

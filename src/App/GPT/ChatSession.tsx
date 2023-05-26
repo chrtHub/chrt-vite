@@ -54,7 +54,7 @@ export default function ChatSession() {
   let navigate = useNavigate();
   const { showBoundary } = useErrorBoundary();
 
-  //-- Prompt stuff --//
+  //-- Prompt Stuff --//
   const [disableSubmitPrompt, setDisableSubmitPrompt] = useState<boolean>(true);
   const [promptDraft, setPromptDraft] = useState<string>("");
   const [promptTooLong, setPromptTooLong] = useState<boolean>(false);
