@@ -502,7 +502,7 @@ export async function send_message(
     },
     //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
     onerror(err) {
-      if (err instanceof ErrorForToast || ErrorForChatToast) {
+      if (err instanceof ErrorForToast || err instanceof ErrorForChatToast) {
         CC.setCompletionLoading(false); //-- End completion loading --//
         throw err; //-- Rethrow error to end request --//
       } else {

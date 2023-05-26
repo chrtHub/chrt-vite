@@ -7,6 +7,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import * as chatson from "./chatson/chatson";
 
 //== NPM Components ==//
+import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import TextareaAutosize from "react-textarea-autosize";
@@ -23,6 +24,7 @@ import {
 
 //== NPM Functions ==//
 import { useCopyToClipboard } from "usehooks-ts";
+import { toast } from "react-toastify";
 
 //== Utility Functions ==//
 import classNames from "../../Util/classNames";
@@ -32,15 +34,22 @@ import getFriendly from "./chatson/getFriendly";
 import { IMessageRow } from "./chatson/chatson_types";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import Tooltip from "../../Components/Tooltip";
+import {
+  ErrorForBoundary,
+  ErrorForToast,
+  ErrorForChatToast,
+} from "../../Errors/ErrorClasses";
 
 //-- Exported Component --//
 interface IProps {
   row: IMessageRow;
   prevRow: IMessageRow | null;
+  chatToast: Function;
 }
-export default function ChatRow({ row, prevRow }: IProps) {
+export default function ChatRow({ row, prevRow, chatToast }: IProps) {
   let CC = useChatContext();
   const { getAccessTokenSilently, user } = useAuth0();
+  const { showBoundary } = useErrorBoundary();
   const [clipboardValue, copyToClipboard] = useCopyToClipboard();
 
   //-- chatson.change_branch() --//
@@ -76,8 +85,16 @@ export default function ChatRow({ row, prevRow }: IProps) {
           CC
         );
       } catch (err) {
-        console.log(err);
-        // TODO - implement showBoundary here
+        if (err instanceof ErrorForToast) {
+          toast(err.message);
+        } else if (
+          err instanceof ErrorForChatToast ||
+          err instanceof TypeError
+        ) {
+          chatToast(err.message);
+        } else if (err instanceof ErrorForBoundary) {
+          showBoundary(err);
+        }
       }
     }
   };
@@ -132,8 +149,13 @@ export default function ChatRow({ row, prevRow }: IProps) {
         CC
       );
     } catch (err) {
-      console.log(err);
-      // TODO - implement showBoundary here
+      if (err instanceof ErrorForToast) {
+        toast(err.message);
+      } else if (err instanceof ErrorForChatToast || err instanceof TypeError) {
+        chatToast(err.message);
+      } else if (err instanceof ErrorForBoundary) {
+        showBoundary(err);
+      }
     }
   };
   //-- When textarea focuses, put cursor after the last char --//

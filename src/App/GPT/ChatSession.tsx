@@ -356,6 +356,7 @@ export default function ChatSession() {
                   prevRow={
                     CC.rowArray && index > 0 ? CC.rowArray[index - 1] : null
                   }
+                  chatToast={chatToast}
                 />
               )}
               followOutput="auto"
