@@ -21,7 +21,7 @@ import {
   ChevronDoubleUpIcon,
   ArrowPathIcon,
 } from "@heroicons/react/24/outline";
-import { Cog8ToothIcon } from "@heroicons/react/24/solid";
+import { ChatBubbleLeftIcon, Cog8ToothIcon } from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
 import { toast } from "react-toastify";
@@ -132,6 +132,7 @@ const Component = () => {
         <p className="font-semibold text-zinc-600 dark:text-zinc-300">
           No Saved Conversations
         </p>
+        <ChatBubbleLeftIcon className="mt-2 h-20 w-20 text-zinc-200 dark:text-zinc-950" />
       </div>
     );
   } else {
@@ -224,7 +225,6 @@ const Component = () => {
 
 //-- Fallback --//
 const Fallback = ({ error }: { error: Error | AxiosError }) => {
-  console.log("Fallback error: ", error); // DEV
   const { resetBoundary } = useErrorBoundary();
 
   const {
@@ -235,10 +235,19 @@ const Fallback = ({ error }: { error: Error | AxiosError }) => {
     axiosHTTPStatusText,
   } = getErrorDetails(error);
 
+  const showGetAccessCTA = isAxiosError && axiosHTTPStatus === "401";
+
   return (
-    <div className="mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md bg-orange-100 font-medium text-orange-800 dark:bg-yellow-950 dark:text-orange-200">
+    <div
+      className={classNames(
+        "mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md  font-medium",
+        showGetAccessCTA
+          ? "bg-zinc-200 dark:bg-zinc-900"
+          : "bg-orange-100 text-orange-800 dark:bg-yellow-950 dark:text-orange-200"
+      )}
+    >
       {/* Non-Axios errors */}
-      {!isAxiosError ||
+      {!showGetAccessCTA ||
         (errorMessage === "Network Error" && (
           <>
             <>{errorMessage}</>
@@ -246,13 +255,27 @@ const Fallback = ({ error }: { error: Error | AxiosError }) => {
         ))}
 
       {/* Axios error details */}
-      {isAxiosError && (
-        <>
-          <p>{axiosHTTPStatus}</p>
-          <p>{axiosHTTPStatusText}</p>
-
-          <p>{axiosServerMessage}</p>
-        </>
+      {showGetAccessCTA && (
+        <div className="px-3">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+              Start using ChrtGPT
+              <br />
+              today
+            </h2>
+            <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+              Request free access to the preview release
+            </p>
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              <a
+                href="#"
+                className="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+              >
+                Get Access <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
