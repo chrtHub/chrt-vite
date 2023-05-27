@@ -85,21 +85,6 @@ export default function ChatSession() {
 
   //-- ***** ***** ***** ***** start of chatson ***** ***** ***** ***** --//
 
-  // //-- Get conversations list on mount and if sortBy changes --//
-  useEffect(() => {
-    const getConversationsListHandler = async () => {
-      let accessToken = await getAccessTokenSilently();
-      try {
-        await chatson.list_conversations(accessToken, CC, "overwrite");
-      } catch (err) {
-        if (err instanceof ErrorForToast) {
-          toast(err.message);
-        }
-      }
-    };
-    getConversationsListHandler();
-  }, [CC.sortBy]);
-
   //-- When conversation_id is updated, load that conversation --//
   let { entity_type, conversation_id } = useParams();
   useEffect(() => {

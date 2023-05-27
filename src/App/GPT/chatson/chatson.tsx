@@ -100,13 +100,7 @@ export async function list_conversations(
     //----//
   } catch (err) {
     CC.setConversationsFetched(true);
-    if (err instanceof AxiosError) {
-      axiosErrorToaster(err, "List conversations");
-      throw err;
-    } else {
-      console.log(err);
-      throw err;
-    }
+    throw err;
   }
 }
 
@@ -301,8 +295,7 @@ export async function send_message(
   let new_node_id: string | null;
   let completion_content: string = ""; // NEW
 
-  // await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
-  await fetchEventSource(`${VITE_ALB_BASE_URL}/NOT_A_ROUTE`, {
+  await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
     method: "POST",
     headers: request_headers,
     body: JSON.stringify(request_body),

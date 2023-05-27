@@ -38,6 +38,7 @@ import {
 import classNames from "../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
+import chartLogo from "../Assets/twemoji_bar_chart/android-chrome-192x192.png";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 interface IProps {
@@ -163,7 +164,7 @@ export default function AppLayout({ infoMode }: IProps) {
               leaveFrom="translate-x-0"
               leaveTo="-translate-x-full"
             >
-              <Dialog.Panel className="flex w-full max-w-sm flex-col justify-start bg-zinc-50 pb-4 pt-5 dark:bg-zinc-950">
+              <Dialog.Panel className="flex w-full max-w-sm flex-col justify-start bg-zinc-50 pb-4 dark:bg-zinc-950">
                 <Transition.Child
                   as={Fragment}
                   enter="ease-in-out duration-300"
@@ -187,19 +188,26 @@ export default function AppLayout({ infoMode }: IProps) {
                     </button>
                   </div>
                 </Transition.Child>
-                {/* START OF CHRT LOGO */}
-                <div className="flex px-4">
+                {/* START OF CHRT LOGO AND NAME */}
+                <div className="ml-2 mt-2 pr-2 lg:pr-0">
                   <a
                     href={window.location.origin}
-                    className="h-8 w-auto px-2 font-sans text-3xl font-semibold text-black hover:text-green-500 dark:text-white dark:hover:text-green-500"
+                    className="flex w-full flex-row items-center justify-start rounded-md pb-2 pl-2 pt-2 hover:bg-green-300 hover:dark:bg-green-900"
                   >
-                    chrt
+                    <img
+                      src={chartLogo}
+                      alt={"chart logo"}
+                      className="h-8 w-8 shadow-md"
+                    />
+                    <p className="ml-2.5 text-3xl font-semibold text-zinc-600 dark:text-white">
+                      chrt
+                    </p>
                   </a>
                 </div>
-                {/* END OF CHRT LOGO */}
+                {/* END OF CHRT LOGO AND NAME */}
 
                 {/* START OF NAVIGATION ITEMS */}
-                <div className="mb-2 mt-4 flex flex-col">
+                <div className="mt-1 flex flex-col">
                   <nav className="flex-1 space-y-1 px-2">
                     {navigationItems.map((item) => (
                       <NavLink
@@ -255,20 +263,27 @@ export default function AppLayout({ infoMode }: IProps) {
       >
         <div
           id="sidebar-primary-items-list"
-          className="flex h-full flex-col overflow-y-auto bg-zinc-50 pt-3 dark:bg-zinc-950"
+          className="flex h-full flex-col overflow-y-auto bg-zinc-50 dark:bg-zinc-950"
         >
-          {/* START OF CHRT LOGO */}
-          <div className="flex flex-shrink-0 items-center px-6">
+          {/* START OF CHRT LOGO AND NAME */}
+          <div className="ml-2 mt-2">
             <a
               href={window.location.origin}
-              className="h-8 w-auto pl-2 font-sans text-3xl font-semibold text-zinc-900 hover:text-green-500 dark:text-white dark:hover:text-green-500"
+              className="flex w-full flex-row items-center justify-start rounded-md pb-2 pl-2 pt-2 hover:bg-green-300 hover:dark:bg-green-900"
             >
-              chrt
+              <img
+                src={chartLogo}
+                alt={"chart logo"}
+                className="h-8 w-8 shadow-md"
+              />
+              <p className="ml-2.5 text-3xl font-semibold text-zinc-600 dark:text-white">
+                chrt
+              </p>
             </a>
           </div>
-          {/* END OF CHRT LOGO */}
+          {/* END OF CHRT LOGO AND NAME */}
           {/* START OF NAVIGATION ITEMS */}
-          <div className="mt-4 flex flex-col">
+          <div className="mt-1 flex flex-col">
             <nav className="flex-1 space-y-1 pl-3">
               {navigationItems.map((item) => (
                 <NavLink

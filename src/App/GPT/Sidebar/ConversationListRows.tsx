@@ -61,12 +61,16 @@ const Component = () => {
     const getConversationsListHandler = async () => {
       let accessToken = await getAccessTokenSilently();
       try {
-        // throw new Error("bar"); // DEV
         await chatson.list_conversations(accessToken, CC, "overwrite");
       } catch (err) {
-        // showBoundary(
-        //   "To view this content, sign up for ChrtGPT. If problems persist, (1) refresh the page, (2) sign out and sign in again, (3) contact support"
-        // );
+        if (err instanceof AxiosError && err?.response?.status === 401) {
+          showBoundary(err);
+          // showBoundary(
+          //   "To view this content, sign up for ChrtGPT. If problems persist, (1) refresh the page, (2) sign out and sign in again, (3) contact support"
+          // );
+        } else if (err instanceof Error) {
+          showBoundary(err);
+        }
       }
     };
     getConversationsListHandler();
@@ -104,7 +108,11 @@ const Component = () => {
       try {
         await chatson.list_conversations(accessToken, CC, "append");
       } catch (err) {
-        if (err instanceof ErrorForToast) {
+        if (err instanceof AxiosError && err?.response?.status === 401) {
+          showBoundary(
+            "To view this content, sign up for ChrtGPT. If problems persist, (1) refresh the page, (2) sign out and sign in again, (3) contact support"
+          );
+        } else if (err instanceof Error) {
           toast(err.message);
         }
       }
@@ -124,16 +132,6 @@ const Component = () => {
         <p className="font-semibold text-zinc-600 dark:text-zinc-300">
           No Saved Conversations
         </p>
-        {/* TODO - new conversation button */}
-        {/* <button
-            className="mt-2 flex flex-col items-center justify-center rounded-full p-3 hover:bg-zinc-200 dark:hover:bg-zinc-800"
-            onClick={listMoreConversations}
-          >
-            <ArrowPathIcon className="h-5 w-5 text-zinc-500  dark:text-zinc-400" />
-            <p className="mt-0.5 text-sm font-semibold italic text-zinc-600 dark:text-zinc-300">
-              refresh
-            </p>
-          </button> */}
       </div>
     );
   } else {
@@ -238,21 +236,22 @@ const Fallback = ({ error }: { error: Error | AxiosError }) => {
   } = getErrorDetails(error);
 
   return (
-    <div className="mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md bg-yellow-100 dark:bg-orange-900 dark:text-orange-50">
+    <div className="mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md bg-orange-100 font-medium text-orange-800 dark:bg-yellow-950 dark:text-orange-200">
       {/* Non-Axios errors */}
-      {!isAxiosError && (
-        <>
-          <>{errorMessage}</>
-        </>
-      )}
+      {!isAxiosError ||
+        (errorMessage === "Network Error" && (
+          <>
+            <>{errorMessage}</>
+          </>
+        ))}
 
       {/* Axios error details */}
       {isAxiosError && (
         <>
-          <p>{errorMessage}</p>
-          <p>{axiosServerMessage}</p>
           <p>{axiosHTTPStatus}</p>
           <p>{axiosHTTPStatusText}</p>
+
+          <p>{axiosServerMessage}</p>
         </>
       )}
     </div>
