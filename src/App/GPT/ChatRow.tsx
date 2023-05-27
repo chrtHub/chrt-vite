@@ -8,7 +8,7 @@ import * as chatson from "./chatson/chatson";
 import { countTokens } from "./chatson/countTokens";
 
 //== NPM Components ==//
-import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
+import { useErrorBoundary } from "react-error-boundary";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import TextareaAutosize from "react-textarea-autosize";

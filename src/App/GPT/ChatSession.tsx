@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useChatContext } from "../../Context/ChatContext";
-import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
+import { useErrorBoundary } from "react-error-boundary";
 
 //== TSX Components ==//
 import ModelSelector from "./ModelSelector";
@@ -83,7 +83,7 @@ export default function ChatSession() {
 
   //-- ***** ***** ***** ***** start of chatson ***** ***** ***** ***** --//
 
-  //-- Get conversations list on mount and if sorBy changes --//
+  // //-- Get conversations list on mount and if sortBy changes --//
   useEffect(() => {
     const getConversationsListHandler = async () => {
       let accessToken = await getAccessTokenSilently();

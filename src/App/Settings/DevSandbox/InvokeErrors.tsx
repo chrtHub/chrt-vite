@@ -2,6 +2,7 @@ import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import { getErrorDetails } from "../../../Errors/getErrorDetails";
 import {
   ArrowPathIcon,
   ExclamationTriangleIcon,
@@ -62,6 +63,7 @@ const ErrorTypes: ErrorType[] = [
 export default function InvokeErrors() {
   return (
     <div className="flex w-full max-w-prose flex-col gap-2">
+      {/* Map error types into components with buttons that invoke an error */}
       {ErrorTypes.map((errorType, index) => {
         return <ErrorComponentWithFallback errorType={errorType} key={index} />;
       })}
@@ -70,24 +72,6 @@ export default function InvokeErrors() {
 }
 
 //-- ***** ***** ***** Error Section Component Stuff ***** ***** ***** --//
-
-const getErrorDetails = (error: Error | AxiosError) => {
-  const errorMessage = error.message;
-  const isAxiosError = error instanceof AxiosError ? "true" : "false";
-  const data =
-    error instanceof AxiosError
-      ? typeof error.response?.data === "object"
-        ? JSON.stringify(error.response?.data) || ""
-        : String(error.response?.data || "")
-      : "";
-  const httpStatus =
-    error instanceof AxiosError ? error.response?.status.toString() || "" : "";
-  const httpStatusText =
-    error instanceof AxiosError ? error.response?.statusText || "" : "";
-
-  return { errorMessage, isAxiosError, data, httpStatus, httpStatusText };
-};
-
 //-- Component in Error Boundary + Fallback --//
 interface IProps {
   errorType: ErrorType;

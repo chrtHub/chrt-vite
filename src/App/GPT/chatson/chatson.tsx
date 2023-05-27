@@ -102,8 +102,10 @@ export async function list_conversations(
     CC.setConversationsFetched(true);
     if (err instanceof AxiosError) {
       axiosErrorHandler(err, "List conversations");
+      throw err;
     } else {
       console.log(err);
+      throw err;
     }
   }
 }
