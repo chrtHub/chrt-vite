@@ -28,9 +28,9 @@ import { toast } from "react-toastify";
 import classNames from "../../../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
-import { IChatContext, useChatContext } from "../../../Context/ChatContext";
+import { useChatContext } from "../../../Context/ChatContext";
 import { ErrorForBoundary, ErrorForToast } from "../../../Errors/ErrorClasses";
-import { Axios, AxiosError } from "axios";
+import { AxiosError } from "axios";
 
 //-- Component --//
 const Component = () => {
@@ -59,14 +59,16 @@ const Component = () => {
     const getConversationsListHandler = async () => {
       let accessToken = await getAccessTokenSilently();
       try {
+        // throw new Error("bar"); // DEV
         await chatson.list_conversations(accessToken, CC, "overwrite");
       } catch (err) {
+        console.log("useEffect error: ", err); // DEV
         if (err instanceof AxiosError && err.response?.status === 401) {
           showBoundary(
             "To view this content, sign up for ChrtGPT. If problems persist, (1) refresh the page, (2) sign out and sign in again, (3) contact support"
           );
         } else if (err instanceof Error) {
-          showBoundary(err.message);
+          showBoundary(err);
         }
       }
     };
@@ -227,19 +229,35 @@ const Component = () => {
 
 //-- Fallback --//
 const Fallback = ({ error }: { error: Error | AxiosError }) => {
+  console.log("Fallback error: ", error); // DEV
   const { resetBoundary } = useErrorBoundary();
 
-  const { errorMessage, isAxiosError, data, httpStatus, httpStatusText } =
-    getErrorDetails(error);
+  const {
+    errorMessage,
+    isAxiosError,
+    axiosServerMessage,
+    axiosHTTPStatus,
+    axiosHTTPStatusText,
+  } = getErrorDetails(error);
 
   return (
     <div className="mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md bg-yellow-100 dark:bg-orange-900 dark:text-orange-50">
-      <p>fallback</p>
+      {/* Non-Axios errors */}
+      {!isAxiosError && (
+        <>
+          <>{errorMessage}</>
+        </>
+      )}
+
       {/* Axios error details */}
-      <p>{errorMessage}</p>
-      <p>{data}</p>
-      <p>{httpStatus}</p>
-      <p>{httpStatusText}</p>
+      {isAxiosError && (
+        <>
+          <p>{errorMessage}</p>
+          <p>{axiosServerMessage}</p>
+          <p>{axiosHTTPStatus}</p>
+          <p>{axiosHTTPStatusText}</p>
+        </>
+      )}
     </div>
   );
 };

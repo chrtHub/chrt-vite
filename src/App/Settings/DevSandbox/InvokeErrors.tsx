@@ -172,8 +172,13 @@ const ErrorComponentWithFallback = ({ errorType }: IProps) => {
   const Fallback = ({ error }: { error: Error | AxiosError }) => {
     const { resetBoundary } = useErrorBoundary();
 
-    const { errorMessage, isAxiosError, data, httpStatus, httpStatusText } =
-      getErrorDetails(error);
+    const {
+      errorMessage,
+      isAxiosError,
+      axiosServerMessage,
+      axiosHTTPStatus,
+      axiosHTTPStatusText,
+    } = getErrorDetails(error);
 
     return (
       <div className="flex w-full flex-col items-center justify-center gap-2 rounded-md bg-orange-200 p-2">
@@ -206,19 +211,20 @@ const ErrorComponentWithFallback = ({ errorType }: IProps) => {
           </div>
 
           <p className="text-zinc-600">
-            <span className="font-semibold text-zinc-900">Data: </span> {data}
+            <span className="font-semibold text-zinc-900">Data: </span>{" "}
+            {axiosServerMessage}
           </p>
 
           <p className="text-zinc-600">
             <span className="font-semibold text-zinc-900">HTTP Status: </span>
-            {httpStatus}
+            {axiosHTTPStatus}
           </p>
 
           <p className="text-zinc-600">
             <span className="font-semibold text-zinc-900">
               HTTP Status Text:{" "}
             </span>
-            {httpStatusText}
+            {axiosHTTPStatusText}
           </p>
         </div>
         {/* Button */}
