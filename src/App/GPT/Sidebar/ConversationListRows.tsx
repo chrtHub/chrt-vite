@@ -63,12 +63,7 @@ const Component = () => {
       try {
         await chatson.list_conversations(accessToken, CC, "overwrite");
       } catch (err) {
-        if (err instanceof AxiosError && err?.response?.status === 401) {
-          showBoundary(err);
-          // showBoundary(
-          //   "To view this content, sign up for ChrtGPT. If problems persist, (1) refresh the page, (2) sign out and sign in again, (3) contact support"
-          // );
-        } else if (err instanceof Error) {
+        if (err instanceof Error) {
           showBoundary(err);
         }
       }
@@ -108,11 +103,7 @@ const Component = () => {
       try {
         await chatson.list_conversations(accessToken, CC, "append");
       } catch (err) {
-        if (err instanceof AxiosError && err?.response?.status === 401) {
-          showBoundary(
-            "To view this content, sign up for ChrtGPT. If problems persist, (1) refresh the page, (2) sign out and sign in again, (3) contact support"
-          );
-        } else if (err instanceof Error) {
+        if (err instanceof Error) {
           toast(err.message);
         }
       }
@@ -225,8 +216,6 @@ const Component = () => {
 
 //-- Fallback --//
 const Fallback = ({ error }: { error: Error | AxiosError }) => {
-  const { resetBoundary } = useErrorBoundary();
-
   const {
     errorMessage,
     isAxiosError,
@@ -235,27 +224,26 @@ const Fallback = ({ error }: { error: Error | AxiosError }) => {
     axiosHTTPStatusText,
   } = getErrorDetails(error);
 
-  const showGetAccessCTA = isAxiosError && axiosHTTPStatus === "401";
+  const is401Error = axiosHTTPStatus === "401";
 
   return (
     <div
       className={classNames(
         "mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md  font-medium",
-        showGetAccessCTA
+        is401Error
           ? "bg-zinc-200 dark:bg-zinc-900"
           : "bg-orange-100 text-orange-800 dark:bg-yellow-950 dark:text-orange-200"
       )}
     >
-      {/* Non-Axios errors */}
-      {!showGetAccessCTA ||
-        (errorMessage === "Network Error" && (
-          <>
-            <>{errorMessage}</>
-          </>
-        ))}
+      {/* Non-401 errors */}
+      {!is401Error && (
+        <>
+          <>{errorMessage}</>
+        </>
+      )}
 
-      {/* Axios error details */}
-      {showGetAccessCTA && (
+      {/* 401 errors */}
+      {is401Error && (
         <div className="px-3">
           <div className="text-center">
             <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
