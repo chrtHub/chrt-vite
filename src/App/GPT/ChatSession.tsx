@@ -46,6 +46,8 @@ import {
   ErrorForToast,
   ErrorForChatToast,
 } from "../../Errors/ErrorClasses";
+import { AxiosError } from "axios";
+import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
@@ -162,15 +164,12 @@ export default function ChatSession() {
               navigate
             );
           } catch (err) {
-            if (err instanceof ErrorForToast) {
-              toast(err.message);
-            } else if (
-              err instanceof ErrorForChatToast ||
-              err instanceof TypeError
-            ) {
+            if (err instanceof ErrorForChatToast) {
               chatToast(err.message);
-            } else if (err instanceof ErrorForBoundary) {
-              showBoundary(err);
+            } else if (err instanceof ErrorForToast) {
+              toast(err.message);
+            } else if (err instanceof Error) {
+              toast(err.message);
             }
           }
         }
@@ -192,6 +191,8 @@ export default function ChatSession() {
       if (last_prompt_row) {
         //-- Send prompt as chat message --//
         try {
+          // CC.setCompletionLoading(false); // DEV
+          // throw new AxiosError(); // DEV
           await chatson.send_message(
             accessToken,
             last_prompt_row.content,
@@ -199,15 +200,12 @@ export default function ChatSession() {
             CC
           );
         } catch (err) {
-          if (err instanceof ErrorForToast) {
-            toast(err.message);
-          } else if (
-            err instanceof ErrorForChatToast ||
-            err instanceof TypeError
-          ) {
+          if (err instanceof ErrorForChatToast) {
             chatToast(err.message);
-          } else if (err instanceof ErrorForBoundary) {
-            showBoundary(err);
+          } else if (err instanceof ErrorForToast) {
+            toast(err.message);
+          } else if (err instanceof Error) {
+            toast(err.message);
           }
         }
       }

@@ -9,10 +9,12 @@ import * as chatson from "../chatson/chatson";
 import { ConversationRow } from "./ConversationRow";
 import { UpDownButton } from "./Buttons/UpDownButton";
 import { getErrorDetails } from "../../../Errors/getErrorDetails";
+import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
 
 //-- NPM Components --//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import { Popover, Transition } from "@headlessui/react";
+
 //-- Icons --//
 import {
   ChevronDoubleDownIcon,
@@ -62,14 +64,9 @@ const Component = () => {
         // throw new Error("bar"); // DEV
         await chatson.list_conversations(accessToken, CC, "overwrite");
       } catch (err) {
-        console.log("useEffect error: ", err); // DEV
-        if (err instanceof AxiosError && err.response?.status === 401) {
-          showBoundary(
-            "To view this content, sign up for ChrtGPT. If problems persist, (1) refresh the page, (2) sign out and sign in again, (3) contact support"
-          );
-        } else if (err instanceof Error) {
-          showBoundary(err);
-        }
+        // showBoundary(
+        //   "To view this content, sign up for ChrtGPT. If problems persist, (1) refresh the page, (2) sign out and sign in again, (3) contact support"
+        // );
       }
     };
     getConversationsListHandler();

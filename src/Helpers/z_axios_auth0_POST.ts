@@ -1,7 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
-import { axiosErrorHandler } from "../Errors/axiosErrorHandler";
+import { axiosErrorToaster } from "../Errors/axiosErrorToaster";
 
 import axios, { AxiosError } from "axios";
 
@@ -35,6 +35,6 @@ try {
   console.log(err);
   // showBoundary(err)
   if (err instanceof AxiosError) {
-    axiosErrorHandler(err, "");
+    axiosErrorToaster(err, "");
   }
 }

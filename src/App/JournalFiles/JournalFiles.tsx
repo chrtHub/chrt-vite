@@ -11,7 +11,7 @@ import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
-import { axiosErrorHandler } from "../../Errors/axiosErrorHandler";
+import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
 
 //-- NPM Components --//
 import { Listbox, Dialog, Transition } from "@headlessui/react";
@@ -128,7 +128,7 @@ export default function JournalFiles({}: IProps) {
       //----//
     } catch (err) {
       if (err instanceof AxiosError) {
-        axiosErrorHandler(err, "List Files");
+        axiosErrorToaster(err, "List Files");
       }
     }
     setListFilesLoading(false);
@@ -155,7 +155,7 @@ export default function JournalFiles({}: IProps) {
       //----//
     } catch (err) {
       if (err instanceof AxiosError) {
-        axiosErrorHandler(err, "Get File");
+        axiosErrorToaster(err, "Get File");
       }
     }
 
@@ -190,7 +190,7 @@ export default function JournalFiles({}: IProps) {
         if (err.response?.status === 415) {
           toast("File type not supported. Please upload a CSV file.");
         } else {
-          axiosErrorHandler(err, "Put File");
+          axiosErrorToaster(err, "Put File");
         }
       }
     }
@@ -221,7 +221,7 @@ export default function JournalFiles({}: IProps) {
       //----//
     } catch (err) {
       if (err instanceof AxiosError) {
-        axiosErrorHandler(err, "Delete File");
+        axiosErrorToaster(err, "Delete File");
       }
     }
     setDeleteFileLoading(false);

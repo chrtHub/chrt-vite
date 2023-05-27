@@ -5,7 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
 import EChart from "../EChart/EChart";
-import { axiosErrorHandler } from "../../Errors/axiosErrorHandler";
+import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
 
 //-- NPM Components --//
 //-- Icons --//
@@ -149,7 +149,7 @@ export default function PL_45_Days() {
         setJournalPL45Days(reversedDatesAndProfits);
       } catch (err) {
         if (err instanceof AxiosError) {
-          axiosErrorHandler(err);
+          axiosErrorToaster(err);
         } else {
           console.log(err);
         }

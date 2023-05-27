@@ -115,15 +115,12 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
           CC
         );
       } catch (err) {
-        if (err instanceof ErrorForToast) {
-          toast(err.message);
-        } else if (
-          err instanceof ErrorForChatToast ||
-          err instanceof TypeError
-        ) {
+        if (err instanceof ErrorForChatToast) {
           chatToast(err.message);
-        } else if (err instanceof ErrorForBoundary) {
-          showBoundary(err);
+        } else if (err instanceof ErrorForToast) {
+          toast(err.message);
+        } else if (err instanceof Error) {
+          toast(err.message);
         }
       }
     }
@@ -189,12 +186,12 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
         CC
       );
     } catch (err) {
-      if (err instanceof ErrorForToast) {
-        toast(err.message);
-      } else if (err instanceof ErrorForChatToast || err instanceof TypeError) {
+      if (err instanceof ErrorForChatToast) {
         chatToast(err.message);
-      } else if (err instanceof ErrorForBoundary) {
-        showBoundary(err);
+      } else if (err instanceof ErrorForToast) {
+        toast(err.message);
+      } else if (err instanceof Error) {
+        toast(err.message);
       }
     }
   };

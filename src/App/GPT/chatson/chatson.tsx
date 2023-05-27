@@ -1,7 +1,7 @@
 //== react, react-router-dom, recoil, Auth0 ==//
 
 //== TSX Components ==//
-import { axiosErrorHandler } from "../../../Errors/axiosErrorHandler";
+import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
 import {
   ErrorForBoundary,
   ErrorForToast,
@@ -101,7 +101,7 @@ export async function list_conversations(
   } catch (err) {
     CC.setConversationsFetched(true);
     if (err instanceof AxiosError) {
-      axiosErrorHandler(err, "List conversations");
+      axiosErrorToaster(err, "List conversations");
       throw err;
     } else {
       console.log(err);
@@ -177,7 +177,7 @@ export async function get_conversation_and_messages(
     //----//
   } catch (err) {
     if (err instanceof AxiosError) {
-      axiosErrorHandler(err, "Get conversation");
+      axiosErrorToaster(err, "Get conversation");
     } else {
       console.log(err);
     }
@@ -208,7 +208,7 @@ export async function create_title(
     );
   } catch (err) {
     if (err instanceof AxiosError) {
-      axiosErrorHandler(err, "Create title");
+      axiosErrorToaster(err, "Create title");
     } else {
       console.log(err);
     }
@@ -244,7 +244,7 @@ export async function retitle(
     await list_conversations(access_token, CC, "overwrite");
   } catch (err) {
     if (err instanceof AxiosError) {
-      axiosErrorHandler(err, "Retitle");
+      axiosErrorToaster(err, "Retitle");
     } else {
       console.log(err);
     }
@@ -301,7 +301,8 @@ export async function send_message(
   let new_node_id: string | null;
   let completion_content: string = ""; // NEW
 
-  await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
+  // await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
+  await fetchEventSource(`${VITE_ALB_BASE_URL}/NOT_A_ROUTE`, {
     method: "POST",
     headers: request_headers,
     body: JSON.stringify(request_body),
@@ -504,13 +505,10 @@ export async function send_message(
     },
     //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
     onerror(err) {
-      if (err instanceof ErrorForToast || err instanceof ErrorForChatToast) {
-        CC.setCompletionLoading(false); //-- End completion loading --//
-        throw err; //-- Rethrow error to end request --//
-      } else {
-        //-- Do nothing to automatically retry. Or implement retry strategy here --//
-        //-- Retry Strategy: end loading state, end request --//
-        CC.setCompletionLoading(false); //-- End completion loading --//
+      CC.setCompletionLoading(false); //-- End completion loading --//
+      //-- Do nothing to automatically retry. Or implement retry strategy here --//
+      //-- Retry Strategy: end loading state, end request --//
+      if (err instanceof Error) {
         throw err; //-- Rethrow error to end request --//
       }
     },
@@ -591,7 +589,7 @@ export async function delete_conversation_and_messages(
     await list_conversations(access_token, CC, "overwrite");
   } catch (err) {
     if (err instanceof AxiosError) {
-      axiosErrorHandler(err, "Delete conversation");
+      axiosErrorToaster(err, "Delete conversation");
     } else {
       console.log(err);
     }

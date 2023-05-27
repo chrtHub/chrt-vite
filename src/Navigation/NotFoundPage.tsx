@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
 //-- TSX Components --//
-import { axiosErrorHandler } from "../Errors/axiosErrorHandler";
+import { axiosErrorToaster } from "../Errors/axiosErrorToaster";
 //-- NPM Components --//
 
 //-- Icons --//
@@ -48,7 +48,7 @@ export default function NotFoundPage({}: IProps) {
         setImageLoaded(true);
       } catch (err) {
         if (err instanceof AxiosError) {
-          axiosErrorHandler(err, "Cute Animal Photo Fetching");
+          axiosErrorToaster(err, "Cute Animal Photo Fetching");
         }
       }
     };
