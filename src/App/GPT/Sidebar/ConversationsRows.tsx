@@ -9,7 +9,6 @@ import * as chatson from "../chatson/chatson";
 import { ConversationsRow } from "./ConversationsRow";
 import { UpDownButton } from "./Buttons/UpDownButton";
 import { getErrorDetails } from "../../../Errors/getErrorDetails";
-import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
 
 //-- NPM Components --//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";

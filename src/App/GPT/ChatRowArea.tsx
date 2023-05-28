@@ -4,9 +4,11 @@ import { useChatContext } from "../../Context/ChatContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useErrorBoundary } from "react-error-boundary";
 
-//== TSX Components ==//
+//== TSX Components, Functions ==//
 import ChatRow from "./ChatRow";
 import ChatLanding from "./ChatLanding";
+import { getPermissions } from "../../Auth/getPermissions";
+import { throwAxiosError } from "../../Errors/throwAxiosError";
 
 //== NPM Components ==//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
@@ -14,8 +16,6 @@ import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 //== Icons ==//
 
 //== NPM Functions ==//
-import { getPermissions } from "../../Auth/getPermissions";
-import { throwAxiosError } from "../../Errors/throwAxiosError";
 
 //== Utility Functions ==//
 

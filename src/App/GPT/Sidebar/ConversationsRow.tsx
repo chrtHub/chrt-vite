@@ -29,7 +29,6 @@ import is420 from "../../../Util/is420";
 import { IConversation } from "../chatson/chatson_types";
 import { IChatContext } from "../../../Context/ChatContext";
 import { NavigateFunction } from "react-router-dom";
-import { ErrorForBoundary, ErrorForToast } from "../../../Errors/ErrorClasses";
 import { AxiosError } from "axios";
 import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
 

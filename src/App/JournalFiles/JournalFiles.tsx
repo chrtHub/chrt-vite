@@ -1,20 +1,16 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import {
-  Fragment,
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  ChangeEvent,
-} from "react";
+import { Fragment, useState, useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
+import FileDropArea from "./FileDropArea";
+import { FileDropAreaFallback } from "./FileDropAreaFallback";
 import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
 
 //-- NPM Components --//
 import { Listbox, Dialog, Transition } from "@headlessui/react";
+import { ErrorBoundary } from "react-error-boundary";
 
 //-- Icons --//
 import {
@@ -24,7 +20,6 @@ import {
   ChevronUpIcon,
 } from "@heroicons/react/20/solid";
 import {
-  FolderIcon,
   ArrowPathIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
@@ -32,7 +27,7 @@ import {
 //-- NPM Functions --//
 import axios, { AxiosError } from "axios";
 import { saveAs } from "file-saver";
-import { FileWithPath, useDropzone } from "react-dropzone";
+
 import { format, parseISO } from "date-fns";
 import { toast } from "react-toastify";
 
@@ -44,7 +39,7 @@ import classNames from "../../Util/classNames";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 import { filesListState } from "./atoms";
 import { IFileMetadata } from "./atoms";
-import { ErrorForBoundary, ErrorForToast } from "../../Errors/ErrorClasses";
+import { throwAxiosError } from "../../Errors/throwAxiosError";
 
 interface IBrokerage {
   id: number;
@@ -232,36 +227,6 @@ export default function JournalFiles({}: IProps) {
   };
 
   //-- Other --//
-  const onDrop = useCallback(
-    (acceptedFiles: FileWithPath[]) => {
-      setPutFileData(acceptedFiles[0]);
-      setPutFilename(acceptedFiles[0].name);
-    },
-    [setPutFileData, setPutFilename] //-- State setters shouldn't ever change, but including anyways --//
-  );
-
-  const { getRootProps, getInputProps, isDragAccept, isDragReject } =
-    useDropzone({
-      accept: {
-        "text/csv": [".csv"],
-      },
-      maxFiles: 1,
-      maxSize: 10485760, //-- 10 MB --//
-      onDrop: onDrop,
-    });
-
-  const fileUploadHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files) return;
-    let file = event.target.files[0];
-    //-- Check file size --//
-    if (file?.size < 10 * 1024 * 1024) {
-      alert("File size limit is 10 MB");
-    } else {
-      setPutFileData(file);
-      setPutFilename(file?.name);
-    }
-  };
-
   const getBrokerageNickname = (brokerageName: string) => {
     const nickname = brokerages.find((x) => x.name === brokerageName);
     return nickname?.nickname || null;
@@ -322,45 +287,12 @@ export default function JournalFiles({}: IProps) {
   return (
     <div className="flex flex-col justify-center">
       {/* START OF FILE UPLOAD AREA */}
-      <form className="mt-6">
-        <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
-          <div className="sm:col-span-6">
-            <div
-              {...getRootProps()}
-              className={classNames(
-                isDragAccept ? "bg-green-200" : "",
-                isDragReject ? "bg-orange-200" : "",
-                "flex cursor-pointer justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pb-6 pt-5 hover:bg-green-100 dark:hover:bg-green-900"
-              )}
-            >
-              <input {...getInputProps()} />
-              <div className="space-y-1 text-center">
-                <FolderIcon className="mx-auto h-10 w-10 text-zinc-400" />
-                <div className="flex text-sm text-zinc-600">
-                  <label
-                    htmlFor="file-upload"
-                    className="hover-within:outline-none hover-within:ring-2 hover-within:ring-green-500 hover-within:ring-offset-2 relative cursor-pointer rounded-md bg-green-100 px-1 font-medium text-green-600 dark:bg-green-900 dark:text-white"
-                  >
-                    <span>Select a file</span>
-                    <input
-                      id="file-upload"
-                      name="file-upload"
-                      type="file"
-                      className="sr-only"
-                      accept=".csv"
-                      onChange={fileUploadHandler}
-                    />
-                  </label>
-                  <p className="pl-1 dark:text-zinc-100">or drag and drop</p>
-                </div>
-                <p className="text-xs text-zinc-500 dark:text-zinc-200">
-                  CSV files up to 10MB
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
+      <ErrorBoundary FallbackComponent={FileDropAreaFallback}>
+        <FileDropArea
+          setPutFilename={setPutFilename}
+          setPutFileData={setPutFileData}
+        />
+      </ErrorBoundary>
       {/* END OF FILE UPLOAD AREA */}
 
       <div className="mt-6 grid grid-cols-6 gap-x-3 gap-y-1">
@@ -608,7 +540,7 @@ export default function JournalFiles({}: IProps) {
         <button
           disabled={
             !tableSelectionFile?.filename ||
-            filesList[0].filename === "example_file_name.csv"
+            filesList[0].filename === "exampleFileName.csv"
           }
           type="button"
           className={classNames(
@@ -625,7 +557,7 @@ export default function JournalFiles({}: IProps) {
         <button
           disabled={
             !tableSelectionFile?.filename ||
-            filesList[0].filename === "example_file_name.csv"
+            filesList[0].filename === "exampleFileName.csv"
           }
           type="button"
           className={classNames(

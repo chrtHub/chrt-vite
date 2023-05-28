@@ -35,11 +35,7 @@ import getFriendly from "./chatson/getFriendly";
 import { IMessageRow } from "./chatson/chatson_types";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import Tooltip from "../../Components/Tooltip";
-import {
-  ErrorForBoundary,
-  ErrorForToast,
-  ErrorForChatToast,
-} from "../../Errors/ErrorClasses";
+import { ErrorForToast, ErrorForChatToast } from "../../Errors/ErrorClasses";
 
 //-- Exported Component --//
 interface IProps {

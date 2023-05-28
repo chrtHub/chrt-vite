@@ -2,11 +2,7 @@
 
 //== TSX Components ==//
 import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
-import {
-  ErrorForBoundary,
-  ErrorForToast,
-  ErrorForChatToast,
-} from "../../../Errors/ErrorClasses";
+import { ErrorForToast, ErrorForChatToast } from "../../../Errors/ErrorClasses";
 
 //== NPM Components ==//
 

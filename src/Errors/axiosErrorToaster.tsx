@@ -13,13 +13,14 @@ export const axiosErrorToaster = (
 ) => {
   const status = err.response?.status; // DEV - is status http-defined or express code-defined?
   const message = err.response?.data?.toString(); //-- 'message' defined in Express --//
+
   //-- 400 --//
   if (status === 400) {
     toast(`${toastTitle}: ${message}`);
   }
   //-- 401 --//
   else if (status === 401) {
-    toast(`${toastTitle}: ${message}`);
+    //-- use Fallback CTA for 401 responses --//
   }
   //-- 500 --//
   else if (status === 500) {
