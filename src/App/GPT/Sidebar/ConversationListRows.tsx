@@ -34,6 +34,18 @@ import { useChatContext } from "../../../Context/ChatContext";
 import { ErrorForBoundary, ErrorForToast } from "../../../Errors/ErrorClasses";
 import { AxiosError } from "axios";
 
+//-- NoSavedConversations --//
+const NoSavedConversations = () => {
+  return (
+    <div className="mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-900">
+      <p className="font-semibold text-zinc-600 dark:text-zinc-300">
+        No Saved Conversations
+      </p>
+      <ChatBubbleLeftIcon className="mt-2 h-20 w-20 text-zinc-200 dark:text-zinc-950" />
+    </div>
+  );
+};
+
 //-- Component --//
 const Component = () => {
   //-- State --//
@@ -118,14 +130,7 @@ const Component = () => {
   }
   //-- Else if fetched, but no conversations returned --//
   else if (CC.conversationsFetched && CC.conversationsArray.length === 0) {
-    return (
-      <div className="mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-900">
-        <p className="font-semibold text-zinc-600 dark:text-zinc-300">
-          No Saved Conversations
-        </p>
-        <ChatBubbleLeftIcon className="mt-2 h-20 w-20 text-zinc-200 dark:text-zinc-950" />
-      </div>
-    );
+    return <NoSavedConversations />;
   } else {
     return (
       <>
@@ -226,47 +231,24 @@ const Fallback = ({ error }: { error: Error | AxiosError }) => {
 
   const is401Error = axiosHTTPStatus === "401";
 
-  return (
-    <div
-      className={classNames(
-        "mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md  font-medium",
-        is401Error
-          ? "bg-zinc-200 dark:bg-zinc-900"
-          : "bg-orange-100 text-orange-800 dark:bg-yellow-950 dark:text-orange-200"
-      )}
-    >
-      {/* Non-401 errors */}
-      {!is401Error && (
-        <>
-          <>{errorMessage}</>
-        </>
-      )}
-
-      {/* 401 errors */}
-      {is401Error && (
-        <div className="px-3">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-              Start using ChrtGPT
-              <br />
-              today
-            </h2>
-            <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-              Request free access to the preview release
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <a
-                href="#"
-                className="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-              >
-                Get Access <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  if (is401Error) {
+    return <NoSavedConversations />;
+  } else {
+    return (
+      <div
+        className={classNames(
+          "mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md  bg-orange-100 font-medium text-orange-800 dark:bg-yellow-950 dark:text-orange-200"
+        )}
+      >
+        {/* Non-401 errors */}
+        {!is401Error && (
+          <>
+            <>{errorMessage}</>
+          </>
+        )}
+      </div>
+    );
+  }
 };
 
 export default function ConversationListRows() {

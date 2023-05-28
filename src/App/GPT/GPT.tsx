@@ -28,7 +28,12 @@ export default function GPT() {
   //-- Auth --//
   //-- Redirect to sign in if token is expired --//
   const { getAccessTokenSilently } = useAuth0();
-  let accessToken = getAccessTokenSilently();
+  useEffect(() => {
+    const checkForFreshAccessToken = async () => {
+      await getAccessTokenSilently();
+    };
+    checkForFreshAccessToken();
+  }, []);
 
   //-- Other [] --//
 

@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useChatContext } from "../../Context/ChatContext";
-import { useErrorBoundary } from "react-error-boundary";
+import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
 //== TSX Components ==//
 import ModelSelector from "./ModelSelector";
@@ -12,6 +12,8 @@ import ChatRow from "./ChatRow";
 import ChatLanding from "./ChatLanding";
 import LLMParams from "./LLMParams";
 import { countTokens } from "./chatson/countTokens";
+import ChatRowArea from "./ChatRowArea";
+import { GPT401FallbackCTA } from "./GPT401FallbackCTA";
 
 //== NPM Components ==//
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
@@ -180,8 +182,6 @@ export default function ChatSession() {
       if (last_prompt_row) {
         //-- Send prompt as chat message --//
         try {
-          // CC.setCompletionLoading(false); // DEV
-          // throw new AxiosError(); // DEV
           await chatson.send_message(
             accessToken,
             last_prompt_row.content,
@@ -326,34 +326,13 @@ export default function ChatSession() {
   return (
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
       {/* CURRENT CHAT or SAMPLE PROPMTS */}
-      {CC.rowArray && CC.rowArray.length > 0 ? (
-        <div id="llm-current-chat" className="flex flex-grow">
-          <div id="chat-rows" className="w-full list-none">
-            {/*-- Similar implemenatation to https://virtuoso.dev/stick-to-bottom/ --*/}
-            <Virtuoso
-              ref={virtuosoRef}
-              data={CC.rowArray}
-              itemContent={(index, row) => (
-                <ChatRow
-                  key={`${row.node_id}-${row.role}`}
-                  row={row}
-                  prevRow={
-                    CC.rowArray && index > 0 ? CC.rowArray[index - 1] : null
-                  }
-                  chatToast={chatToast}
-                />
-              )}
-              followOutput="auto"
-              atBottomStateChange={(isAtBottom) => {
-                setAtBottom(isAtBottom);
-              }}
-            />
-          </div>
-        </div>
-      ) : (
-        //-- Landing view for null conversation --//
-        <ChatLanding />
-      )}
+      <ErrorBoundary FallbackComponent={GPT401FallbackCTA}>
+        <ChatRowArea
+          virtuosoRef={virtuosoRef}
+          setAtBottom={setAtBottom}
+          chatToast={chatToast}
+        />
+      </ErrorBoundary>
 
       {/* STICKY INPUT SECTION */}
       <div className="sticky bottom-0 flex h-auto flex-col justify-center bg-zinc-50 pb-3 pt-1 dark:bg-zinc-950">
