@@ -234,11 +234,7 @@ export async function retitle(
     );
     await list_conversations(access_token, CC, "overwrite");
   } catch (err) {
-    if (err instanceof AxiosError) {
-      axiosErrorToaster(err, "Retitle");
-    } else {
-      console.log(err);
-    }
+    throw err;
   }
 }
 
@@ -578,11 +574,7 @@ export async function delete_conversation_and_messages(
     //-- Fetch updated conversations list --//
     await list_conversations(access_token, CC, "overwrite");
   } catch (err) {
-    if (err instanceof AxiosError) {
-      axiosErrorToaster(err, "Delete conversation");
-    } else {
-      console.log(err);
-    }
+    throw err;
   }
 }
 

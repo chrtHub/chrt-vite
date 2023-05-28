@@ -30,6 +30,8 @@ import { IConversation } from "../chatson/chatson_types";
 import { IChatContext } from "../../../Context/ChatContext";
 import { NavigateFunction } from "react-router-dom";
 import { ErrorForBoundary, ErrorForToast } from "../../../Errors/ErrorClasses";
+import { AxiosError } from "axios";
+import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
 
 //-- Conversation Rows with Sticky Header Logic --//
 export const ConversationRow = (
@@ -112,7 +114,9 @@ export const ConversationRow = (
         navigate
       );
     } catch (err) {
-      if (err instanceof ErrorForToast) {
+      if (err instanceof AxiosError) {
+        axiosErrorToaster(err, "Delete Conversation");
+      } else if (err instanceof Error) {
         toast(err.message);
       }
     }
@@ -136,7 +140,9 @@ export const ConversationRow = (
     try {
       await chatson.retitle(accessToken, CC, row._id, newTitleDraft);
     } catch (err) {
-      if (err instanceof ErrorForToast) {
+      if (err instanceof AxiosError) {
+        axiosErrorToaster(err, "Retitle");
+      } else if (err instanceof Error) {
         toast(err.message);
       }
     }
