@@ -16,6 +16,7 @@ export default defineConfig({
     preserveSymlinks: true,
   },
   build: {
+    target: "es2022",
     sourcemap: true, //-- Defaults to 'false' --//
   },
 });
