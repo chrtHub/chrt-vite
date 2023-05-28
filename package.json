@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "stats": "open stats.html"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.0.0",
