@@ -48,6 +48,7 @@ import {
 } from "../../Errors/ErrorClasses";
 import { AxiosError } from "axios";
 import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
+import { ObjectId } from "bson";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
@@ -89,7 +90,11 @@ export default function ChatSession() {
   let { entity_type, conversation_id } = useParams();
   useEffect(() => {
     const lambda = async () => {
-      if (entity_type === "c" && conversation_id) {
+      if (
+        entity_type === "c" &&
+        conversation_id &&
+        ObjectId.isValid(conversation_id)
+      ) {
         CC.setConversationId(conversation_id);
         const accessToken = await getAccessTokenSilently();
         try {
@@ -106,10 +111,6 @@ export default function ChatSession() {
           }
         }
       }
-      // else {
-      //   // TODO - move this logic higher up, probably close to where the outlet in AppLayout is rendered
-      //   navigate("/gpt");
-      // }
     };
     lambda();
   }, [conversation_id]);
