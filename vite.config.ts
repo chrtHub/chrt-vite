@@ -1,6 +1,7 @@
 import { defineConfig, type PluginOption } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import mdx from "@mdx-js/rollup";
+import topLevelAwait from "vite-plugin-top-level-await";
 import { visualizer } from "rollup-plugin-visualizer";
 import Inspect from "vite-plugin-inspect";
 
@@ -9,6 +10,12 @@ export default defineConfig({
   plugins: [
     [react() as PluginOption],
     [mdx() as PluginOption],
+    [
+      topLevelAwait({
+        promiseExportName: "__tla",
+        promiseImportName: (i) => `__tla_${i}`,
+      }),
+    ],
     [Inspect() as PluginOption],
     [
       visualizer({
