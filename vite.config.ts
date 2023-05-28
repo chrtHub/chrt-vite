@@ -9,8 +9,12 @@ export default defineConfig({
   plugins: [
     [react() as PluginOption],
     [mdx() as PluginOption],
-    [visualizer() as PluginOption],
     [Inspect() as PluginOption],
+    [
+      visualizer({
+        template: "treemap",
+      }) as PluginOption,
+    ],
   ],
   resolve: {
     preserveSymlinks: true,
