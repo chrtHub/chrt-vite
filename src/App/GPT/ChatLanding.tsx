@@ -22,7 +22,7 @@ export default function ChatLanding() {
       <p className="font-sans text-4xl font-semibold text-zinc-700 dark:text-zinc-200">
         ChrtGPT
       </p>
-      <article className="prose prose-zinc dark:prose-invert">
+      {/* <article className="prose prose-zinc dark:prose-invert">
         <div className="mb-0 flex flex-col">
           <p className="mb-0 mt-2.5 font-sans font-medium italic">
             What is ChrtGPT?
@@ -34,7 +34,7 @@ export default function ChatLanding() {
             What are ways to be a good day trader?
           </p>
         </div>
-      </article>
+      </article> */}
     </div>
   );
 }

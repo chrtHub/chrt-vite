@@ -1,24 +1,27 @@
 //== react, react-router-dom, recoil, Auth0 ==//
 import { useEffect } from "react";
 import { useChatContext } from "../../Context/ChatContext";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useErrorBoundary } from "react-error-boundary";
 
 //== TSX Components ==//
 import ChatRow from "./ChatRow";
 import ChatLanding from "./ChatLanding";
 
 //== NPM Components ==//
-import { useErrorBoundary } from "react-error-boundary";
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 
 //== Icons ==//
 
 //== NPM Functions ==//
 import { getPermissions } from "../../Auth/getPermissions";
+import { throwAxiosError } from "../../Errors/throwAxiosError";
 
 //== Utility Functions ==//
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
+//-- Exported Component --//
 interface IProps {
   virtuosoRef: React.MutableRefObject<VirtuosoHandle | null>;
   setAtBottom: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,25 +33,28 @@ export default function ChatRowArea({
   chatToast,
 }: IProps) {
   let CC = useChatContext();
+  const { getAccessTokenSilently } = useAuth0();
   const { showBoundary } = useErrorBoundary();
 
-  useEffect(() => {
+  //-- On mount, check if accessToken permissions include "chat:llm" --//
+  const lambda = async () => {
     try {
-      const permissionCheck = async () => {
-        let permissions = await getPermissions();
-        if (!permissions.includes("chat:llm")) {
-          throw new Error();
-          showBoundary(new Error("test"));
-        }
-      };
-      permissionCheck();
+      const accessToken = await getAccessTokenSilently();
+      const permissions = await getPermissions(accessToken);
+      if (!permissions.includes("chat:llm")) {
+        throwAxiosError(401);
+      }
     } catch (err) {
-      throw err;
+      showBoundary(err);
     }
+  };
+  useEffect(() => {
+    lambda();
   }, []);
 
   return (
     <>
+      {/* Chat Rows */}
       {CC.rowArray && CC.rowArray.length > 0 ? (
         <div id="llm-current-chat" className="flex flex-grow">
           <div id="chat-rows" className="w-full list-none">
@@ -74,7 +80,7 @@ export default function ChatRowArea({
           </div>
         </div>
       ) : (
-        //-- Landing view for null conversation --//
+        //-- Landing view for when no messages to render --//
         <ChatLanding />
       )}
     </>

@@ -18,10 +18,10 @@ import classNames from "../../../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 import { useChatContext } from "../../../Context/ChatContext";
-import ConversationListRows from "./ConversationListRows";
+import ConversationsRows from "./ConversationsRows";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function ConversationsList() {
+export default function Conversations() {
   //-- State --//
   const CC = useChatContext();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -103,7 +103,7 @@ export default function ConversationsList() {
       </div>
 
       {/* Conversation List Rows */}
-      <ConversationListRows />
+      <ConversationsRows />
     </div>
   );
 }

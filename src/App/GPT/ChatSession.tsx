@@ -3,20 +3,18 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useChatContext } from "../../Context/ChatContext";
-import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
+import { ErrorBoundary } from "react-error-boundary";
 
 //== TSX Components ==//
 import ModelSelector from "./ModelSelector";
 import * as chatson from "./chatson/chatson";
-import ChatRow from "./ChatRow";
-import ChatLanding from "./ChatLanding";
 import LLMParams from "./LLMParams";
 import { countTokens } from "./chatson/countTokens";
 import ChatRowArea from "./ChatRowArea";
-import { GPT401FallbackCTA } from "./GPT401FallbackCTA";
+import { ChatRowAreaFallback } from "./ChatRowAreaFallback";
 
 //== NPM Components ==//
-import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
+import { VirtuosoHandle } from "react-virtuoso";
 import TextareaAutosize from "react-textarea-autosize";
 
 //== Icons ==//
@@ -43,11 +41,7 @@ import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import ConversationStats from "./ConversationStats";
 import "../../Components/ProgressBar.css";
-import {
-  ErrorForBoundary,
-  ErrorForToast,
-  ErrorForChatToast,
-} from "../../Errors/ErrorClasses";
+import { ErrorForToast, ErrorForChatToast } from "../../Errors/ErrorClasses";
 import { AxiosError } from "axios";
 import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
 import { ObjectId } from "bson";
@@ -57,7 +51,6 @@ export default function ChatSession() {
   //== React State (+ Context, Refs) ==//
   let CC = useChatContext();
   let navigate = useNavigate();
-  const { showBoundary } = useErrorBoundary();
 
   //-- Prompt Stuff --//
   const [disableSubmitPrompt, setDisableSubmitPrompt] = useState<boolean>(true);
@@ -325,8 +318,8 @@ export default function ChatSession() {
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
-      {/* CURRENT CHAT or SAMPLE PROPMTS */}
-      <ErrorBoundary FallbackComponent={GPT401FallbackCTA}>
+      {/* CURRENT CHAT, SAMPLE PROPMTS, OR FALLBACK */}
+      <ErrorBoundary FallbackComponent={ChatRowAreaFallback}>
         <ChatRowArea
           virtuosoRef={virtuosoRef}
           setAtBottom={setAtBottom}

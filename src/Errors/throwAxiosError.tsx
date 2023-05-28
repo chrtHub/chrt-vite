@@ -22,7 +22,7 @@ export function throwAxiosError(
     code = "ERR_BAD_REQUEST";
   }
 
-  let data: string = `throwAxiosError ${status}, this would be the custom message from the server`;
+  let data: string = `throwAxiosError ${status}`;
 
   throw new AxiosError(
     //-- message --//

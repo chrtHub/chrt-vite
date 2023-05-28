@@ -13,9 +13,13 @@ export const getErrorDetails = (error: Error | AxiosError) => {
         : String(error.response?.data || "")
       : "";
   const axiosHTTPStatus =
-    error instanceof AxiosError ? error.response?.status.toString() || "" : "";
+    error instanceof AxiosError && error.response?.status
+      ? error.response?.status.toString()
+      : "";
   const axiosHTTPStatusText =
-    error instanceof AxiosError ? error.response?.statusText || "" : "";
+    error instanceof AxiosError && error.response?.statusText
+      ? error.response?.statusText
+      : "";
 
   //-- Function Return --//
   return {

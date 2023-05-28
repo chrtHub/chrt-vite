@@ -34,7 +34,7 @@ import { AxiosError } from "axios";
 import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
 
 //-- Conversation Rows with Sticky Header Logic --//
-export const ConversationRow = (
+export const ConversationsRow = (
   index: number,
   row: IConversation,
   CC: IChatContext,

@@ -6,7 +6,7 @@ import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components --//
 import * as chatson from "../chatson/chatson";
-import { ConversationRow } from "./ConversationRow";
+import { ConversationsRow } from "./ConversationsRow";
 import { UpDownButton } from "./Buttons/UpDownButton";
 import { getErrorDetails } from "../../../Errors/getErrorDetails";
 import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
@@ -21,7 +21,11 @@ import {
   ChevronDoubleUpIcon,
   ArrowPathIcon,
 } from "@heroicons/react/24/outline";
-import { ChatBubbleLeftIcon, Cog8ToothIcon } from "@heroicons/react/24/solid";
+import {
+  ChatBubbleLeftIcon,
+  Cog8ToothIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
 import { toast } from "react-toastify";
@@ -140,7 +144,7 @@ const Component = () => {
           ref={virtuosoRef}
           data={CC.conversationsArray}
           itemContent={(index, row) =>
-            ConversationRow(
+            ConversationsRow(
               index,
               row,
               CC,
@@ -220,7 +224,7 @@ const Component = () => {
 };
 
 //-- Fallback --//
-const Fallback = ({ error }: { error: Error | AxiosError }) => {
+const Fallback = ({ error }: { error: Error }) => {
   const {
     errorMessage,
     isAxiosError,
@@ -237,12 +241,13 @@ const Fallback = ({ error }: { error: Error | AxiosError }) => {
     return (
       <div
         className={classNames(
-          "mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md  bg-orange-100 font-medium text-orange-800 dark:bg-yellow-950 dark:text-orange-200"
+          "mb-2 mt-1.5 flex h-full w-full flex-col items-center justify-center rounded-md bg-orange-100 p-3  text-center font-medium text-orange-800 dark:bg-yellow-950 dark:text-orange-200"
         )}
       >
         {/* Non-401 errors */}
         {!is401Error && (
           <>
+            <ExclamationTriangleIcon className="h-12 w-12 text-orange-400 opacity-40" />
             <>{errorMessage}</>
           </>
         )}
@@ -251,7 +256,7 @@ const Fallback = ({ error }: { error: Error | AxiosError }) => {
   }
 };
 
-export default function ConversationListRows() {
+export default function ConversationsRows() {
   //-- Component with ErrorBoundary and Fallback --//
   return (
     <ErrorBoundary FallbackComponent={Fallback}>

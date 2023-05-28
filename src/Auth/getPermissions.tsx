@@ -1,5 +1,3 @@
-import { useAuth0 } from "@auth0/auth0-react";
-
 import jwtDecode from "jwt-decode";
 import { JwtPayload } from "jwt-decode";
 
@@ -16,10 +14,14 @@ interface IExtendedJwtPayload extends JwtPayload {
 }
 //-- End of: Adapted from Express server code, 2023-05-28 --//
 
-export const getPermissions = async (): Promise<string[]> => {
+/**
+ *
+ * @param accessToken
+ * @returns
+ */
+export const getPermissions = async (accessToken: string) => {
   // export const getPermissions = (accessToken: string): string[] => {
-  const { getAccessTokenSilently } = useAuth0();
-  let accessToken = await getAccessTokenSilently();
+
   const decodedToken: IExtendedJwtPayload = jwtDecode(accessToken);
   const permissions = decodedToken.permissions;
   if (permissions) {

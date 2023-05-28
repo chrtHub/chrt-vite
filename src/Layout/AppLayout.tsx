@@ -3,7 +3,7 @@ import { Fragment, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 
 //-- TSX Components --//
-import ConversationsList from "../App/GPT/Sidebar/ConversationsList";
+import Conversations from "../App/GPT/Sidebar/Conversations";
 import SignOutModal from "./SignOutModal";
 import DropdownMenu from "./DropdownMenu";
 
@@ -245,7 +245,7 @@ export default function AppLayout({ infoMode }: IProps) {
                   id="secondary-items-list"
                   className="mx-2 flex-grow overflow-y-auto"
                 >
-                  {pathname.startsWith("/gpt") && <ConversationsList />}
+                  {pathname.startsWith("/gpt") && <Conversations />}
                 </div>
                 {/* END OF SECONDARY ITEMS */}
               </Dialog.Panel>
@@ -322,7 +322,7 @@ export default function AppLayout({ infoMode }: IProps) {
             id="secondary-items-list"
             className="ml-3 flex-grow overflow-y-auto"
           >
-            {pathname.startsWith("/gpt") && <ConversationsList />}
+            {pathname.startsWith("/gpt") && <Conversations />}
           </div>
           {/* END OF SECONDARY ITEMS */}
         </div>
