@@ -11,11 +11,8 @@ export const axiosErrorToaster = (
   err: AxiosError,
   toastTitle: string = "Error"
 ) => {
-  console.log(err); // dev
   const status = err.response?.status; // DEV - is status http-defined or express code-defined?
-
   const message = err.response?.data?.toString(); //-- 'message' defined in Express --//
-
   //-- 400 --//
   if (status === 400) {
     toast(`${toastTitle}: ${message}`);
@@ -36,7 +33,7 @@ export const axiosErrorToaster = (
   }
   //-- Bad Request --//
   else if (err.code === "ERR_BAD_REQUEST") {
-    toast(`${toastTitle}: bad request`);
+    toast(`${toastTitle}: bad request`); // DEV - what causes this?
   }
   //-- Other (unexpected errors) --//
   else {

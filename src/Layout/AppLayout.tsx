@@ -239,6 +239,7 @@ export default function AppLayout({ infoMode }: IProps) {
                   </nav>
                 </div>
                 {/* END OF NAVIGATION ITEMS */}
+
                 {/* START OF SECONDARY ITEMS */}
                 <div
                   id="secondary-items-list"
@@ -282,6 +283,7 @@ export default function AppLayout({ infoMode }: IProps) {
             </a>
           </div>
           {/* END OF CHRT LOGO AND NAME */}
+
           {/* START OF NAVIGATION ITEMS */}
           <div className="mt-1 flex flex-col">
             <nav className="flex-1 space-y-1 pl-3">

@@ -32,6 +32,7 @@ import {
 import { IChatContext } from "../../../Context/ChatContext";
 import { ObjectId } from "bson";
 import { NavigateFunction } from "react-router-dom";
+import { throwAxiosError } from "../../../Errors/throwAxiosError";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- Chatson stuff --//
@@ -170,11 +171,7 @@ export async function get_conversation_and_messages(
     }
     //----//
   } catch (err) {
-    if (err instanceof AxiosError) {
-      axiosErrorToaster(err, "Get conversation");
-    } else {
-      console.log(err);
-    }
+    throw err;
   }
 }
 

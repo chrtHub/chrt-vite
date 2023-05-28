@@ -99,14 +99,17 @@ export default function ChatSession() {
             CC
           );
         } catch (err) {
-          if (err instanceof ErrorForToast) {
+          if (err instanceof AxiosError) {
+            axiosErrorToaster(err, "Get Conversation");
+          } else if (err instanceof Error) {
             toast(err.message);
           }
         }
-      } else {
-        // TODO - move this logic higher up, probably close to where the outlet in AppLayout is rendered
-        navigate("/gpt");
       }
+      // else {
+      //   // TODO - move this logic higher up, probably close to where the outlet in AppLayout is rendered
+      //   navigate("/gpt");
+      // }
     };
     lambda();
   }, [conversation_id]);
