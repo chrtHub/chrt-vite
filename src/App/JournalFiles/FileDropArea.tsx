@@ -1,10 +1,7 @@
 //== react, react-router-dom, recoil, Auth0, react-error-boundary ==//
-import { useEffect, useCallback, ChangeEvent } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useCallback, ChangeEvent } from "react";
 
 //== TSX Components, Functions ==//
-import { getPermissions } from "../../Auth/getPermissions";
-import { throwAxiosError } from "../../Errors/throwAxiosError";
 
 //== NPM Components ==//
 import { FileWithPath, useDropzone } from "react-dropzone";
@@ -13,7 +10,6 @@ import { FileWithPath, useDropzone } from "react-dropzone";
 import { FolderIcon } from "@heroicons/react/24/outline";
 
 //== NPM Functions ==//
-import { useErrorBoundary } from "react-error-boundary";
 
 //== Utility Functions ==//
 import classNames from "../../Util/classNames";
@@ -30,8 +26,6 @@ export default function FileDropArea({
   setPutFileData,
 }: IProps) {
   //== React State, Custom Hooks ==//
-  const { getAccessTokenSilently } = useAuth0();
-  const { showBoundary } = useErrorBoundary();
 
   //== Auth ==//
 
@@ -54,21 +48,6 @@ export default function FileDropArea({
     });
 
   //== Side Effects ==//
-  //-- On mount, check if accessToken permissions include "write:journal" --//
-  const lambda = async () => {
-    try {
-      const accessToken = await getAccessTokenSilently();
-      const permissions = await getPermissions(accessToken);
-      if (!permissions.includes("write:journal")) {
-        throwAxiosError(401);
-      }
-    } catch (err) {
-      showBoundary(err);
-    }
-  };
-  useEffect(() => {
-    lambda();
-  }, []);
 
   //== Event Handlers ==//
   const fileUploadHandler = (event: ChangeEvent<HTMLInputElement>) => {

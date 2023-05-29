@@ -5,12 +5,11 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
 import FileDropArea from "./FileDropArea";
-import { FileDropAreaFallback } from "./FileDropAreaFallback";
+import CTA401Fallback from "./CTA401Fallback";
 import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
 
 //-- NPM Components --//
 import { Listbox, Dialog, Transition } from "@headlessui/react";
-import { ErrorBoundary } from "react-error-boundary";
 
 //-- Icons --//
 import {
@@ -39,7 +38,6 @@ import classNames from "../../Util/classNames";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 import { filesListState } from "./atoms";
 import { IFileMetadata } from "./atoms";
-import { throwAxiosError } from "../../Errors/throwAxiosError";
 
 interface IBrokerage {
   id: number;
@@ -285,14 +283,17 @@ export default function JournalFiles({}: IProps) {
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <div className="flex flex-col justify-center">
+    <div
+      id="journal-files"
+      className="relative flex h-full flex-col justify-start bg-yellow-500"
+    >
+      <CTA401Fallback />
+
       {/* START OF FILE UPLOAD AREA */}
-      <ErrorBoundary FallbackComponent={FileDropAreaFallback}>
-        <FileDropArea
-          setPutFilename={setPutFilename}
-          setPutFileData={setPutFileData}
-        />
-      </ErrorBoundary>
+      <FileDropArea
+        setPutFilename={setPutFilename}
+        setPutFileData={setPutFileData}
+      />
       {/* END OF FILE UPLOAD AREA */}
 
       <div className="mt-6 grid grid-cols-6 gap-x-3 gap-y-1">
