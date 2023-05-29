@@ -1,9 +1,6 @@
 //== react, react-router-dom, recoil, Auth0 ==//
-import { useEffect, Fragment, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-
-import { Dialog, Transition } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/24/outline";
 
 //== TSX Components, Functions ==//
 import { getPermissions } from "../../Auth/getPermissions";
@@ -14,10 +11,11 @@ import { getErrorDetails } from "../../Errors/getErrorDetails";
 //== NPM Components ==//
 
 //== Icons ==//
+import { PlusIcon } from "@heroicons/react/24/outline";
 
 //== NPM Functions ==//
 import { useErrorBoundary } from "react-error-boundary";
-import { PlayIcon } from "@heroicons/react/24/solid";
+import { useNavigate } from "react-router-dom";
 
 //== Utility Functions ==//
 
@@ -65,8 +63,6 @@ const Component = () => {
 };
 
 const Fallback = ({ error }: { error: Error }) => {
-  const [modalOpen, setModalOpen] = useState(true);
-
   const {
     errorMessage,
     isAxiosError,
@@ -76,83 +72,33 @@ const Fallback = ({ error }: { error: Error }) => {
   } = getErrorDetails(error);
   const is401Error = axiosHTTPStatus === "401";
 
+  let navigate = useNavigate();
+
   //-- 401 errors --//
   if (is401Error) {
     return (
-      <div className="relative">
-        <Transition.Root show={modalOpen} as={Fragment}>
-          {/* <Dialog as="div" className="relative z-10" onClose={setModalOpen}> */}
-          <Dialog
-            as="div"
-            className="absolute inset-0 z-10"
-            onClose={setModalOpen}
-          >
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              {/* <div className="fixed inset-0 bg-zinc-500 bg-opacity-40 transition-opacity" /> */}
-              <div className="absolute inset-0 bg-zinc-500 bg-opacity-40 transition-opacity" />
-            </Transition.Child>
-
-            {/* <div className="fixed inset-0 z-10 overflow-y-auto"> */}
-            <div className="absolute inset-0 z-10 overflow-y-auto">
-              <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                <Transition.Child
-                  as={Fragment}
-                  enter="ease-out duration-300"
-                  enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                  enterTo="opacity-100 translate-y-0 sm:scale-100"
-                  leave="ease-in duration-200"
-                  leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                  leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+      <>
+        <div className="mb-6 rounded-lg bg-zinc-300 dark:bg-zinc-500">
+          <div className="px-12 py-12">
+            <div className="mx-auto text-center">
+              <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 lg:text-4xl">
+                Start using CHRT Journal Today
+              </h2>
+              <p className="mx-auto mt-6 text-lg leading-8 text-zinc-600 dark:text-zinc-200">
+                Request free access to the preview release
+              </p>
+              <div className="mt-6 flex items-center justify-center">
+                <button
+                  onClick={() => navigate("/profile")}
+                  className="text-md rounded-md bg-green-600 px-3.5 py-2.5 font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                 >
-                  <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6 lg:max-w-lg">
-                    <div>
-                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                        <PlayIcon
-                          className="h-6 w-6 text-green-600"
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <div className="mt-3 text-center sm:mt-5">
-                        <Dialog.Title
-                          as="h3"
-                          className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100"
-                        >
-                          Start using CHRT Journal Today
-                        </Dialog.Title>
-                        <div className="mt-2">
-                          <p className="text-md text-zinc-600 dark:text-zinc-400">
-                            Request free access to the preview release
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-5 sm:mt-6">
-                      <button
-                        type="button"
-                        className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-                        onClick={() => setModalOpen(false)}
-                      >
-                        Get Access{" "}
-                        <span className="ml-1" aria-hidden="true">
-                          →
-                        </span>
-                      </button>
-                    </div>
-                  </Dialog.Panel>
-                </Transition.Child>
+                  Get Access <span aria-hidden="true">→</span>
+                </button>
               </div>
             </div>
-          </Dialog>
-        </Transition.Root>
-      </div>
+          </div>
+        </div>
+      </>
     );
   } else {
     return <></>;
