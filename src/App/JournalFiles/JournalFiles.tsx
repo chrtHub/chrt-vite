@@ -182,6 +182,8 @@ export default function JournalFiles({}: IProps) {
       if (err instanceof AxiosError) {
         if (err.response?.status === 415) {
           toast("File type not supported. Please upload a CSV file.");
+        } else if (err.response?.status === 401) {
+          toast("Journal access required");
         } else {
           axiosErrorToaster(err, "Put File");
         }
