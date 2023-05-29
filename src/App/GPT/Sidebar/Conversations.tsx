@@ -24,23 +24,12 @@ import ConversationsRows from "./ConversationsRows";
 export default function Conversations() {
   //-- State --//
   const CC = useChatContext();
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  // const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [textareaOnFocusToggle, setTextareaOnFocusToggle] =
     useState<boolean>(false);
 
   //-- Auth, react-router-dom, react-error-boundary --//
   const navigate = useNavigate();
-
-  //-- When textarea focuses, put cursor after the last char --//
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.focus();
-      textareaRef.current.setSelectionRange(
-        textareaRef.current.value.length,
-        textareaRef.current.value.length
-      );
-    }
-  }, [textareaOnFocusToggle]);
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (

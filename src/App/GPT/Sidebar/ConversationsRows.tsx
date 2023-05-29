@@ -84,6 +84,17 @@ const Component = () => {
     getConversationsListHandler();
   }, [CC.sortBy]);
 
+  //-- When textarea focuses, put cursor after the last char --//
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+      textareaRef.current.setSelectionRange(
+        textareaRef.current.value.length,
+        textareaRef.current.value.length
+      );
+    }
+  }, [textareaOnFocusToggle]);
+
   //-- Virutoso --//
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
   const scrollToBottomHandler = () => {
