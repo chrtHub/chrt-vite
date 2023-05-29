@@ -1,7 +1,6 @@
 //== react, react-router-dom, recoil, Auth0 ==//
 
 //== TSX Components ==//
-import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
 import { ErrorForToast, ErrorForChatToast } from "../../../Errors/ErrorClasses";
 
 //== NPM Components ==//
@@ -9,7 +8,7 @@ import { ErrorForToast, ErrorForChatToast } from "../../../Errors/ErrorClasses";
 //== Icons ==//
 
 //== NPM Functions ==//
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { produce } from "immer";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 
@@ -28,7 +27,6 @@ import {
 import { IChatContext } from "../../../Context/ChatContext";
 import { ObjectId } from "bson";
 import { NavigateFunction } from "react-router-dom";
-import { throwAxiosError } from "../../../Errors/throwAxiosError";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- Chatson stuff --//
@@ -168,37 +166,6 @@ export async function get_conversation_and_messages(
     //----//
   } catch (err) {
     throw err;
-  }
-}
-
-/**
- * (3)
- *
- * @param access_token
- * @param conversation_id
- */
-export async function create_title(
-  access_token: string,
-  conversation_id: string
-): Promise<void> {
-  console.log("---- create_title -----");
-
-  try {
-    await axios.post<string>(
-      `${VITE_ALB_BASE_URL}/openai/create_title`,
-      { conversation_id: conversation_id },
-      {
-        headers: {
-          authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-  } catch (err) {
-    if (err instanceof AxiosError) {
-      axiosErrorToaster(err, "Create title");
-    } else {
-      console.log(err);
-    }
   }
 }
 
@@ -464,8 +431,6 @@ export async function send_message(
     },
     //-- ***** ***** ***** ***** ONCLOSE ***** ***** ***** ***** --//
     onclose() {
-      console.log("Connection closed by the server"); // DEV
-
       CC.setCompletionLoading(false);
 
       //-- If new conversation, create title --//
@@ -477,7 +442,19 @@ export async function send_message(
           }
           //-- For new conversations, create title --//
           if (new_conversation_id) {
-            await create_title(access_token, new_conversation_id);
+            try {
+              await axios.post<string>(
+                `${VITE_ALB_BASE_URL}/openai/create_title`,
+                { conversation_id: new_conversation_id },
+                {
+                  headers: {
+                    authorization: `Bearer ${access_token}`,
+                  },
+                }
+              );
+            } catch (err) {
+              //----//
+            }
           }
         }
         //-- Upate conversations list --//
