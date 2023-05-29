@@ -311,6 +311,28 @@ export async function send_message(
         nodeArray.push(root_node);
       }
 
+      if (new_conversation) {
+        const CURRENT_SCHEMA_VERSION = "2023-04-20";
+        CC.setConversationsArray((prevArray) => {
+          return produce(prevArray, (draft) => {
+            draft.unshift({
+              _id: conversation_id,
+              api_provider_name: CC.model.api_provider_name,
+              model_developer_name: CC.model.model_developer_name,
+              user_db_id: user_db_id,
+              title: "New conversation...",
+              root_node_id: root_node_id || "",
+              schema_version: CURRENT_SCHEMA_VERSION,
+              created_at: root_node_created_at || "",
+              last_edited: root_node_created_at || "",
+              api_req_res_metadata: [],
+              system_tags: [],
+              user_tags: [],
+            });
+          });
+        });
+      }
+
       //-- New node --//
       new_node_id = res.headers.get("CHRT-new-node-id");
       const new_node_created_at = res.headers.get("CHRT-new-node-created-at");

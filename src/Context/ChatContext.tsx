@@ -20,7 +20,6 @@ export interface IChatContext {
   setConversationsArray: React.Dispatch<React.SetStateAction<IConversation[]>>;
   conversationsFetched: Boolean;
   setConversationsFetched: React.Dispatch<React.SetStateAction<boolean>>;
-  // DEV - rowArray per leafNodeId?
   rowArray: IMessageRow[] | null;
   setRowArray: React.Dispatch<React.SetStateAction<IMessageRow[] | null>>;
   conversationId: string | null;
