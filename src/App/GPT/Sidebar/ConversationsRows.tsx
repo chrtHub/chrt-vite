@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components and Functions --//
-import { list_conversations } from "../chatson/list_conversations";
+import { list_conversations } from "../chatson/Functions/list_conversations";
 import { ConversationsRow } from "./ConversationsRow";
 import { UpDownButton } from "./Buttons/UpDownButton";
 import { getErrorDetails } from "../../../Errors/getErrorDetails";

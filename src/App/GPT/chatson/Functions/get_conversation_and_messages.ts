@@ -15,11 +15,11 @@ import {
   nodeArraySet,
   nodeArrayGetNewestNode,
   nodeArrayToRowArray,
-} from "./nodeArray";
+} from "./../nodeArray";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { IConversation, IMessageNode } from "./chatson_types";
-import { IChatContext } from "../../../Context/ChatContext";
+import { IConversation, IMessageNode } from "./../chatson_types";
+import { IChatContext } from "../../../../Context/ChatContext";
 
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 

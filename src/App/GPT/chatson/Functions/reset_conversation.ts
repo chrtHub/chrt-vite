@@ -9,10 +9,10 @@
 //== NPM Functions ==//
 
 //== Utility Functions ==//
-import { nodeArrayReset } from "./nodeArray";
+import { nodeArrayReset } from "./../nodeArray";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { IChatContext } from "../../../Context/ChatContext";
+import { IChatContext } from "../../../../Context/ChatContext";
 import { NavigateFunction } from "react-router-dom";
 
 export function reset_conversation(

@@ -10,11 +10,11 @@
 
 //== Utility Functions ==//
 
-import { nodeArrayGet, nodeArrayToRowArray } from "./nodeArray";
+import { nodeArrayGet, nodeArrayToRowArray } from "../nodeArray";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { IMessageNode } from "./chatson_types";
-import { IChatContext } from "../../../Context/ChatContext";
+import { IMessageNode } from "../chatson_types";
+import { IChatContext } from "../../../../Context/ChatContext";
 
 /**
  * Change branch - rebuilds rowArray by updating the leaf node as a node from among the siblings of the current message

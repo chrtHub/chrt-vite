@@ -13,8 +13,8 @@ import { produce } from "immer";
 //== Utility Functions ==//
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { IConversation } from "./chatson_types";
-import { IChatContext } from "../../../Context/ChatContext";
+import { IConversation } from "../chatson_types";
+import { IChatContext } from "../../../../Context/ChatContext";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 /**

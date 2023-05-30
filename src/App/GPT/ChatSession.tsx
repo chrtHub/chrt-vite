@@ -6,8 +6,8 @@ import { useChatContext } from "../../Context/ChatContext";
 import { ErrorBoundary } from "react-error-boundary";
 
 //== TSX Components and Functions ==//
-import { send_message } from "./chatson/send_message";
-import { get_conversation_and_messages } from "./chatson/get_conversation_and_messages";
+import { send_message } from "./chatson/Functions/send_message";
+import { get_conversation_and_messages } from "./chatson/Functions/get_conversation_and_messages";
 import ModelSelector from "./ModelSelector";
 import LLMParams from "./LLMParams";
 import { countTokens } from "./chatson/Util/countTokens";

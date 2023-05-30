@@ -4,8 +4,8 @@ import { useChatContext } from "../../Context/ChatContext";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //== TSX Components and Functions ==//
-import { change_branch } from "./chatson/change_branch";
-import { send_message } from "./chatson/send_message";
+import { change_branch } from "./chatson/Functions/change_branch";
+import { send_message } from "./chatson/Functions/send_message";
 import { countTokens } from "./chatson/Util/countTokens";
 
 //== NPM Components ==//

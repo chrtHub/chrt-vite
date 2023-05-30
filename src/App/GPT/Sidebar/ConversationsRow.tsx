@@ -2,8 +2,8 @@
 import { RefObject, SetStateAction } from "react";
 
 //-- TSX Components and Functions --//
-import { delete_conversation_and_messages } from "../chatson/delete_conversation_and_messages";
-import { retitle } from "../chatson/retitle";
+import { delete_conversation_and_messages } from "../chatson/Functions/delete_conversation_and_messages";
+import { retitle } from "../chatson/Functions/retitle";
 
 //-- NPM Components --//
 import TextareaAutosize from "react-textarea-autosize";

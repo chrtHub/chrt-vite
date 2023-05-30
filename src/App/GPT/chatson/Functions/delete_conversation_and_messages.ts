@@ -14,7 +14,7 @@ import axios from "axios";
 //== Utility Functions ==//
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { IChatContext } from "../../../Context/ChatContext";
+import { IChatContext } from "../../../../Context/ChatContext";
 import { NavigateFunction } from "react-router-dom";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 

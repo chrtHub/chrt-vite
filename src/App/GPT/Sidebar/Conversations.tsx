@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 //-- TSX Components and Functions --//
-import { reset_conversation } from "../chatson/reset_conversation";
+import { reset_conversation } from "../chatson/Functions/reset_conversation";
 import { ConversationButton } from "./Buttons/ConversationButton";
 
 //-- NPM Components --//
