@@ -4,8 +4,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
-//-- TSX Components --//
-import * as chatson from "../chatson/chatson";
+//-- TSX Components and Functions --//
+import { list_conversations } from "../chatson/list_conversations";
 import { ConversationsRow } from "./ConversationsRow";
 import { UpDownButton } from "./Buttons/UpDownButton";
 import { getErrorDetails } from "../../../Errors/getErrorDetails";
@@ -74,7 +74,7 @@ const Component = () => {
     const getConversationsListHandler = async () => {
       let accessToken = await getAccessTokenSilently();
       try {
-        await chatson.list_conversations(accessToken, CC, "overwrite");
+        await list_conversations(accessToken, CC, "overwrite");
       } catch (err) {
         if (err instanceof Error) {
           showBoundary(err);
@@ -125,7 +125,7 @@ const Component = () => {
     if (CC.conversationsArray) {
       let accessToken = await getAccessTokenSilently();
       try {
-        await chatson.list_conversations(accessToken, CC, "append");
+        await list_conversations(accessToken, CC, "append");
       } catch (err) {
         if (err instanceof Error) {
           toast(err.message);

@@ -125,6 +125,9 @@ export interface IChatCompletionRequestBody_OpenAI {
 export type TokenLimit = {
   [key in ModelAPINames]: number;
 };
+export type ResponseBuffer = {
+  [key in ModelAPINames]: number;
+};
 
 /** These lists is to be append-only. To prevent the use of a model, limit the models included in the model_options object created in the file where ChatContext is created. */
 export type APIProviderNames = "openai" | "amazon_bedrock" | "google";

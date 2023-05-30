@@ -1,8 +1,9 @@
 //-- react, react-router-dom, recoil, Auth0 --//
 import { RefObject, SetStateAction } from "react";
 
-//-- TSX Components --//
-import * as chatson from "../chatson/chatson";
+//-- TSX Components and Functions --//
+import { delete_conversation_and_messages } from "../chatson/delete_conversation_and_messages";
+import { retitle } from "../chatson/retitle";
 
 //-- NPM Components --//
 import TextareaAutosize from "react-textarea-autosize";
@@ -106,7 +107,7 @@ export const ConversationsRow = (
     event.stopPropagation();
     let accessToken = await getAccessTokenSilently();
     try {
-      await chatson.delete_conversation_and_messages(
+      await delete_conversation_and_messages(
         accessToken,
         row._id,
         CC,
@@ -137,7 +138,7 @@ export const ConversationsRow = (
     let accessToken = await getAccessTokenSilently();
     setRetitleLoading(true);
     try {
-      await chatson.retitle(accessToken, CC, row._id, newTitleDraft);
+      await retitle(accessToken, CC, row._id, newTitleDraft);
     } catch (err) {
       if (err instanceof AxiosError) {
         axiosErrorToaster(err, "Retitle");

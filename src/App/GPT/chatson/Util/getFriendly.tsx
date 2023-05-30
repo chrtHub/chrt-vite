@@ -1,4 +1,4 @@
-import { IModelFriendly, ModelAPINames } from "./chatson_types";
+import { IModelFriendly, ModelAPINames } from "../chatson_types";
 
 export default function getFriendly(
   model_api_name: ModelAPINames,

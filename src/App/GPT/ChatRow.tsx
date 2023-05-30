@@ -3,9 +3,10 @@ import { useState, useEffect, useRef } from "react";
 import { useChatContext } from "../../Context/ChatContext";
 import { useAuth0 } from "@auth0/auth0-react";
 
-//== TSX Components ==//
-import * as chatson from "./chatson/chatson";
-import { countTokens } from "./chatson/countTokens";
+//== TSX Components and Functions ==//
+import { change_branch } from "./chatson/change_branch";
+import { send_message } from "./chatson/send_message";
+import { countTokens } from "./chatson/Util/countTokens";
 
 //== NPM Components ==//
 import { useErrorBoundary } from "react-error-boundary";
@@ -29,7 +30,7 @@ import { toast } from "react-toastify";
 
 //== Utility Functions ==//
 import classNames from "../../Util/classNames";
-import getFriendly from "./chatson/getFriendly";
+import getFriendly from "./chatson/Util/getFriendly";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { IMessageRow } from "./chatson/chatson_types";
@@ -54,7 +55,7 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
   const changeBranchHandler = (increment: number) => {
     const node_index = row.sibling_node_ids.indexOf(row.node_id);
     const new_leaf_node_id = row.sibling_node_ids[node_index + increment];
-    chatson.change_branch(new_leaf_node_id, CC);
+    change_branch(new_leaf_node_id, CC);
   };
 
   //-- Prompt Stuff --//
@@ -104,7 +105,7 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
     if (prevRow) {
       try {
         //-- Send prompt as chat message --//
-        await chatson.send_message(
+        await send_message(
           accessToken,
           prevRow.content,
           prevRow.parent_node_id,
@@ -175,12 +176,7 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
 
     try {
       //-- Send prompt as chat message --//
-      await chatson.send_message(
-        accessToken,
-        promptContent,
-        row.parent_node_id,
-        CC
-      );
+      await send_message(accessToken, promptContent, row.parent_node_id, CC);
     } catch (err) {
       if (err instanceof ErrorForChatToast) {
         chatToast(err.message);

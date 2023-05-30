@@ -14,7 +14,7 @@ import { useChatContext } from "../../Context/ChatContext";
 
 //-- Utility Functions --//
 import classNames from "../../Util/classNames";
-import getFriendly from "./chatson/getFriendly";
+import getFriendly from "./chatson/Util/getFriendly";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//

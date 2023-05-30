@@ -1,6 +1,7 @@
 //== react, react-router-dom, recoil, Auth0 ==//
 
-//== TSX Components ==//
+//== TSX Components and Functions ==//
+import { list_conversations } from "./list_conversations";
 import { ErrorForToast, ErrorForChatToast } from "../../../Errors/ErrorClasses";
 
 //== NPM Components ==//
@@ -14,192 +15,24 @@ import { fetchEventSource } from "@microsoft/fetch-event-source";
 
 //== Utility Functions ==//
 import { getUserDbId } from "../../../Util/getUserDbId";
+import {
+  nodeArrayPush,
+  nodeArrayAddChildToNode,
+  nodeArraySetNodeCompletion,
+  nodeArrayToRowArray,
+} from "./nodeArray";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import {
   IAPIReqResMetadata,
   IConversation,
   IMessageNode,
-  IMessageRow,
   IMessage,
   IChatCompletionRequestBody_OpenAI,
 } from "./chatson_types";
 import { IChatContext } from "../../../Context/ChatContext";
-import { ObjectId } from "bson";
 import { NavigateFunction } from "react-router-dom";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
-
-//-- Chatson stuff --//
-let nodeArray: IMessageNode[] = [];
-
-//== DATA STRUCTURES ==//
-// `nodeArray` - IMessageNode[] stored locally in this chatson.tsx file
-// // use: used to store all IMessageNode objects for the current conversation, no particular order
-
-// `CC.rowArray` - IMessageRow[] | null stored in ChatContext in correct conversation branch order
-// // use: directly rendered as <ChatRow /> components by the Virtuoso list
-
-//== METHODS ==//
-// (0) list_conversations
-// (1) reset_conversation
-// (2) get_conversation_and_messages
-// (3) create_title
-// (3.5) retitle
-// (4) send_message
-// (5) change_branch
-// (6) delete_conversation_and_messages
-// Utilities
-// (7) nodeArrayToRowArray
-// (8) getNewestNode
-//== ******* ==//
-
-/**
- * (0) list_conversations
- *
- * @param accessToken user's access token
- * @param CC
- * @param skip the number of documents to skip when returning results
- * @returns
- */
-export async function list_conversations(
-  accessToken: string,
-  CC: IChatContext,
-  writeOption: "overwrite" | "append"
-): Promise<void> {
-  console.log("--- list_conversations ---"); // DEV
-  let skip = writeOption === "append" ? CC.conversationsArray.length : 0;
-  try {
-    //-- Make POST request --//
-    let res = await axios.get<IConversation[]>(
-      `${VITE_ALB_BASE_URL}/llm/list_conversations/${CC.sortBy}/${skip}`,
-      {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    if (res.data) {
-      if (writeOption === "append") {
-        //-- Append results to array (which is sometimes empty) --//
-        CC.setConversationsArray((prevArray) => {
-          return produce(prevArray, (draft) => {
-            draft.push(...res.data);
-          });
-        });
-      } else {
-        //-- writeOption === "overwrite" --//
-        CC.setConversationsArray(() => [...res.data]);
-      }
-    }
-    CC.setConversationsFetched(true);
-    //----//
-  } catch (err) {
-    CC.setConversationsFetched(true);
-    throw err;
-  }
-}
-
-/**
- * (1) reset_conversation
- * TODO
- */
-export function reset_conversation(
-  CC: IChatContext,
-  navigate: NavigateFunction
-): void {
-  console.log("reset_conversation"); // DEV
-  //-- Clear nodeArray and ChatContext values --//
-  nodeArray = [];
-  CC.setRowArray([]);
-  CC.setConversation(null);
-  CC.setConversationId(null);
-  CC.setTemperature(null);
-  CC.setFocusTextarea(true);
-  navigate("/gpt");
-}
-
-/**
- * (2) get_conversation_and_messages sends a prompt to an LLM and receives the response
- *
- * @param access_token
- * @param conversation_id
- * @param CC chat context
- */
-export async function get_conversation_and_messages(
-  access_token: string,
-  conversation_id: string,
-  CC: IChatContext
-): Promise<void> {
-  try {
-    console.log("get_conversation_and_messages"); // DEV
-    //-- Make GET request --//
-    let res = await axios.get<{
-      conversation: IConversation;
-      message_nodes: IMessageNode[];
-    }>(
-      `${VITE_ALB_BASE_URL}/llm/get_conversation_and_messages/${conversation_id}`,
-      {
-        headers: {
-          authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-    let { conversation, message_nodes } = res.data;
-
-    //-- Update conversation --//
-    CC.setConversation(conversation);
-
-    //-- If messages received, update CC.model, CC.rowArray, and local nodeArray --/
-    if (message_nodes.length > 0) {
-      //-- Set newest node as the leaf node  --//
-      let leaf_node = getNewestNode(message_nodes);
-      //-- Set model to match leaf node's model --//
-      if (leaf_node.completion?.model) {
-        CC.setModel(leaf_node.completion.model);
-      }
-      //-- Update nodeArray --//
-      nodeArray = message_nodes;
-      //-- Update rowArray --//
-      let rowArray = nodeArrayToRowArray(message_nodes, leaf_node);
-      CC.setRowArray(rowArray);
-    }
-    //----//
-  } catch (err) {
-    throw err;
-  }
-}
-
-/**
- * (3.5) retitle
- * @param access_token
- * @param CC
- * @param conversation_id
- * @param new_title
- * @return Promise<void>
- */
-export async function retitle(
-  access_token: string,
-  CC: IChatContext,
-  conversation_id: string,
-  new_title: string
-): Promise<void> {
-  console.log("----- retitle -----");
-
-  try {
-    await axios.post(
-      `${VITE_ALB_BASE_URL}/llm/retitle`,
-      { conversation_id: conversation_id, new_title: new_title },
-      {
-        headers: {
-          authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-    await list_conversations(access_token, CC, "overwrite");
-  } catch (err) {
-    throw err;
-  }
-}
 
 /**
  * (4) send_message sends a prompt to an LLM and receives the response
@@ -308,7 +141,8 @@ export async function send_message(
         };
 
         //-- Add root node to nodeArray --//
-        nodeArray.push(root_node);
+        // nodeArray.push(root_node);
+        nodeArrayPush(root_node);
       }
 
       if (new_conversation) {
@@ -362,14 +196,14 @@ export async function send_message(
       };
 
       //-- Add new_node to nodeArray, update parent node's children_node_ids --//
-      nodeArray.push(new_node);
-      let parent_node = nodeArray.find((node) => node._id === parent_node_id);
-      if (parent_node) {
-        parent_node.children_node_ids.push(new_node._id);
-      }
+      // nodeArray.push(new_node);
+      nodeArrayPush(new_node);
+      // let parent_node = nodeArray.find((node) => node._id === parent_node_id);
+      nodeArrayAddChildToNode(parent_node_id, new_node._id);
 
       //-- Update rowArray --//
-      let rowArray = nodeArrayToRowArray(nodeArray, new_node);
+      // let rowArray = nodeArrayToRowArray(nodeArray, new_node);
+      let rowArray = nodeArrayToRowArray(new_node);
       CC.setRowArray(rowArray);
 
       //----//
@@ -393,10 +227,7 @@ export async function send_message(
       else if (event.id && event.id === "completion") {
         let completion_object: IMessage = JSON.parse(event.data);
         //-- Overwrite completion object in nodeArray --//
-        let new_node = nodeArray.find((node) => node._id === new_node_id);
-        if (new_node) {
-          new_node.completion = completion_object;
-        }
+        nodeArraySetNodeCompletion(new_node_id, completion_object);
 
         //-- Overwrite completion content in rowArray --//
         CC.setRowArray((prevRowArray) => {
@@ -495,158 +326,3 @@ export async function send_message(
     },
   });
 }
-
-/**
- * Change branch - rebuilds rowArray by updating the leaf node as a node from among the siblings of the current message
- *
- * @param new_sibling_node_id
- * @param CC
- */
-export function change_branch(
-  new_sibling_node_id: string,
-  CC: IChatContext
-): void {
-  //-- Find the new sibling node in the nodeArray --//
-  const new_sibling_node = nodeArray.find(
-    (node) => node._id === new_sibling_node_id
-  );
-
-  if (new_sibling_node) {
-    let new_leaf_node: IMessageNode;
-    //-- If new sibling has no children, it's the leaf node --//
-    if (new_sibling_node.children_node_ids.length === 0) {
-      new_leaf_node = new_sibling_node;
-    }
-    //-- Else recursively find the first-born descendants --//
-    else {
-      new_leaf_node = finalFirstborn(new_sibling_node);
-    }
-    //-- Use new_leaf_node to build new rowArray and set it in state --//
-    const rowArray = nodeArrayToRowArray(nodeArray, new_leaf_node);
-    CC.setRowArray(rowArray);
-  }
-}
-
-function finalFirstborn(node: IMessageNode): IMessageNode {
-  while (node.children_node_ids.length > 0) {
-    let next_node_id = node.children_node_ids[0]; //-- Firstborn --//
-    let next_node = nodeArray.find((node) => node._id === next_node_id);
-    if (next_node) {
-      node = next_node;
-    }
-  }
-  return node;
-}
-
-/**
- * (5) delete_conversation_and_messages causes deletion of all message nodes and the conversation object by conversation_id
- *
- * @param access_token
- * @param conversation_id
- * @param CC
- */
-export async function delete_conversation_and_messages(
-  access_token: string,
-  conversation_id: string,
-  CC: IChatContext,
-  navigate: NavigateFunction
-): Promise<void> {
-  try {
-    console.log("--- delete_conversations ---");
-    //-- Make GET request --//
-    await axios.delete(
-      `${VITE_ALB_BASE_URL}/llm/delete_conversation_and_messages/${conversation_id}`,
-      {
-        headers: {
-          authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-    //-- If current conversation was deleted, reset conversation --//
-    if (CC.conversationId === conversation_id) {
-      reset_conversation(CC, navigate);
-    }
-    //-- Fetch updated conversations list --//
-    await list_conversations(access_token, CC, "overwrite");
-  } catch (err) {
-    throw err;
-  }
-}
-
-//-- Utility function(s) --//
-/**
- * (6) nodeArrayToRowArray
- *
- * @param nodeArray
- * @param leafNode
- * @returns
- */
-const nodeArrayToRowArray = (
-  nodeArray: IMessageNode[],
-  leafNode: IMessageNode
-): IMessageRow[] => {
-  //-- Build Node Map --//
-  let nodeMap: Record<string, IMessageNode> = {};
-  nodeArray.forEach((node) => {
-    nodeMap[node._id.toString()] = node; //-- populate --//
-  });
-
-  //-- Build newRowArray and set as CC.rowsArray --//
-  let newRowArray: IMessageRow[] = []; //-- Build new rows array --//
-  let node: IMessageNode = nodeMap[leafNode._id.toString()]; //-- Start with leaf node --//
-
-  //-- Loop until reaching the root node where parent_node_id is null --//
-  while (node.parent_node_id) {
-    let parent_node = nodeMap[node.parent_node_id.toString()];
-    //-- Sort parent's children by timestamp ascending --//
-    let sibling_ids_timestamp_asc: string[] = [
-      ...parent_node.children_node_ids.sort(
-        (a, b) =>
-          ObjectId.createFromHexString(a).getTimestamp().getTime() -
-          ObjectId.createFromHexString(b).getTimestamp().getTime()
-      ),
-    ];
-    //-- Build completion row, add to newRowArray --//
-    let completion_row: IMessageRow;
-    if (node.completion) {
-      completion_row = {
-        ...node.completion,
-        prompt_or_completion: "completion",
-        node_id: node._id,
-        parent_node_id: parent_node._id, // NEW
-        sibling_node_ids: [], //-- Use prompt_row for this --//
-      };
-      newRowArray.push(completion_row);
-    }
-    //-- Build prompt row, add to newRowArray --//
-    let prompt_row: IMessageRow = {
-      ...node.prompt,
-      prompt_or_completion: "prompt",
-      node_id: node._id,
-      parent_node_id: parent_node._id, // NEW
-      sibling_node_ids: [...sibling_ids_timestamp_asc],
-    };
-    newRowArray.push(prompt_row);
-    //-- Update node --//
-    node = parent_node;
-  }
-  newRowArray = newRowArray.reverse(); //-- push + reverse --//
-  return newRowArray;
-};
-
-/**
- * (7) getNewestNode
- *
- * @param nodeArray
- * @returns
- */
-const getNewestNode = (nodeArray: IMessageNode[]): IMessageNode => {
-  let newestNode: IMessageNode = nodeArray[0];
-  for (const node of nodeArray) {
-    if (node.created_at > newestNode.created_at) {
-      newestNode = node;
-    }
-  }
-
-  return newestNode;
-};

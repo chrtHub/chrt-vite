@@ -5,11 +5,12 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useChatContext } from "../../Context/ChatContext";
 import { ErrorBoundary } from "react-error-boundary";
 
-//== TSX Components ==//
+//== TSX Components and Functions ==//
+import { send_message } from "./chatson/send_message";
+import { get_conversation_and_messages } from "./chatson/get_conversation_and_messages";
 import ModelSelector from "./ModelSelector";
-import * as chatson from "./chatson/chatson";
 import LLMParams from "./LLMParams";
-import { countTokens } from "./chatson/countTokens";
+import { countTokens } from "./chatson/Util/countTokens";
 import ChatRowArea from "./ChatRowArea";
 import { ChatRowAreaFallback } from "./ChatRowAreaFallback";
 
@@ -93,11 +94,7 @@ export default function ChatSession() {
         CC.setConversationId(conversation_id);
         const accessToken = await getAccessTokenSilently();
         try {
-          await chatson.get_conversation_and_messages(
-            accessToken,
-            conversation_id,
-            CC
-          );
+          await get_conversation_and_messages(accessToken, conversation_id, CC);
         } catch (err) {
           if (err instanceof AxiosError) {
             axiosErrorToaster(err, "Get Conversation");
@@ -110,7 +107,7 @@ export default function ChatSession() {
     lambda();
   }, [conversation_id]);
 
-  //-- chatson.send_message() --//
+  //-- send_message() --//
   const submitPromptHandler = () => {
     //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
     setPromptContent(promptDraft);
@@ -139,7 +136,7 @@ export default function ChatSession() {
         //-- Send prompt as chat message --//
         if (user?.sub) {
           try {
-            await chatson.send_message(
+            await send_message(
               accessToken,
               promptContent,
               parentNodeId,
@@ -175,7 +172,7 @@ export default function ChatSession() {
       if (last_prompt_row) {
         //-- Send prompt as chat message --//
         try {
-          await chatson.send_message(
+          await send_message(
             accessToken,
             last_prompt_row.content,
             last_prompt_row.parent_node_id,

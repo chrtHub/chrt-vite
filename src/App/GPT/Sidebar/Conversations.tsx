@@ -2,8 +2,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-//-- TSX Components --//
-import * as chatson from "../chatson/chatson";
+//-- TSX Components and Functions --//
+import { reset_conversation } from "../chatson/reset_conversation";
 import { ConversationButton } from "./Buttons/ConversationButton";
 
 //-- NPM Components --//
@@ -49,7 +49,7 @@ export default function Conversations() {
         {/* 'New Conversation' Button */}
         <ConversationButton
           onClick={() => {
-            chatson.reset_conversation(CC, navigate);
+            reset_conversation(CC, navigate);
           }}
         >
           <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
