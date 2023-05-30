@@ -11,8 +11,9 @@ import {
   IModel,
   IModelFriendly,
   ModelAPINames,
-  TokenLimit,
 } from "../App/GPT/chatson/chatson_types";
+
+import { TOKEN_LIMITS } from "../App/GPT/chatson/chatson_vals";
 
 //-- Create interface and Context --//
 export interface IChatContext {
@@ -121,18 +122,6 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     //   model_friendly_name: "PaLM 2",
     //   model_description: "General purpose LLM",
     // },
-  };
-
-  //-- Token Limit per model --//
-  const BUFFER: number = 96;
-  const TOKEN_LIMITS: TokenLimit = {
-    "gpt-3.5-turbo": 4096 - BUFFER,
-    "gpt-4": 4096 - BUFFER,
-    "gpt-4-32k": 0,
-    claude: 0,
-    "jurrasic-2": 0,
-    "amazon-titan": 0,
-    "google-palm-2": 0,
   };
 
   //-- State values --//
