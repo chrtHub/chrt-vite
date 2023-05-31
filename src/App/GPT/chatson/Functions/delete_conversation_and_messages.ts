@@ -18,13 +18,6 @@ import { IChatContext } from "../../../../Context/ChatContext";
 import { NavigateFunction } from "react-router-dom";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
-/**
- * (5) delete_conversation_and_messages causes deletion of all message nodes and the conversation object by conversation_id
- *
- * @param access_token
- * @param conversation_id
- * @param CC
- */
 export async function delete_conversation_and_messages(
   access_token: string,
   conversation_id: string,
@@ -32,7 +25,6 @@ export async function delete_conversation_and_messages(
   navigate: NavigateFunction
 ): Promise<void> {
   try {
-    console.log("--- delete_conversations ---");
     //-- Make GET request --//
     await axios.delete(
       `${VITE_ALB_BASE_URL}/llm/delete_conversation_and_messages/${conversation_id}`,

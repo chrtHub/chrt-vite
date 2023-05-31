@@ -43,8 +43,14 @@ interface IProps {
   row: IMessageRow;
   prevRow: IMessageRow | null;
   chatToast: Function;
+  abortControllerRef: React.MutableRefObject<AbortController | null>;
 }
-export default function ChatRow({ row, prevRow, chatToast }: IProps) {
+export default function ChatRow({
+  row,
+  prevRow,
+  chatToast,
+  abortControllerRef,
+}: IProps) {
   //-- Context, State, Auth, Error Boundary, Custom Hooks --//
   let CC = useChatContext();
   const { getAccessTokenSilently, user } = useAuth0();
@@ -107,6 +113,7 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
         //-- Send prompt as chat message --//
         await send_message(
           accessToken,
+          abortControllerRef,
           prevRow.content,
           prevRow.parent_node_id,
           CC
@@ -176,7 +183,13 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
 
     try {
       //-- Send prompt as chat message --//
-      await send_message(accessToken, promptContent, row.parent_node_id, CC);
+      await send_message(
+        accessToken,
+        abortControllerRef,
+        promptContent,
+        row.parent_node_id,
+        CC
+      );
     } catch (err) {
       if (err instanceof ErrorForChatToast) {
         chatToast(err.message);

@@ -4,17 +4,14 @@ import { ObjectId } from "bson";
 let nodeArray: IMessageNode[] = [];
 
 export const nodeArrayGet = () => {
-  console.log("nodeArrayGet"); // DEV
   return nodeArray;
 };
 
 export const nodeArrayPush = (element: IMessageNode) => {
-  console.log("nodeArrayPush"); // DEV
   nodeArray.push(element);
 };
 
 export const nodeArrayAddChildToNode = (node_id: string, child_id: string) => {
-  console.log("nodeArrayAddChildToNode"); // DEV
   let parent_node = nodeArray.find((node) => node._id === node_id);
   if (parent_node) {
     parent_node.children_node_ids.push(child_id);
@@ -25,7 +22,6 @@ export const nodeArraySetNodeCompletion = (
   node_id: string | null,
   completion: IMessage
 ) => {
-  console.log("nodeArraySetNodeCompletion"); // DEV
   let target_node = nodeArray.find((node) => node._id === node_id);
   if (target_node) {
     target_node.completion = completion;
@@ -33,20 +29,15 @@ export const nodeArraySetNodeCompletion = (
 };
 
 export const nodeArraySet = (newArray: IMessageNode[]) => {
-  console.log("nodeArraySet"); // DEV
   nodeArray = newArray;
 };
 
 export const nodeArrayReset = () => {
-  console.log("nodeArrayReset"); // DEV
   nodeArray = [];
 };
 
 export const nodeArrayGetNewestNode = (): IMessageNode => {
-  console.log("nodeArrayGetNewestNode"); // DEV
   let newestNode: IMessageNode = nodeArray[0];
-  console.log(nodeArray); // DEV
-  console.log(newestNode); // DEV
   for (const node of nodeArray) {
     if (node.created_at > newestNode.created_at) {
       newestNode = node;

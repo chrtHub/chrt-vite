@@ -52,6 +52,7 @@ export default function ChatSession() {
   //== React State (+ Context, Refs) ==//
   let CC = useChatContext();
   let navigate = useNavigate();
+  let abortControllerRef = useRef<AbortController | null>(null);
 
   //-- Prompt Stuff --//
   const [disableSubmitPrompt, setDisableSubmitPrompt] = useState<boolean>(true);
@@ -138,6 +139,7 @@ export default function ChatSession() {
           try {
             await send_message(
               accessToken,
+              abortControllerRef,
               promptContent,
               parentNodeId,
               CC,
@@ -174,6 +176,7 @@ export default function ChatSession() {
         try {
           await send_message(
             accessToken,
+            abortControllerRef,
             last_prompt_row.content,
             last_prompt_row.parent_node_id,
             CC
@@ -321,6 +324,7 @@ export default function ChatSession() {
           virtuosoRef={virtuosoRef}
           setAtBottom={setAtBottom}
           chatToast={chatToast}
+          abortControllerRef={abortControllerRef}
         />
       </ErrorBoundary>
 
@@ -452,7 +456,9 @@ export default function ChatSession() {
                   <>
                     <button
                       onClick={() => {
-                        console.log("TODO - stop generating response");
+                        if (abortControllerRef.current) {
+                          abortControllerRef.current.abort();
+                        }
                       }}
                       className="flex flex-row rounded-md border-2 border-zinc-600 px-2.5 py-1 text-sm font-semibold text-zinc-600 shadow-sm hover:border-zinc-400 hover:bg-zinc-400 hover:text-zinc-50 hover:shadow-md dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-zinc-600 dark:hover:bg-zinc-600"
                     >

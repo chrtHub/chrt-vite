@@ -23,20 +23,12 @@ import { IChatContext } from "../../../../Context/ChatContext";
 
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
-/**
- * (2) get_conversation_and_messages sends a prompt to an LLM and receives the response
- *
- * @param access_token
- * @param conversation_id
- * @param CC chat context
- */
 export async function get_conversation_and_messages(
   access_token: string,
   conversation_id: string,
   CC: IChatContext
 ): Promise<void> {
   try {
-    console.log("get_conversation_and_messages"); // DEV
     //-- Make GET request --//
     let res = await axios.get<{
       conversation: IConversation;
@@ -53,8 +45,6 @@ export async function get_conversation_and_messages(
 
     //-- Update conversation --//
     CC.setConversation(conversation);
-
-    console.log(message_nodes); // DEV
 
     //-- If messages received, update CC.model, CC.rowArray, and local nodeArray --/
     if (message_nodes.length > 0) {

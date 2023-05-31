@@ -18,9 +18,7 @@ import { IChatContext } from "../../../../Context/ChatContext";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 /**
- * (0) list_conversations
- *
- * @param accessToken user's access token
+ * @param accessToken
  * @param CC
  * @param skip the number of documents to skip when returning results
  * @returns
@@ -30,7 +28,6 @@ export async function list_conversations(
   CC: IChatContext,
   writeOption: "overwrite" | "append"
 ): Promise<void> {
-  console.log("--- list_conversations ---"); // DEV
   let skip = writeOption === "append" ? CC.conversationsArray.length : 0;
   try {
     //-- Make POST request --//

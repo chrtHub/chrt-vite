@@ -38,9 +38,7 @@ import { NavigateFunction } from "react-router-dom";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 /**
- * (4) send_message sends a prompt to an LLM and receives the response
- *
- * @param access_token (a) set as the author id, (b) sent as Bearer token in 'authorization' header
+ * @param access_token
  * @param prompt_content user input to be added to the conversation
  * @param parent_node_id For new conversations, the parent_node is null. For creating a message on the same branch, the parent_node is the current leaf node. For creating a message on a new branch, the parent_node is the parent of the current leaf node.
  * @param CC chat context
@@ -49,6 +47,7 @@ let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
  */
 export async function send_message(
   access_token: string,
+  abortControllerRef: React.MutableRefObject<AbortController | null>,
   prompt_content: string,
   parent_node_id: string | null,
   CC: IChatContext,
@@ -68,6 +67,12 @@ export async function send_message(
     content: prompt_content,
   };
 
+  //-- Headers --//
+  const request_headers = {
+    Authorization: `Bearer ${access_token}`,
+    "Content-Type": "application/json",
+  };
+
   //-- Build request_body --//
   const request_body: IChatCompletionRequestBody_OpenAI = {
     prompt: prompt,
@@ -76,21 +81,24 @@ export async function send_message(
     temperature: CC.temperature,
   };
 
-  //-- Headers --//
-  const request_headers = {
-    Authorization: `Bearer ${access_token}`,
-    "Content-Type": "application/json",
-  };
-
+  //-- Variables --//
   let new_conversation: boolean = Boolean(!CC.conversation);
   let new_conversation_id: string | null = null;
   let new_node_id: string | null;
-  let completion_content: string = ""; // NEW
+  let completion_content: string = "";
+
+  //-- Abort Controller signal --//
+  abortControllerRef.current = new AbortController();
+  abortControllerRef.current.signal.addEventListener("abort", () => {
+    console.log("Request aborted"); // DEV
+    CC.setCompletionLoading(false); //-- End completion loading --//
+  });
 
   await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
     method: "POST",
     headers: request_headers,
     body: JSON.stringify(request_body),
+    signal: abortControllerRef.current.signal,
     openWhenHidden: true, //-- Keep connection open when Page Visibility API notices tab is hidden --//
 
     //-- ***** ***** ***** ***** ONOPEN ***** ***** ***** ***** --//
@@ -287,6 +295,7 @@ export async function send_message(
     },
     //-- ***** ***** ***** ***** ONCLOSE ***** ***** ***** ***** --//
     onclose() {
+      console.log("onclose"); // DEV
       CC.setCompletionLoading(false);
 
       //-- If new conversation, create title --//
@@ -320,6 +329,7 @@ export async function send_message(
     },
     //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
     onerror(err) {
+      console.log("onerror"); // DEV
       CC.setCompletionLoading(false); //-- End completion loading --//
       //-- Do nothing to automatically retry. Or implement retry strategy here --//
       //-- Retry Strategy: end loading state, end request --//

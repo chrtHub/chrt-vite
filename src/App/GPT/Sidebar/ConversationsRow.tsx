@@ -3,7 +3,7 @@ import { RefObject, SetStateAction } from "react";
 
 //-- TSX Components and Functions --//
 import { delete_conversation_and_messages } from "../chatson/Functions/delete_conversation_and_messages";
-import { retitle } from "../chatson/Functions/retitle";
+import { retitle_conversation } from "../chatson/Functions/retitle_conversation";
 
 //-- NPM Components --//
 import TextareaAutosize from "react-textarea-autosize";
@@ -133,12 +133,10 @@ export const ConversationsRow = (
 
   const confirmEditHandler = async (event?: React.MouseEvent) => {
     event?.stopPropagation();
-    console.log("todo - confirmEditHandler with title: ", newTitleDraft); // DEV
-    // on click of confirmEdit button, send the value of the textarea input to the titles endpoint
     let accessToken = await getAccessTokenSilently();
     setRetitleLoading(true);
     try {
-      await retitle(accessToken, CC, row._id, newTitleDraft);
+      await retitle_conversation(accessToken, CC, row._id, newTitleDraft);
     } catch (err) {
       if (err instanceof AxiosError) {
         axiosErrorToaster(err, "Retitle");

@@ -19,7 +19,6 @@ export function reset_conversation(
   CC: IChatContext,
   navigate: NavigateFunction
 ): void {
-  console.log("reset_conversation"); // DEV
   //-- Clear nodeArray and ChatContext values --//
   nodeArrayReset();
   CC.setRowArray([]);

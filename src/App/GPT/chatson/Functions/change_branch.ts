@@ -16,12 +16,6 @@ import { nodeArrayGet, nodeArrayToRowArray } from "../nodeArray";
 import { IMessageNode } from "../chatson_types";
 import { IChatContext } from "../../../../Context/ChatContext";
 
-/**
- * Change branch - rebuilds rowArray by updating the leaf node as a node from among the siblings of the current message
- *
- * @param new_sibling_node_id
- * @param CC
- */
 export function change_branch(
   new_sibling_node_id: string,
   CC: IChatContext
