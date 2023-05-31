@@ -483,7 +483,7 @@ export default function ChatRow({
               onChange={(event) => setPromptContent(event.target.value)}
               onKeyDown={keyDownHandler}
               className={classNames(
-                "mb-2.5 mt-0.5 block w-full resize-none rounded-sm border-0 px-3 py-3 text-base leading-6 ring-2 focus:ring-2 lg:mb-4 lg:mt-6",
+                "mb-2.5 mt-0.5 block w-full resize-none rounded-lg border-0 px-3 py-3 text-base leading-6 ring-2 focus:ring-2 lg:mb-4 lg:mt-6",
                 "text-zinc-900 ring-green-600 focus:ring-green-600",
                 CC.completionLoading
                   ? "animate-pulse bg-zinc-300 dark:bg-zinc-500"

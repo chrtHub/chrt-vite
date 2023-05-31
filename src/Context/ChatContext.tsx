@@ -36,6 +36,10 @@ export interface IChatContext {
   setTemperature: React.Dispatch<React.SetStateAction<number | null>>;
   completionLoading: boolean;
   setCompletionLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  firstCompletionChunkReceived: boolean;
+  setFirstCompletionChunkReceived: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
   sortBy: "last_edited" | "created_at";
   setSortBy: React.Dispatch<React.SetStateAction<"last_edited" | "created_at">>;
   focusTextarea: boolean;
@@ -142,6 +146,8 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   );
   const [temperature, setTemperature] = useState<number | null>(null);
   const [completionLoading, setCompletionLoading] = useState<boolean>(false);
+  const [firstCompletionChunkReceived, setFirstCompletionChunkReceived] =
+    useState<boolean>(false);
   const [focusTextarea, setFocusTextarea] = useState<boolean>(false);
   const localStorage_sortBy = localStorage.getItem("sortBy");
   const [sortBy, setSortBy] = useState<"last_edited" | "created_at">(
@@ -175,6 +181,8 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     model_options,
     completionLoading,
     setCompletionLoading,
+    firstCompletionChunkReceived,
+    setFirstCompletionChunkReceived,
     focusTextarea,
     setFocusTextarea,
     sortBy,

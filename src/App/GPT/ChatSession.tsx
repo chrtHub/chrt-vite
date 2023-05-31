@@ -173,6 +173,7 @@ export default function ChatSession() {
 
       if (last_prompt_row) {
         //-- Send prompt as chat message --//
+        CC.setCompletionLoading(true);
         try {
           await send_message(
             accessToken,
@@ -452,7 +453,7 @@ export default function ChatSession() {
               <div className="flex flex-row justify-center">
                 {/* Stop Response Generation */}
                 {/* DEV - always 'false' for now, when streaming in use, add logic here to allow user to stop response generation */}
-                {CC.completionLoading && (
+                {CC.firstCompletionChunkReceived && (
                   <>
                     <button
                       onClick={() => {
@@ -524,7 +525,7 @@ export default function ChatSession() {
                 onKeyDown={keyDownHandler}
                 onChange={(event) => setPromptDraft(event.target.value)}
                 className={classNames(
-                  "block w-full resize-none rounded-sm border-0 py-3 pr-10 text-base leading-6",
+                  "block w-full resize-none rounded-lg border-0 py-3 pr-10 text-base leading-6",
                   "text-zinc-900 placeholder:text-zinc-400",
                   "focus:ring-2 focus:ring-inset focus:ring-green-600",
                   CC.completionLoading

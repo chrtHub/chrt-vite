@@ -55,6 +55,10 @@ export async function send_message(
   navigate?: NavigateFunction
 ): Promise<void> {
   console.log(" ----- SEND MESSAGE ----- "); // DEV
+  if (!CC.completionLoading) {
+    CC.setCompletionLoading(true);
+  }
+
   //-- Get user_db_id from access token --//
   const user_db_id = getUserDbId(access_token);
 
@@ -91,6 +95,16 @@ export async function send_message(
   abortControllerRef.current = new AbortController();
   abortControllerRef.current.signal.addEventListener("abort", () => {
     console.log("Request aborted"); // DEV
+    //-- Update nodeArray, update completion loading and chunk received state --//
+    let aborted_completion: IMessage = {
+      author: CC.model.model_api_name,
+      model: CC.model,
+      created_at: new Date().toISOString(), //-- Database value will vary --//
+      role: "assistant",
+      content: completion_content, //-- Database value may vary --//
+    };
+    nodeArraySetNodeCompletion(new_node_id, aborted_completion);
+    CC.setFirstCompletionChunkReceived(false);
     CC.setCompletionLoading(false); //-- End completion loading --//
   });
 
@@ -152,7 +166,6 @@ export async function send_message(
         };
 
         //-- Add root node to nodeArray --//
-        // nodeArray.push(root_node);
         nodeArrayPush(root_node);
       }
 
@@ -207,16 +220,12 @@ export async function send_message(
       };
 
       //-- Add new_node to nodeArray, update parent node's children_node_ids --//
-      // nodeArray.push(new_node);
       nodeArrayPush(new_node);
-      // let parent_node = nodeArray.find((node) => node._id === parent_node_id);
       nodeArrayAddChildToNode(parent_node_id, new_node._id);
 
       //-- Update rowArray --//
-      // let rowArray = nodeArrayToRowArray(nodeArray, new_node);
       let rowArray = nodeArrayToRowArray(new_node);
       CC.setRowArray(rowArray);
-
       //----//
     },
     //-- ***** ***** ***** ***** ONMESSAGE ***** ***** ***** ***** --//
@@ -286,16 +295,18 @@ export async function send_message(
               if (draft[draft.length - 1].node_id === new_node_id) {
                 //-- Set accumulated completion content as content --//
                 draft[draft.length - 1].content = completion_content;
-                // draft[draft.length - 1].content + uriDecodedData; //-- Add message chunk to `content` of last row in rowArray --//
               }
             }
           });
         });
+        if (!CC.firstCompletionChunkReceived) {
+          CC.setFirstCompletionChunkReceived(true);
+        }
       }
     },
     //-- ***** ***** ***** ***** ONCLOSE ***** ***** ***** ***** --//
     onclose() {
-      console.log("onclose"); // DEV
+      CC.setFirstCompletionChunkReceived(false);
       CC.setCompletionLoading(false);
 
       //-- If new conversation, create title --//
@@ -329,7 +340,7 @@ export async function send_message(
     },
     //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
     onerror(err) {
-      console.log("onerror"); // DEV
+      CC.setFirstCompletionChunkReceived(false);
       CC.setCompletionLoading(false); //-- End completion loading --//
       //-- Do nothing to automatically retry. Or implement retry strategy here --//
       //-- Retry Strategy: end loading state, end request --//
