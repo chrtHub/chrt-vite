@@ -5,6 +5,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useAuth0 } from "@auth0/auth0-react";
+import classNames from "../Util/classNames";
 
 interface IProps {
   signOutModalOpen: boolean;
@@ -28,7 +29,7 @@ export default function ConfirmSignOutModal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-zinc-500 bg-opacity-75 transition-opacity dark:bg-zinc-900 dark:bg-opacity-75" />
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -42,11 +43,11 @@ export default function ConfirmSignOutModal({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-zinc-50 px-4 pb-4 pt-5 text-left shadow-xl transition-all dark:bg-zinc-950 sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                 <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
                   <button
                     type="button"
-                    className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="rounded-md text-zinc-400 hover:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     onClick={() => setSignOutModalOpen(false)}
                   >
                     <span className="sr-only">Close</span>
@@ -54,21 +55,21 @@ export default function ConfirmSignOutModal({
                   </button>
                 </div>
                 <div className="sm:flex sm:items-start">
-                  <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                  <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-950 sm:mx-0 sm:h-10 sm:w-10">
                     <ExclamationTriangleIcon
-                      className="h-6 w-6 text-red-600"
+                      className="h-6 w-6 text-red-600 dark:text-red-300"
                       aria-hidden="true"
                     />
                   </div>
                   <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                     <Dialog.Title
                       as="h3"
-                      className="text-base font-semibold leading-6 text-gray-900"
+                      className="text-base font-semibold leading-6 text-zinc-900 dark:text-zinc-100"
                     >
                       Confirm Sign Out
                     </Dialog.Title>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">
                         Or continue your session
                       </p>
                     </div>
@@ -77,14 +78,24 @@ export default function ConfirmSignOutModal({
                 <div className="mt-4 flex flex-row justify-end">
                   <button
                     type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    className={classNames(
+                      "mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset",
+                      "bg-zinc-50 text-zinc-900 ring-zinc-300 hover:bg-zinc-200",
+                      "dark:bg-zinc-700 dark:text-zinc-300 dark:ring-zinc-400 dark:hover:bg-zinc-500",
+                      "sm:mt-0 sm:w-auto"
+                    )}
                     onClick={() => setSignOutModalOpen(false)}
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                    className={classNames(
+                      "inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm",
+                      "bg-red-600 text-white hover:bg-red-500",
+                      "dark:bg-red-800 dark:text-red-100 dark:hover:bg-red-600",
+                      "sm:ml-3 sm:w-auto"
+                    )}
                     onClick={() => {
                       //-- Remove localStorage items --//
                       // localStorage.clear()

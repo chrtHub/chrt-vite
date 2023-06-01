@@ -95,12 +95,7 @@ export default function NotFoundPage({}: IProps) {
             alt={randomAnimal.type}
           />
         ) : (
-          <div
-            className={classNames(
-              `${LIGHT_THEME_BG} ${DARK_THEME_BG}`,
-              "my-10 h-[300px] w-[300px] animate-pulse rounded-2xl md:h-[640px] md:w-[640px]"
-            )}
-          />
+          <div className="my-10 h-[300px] w-[300px] animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800 md:h-[640px] md:w-[640px]" />
         )}
       </div>
     </div>

@@ -66,7 +66,7 @@ export default function ModelSelector() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute bottom-full left-1/2 z-10 mb-2 w-48 origin-top-right -translate-x-1/2 transform divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:divide-zinc-200 dark:bg-zinc-900">
+              <Listbox.Options className="absolute bottom-full left-1/2 z-10 mb-2 w-48 origin-top-right -translate-x-1/2 transform divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:divide-zinc-200 dark:bg-zinc-800">
                 {Object.values(CC.model_options).map((model) => {
                   //-- Selected --//
                   const selected =
@@ -76,12 +76,15 @@ export default function ModelSelector() {
                       key={model.model_api_name}
                       className={({ active }) =>
                         classNames(
-                          //-- Selected --//
-                          selected ? "bg-green-600 dark:bg-green-700" : "",
-                          //-- Active --//
-                          active ? "bg-green-200 dark:bg-green-900" : "",
                           //-- Normal --//
-                          "cursor-default select-none p-4 text-sm"
+                          "cursor-pointer select-none p-4 text-sm",
+                          //-- Selected --//
+                          selected
+                            ? "bg-green-600 dark:bg-green-700"
+                            : //-- Active --//
+                            active
+                            ? "bg-green-200 dark:bg-green-900"
+                            : ""
                         )
                       }
                       value={model}
@@ -92,14 +95,12 @@ export default function ModelSelector() {
                             {/* Model Name */}
                             <p
                               className={classNames(
+                                //-- Normal --//
+                                "font-bold",
                                 //-- Selected --//
                                 selected
                                   ? "text-white"
-                                  : "text-zinc-900 dark:text-white",
-                                //-- Active --//
-                                active ? "" : "",
-                                //-- Normal --//
-                                "font-bold"
+                                  : "text-zinc-600 dark:text-zinc-200"
                               )}
                             >
                               {getFriendly(
@@ -113,14 +114,12 @@ export default function ModelSelector() {
                             <div className="flex flex-row">
                               <p
                                 className={classNames(
-                                  //-- Active --//
-                                  active ? "" : "",
+                                  //-- Normal --//
+                                  "font-semibold",
                                   //-- Selected --//
                                   selected
                                     ? "text-white dark:text-zinc-300"
-                                    : "text-zinc-500 dark:text-zinc-400",
-                                  //-- Normal --//
-                                  "font-semibold"
+                                    : "text-zinc-500 dark:text-zinc-400"
                                 )}
                               >
                                 {getFriendly(
@@ -142,13 +141,12 @@ export default function ModelSelector() {
                               >
                                 <ArrowTopRightOnSquareIcon
                                   className={classNames(
-                                    //-- Active --//
+                                    //-- Normal --//
+                                    "ml-1 h-4 w-4",
                                     //-- Selected --//
                                     selected
                                       ? "text-white dark:text-zinc-300"
-                                      : "text-zinc-500 dark:text-zinc-400",
-                                    //-- Normal --//
-                                    "ml-1 h-4 w-4"
+                                      : "text-zinc-500 dark:text-zinc-400"
                                   )}
                                 />
                               </a>
@@ -158,15 +156,12 @@ export default function ModelSelector() {
                           {/* Model Description */}
                           <p
                             className={classNames(
-                              // "text-zinc-500",
+                              //-- Normal --//
+                              "mt-2",
                               //-- Selected --//
                               selected
                                 ? "text-green-200 dark:text-green-100"
-                                : "text-zinc-700 dark:text-zinc-300",
-                              //-- Active --//
-                              active ? "" : "",
-                              //-- Normal --//
-                              "mt-2"
+                                : "text-zinc-700 dark:text-zinc-300"
                             )}
                           >
                             {getFriendly(

@@ -402,7 +402,7 @@ export default function ChatRow({
     <div
       id="chat-row"
       className={classNames(
-        row.role === "user" ? "" : "rounded-md bg-zinc-200 dark:bg-zinc-900",
+        row.role === "user" ? "" : "rounded-md bg-zinc-200 dark:bg-zinc-800",
         "w-full justify-center lg:flex"
       )}
       onMouseEnter={mouseEnterHandler}

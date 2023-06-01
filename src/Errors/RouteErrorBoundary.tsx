@@ -113,7 +113,7 @@ export default function RouteErrorBoundary() {
                   </button> */}
                 </div>
                 <div className="mt-4 border-t-2 border-zinc-500" />
-                <div className="mt-4 rounded-md bg-zinc-950 p-4 font-mono text-sm text-zinc-50">
+                <div className="mt-4 rounded-md  bg-zinc-950 p-4 font-mono text-sm text-zinc-50">
                   <p>{errorString}</p>
                 </div>
               </Dialog.Panel>
