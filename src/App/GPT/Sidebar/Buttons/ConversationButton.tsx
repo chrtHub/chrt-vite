@@ -16,7 +16,7 @@ export const ConversationButton: React.FC<ConversationButtonProps> = ({
       type="button"
       className={classNames(
         //-- Normal --//
-        "mb-2 mt-1 inline-flex w-full items-center justify-center gap-x-1.5 rounded-2xl px-2.5 py-1.5 text-sm font-semibold shadow-sm",
+        "mb-1.5 mt-1 inline-flex w-full items-center justify-center gap-x-1.5 rounded-2xl px-2.5 py-1.5 text-sm font-semibold shadow-sm",
         //----//
         "bg-green-300 text-green-800",
         //-- Hover --//
