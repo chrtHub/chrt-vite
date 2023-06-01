@@ -3,13 +3,20 @@ import { Placement } from "@popperjs/core";
 import { usePopper } from "react-popper";
 
 import "./Tooltip.css";
+import classNames from "../Util/classNames";
 
 interface IProps {
   placement: Placement;
   content: React.ReactNode;
+  hidden?: boolean;
   children: React.ReactElement;
 }
-export default function Tooltip({ placement, content, children }: IProps) {
+export default function Tooltip({
+  placement,
+  content,
+  hidden,
+  children,
+}: IProps) {
   //-- State and Refs --//
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [buttonRef, setButtonRef] = useState<HTMLElement | null>(null);
@@ -58,7 +65,10 @@ export default function Tooltip({ placement, content, children }: IProps) {
           ref={setTooltipRef}
           style={styles.popper}
           {...attributes.popper}
-          className="z-20 rounded bg-zinc-500 px-3 py-1 text-xs text-white shadow-lg"
+          className={classNames(
+            "z-20 rounded bg-zinc-500 px-3 py-1 text-xs text-white shadow-lg",
+            hidden ? "hidden" : ""
+          )}
         >
           {content}
           <div id="arrow" ref={setArrowRef} style={styles.arrow} />

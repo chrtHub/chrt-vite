@@ -47,7 +47,6 @@ let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
  */
 export async function send_message(
   access_token: string,
-  abortControllerRef: React.MutableRefObject<AbortController | null>,
   prompt_content: string,
   parent_node_id: string | null,
   CC: IChatContext,
@@ -55,8 +54,8 @@ export async function send_message(
   navigate?: NavigateFunction
 ): Promise<void> {
   console.log(" ----- SEND MESSAGE ----- "); // DEV
-  if (!CC.completionLoading) {
-    CC.setCompletionLoading(true);
+  if (!CC.completionRequested) {
+    CC.setCompletionRequested(true);
   }
 
   //-- Get user_db_id from access token --//
@@ -92,10 +91,10 @@ export async function send_message(
   let completion_content: string = "";
 
   //-- Abort Controller signal --//
-  abortControllerRef.current = new AbortController();
-  abortControllerRef.current.signal.addEventListener("abort", () => {
+  CC.abortControllerRef.current = new AbortController();
+  CC.abortControllerRef.current.signal.addEventListener("abort", () => {
     console.log("Request aborted"); // DEV
-    //-- Update nodeArray, update completion loading and chunk received state --//
+    //-- Update nodeArray, update completion loading and firstCompletionChunkReceived state --//
     let aborted_completion: IMessage = {
       author: CC.model.model_api_name,
       model: CC.model,
@@ -103,16 +102,17 @@ export async function send_message(
       role: "assistant",
       content: completion_content, //-- Database value may vary --//
     };
+
     nodeArraySetNodeCompletion(new_node_id, aborted_completion);
-    CC.setFirstCompletionChunkReceived(false);
-    CC.setCompletionLoading(false); //-- End completion loading --//
+    CC.setCompletionStreaming(false);
+    CC.setCompletionRequested(false); //-- End completion loading --//
   });
 
   await fetchEventSource(`${VITE_ALB_BASE_URL}/openai/v1/chat/completions`, {
     method: "POST",
     headers: request_headers,
     body: JSON.stringify(request_body),
-    signal: abortControllerRef.current.signal,
+    signal: CC.abortControllerRef.current.signal,
     openWhenHidden: true, //-- Keep connection open when Page Visibility API notices tab is hidden --//
 
     //-- ***** ***** ***** ***** ONOPEN ***** ***** ***** ***** --//
@@ -299,15 +299,15 @@ export async function send_message(
             }
           });
         });
-        if (!CC.firstCompletionChunkReceived) {
-          CC.setFirstCompletionChunkReceived(true);
+        if (!CC.completionStreaming) {
+          CC.setCompletionStreaming(true);
         }
       }
     },
     //-- ***** ***** ***** ***** ONCLOSE ***** ***** ***** ***** --//
     onclose() {
-      CC.setFirstCompletionChunkReceived(false);
-      CC.setCompletionLoading(false);
+      CC.setCompletionStreaming(false);
+      CC.setCompletionRequested(false);
 
       //-- If new conversation, create title --//
       const onCloseHandler = async () => {
@@ -340,8 +340,8 @@ export async function send_message(
     },
     //-- ***** ***** ***** ***** ONERROR ***** ***** ***** ***** --//
     onerror(err) {
-      CC.setFirstCompletionChunkReceived(false);
-      CC.setCompletionLoading(false); //-- End completion loading --//
+      CC.setCompletionStreaming(false);
+      CC.setCompletionRequested(false); //-- End completion loading --//
       //-- Do nothing to automatically retry. Or implement retry strategy here --//
       //-- Retry Strategy: end loading state, end request --//
       if (err instanceof Error) {

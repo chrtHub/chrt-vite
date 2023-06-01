@@ -53,7 +53,6 @@ export default function ChatSession() {
   //== React State (+ Context, Refs) ==//
   let CC = useChatContext();
   let navigate = useNavigate();
-  let abortControllerRef = useRef<AbortController | null>(null);
 
   //-- Prompt Stuff --//
   const [disableSubmitPrompt, setDisableSubmitPrompt] = useState<boolean>(true);
@@ -84,9 +83,16 @@ export default function ChatSession() {
 
   //-- ***** ***** ***** ***** start of chatson ***** ***** ***** ***** --//
 
-  //-- When conversation_id is updated, load that conversation --//
+  //-- When conversation_id is updated (via param or CC.setConversationId), load that conversation --//
   let { entity_type, conversation_id } = useParams();
   useEffect(() => {
+    //-- If SSE abortable, abort --//
+    if (CC.completionStreaming) {
+      if (CC.abortControllerRef.current) {
+        CC.abortControllerRef.current.abort();
+      }
+    }
+
     const lambda = async () => {
       if (
         entity_type === "c" &&
@@ -113,7 +119,7 @@ export default function ChatSession() {
   const submitPromptHandler = () => {
     //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
     setPromptContent(promptDraft);
-    CC.setCompletionLoading(true);
+    CC.setCompletionRequested(true);
     setPromptReadyToSend(true); //-- Invokes useEffect() below --//
   };
 
@@ -140,7 +146,6 @@ export default function ChatSession() {
           try {
             await send_message(
               accessToken,
-              abortControllerRef,
               promptContent,
               parentNodeId,
               CC,
@@ -174,11 +179,10 @@ export default function ChatSession() {
 
       if (last_prompt_row) {
         //-- Send prompt as chat message --//
-        CC.setCompletionLoading(true);
+        CC.setCompletionRequested(true);
         try {
           await send_message(
             accessToken,
-            abortControllerRef,
             last_prompt_row.content,
             last_prompt_row.parent_node_id,
             CC
@@ -267,7 +271,7 @@ export default function ChatSession() {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault(); //-- Prevent default behavior (newline insertion) --//
       //-- prevent submit while loading or if `disableSubmitPrompt` is true --//
-      if (!CC.completionLoading && !disableSubmitPrompt) {
+      if (!CC.completionRequested && !disableSubmitPrompt) {
         submitPromptHandler();
       }
     } //-- else "Enter" with shift will just insert a newline --//
@@ -326,7 +330,6 @@ export default function ChatSession() {
           virtuosoRef={virtuosoRef}
           setAtBottom={setAtBottom}
           chatToast={chatToast}
-          abortControllerRef={abortControllerRef}
         />
       </ErrorBoundary>
 
@@ -459,12 +462,12 @@ export default function ChatSession() {
               <div className="flex flex-row justify-center">
                 {/* Stop Response Generation */}
                 {/* DEV - always 'false' for now, when streaming in use, add logic here to allow user to stop response generation */}
-                {CC.firstCompletionChunkReceived && (
+                {CC.completionStreaming && (
                   <>
                     <button
                       onClick={() => {
-                        if (abortControllerRef.current) {
-                          abortControllerRef.current.abort();
+                        if (CC.abortControllerRef.current) {
+                          CC.abortControllerRef.current.abort();
                         }
                       }}
                       className="flex flex-row rounded-md border-2 border-zinc-600 px-2.5 py-1 text-sm font-semibold text-zinc-600 shadow-sm hover:border-zinc-400 hover:bg-zinc-400 hover:text-zinc-50 hover:shadow-md dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-zinc-600 dark:hover:bg-zinc-600"
@@ -475,7 +478,7 @@ export default function ChatSession() {
                     </button>
                   </>
                 )}
-                {!CC.completionLoading &&
+                {!CC.completionRequested &&
                   CC.rowArray &&
                   CC.rowArray.length > 0 && (
                     <button
@@ -534,7 +537,7 @@ export default function ChatSession() {
                   "block w-full resize-none rounded-lg border-0 py-3 pr-10 text-base leading-6",
                   "text-zinc-900 placeholder:text-zinc-400",
                   "focus:ring-2 focus:ring-inset focus:ring-green-600",
-                  CC.completionLoading
+                  CC.completionRequested
                     ? "animate-pulse bg-zinc-300 dark:bg-zinc-500"
                     : promptTooLong && !prompt2XTooLong
                     ? "bg-orange-300 ring-1 ring-orange-400 focus:ring-2 focus:ring-orange-400 dark:ring-orange-600 dark:focus:ring-orange-600"
@@ -543,7 +546,7 @@ export default function ChatSession() {
                     : "bg-white ring-1 ring-inset ring-zinc-300 dark:bg-zinc-700 dark:text-white"
                 )}
               />
-              {CC.completionLoading ? (
+              {CC.completionRequested ? (
                 <button className="absolute bottom-0 right-0 flex cursor-wait items-center px-1.5 py-3 focus:outline-green-600">
                   <CpuChipIcon className="text h-6 w-6 animate-spin text-green-500" />
                 </button>

@@ -26,13 +26,11 @@ interface IProps {
   virtuosoRef: React.MutableRefObject<VirtuosoHandle | null>;
   setAtBottom: React.Dispatch<React.SetStateAction<boolean>>;
   chatToast: (message: string) => void;
-  abortControllerRef: React.MutableRefObject<AbortController | null>;
 }
 export default function ChatRowArea({
   virtuosoRef,
   setAtBottom,
   chatToast,
-  abortControllerRef,
 }: IProps) {
   let CC = useChatContext();
   const { getAccessTokenSilently } = useAuth0();
@@ -72,7 +70,6 @@ export default function ChatRowArea({
                     CC.rowArray && index > 0 ? CC.rowArray[index - 1] : null
                   }
                   chatToast={chatToast}
-                  abortControllerRef={abortControllerRef}
                 />
               )}
               followOutput="auto"

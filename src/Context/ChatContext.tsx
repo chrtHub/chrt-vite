@@ -1,9 +1,10 @@
 import {
   useState,
+  useEffect,
+  useRef,
   createContext,
   useContext,
   PropsWithChildren,
-  useEffect,
 } from "react";
 import {
   IConversation,
@@ -34,12 +35,11 @@ export interface IChatContext {
   model_options: Partial<Record<ModelAPINames, IModel>>;
   temperature: number | null;
   setTemperature: React.Dispatch<React.SetStateAction<number | null>>;
-  completionLoading: boolean;
-  setCompletionLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  firstCompletionChunkReceived: boolean;
-  setFirstCompletionChunkReceived: React.Dispatch<
-    React.SetStateAction<boolean>
-  >;
+  completionRequested: boolean;
+  setCompletionRequested: React.Dispatch<React.SetStateAction<boolean>>;
+  completionStreaming: boolean;
+  setCompletionStreaming: React.Dispatch<React.SetStateAction<boolean>>;
+  abortControllerRef: React.MutableRefObject<AbortController | null>;
   sortBy: "last_edited" | "created_at";
   setSortBy: React.Dispatch<React.SetStateAction<"last_edited" | "created_at">>;
   focusTextarea: boolean;
@@ -145,9 +145,11 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     TOKEN_LIMITS[model.model_api_name]
   );
   const [temperature, setTemperature] = useState<number | null>(null);
-  const [completionLoading, setCompletionLoading] = useState<boolean>(false);
-  const [firstCompletionChunkReceived, setFirstCompletionChunkReceived] =
+  const [completionRequested, setCompletionRequested] =
     useState<boolean>(false);
+  const [completionStreaming, setCompletionStreaming] =
+    useState<boolean>(false);
+  let abortControllerRef = useRef<AbortController | null>(null);
   const [focusTextarea, setFocusTextarea] = useState<boolean>(false);
   const localStorage_sortBy = localStorage.getItem("sortBy");
   const [sortBy, setSortBy] = useState<"last_edited" | "created_at">(
@@ -165,7 +167,6 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     setConversationsArray,
     conversationsFetched,
     setConversationsFetched,
-    // DEV - rowArray per leafNodeId?
     rowArray,
     setRowArray,
     conversationId,
@@ -179,10 +180,11 @@ function ChatContextProvider({ children }: PropsWithChildren) {
     temperature,
     setTemperature,
     model_options,
-    completionLoading,
-    setCompletionLoading,
-    firstCompletionChunkReceived,
-    setFirstCompletionChunkReceived,
+    completionRequested,
+    setCompletionRequested,
+    completionStreaming,
+    setCompletionStreaming,
+    abortControllerRef,
     focusTextarea,
     setFocusTextarea,
     sortBy,

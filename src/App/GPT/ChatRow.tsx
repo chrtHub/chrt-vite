@@ -43,18 +43,11 @@ interface IProps {
   row: IMessageRow;
   prevRow: IMessageRow | null;
   chatToast: Function;
-  abortControllerRef: React.MutableRefObject<AbortController | null>;
 }
-export default function ChatRow({
-  row,
-  prevRow,
-  chatToast,
-  abortControllerRef,
-}: IProps) {
+export default function ChatRow({ row, prevRow, chatToast }: IProps) {
   //-- Context, State, Auth, Error Boundary, Custom Hooks --//
   let CC = useChatContext();
   const { getAccessTokenSilently, user } = useAuth0();
-  const { showBoundary } = useErrorBoundary();
   const [clipboardValue, copyToClipboard] = useCopyToClipboard();
 
   //-- chatson.change_branch() --//
@@ -113,7 +106,6 @@ export default function ChatRow({
         //-- Send prompt as chat message --//
         await send_message(
           accessToken,
-          abortControllerRef,
           prevRow.content,
           prevRow.parent_node_id,
           CC
@@ -132,37 +124,57 @@ export default function ChatRow({
   //-- Regnerate Completion Button --//
   const RegenerateButton = () => {
     return (
-      <div className="flex flex-row justify-center rounded-full p-1 text-zinc-600 hover:bg-zinc-300 hover:text-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700">
-        <Tooltip content="Regenerate" placement="top">
-          <button onClick={regenerateCompletion}>
+      <Tooltip
+        content="Regenerate"
+        placement="top"
+        hidden={CC.completionRequested} // NEW
+      >
+        <div
+          className={classNames(
+            CC.completionRequested ? "cursor-not-allowed" : "", // NEW
+            "flex flex-row justify-center rounded-full p-1 text-zinc-600 hover:bg-zinc-300 hover:text-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
+          )}
+        >
+          <button
+            disabled={CC.completionRequested} // NEW
+            onClick={regenerateCompletion}
+            className={classNames(
+              CC.completionRequested ? "cursor-not-allowed" : ""
+            )} // NEW
+          >
             <ArrowPathIcon className="h-5 w-5" />
           </button>
-        </Tooltip>
-      </div>
+        </div>
+      </Tooltip>
     );
   };
 
   //-- Edit Prompt
   const EditButton = () => {
     return (
-      <div
-        className={classNames(
-          "flex flex-row justify-center rounded-full p-1 text-zinc-600 dark:text-zinc-300",
-          editing
-            ? "bg-green-300 text-green-900 dark:bg-green-800 dark:text-green-200"
-            : "dark:hover:bg-text-200 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700"
-        )}
-      >
-        <Tooltip content="Edit" placement="top">
+      <Tooltip content="Edit" placement="top" hidden={CC.completionRequested}>
+        <div
+          className={classNames(
+            CC.completionRequested ? "cursor-not-allowed" : "",
+            "flex flex-row justify-center rounded-full p-1 text-zinc-600 dark:text-zinc-300",
+            editing
+              ? "bg-green-300 text-green-900 dark:bg-green-800 dark:text-green-200"
+              : "dark:hover:bg-text-200 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700"
+          )}
+        >
           <button
+            disabled={CC.completionRequested}
             onClick={() => {
               setEditing(true);
             }}
+            className={classNames(
+              CC.completionRequested ? "cursor-not-allowed" : ""
+            )}
           >
             <PencilSquareIcon className="h-5 w-5" aria-hidden="true" />
           </button>
-        </Tooltip>
-      </div>
+        </div>
+      </Tooltip>
     );
   };
 
@@ -172,7 +184,7 @@ export default function ChatRow({
       event.preventDefault(); //-- Prevent default behavior (newline insertion) --//
       // textareaRef.current?.blur(); // removed
       //-- prevent submit while loading or if `disableSubmitPrompt` is true --//
-      if (!CC.completionLoading && !disableSubmitPrompt) submitEditedPrompt();
+      if (!CC.completionRequested && !disableSubmitPrompt) submitEditedPrompt();
       // TODO - prevent submit if loading new completion?
     } //-- else "Enter" with shift will just insert a newline --//
   };
@@ -183,13 +195,7 @@ export default function ChatRow({
 
     try {
       //-- Send prompt as chat message --//
-      await send_message(
-        accessToken,
-        abortControllerRef,
-        promptContent,
-        row.parent_node_id,
-        CC
-      );
+      await send_message(accessToken, promptContent, row.parent_node_id, CC);
     } catch (err) {
       if (err instanceof ErrorForChatToast) {
         chatToast(err.message);
@@ -215,16 +221,18 @@ export default function ChatRow({
   const [copying, setCopied] = useState<boolean>(false);
   const CopyToClipboardButton = () => {
     return (
-      <div
-        className={classNames(
-          "flex flex-row justify-center rounded-full p-1 text-zinc-600 dark:text-zinc-300",
-          copying
-            ? "bg-green-300 text-green-900 dark:bg-green-800 dark:text-green-200"
-            : "dark:hover:bg-text-200 hover:bg-zinc-300 hover:text-zinc-700 dark:hover:bg-zinc-700"
-        )}
-      >
-        <Tooltip content="Copy" placement="top">
+      <Tooltip content="Copy" placement="top" hidden={CC.completionRequested}>
+        <div
+          className={classNames(
+            CC.completionRequested ? "cursor-not-allowed" : "",
+            "flex flex-row justify-center rounded-full p-1 text-zinc-600 dark:text-zinc-300",
+            copying
+              ? "bg-green-300 text-green-900 dark:bg-green-800 dark:text-green-200"
+              : "dark:hover:bg-text-200 hover:bg-zinc-300 hover:text-zinc-700 dark:hover:bg-zinc-700"
+          )}
+        >
           <button
+            disabled={CC.completionRequested}
             onClick={() => {
               copyToClipboard(row.content);
               setCopied(true);
@@ -232,11 +240,14 @@ export default function ChatRow({
                 setCopied(false);
               }, 750);
             }}
+            className={classNames(
+              CC.completionRequested ? "cursor-not-allowed" : ""
+            )}
           >
             <ClipboardDocumentIcon className="h-6 w-6" aria-hidden="true" />
           </button>
-        </Tooltip>
-      </div>
+        </div>
+      </Tooltip>
     );
   };
 
@@ -346,6 +357,7 @@ export default function ChatRow({
           <button
             className="flex flex-col justify-end pb-0.5"
             onClick={() => {
+              console.log("foo"); // DEV
               changeBranchHandler(-1); //-- Decrement sibling --//
             }}
           >
@@ -485,7 +497,7 @@ export default function ChatRow({
               className={classNames(
                 "mb-2.5 mt-0.5 block w-full resize-none rounded-lg border-0 px-3 py-3 text-base leading-6 ring-2 focus:ring-2 lg:mb-4 lg:mt-6",
                 "text-zinc-900 ring-green-600 focus:ring-green-600",
-                CC.completionLoading
+                CC.completionRequested
                   ? "animate-pulse bg-zinc-300 dark:bg-zinc-500"
                   : promptTooLong && !prompt2XTooLong
                   ? "bg-orange-300 ring-1 ring-orange-400 focus:ring-2 focus:ring-orange-400 dark:ring-orange-600 dark:focus:ring-orange-600"

@@ -19,6 +19,10 @@ export function reset_conversation(
   CC: IChatContext,
   navigate: NavigateFunction
 ): void {
+  //-- If SSE abortable, abort --//
+  if (CC.completionStreaming) {
+    CC.abortControllerRef.current?.abort();
+  }
   //-- Clear nodeArray and ChatContext values --//
   nodeArrayReset();
   CC.setRowArray([]);

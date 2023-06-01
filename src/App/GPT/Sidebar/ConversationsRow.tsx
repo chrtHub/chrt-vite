@@ -85,9 +85,8 @@ export const ConversationsRow = (
   }
 
   //-- Set conversationId --//
-  const setConversationIdHandler = async (row: IConversation) => {
-    navigate(`/gpt/c/${row._id}`); // NEW
-    // CC.setConversationId(row._id);
+  const setConversationIdPathParamHandler = async (row: IConversation) => {
+    navigate(`/gpt/c/${row._id}`);
   };
 
   //-- Hover handlers --//
@@ -198,7 +197,7 @@ export const ConversationsRow = (
           onMouseEnter={mouseEnterHandler}
           onMouseLeave={mouseLeaveHandler}
           onClick={() => {
-            setConversationIdHandler(row);
+            setConversationIdPathParamHandler(row);
           }}
         >
           {/* Title string */}
