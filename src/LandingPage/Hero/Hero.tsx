@@ -31,7 +31,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 // ];
 
 import classNames from "../../Util/classNames";
-import { DARK_THEME_BG, LIGHT_THEME_BG } from "../../Theme";
+import { DARK_THEME_BG, LIGHT_THEME_BG } from "../../Layout/Theme";
 
 export default function Hero() {
   //-- Detect theme value (a) set in localStorage, or (b) from OS theme --//

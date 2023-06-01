@@ -46,7 +46,7 @@ import { ErrorForToast, ErrorForChatToast } from "../../Errors/ErrorClasses";
 import { AxiosError } from "axios";
 import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
 import { ObjectId } from "bson";
-import { DARK_THEME_BG, LIGHT_THEME_BG } from "../../Theme";
+import { DARK_THEME_BG, LIGHT_THEME_BG } from "../../Layout/Theme";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
