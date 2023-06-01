@@ -19,7 +19,7 @@ export default function ChatLanding() {
       id="llm-sample-prompts"
       className="flex flex-grow flex-col items-center justify-center"
     >
-      <p className="font-sans text-4xl font-semibold text-zinc-700 dark:text-zinc-200">
+      <p className="font-sans text-4xl font-bold text-zinc-600 dark:text-zinc-400">
         ChrtGPT
       </p>
       {/* <article className="prose prose-zinc dark:prose-invert">
