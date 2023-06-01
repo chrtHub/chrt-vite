@@ -418,7 +418,7 @@ export default function ChatSession() {
 
         {/* DIVIDER */}
         <div className="flex justify-center">
-          <div className="mb-2 w-full max-w-prose border-t-2 border-zinc-300 dark:border-zinc-600" />
+          <div className="mb-2 w-full max-w-prose rounded-full border-t-2 border-zinc-300 dark:border-zinc-600" />
         </div>
 
         {/* CONTROL BAR */}

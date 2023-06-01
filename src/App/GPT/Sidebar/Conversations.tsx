@@ -38,7 +38,7 @@ export default function Conversations() {
       <div className="mb-0.5 mt-1.5">
         <div
           className={classNames(
-            "border-t-2 border-zinc-300 dark:border-zinc-500"
+            "rounded-full border-t-2 border-zinc-300 dark:border-zinc-500"
           )}
           aria-hidden="true"
         />
