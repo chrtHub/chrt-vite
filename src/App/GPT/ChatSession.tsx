@@ -46,6 +46,7 @@ import { ErrorForToast, ErrorForChatToast } from "../../Errors/ErrorClasses";
 import { AxiosError } from "axios";
 import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
 import { ObjectId } from "bson";
+import { DARK_THEME_BG, LIGHT_THEME_BG } from "../../Theme";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
@@ -330,7 +331,12 @@ export default function ChatSession() {
       </ErrorBoundary>
 
       {/* STICKY INPUT SECTION */}
-      <div className="sticky bottom-0 flex h-auto flex-col justify-center bg-zinc-50 pb-3 pt-1 dark:bg-zinc-950">
+      <div
+        className={classNames(
+          `${LIGHT_THEME_BG} ${DARK_THEME_BG}`,
+          "sticky bottom-0 flex h-auto flex-col justify-center pb-3 pt-1"
+        )}
+      >
         {/* ABOVE DIVIDER */}
 
         {/* Error Alert */}

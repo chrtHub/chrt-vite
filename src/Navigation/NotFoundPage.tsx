@@ -15,6 +15,8 @@ import axios from "axios";
 
 //-- Data Objects --//
 import { AxiosError } from "axios";
+import classNames from "../Util/classNames";
+import { DARK_THEME_BG, LIGHT_THEME_BG } from "../Theme";
 interface IAnimal {
   type: string;
   url: string;
@@ -56,7 +58,12 @@ export default function NotFoundPage({}: IProps) {
   }, []);
 
   return (
-    <div className="min-h-full bg-zinc-50 px-6 py-16 dark:bg-zinc-950 sm:py-24  lg:px-8">
+    <div
+      className={classNames(
+        `${LIGHT_THEME_BG} ${DARK_THEME_BG}`,
+        "min-h-full px-6 py-16 sm:py-24 lg:px-8"
+      )}
+    >
       <div className="mx-auto max-w-max">
         <main className="sm:flex">
           <p className="text-4xl font-bold tracking-tight text-green-600 sm:text-5xl">
@@ -88,7 +95,12 @@ export default function NotFoundPage({}: IProps) {
             alt={randomAnimal.type}
           />
         ) : (
-          <div className="my-10 h-[300px] w-[300px] animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-950 md:h-[640px] md:w-[640px]"></div>
+          <div
+            className={classNames(
+              `${LIGHT_THEME_BG} ${DARK_THEME_BG}`,
+              "my-10 h-[300px] w-[300px] animate-pulse rounded-2xl md:h-[640px] md:w-[640px]"
+            )}
+          />
         )}
       </div>
     </div>

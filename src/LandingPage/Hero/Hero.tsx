@@ -31,6 +31,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 // ];
 
 import classNames from "../../Util/classNames";
+import { DARK_THEME_BG, LIGHT_THEME_BG } from "../../Theme";
 
 export default function Hero() {
   //-- Detect theme value (a) set in localStorage, or (b) from OS theme --//
@@ -197,7 +198,12 @@ export default function Hero() {
 
       {/* START OF MAIN */}
       <main>
-        <div className="relative bg-zinc-50 py-24 dark:bg-zinc-950 sm:py-32 lg:pb-40">
+        <div
+          className={classNames(
+            `${LIGHT_THEME_BG} ${DARK_THEME_BG}`,
+            "relative py-24 sm:py-32 lg:pb-40"
+          )}
+        >
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             {/* START OF TITLE & SUBTITLE */}
             <div className="mx-auto max-w-2xl text-center">

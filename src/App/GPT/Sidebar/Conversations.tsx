@@ -19,6 +19,7 @@ import classNames from "../../../Util/classNames";
 //-- Data Objects, Environment Variables --//
 import { useChatContext } from "../../../Context/ChatContext";
 import ConversationsRows from "./ConversationsRows";
+import { DARK_THEME_BG } from "../../../Theme";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Conversations() {
@@ -64,7 +65,7 @@ export default function Conversations() {
               "relative inline-flex flex-grow items-center justify-center rounded-l-md border px-3 py-0.5 text-xs font-semibold focus:z-10",
               CC.sortBy === "last_edited"
                 ? "border-zinc-400 bg-zinc-400 text-zinc-50 ring-zinc-400 dark:border-zinc-600 dark:bg-zinc-600 dark:text-zinc-100"
-                : "border-zinc-300 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-700 dark:hover:text-zinc-200"
+                : "border-zinc-300 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-700 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-700 dark:hover:text-zinc-200"
             )}
             onClick={() => {
               localStorage.setItem("sortBy", "last_edited");
@@ -79,7 +80,7 @@ export default function Conversations() {
               "relative -ml-px inline-flex flex-grow items-center justify-center rounded-r-md border px-3 py-0.5 text-xs font-semibold focus:z-10",
               CC.sortBy === "created_at"
                 ? "border-zinc-400 bg-zinc-400 text-zinc-50 ring-zinc-400 dark:border-zinc-600 dark:bg-zinc-600 dark:text-zinc-100"
-                : "border-zinc-300 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-700 dark:hover:text-zinc-200"
+                : "border-zinc-300 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-700 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-700 dark:hover:text-zinc-200"
             )}
             onClick={() => {
               localStorage.setItem("sortBy", "created_at");

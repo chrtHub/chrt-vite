@@ -165,7 +165,7 @@ export const ConversationsRow = (
       {/* START OF STICKY HEADER - Date */}
       <>
         {showStickyHeader && (
-          <div className="sticky top-0 bg-zinc-50 dark:bg-zinc-950">
+          <div className="sticky top-0">
             <div className="pb-1 pl-1 pt-1.5 text-sm font-semibold text-zinc-500 dark:border-zinc-500 dark:text-zinc-400">
               <div className="flex flex-row">
                 <CalendarDaysIcon className="mr-1 h-5 w-5" />

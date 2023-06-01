@@ -39,6 +39,7 @@ import classNames from "../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 import chartLogo from "../Assets/twemoji_bar_chart/android-chrome-192x192.png";
+import { DARK_THEME_BG, LIGHT_THEME_BG } from "../Theme";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 interface IProps {
@@ -97,7 +98,10 @@ export default function AppLayout({ infoMode }: IProps) {
     <div
       id="app-layout-top-level-div"
       //-- With use of 'overflow-hidden', scroll behavior is to be handles by Outlet components (?) --//
-      className="fixed h-full w-full overflow-hidden overscroll-none bg-zinc-50 dark:bg-zinc-950"
+      className={classNames(
+        `${DARK_THEME_BG} ${LIGHT_THEME_BG}`,
+        "fixed h-full w-full overflow-hidden overscroll-none"
+      )}
     >
       {/* START OF CONFIRM SIGN OUT MODAL */}
       <SignOutModal
@@ -164,7 +168,12 @@ export default function AppLayout({ infoMode }: IProps) {
               leaveFrom="translate-x-0"
               leaveTo="-translate-x-full"
             >
-              <Dialog.Panel className="flex w-full max-w-sm flex-col justify-start bg-zinc-50 pb-4 dark:bg-zinc-950">
+              <Dialog.Panel
+                className={classNames(
+                  `${DARK_THEME_BG} ${LIGHT_THEME_BG}`,
+                  "flex w-full max-w-sm flex-col justify-start pb-4"
+                )}
+              >
                 <Transition.Child
                   as={Fragment}
                   enter="ease-in-out duration-300"
@@ -264,7 +273,9 @@ export default function AppLayout({ infoMode }: IProps) {
       >
         <div
           id="sidebar-primary-items-list"
-          className="flex h-full flex-col overflow-y-auto bg-zinc-50 dark:bg-zinc-950"
+          className={classNames(
+            `flex h-full flex-col overflow-y-auto ${DARK_THEME_BG} ${LIGHT_THEME_BG}`
+          )}
         >
           {/* START OF CHRT LOGO AND NAME */}
           <div className="ml-2 mt-2">
@@ -339,7 +350,12 @@ export default function AppLayout({ infoMode }: IProps) {
           className="mx-auto flex h-full max-w-screen-2xl flex-col px-4 xl:px-6"
         >
           {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
-          <div className="sticky top-0 z-30 flex h-16 flex-shrink-0 bg-zinc-50 dark:bg-zinc-950">
+          <div
+            className={classNames(
+              `${LIGHT_THEME_BG} ${DARK_THEME_BG}`,
+              "sticky top-0 z-30 flex h-16 flex-shrink-0"
+            )}
+          >
             {/* START OF HAMBURGER BUTTON (hidden after lg) */}
             <button
               type="button"
