@@ -50,13 +50,13 @@ export default function LLMParams() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Popover.Panel className="absolute bottom-full left-1/2 z-10 mb-3 mt-2 w-56 origin-top-right -translate-x-1/2 transform rounded-md bg-white shadow-lg ring-1 ring-transparent focus:outline-none dark:bg-zinc-900">
+        <Popover.Panel className="absolute bottom-full left-1/2 z-10 mb-3 mt-2 w-56 origin-top-right -translate-x-1/2 transform rounded-md bg-white shadow-lg ring-1 ring-transparent focus:outline-none dark:bg-zinc-800">
           {({ close }) => (
             <div className="flex flex-col">
               {/* Header row */}
-              <div className="mb-1 flex flex-row items-center justify-start rounded-t-md bg-zinc-200 py-2 pl-3 pr-2 text-sm font-semibold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+              <div className="mb-1 flex flex-row items-center justify-start rounded-t-md bg-zinc-200 py-2 pl-3 pr-2 text-sm font-semibold text-zinc-500 dark:bg-zinc-700 dark:text-zinc-400">
                 {/* Title */}
-                <p>LLM Parameters</p>
+                <p className="pt-1">LLM Parameters</p>
                 {/* Spacer */}
                 <div className="flex-grow" />
                 {/* Close menu button */}
@@ -73,7 +73,7 @@ export default function LLMParams() {
               {/* Temperature Row */}
               <div className="pb-2 pt-1">
                 {/* Temperature Title and Value */}
-                <div className="flex flex-row bg-white px-2 dark:bg-zinc-900">
+                <div className="flex flex-row px-2">
                   <div>
                     {/*-- Icon --*/}
                     <div
@@ -107,7 +107,7 @@ export default function LLMParams() {
                 </div>
 
                 {/* Temperature Slider */}
-                <div className="mx-2 flex flex-row items-center bg-white dark:bg-zinc-900">
+                <div className="mx-2 flex flex-row items-center">
                   {/* Slider */}
 
                   <input
@@ -130,7 +130,7 @@ export default function LLMParams() {
                       onClick={() => CC.setTemperature(null)}
                     >
                       {/* <XMarkIcon className="h-5 w-5" aria-hidden="true" /> */}
-                      <p className="text-sm">Default</p>
+                      <p className="px-0.5 text-sm">Default</p>
                     </button>
                   </div>
                 </div>

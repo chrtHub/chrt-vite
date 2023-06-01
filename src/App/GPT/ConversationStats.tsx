@@ -189,13 +189,13 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Popover.Panel className="absolute bottom-full left-0 z-10 mb-3 ml-1 mt-2 w-52 rounded-md bg-white pb-1 shadow-lg ring-1 ring-transparent ring-opacity-5 focus:outline-none dark:bg-zinc-900">
+        <Popover.Panel className="absolute bottom-full left-0 z-10 mb-3 ml-1 mt-2 w-52 rounded-md bg-white pb-1 shadow-lg ring-1 ring-transparent ring-opacity-5 focus:outline-none dark:bg-zinc-800">
           {({ close }) => (
             <div className="flex flex-col">
               {/* Header row */}
-              <div className="mb-1 flex flex-row items-center justify-start rounded-t-md bg-zinc-200 py-2 pl-3 pr-2 text-sm font-semibold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+              <div className="mb-1 flex flex-row items-center justify-start rounded-t-md bg-zinc-200 py-2 pl-3 pr-2 text-sm font-semibold text-zinc-500 dark:bg-zinc-700 dark:text-zinc-400">
                 {/* Title */}
-                <p>Conversation Stats</p>
+                <p className="pt-1">Conversation Stats</p>
                 {/* Spacer */}
                 <div className="flex-grow" />
                 {/* Close menu button */}
