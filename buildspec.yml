@@ -1,8 +1,8 @@
 version: 0.2
 
-env:
-  secrets-manager:
-    SOURCEMAPS_API_KEY: "/chrt/chrt-vite/highlight/sourcemaps_api_key:chrt-vite"
+# env:
+# secrets-manager:
+#   SOURCEMAPS_API_KEY: "/chrt/chrt-vite/highlight/sourcemaps_api_key:chrt-vite"
 
 phases:
   install:
