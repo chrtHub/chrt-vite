@@ -32,6 +32,7 @@ import { IChatContext } from "../../../Context/ChatContext";
 import { NavigateFunction } from "react-router-dom";
 import { AxiosError } from "axios";
 import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
+import { DARK_THEME_BG, LIGHT_THEME_BG } from "../../../Theme";
 
 //-- Conversation Rows with Sticky Header Logic --//
 export const ConversationsRow = (
@@ -166,7 +167,12 @@ export const ConversationsRow = (
       <>
         {showStickyHeader && (
           <div className="sticky top-0">
-            <div className="pb-1 pl-1 pt-1.5 text-sm font-semibold text-zinc-500 dark:border-zinc-500 dark:text-zinc-400">
+            <div
+              className={classNames(
+                `${LIGHT_THEME_BG} ${DARK_THEME_BG}`,
+                "pb-1 pl-1 pt-1.5 text-sm font-semibold text-zinc-500 dark:border-zinc-500 dark:text-zinc-400"
+              )}
+            >
               <div className="flex flex-row">
                 <CalendarDaysIcon className="mr-1 h-5 w-5" />
                 {stickyHeaderText}
