@@ -88,8 +88,8 @@ export default function App({}: IAppProps) {
         auth0Stuff = true;
       }
     }
-  } catch (e) {
-    console.log(e);
+  } catch (err) {
+    console.log(err);
   }
 
   //-- Loading is complete, user is authenticated --> show the app --//

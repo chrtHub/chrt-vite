@@ -134,7 +134,6 @@ function ChatContextProvider({ children }: PropsWithChildren) {
   );
   const [conversationsFetched, setConversationsFetched] =
     useState<boolean>(false);
-  // DEV - rowArray per leafNodeId?
   const [rowArray, setRowArray] = useState<IMessageRow[] | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [conversation, setConversation] = useState<IConversation | null>(null);

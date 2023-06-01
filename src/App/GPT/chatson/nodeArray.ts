@@ -77,7 +77,7 @@ export const nodeArrayToRowArray = (leafNode: IMessageNode): IMessageRow[] => {
         ...node.completion,
         prompt_or_completion: "completion",
         node_id: node._id,
-        parent_node_id: parent_node._id, // NEW
+        parent_node_id: parent_node._id,
         sibling_node_ids: [], //-- Use prompt_row for this --//
       };
       newRowArray.push(completion_row);
@@ -87,7 +87,7 @@ export const nodeArrayToRowArray = (leafNode: IMessageNode): IMessageRow[] => {
       ...node.prompt,
       prompt_or_completion: "prompt",
       node_id: node._id,
-      parent_node_id: parent_node._id, // NEW
+      parent_node_id: parent_node._id,
       sibling_node_ids: [...sibling_ids_timestamp_asc],
     };
     newRowArray.push(prompt_row);

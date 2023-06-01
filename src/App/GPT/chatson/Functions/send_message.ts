@@ -53,7 +53,6 @@ export async function send_message(
   setPromptDraft?: React.Dispatch<React.SetStateAction<string>>,
   navigate?: NavigateFunction
 ): Promise<void> {
-  console.log(" ----- SEND MESSAGE ----- "); // DEV
   if (!CC.completionRequested) {
     CC.setCompletionRequested(true);
   }
@@ -93,7 +92,6 @@ export async function send_message(
   //-- Abort Controller signal --//
   CC.abortControllerRef.current = new AbortController();
   CC.abortControllerRef.current.signal.addEventListener("abort", () => {
-    console.log("Request aborted"); // DEV
     //-- Update nodeArray, update completion loading and firstCompletionChunkReceived state --//
     let aborted_completion: IMessage = {
       author: CC.model.model_api_name,
@@ -234,8 +232,7 @@ export async function send_message(
       //-- Error --//
       if (event.id && event.id === "error") {
         const data = JSON.parse(event.data);
-        // const message = JSON.stringify(data.message);
-        throw new ErrorForToast(data.message); // DEV - test this
+        throw new ErrorForToast(data.message);
       }
       //-- Conversation object (IConversation) --//
       else if (event.id && event.id === "conversation") {

@@ -63,8 +63,8 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
     useState<boolean>(false);
   const [disableSubmitPrompt, setDisableSubmitPrompt] = useState<boolean>(true);
   const [promptContent, setPromptContent] = useState<string>(row.content);
-  const [promptTooLong, setPromptTooLong] = useState<boolean>(false); // NEW
-  const [prompt2XTooLong, setPrompt2XTooLong] = useState<boolean>(false); // NEW
+  const [promptTooLong, setPromptTooLong] = useState<boolean>(false);
+  const [prompt2XTooLong, setPrompt2XTooLong] = useState<boolean>(false);
   const [approxTokenCount, setApproxTokenCount] = useState<number>(0);
   const [editing, setEditing] = useState<boolean>(false);
 
@@ -127,20 +127,20 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
       <Tooltip
         content="Regenerate"
         placement="top"
-        hidden={CC.completionRequested} // NEW
+        hidden={CC.completionRequested}
       >
         <div
           className={classNames(
-            CC.completionRequested ? "cursor-not-allowed" : "", // NEW
+            CC.completionRequested ? "cursor-not-allowed" : "",
             "flex flex-row justify-center rounded-full p-1 text-zinc-600 hover:bg-zinc-300 hover:text-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
           )}
         >
           <button
-            disabled={CC.completionRequested} // NEW
+            disabled={CC.completionRequested}
             onClick={regenerateCompletion}
             className={classNames(
               CC.completionRequested ? "cursor-not-allowed" : ""
-            )} // NEW
+            )}
           >
             <ArrowPathIcon className="h-5 w-5" />
           </button>
@@ -182,10 +182,8 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
   const keyDownHandler = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault(); //-- Prevent default behavior (newline insertion) --//
-      // textareaRef.current?.blur(); // removed
       //-- prevent submit while loading or if `disableSubmitPrompt` is true --//
       if (!CC.completionRequested && !disableSubmitPrompt) submitEditedPrompt();
-      // TODO - prevent submit if loading new completion?
     } //-- else "Enter" with shift will just insert a newline --//
   };
 
@@ -355,11 +353,14 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
         {/*-- If current node is > sibling 1, allow decrement --*/}
         {row.sibling_node_ids.indexOf(row.node_id) > 0 ? (
           <button
-            className="flex flex-col justify-end pb-0.5"
+            disabled={CC.completionRequested}
             onClick={() => {
-              console.log("foo"); // DEV
               changeBranchHandler(-1); //-- Decrement sibling --//
             }}
+            className={classNames(
+              "flex flex-col justify-end pb-0.5",
+              CC.completionRequested ? "cursor-not-allowed" : ""
+            )}
           >
             <ChevronLeftIcon
               className="h-4 w-4 rounded-full text-zinc-400 hover:bg-zinc-300 hover:text-zinc-700 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
@@ -383,10 +384,14 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
         {row.sibling_node_ids.indexOf(row.node_id) + 1 <
         row.sibling_node_ids.length ? (
           <button
-            className="flex flex-col justify-end pb-0.5"
+            disabled={CC.completionRequested}
             onClick={() => {
               changeBranchHandler(1); //-- Increment sibling --//
             }}
+            className={classNames(
+              "flex flex-col justify-end pb-0.5",
+              CC.completionRequested ? "cursor-not-allowed" : ""
+            )}
           >
             <ChevronRightIcon
               className="h-4 w-4 rounded-full text-zinc-400 hover:bg-zinc-300 hover:text-zinc-700 dark:hover:bg-zinc-500 dark:hover:text-zinc-100"
