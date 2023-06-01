@@ -18,6 +18,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "Archive/ModelListbox.tsx"],
+  "include": ["src"],
   "exclude": ["node_modules"]
 }

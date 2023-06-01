@@ -27,6 +27,10 @@ import classNames from "../Util/classNames";
 
 //-- Data Objects --//
 import { echartsThemeState } from "../Layout/atoms";
+import {
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/solid";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 const Profile = () => {
@@ -97,68 +101,143 @@ const Profile = () => {
       <p className="mb-2 text-zinc-500 dark:text-zinc-400">{user?.email}</p>
       {/* END OF IMAGE, NAME, EMAIL */}
 
-      {/* START OF AUTH TOKEN BUTTON AND POPOVER */}
-      <Popover>
-        <Popover.Button
-          ref={setReferenceElement}
-          className="focus:outline-none"
-        >
-          <button
-            disabled={popoverOpen}
-            type="button"
-            className="mt-2 mb-1 inline-flex w-56 justify-center  gap-x-2 rounded-md bg-green-500 py-3 text-sm font-semibold text-white shadow-sm hover:bg-green-600 focus:outline-none dark:bg-green-800 dark:hover:bg-green-700"
-            onClick={copyHandler}
-          >
-            Copy Auth Token
-            <ClipboardDocumentIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
-        </Popover.Button>
+      <div className="w-full max-w-prose">
+        {/* START OF COPY AUTH TOKEN SECTION */}
+        <div className="flex flex-col justify-center rounded-md bg-yellow-100 p-4 dark:bg-yellow-950">
+          <div className="flex flex-row">
+            <ExclamationTriangleIcon
+              className="h-5 w-5 text-yellow-400 dark:text-yellow-100"
+              aria-hidden="true"
+            />
+            <h3 className="ml-2 text-sm font-medium text-yellow-800 dark:text-yellow-100">
+              Caution - Auth Tokens are intended for developer use only
+            </h3>
+          </div>
 
-        {popoverOpen && (
-          <Popover.Panel
-            static
-            ref={setPopperElement}
-            style={styles.popper}
-            {...attributes.popper}
-          >
-            <div className="rounded-md bg-green-200 p-2">
-              <div className="flex">
-                <div className="mx-1">
-                  <p className="text-sm font-medium text-green-800">Copied!</p>
-                </div>
-                <div className="flex-shrink-0">
-                  <CheckCircleIcon
-                    className="h-5 w-5 text-green-600"
+          <div className="mt-2 text-sm text-yellow-700 dark:text-yellow-100">
+            <ul role="list" className="list-disc space-y-1 pl-5">
+              <li>
+                Do not share you Auth Token with anyone - not even chrt.com
+                staff.
+              </li>
+              <li>
+                Your Auth Token rotates each ~7 days and provides full access to
+                your account.
+              </li>
+              <li>
+                If you are familiar with keeping an Auth Token secure, you may
+                use yours with tools like Postman or the browser's Fetch API to
+                make requests to our backend (on your own behalf only).
+              </li>
+            </ul>
+          </div>
+
+          <div className="mt-2.5 flex flex-row justify-center">
+            {/* START OF AUTH TOKEN BUTTON AND POPOVER */}
+            <Popover>
+              <Popover.Button
+                ref={setReferenceElement}
+                className="focus:outline-none"
+              >
+                <button
+                  disabled={popoverOpen}
+                  type="button"
+                  className={classNames(
+                    "inline-flex w-56 justify-center gap-x-2 rounded-md py-3 text-sm font-semibold shadow-sm  focus:outline-none",
+                    "bg-yellow-400 text-yellow-900 hover:bg-yellow-500",
+                    "text-yellow-900 dark:bg-yellow-300 dark:hover:bg-yellow-200"
+                  )}
+                  onClick={copyHandler}
+                >
+                  Copy Auth Token
+                  <ClipboardDocumentIcon
+                    className="h-5 w-5"
                     aria-hidden="true"
                   />
-                </div>
-              </div>
-            </div>
-          </Popover.Panel>
-        )}
-      </Popover>
-      {/* START OF AUTH TOKEN BUTTON AND POPOVER */}
+                </button>
+              </Popover.Button>
 
-      {/* START OF DECODED TOKEN BUTTON */}
-      <button
-        className="mt-2 inline-flex w-56 justify-center gap-x-2 rounded-md bg-zinc-500 py-3  text-sm font-semibold text-white shadow-sm hover:bg-zinc-600 focus:outline-none dark:bg-zinc-600 dark:hover:bg-zinc-500"
-        onClick={() => {
-          setViewDecodedToken((state) => !state);
-        }}
-      >
-        {!viewDecodedToken ? (
-          <>
-            <div>View Decoded Token</div>
-            <EyeIcon className="h-5 w-5" aria-hidden="true" />
-          </>
-        ) : (
-          <>
-            <div>Hide Decoded Token</div>
-            <EyeSlashIcon className="h-5 w-5" aria-hidden="true" />
-          </>
-        )}
-      </button>
-      {/* START OF DECODED TOKEN BUTTON */}
+              {popoverOpen && (
+                <Popover.Panel
+                  static
+                  ref={setPopperElement}
+                  style={styles.popper}
+                  {...attributes.popper}
+                >
+                  <div className="mb-1 rounded-md bg-green-200 p-2">
+                    <div className="flex">
+                      <div className="mx-1">
+                        <p className="text-sm font-medium text-black">
+                          Copied!
+                        </p>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <CheckCircleIcon
+                          className="h-5 w-5 text-green-600"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </Popover.Panel>
+              )}
+            </Popover>
+          </div>
+        </div>
+        {/* END OF COPY AUTH TOKEN SECTION */}
+
+        {/* START OF DECODED TOKEN BUTTON */}
+        <div className="mt-2 flex flex-col justify-center rounded-md bg-zinc-100 p-4 dark:bg-zinc-900">
+          <div className="flex flex-row">
+            <InformationCircleIcon
+              className="h-5 w-5 text-zinc-400 dark:text-zinc-100"
+              aria-hidden="true"
+            />
+            <h3 className="ml-2 text-sm font-medium text-zinc-800 dark:text-zinc-100">
+              View your account's permission
+            </h3>
+          </div>
+
+          <div className="mt-2 text-sm text-zinc-700 dark:text-zinc-100">
+            <ul role="list" className="list-disc space-y-1 pl-5">
+              <li>
+                Your decoded Auth Token (below) is not nearly as sensitive as
+                the encoded version (above).
+              </li>
+              <li>
+                The decoded token cannot be directly used to access your
+                account.
+              </li>
+              <li>
+                Still, we recommend that you only share the decoded token
+                information to emails ending in '@chrt.com' for support
+                purposes.
+              </li>
+            </ul>
+          </div>
+
+          <div className="mt-2.5 flex flex-row justify-center">
+            <button
+              className="mt-2 inline-flex w-56 justify-center gap-x-2 rounded-md bg-zinc-500 py-3  text-sm font-semibold text-white shadow-sm hover:bg-zinc-600 focus:outline-none dark:bg-zinc-600 dark:hover:bg-zinc-500"
+              onClick={() => {
+                setViewDecodedToken((state) => !state);
+              }}
+            >
+              {!viewDecodedToken ? (
+                <>
+                  <div>View Decoded Token</div>
+                  <EyeIcon className="h-5 w-5" aria-hidden="true" />
+                </>
+              ) : (
+                <>
+                  <div>Hide Decoded Token</div>
+                  <EyeSlashIcon className="h-5 w-5" aria-hidden="true" />
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* START OF JSON */}
       <div className="mt-4 pb-4">

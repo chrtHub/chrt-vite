@@ -1,6 +1,6 @@
 import UAParser from "ua-parser-js";
 
-const useIsMobile = () => {
+const useIsMobile = (): boolean => {
   //-- For mobile clients, use 'localStorage' cache because sometimes the auth redirect hangs if using 'memory' --//
   const parser = new UAParser();
   const userAgent = parser.getResult();

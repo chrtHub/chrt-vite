@@ -1,6 +1,6 @@
 //== react, react-router-dom, recoil, Auth0 ==//
 
-//== TSX Components ==//
+//== TSX Components, Functions ==//
 
 //== NPM Components ==//
 
@@ -14,12 +14,15 @@
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ComponentName() {
-  //== React State ==//
-  //== Recoil State ==//
+  //== React State, Custom Hooks ==//
   //== Auth ==//
   //== Other ==//
   //== Side Effects ==//
   //== Event Handlers ==//
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
-  // return <div>foo</div>;
+  // return (
+  //   <div>
+  //     <p>foo</p>
+  //   </div>
+  // );
 }

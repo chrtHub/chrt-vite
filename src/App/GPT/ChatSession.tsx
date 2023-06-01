@@ -1,44 +1,77 @@
 //== react, react-router-dom, recoil, Auth0 ==//
 import { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useChatContext } from "../../Context/ChatContext";
+import { ErrorBoundary } from "react-error-boundary";
 
-//== TSX Components ==//
+//== TSX Components and Functions ==//
+import { send_message } from "./chatson/Functions/send_message";
+import { get_conversation_and_messages } from "./chatson/Functions/get_conversation_and_messages";
 import ModelSelector from "./ModelSelector";
-import * as chatson from "./chatson/chatson";
+import LLMParams from "./LLMParams";
+import { countTokens } from "./chatson/Util/countTokens";
+import ChatRowArea from "./ChatRowArea";
+import { ChatRowAreaFallback } from "./ChatRowAreaFallback";
 
 //== NPM Components ==//
-import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
+import { VirtuosoHandle } from "react-virtuoso";
 import TextareaAutosize from "react-textarea-autosize";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
 //== Icons ==//
-import { ArrowUpCircleIcon } from "@heroicons/react/20/solid";
+import {
+  ArrowUpCircleIcon,
+  ExclamationTriangleIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/solid";
+import {
+  ArrowPathIcon,
+  ChevronDoubleDownIcon,
+  CpuChipIcon,
+  StopIcon,
+} from "@heroicons/react/24/outline";
 
 //== NPM Functions ==//
+import numeral from "numeral";
+import { toast } from "react-toastify";
 
 //== Utility Functions ==//
 import classNames from "../../Util/classNames";
-import {
-  ChevronDoubleDownIcon,
-  CpuChipIcon,
-  XCircleIcon,
-} from "@heroicons/react/24/outline";
 import { useIsMobile, useOSName } from "../../Util/useUserAgent";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { IMessage, IMessages } from "./chatson/types";
+import ConversationStats from "./ConversationStats";
+import "../../Components/ProgressBar.css";
+import { ErrorForToast, ErrorForChatToast } from "../../Errors/ErrorClasses";
+import { AxiosError } from "axios";
+import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
+import { ObjectId } from "bson";
+import { DARK_THEME_BG, LIGHT_THEME_BG } from "../../Theme";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ChatSession() {
   //== React State (+ Context, Refs) ==//
-  let ChatContext = useChatContext();
-  const [promptInput, setPromptInput] = useState<string>("");
-  const [promptToSend, setPromptToSend] = useState<string>("");
+  let CC = useChatContext();
+  let navigate = useNavigate();
+
+  //-- Prompt Stuff --//
+  const [disableSubmitPrompt, setDisableSubmitPrompt] = useState<boolean>(true);
+  const [promptDraft, setPromptDraft] = useState<string>("");
+  const [promptTooLong, setPromptTooLong] = useState<boolean>(false);
+  const [prompt2XTooLong, setPrompt2XTooLong] = useState<boolean>(false);
+  const [approxTokenCount, setApproxTokenCount] = useState<number>(0);
+  const [promptContent, setPromptContent] = useState<string>("");
   const [promptReadyToSend, setPromptReadyToSend] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [textAreaFocus, setTextAreaFocus] = useState<boolean>(true);
+
+  const [showError, setShowError] = useState<string | null>(null);
+  const [animationKey, setAnimationKey] = useState<number>(0);
+  let errorTimeoutRef = useRef<number | null>(null);
+
+  //-- Virtualized rows stuff --//
+  const virtuosoRef = useRef<VirtuosoHandle | null>(null);
+  const [atBottom, setAtBottom] = useState<boolean>(true);
+  const [showButton, setShowButton] = useState<boolean>(false);
 
   //== Recoil State ==//
 
@@ -48,7 +81,48 @@ export default function ChatSession() {
   //== Other ==//
   const OS_NAME = useOSName();
 
-  //== Side Effects ==//
+  //-- ***** ***** ***** ***** start of chatson ***** ***** ***** ***** --//
+
+  //-- When conversation_id is updated (via param or CC.setConversationId), load that conversation --//
+  let { entity_type, conversation_id } = useParams();
+  useEffect(() => {
+    //-- If SSE abortable, abort --//
+    if (CC.completionStreaming) {
+      if (CC.abortControllerRef.current) {
+        CC.abortControllerRef.current.abort();
+      }
+    }
+
+    const lambda = async () => {
+      if (
+        entity_type === "c" &&
+        conversation_id &&
+        ObjectId.isValid(conversation_id)
+      ) {
+        CC.setConversationId(conversation_id);
+        const accessToken = await getAccessTokenSilently();
+        try {
+          await get_conversation_and_messages(accessToken, conversation_id, CC);
+        } catch (err) {
+          if (err instanceof AxiosError) {
+            axiosErrorToaster(err, "Get Conversation");
+          } else if (err instanceof Error) {
+            toast(err.message);
+          }
+        }
+      }
+    };
+    lambda();
+  }, [conversation_id]);
+
+  //-- send_message() --//
+  const submitPromptHandler = () => {
+    //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
+    setPromptContent(promptDraft);
+    CC.setCompletionRequested(true);
+    setPromptReadyToSend(true); //-- Invokes useEffect() below --//
+  };
+
   useEffect(() => {
     if (promptReadyToSend) {
       //-- Refocus textarea after submitting a prompt (unless on mobile) --//
@@ -57,20 +131,36 @@ export default function ChatSession() {
         textareaRef.current.focus();
       }
 
+      //-- If first message, parentNodeId is null --//
+      let parentNodeId: string | null = null;
+      //-- Else parentNodeId is current leaf node's id --//
+      if (CC.rowArray && CC.rowArray.length > 0) {
+        parentNodeId = CC.rowArray[CC.rowArray.length - 1].node_id;
+      }
+
       const submitPrompt = async () => {
         const accessToken = await getAccessTokenSilently();
 
         //-- Send prompt as chat message --//
         if (user?.sub) {
-          await chatson.send_message(
-            accessToken,
-            [user.sub],
-            ChatContext.model,
-            promptToSend,
-            ChatContext.conversation,
-            ChatContext.setConversation
-          );
-          ChatContext.setCompletionLoading(false);
+          try {
+            await send_message(
+              accessToken,
+              promptContent,
+              parentNodeId,
+              CC,
+              setPromptDraft,
+              navigate
+            );
+          } catch (err) {
+            if (err instanceof ErrorForChatToast) {
+              chatToast(err.message);
+            } else if (err instanceof ErrorForToast) {
+              toast(err.message);
+            } else if (err instanceof Error) {
+              toast(err.message);
+            }
+          }
         }
       };
       submitPrompt();
@@ -79,6 +169,86 @@ export default function ChatSession() {
     }
   }, [promptReadyToSend]);
 
+  //-- Submit edited prompt, create new branch --//
+  const regenerateResponse = async () => {
+    const accessToken = await getAccessTokenSilently();
+    if (CC.rowArray) {
+      let last_prompt_row = [...CC.rowArray]
+        .reverse()
+        .find((row) => row.prompt_or_completion === "prompt");
+
+      if (last_prompt_row) {
+        //-- Send prompt as chat message --//
+        CC.setCompletionRequested(true);
+        try {
+          await send_message(
+            accessToken,
+            last_prompt_row.content,
+            last_prompt_row.parent_node_id,
+            CC
+          );
+        } catch (err) {
+          if (err instanceof ErrorForChatToast) {
+            chatToast(err.message);
+          } else if (err instanceof ErrorForToast) {
+            toast(err.message);
+          } else if (err instanceof Error) {
+            toast(err.message);
+          }
+        }
+      }
+    }
+  };
+
+  //-- ***** ***** ***** ***** end of chatson ***** ***** ***** ***** --//
+
+  //-- Chat Toast --//
+  const chatToast = (message: string) => {
+    //-- Show error --//
+    setShowError(message);
+    //-- Clear old timeout --//
+    if (errorTimeoutRef.current) {
+      clearTimeout(errorTimeoutRef.current);
+    }
+    //-- Set new timeout --//
+    errorTimeoutRef.current = setTimeout(() => {
+      setShowError(null);
+    }, 4000);
+    //-- Cause error alert progress bar animation to restart --//
+    setAnimationKey((prevKey) => prevKey + 1);
+  };
+
+  //== Side Effects ==//
+  //-- On promptDraft updates, update promptTooLong and disableSubmitPrompt  --//
+  useEffect(() => {
+    let tokens = countTokens(promptDraft);
+
+    if (!promptDraft || tokens > CC.modelTokenLimit * 2) {
+      setDisableSubmitPrompt(true);
+    } else {
+      setDisableSubmitPrompt(false);
+    }
+
+    if (tokens > CC.modelTokenLimit) {
+      setPromptTooLong(true);
+    } else {
+      if (promptTooLong) {
+        setPromptTooLong(false);
+      }
+    }
+
+    if (tokens > CC.modelTokenLimit * 2) {
+      setPrompt2XTooLong(true);
+    } else {
+      if (prompt2XTooLong) {
+        setPrompt2XTooLong(false);
+      }
+    }
+
+    setApproxTokenCount(tokens);
+  }, [promptDraft]);
+
+  //-- Listener for keyboard shortcuts --//
   useEffect(() => {
     document.addEventListener("keydown", globalKeyDownHandler);
     return () => {
@@ -86,21 +256,24 @@ export default function ChatSession() {
     };
   }, []);
 
-  //== Event Handlers ==//
-  //-- Submit prompt from textarea --//
-  const submitPromptHandler = () => {
-    //-- Update state and trigger prompt submission to occur afterwards as a side effect --//
-    setPromptToSend(promptInput);
-    setPromptInput("");
-    ChatContext.setCompletionLoading(true);
-    setPromptReadyToSend(true);
-  };
+  //-- Virtuoso - when 'atBottom' changes - if at bottom don't show button, else show button --//
+  useEffect(() => {
+    if (atBottom) {
+      setShowButton(false);
+    } else {
+      setShowButton(true);
+    }
+  }, [atBottom, setShowButton]);
 
+  //== Event Handlers ==//
   //-- 'Enter' to submit prompt, 'Shift + Enter' for newline --//
   const keyDownHandler = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault(); //-- Prevent default behavior (newline insertion) --//
-      submitPromptHandler();
+      //-- prevent submit while loading or if `disableSubmitPrompt` is true --//
+      if (!CC.completionRequested && !disableSubmitPrompt) {
+        submitPromptHandler();
+      }
     } //-- else "Enter" with shift will just insert a newline --//
   };
 
@@ -118,266 +291,212 @@ export default function ChatSession() {
   };
 
   //-- Text area placeholder handlers and string --//
-  const textareaFocusHandler = () => {
-    setTextAreaFocus(true);
-  };
-  const textareaBlurHandler = () => {
-    setTextAreaFocus(false);
-  };
   const textareaPlaceholder = () => {
     let placeholder = "Input prompt...";
-
-    if (!textAreaFocus && OS_NAME === "Mac OS") {
-      placeholder = "⌘ +  /  to input prompt...";
-    }
-
+    // TODO - find way to implement without onBlur
+    // if (!textareaFocused && OS_NAME === "Mac OS") {
+    //   placeholder = "⌘ +  /  to input prompt...";
+    // }
     return placeholder;
   };
 
-  //-- ***** ***** ***** Start of Functions and Components for Message Rows **** ***** ***** --//
-  const virtuosoRef = useRef<VirtuosoHandle | null>(null);
-  const [atBottom, setAtBottom] = useState<boolean>(true);
-  const [showButton, setShowButton] = useState<boolean>(false);
-
-  let filteredMessages: IMessage[] | [] = [];
-  const allMessages = ChatContext?.conversation?.messages;
-  if (allMessages) {
-    filteredMessages = Object.values(allMessages).filter(
-      (message) => message.role !== "system"
-    );
-  }
-
-  //-- When 'atBottom' changes - if at bottom don't show button, else show button --//
+  //-- Focus textarea from another component (e.g. via "New Conversation") --//
   useEffect(() => {
-    if (atBottom) {
-      setShowButton(false);
-    } else {
-      setShowButton(true);
+    if (CC.focusTextarea) {
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+      }
     }
-  }, [atBottom, setShowButton]);
+    CC.setFocusTextarea(false); //-- a bit janky. causes an extra render. --//
+  }, [CC.focusTextarea]);
 
+  //-- Virtuoso --//
   const scrollToBottomHandler = () => {
-    if (virtuosoRef.current && filteredMessages.length > 0) {
+    if (virtuosoRef.current && CC.rowArray && CC.rowArray.length > 0) {
       virtuosoRef.current.scrollToIndex({
-        index: filteredMessages.length - 1,
+        index: CC.rowArray.length - 1, // e.g. visibleThread.length
         behavior: "smooth",
         align: "end",
       });
     }
   };
 
-  //-- Message Row Author --//
-  const Author = (props: { message: IMessage }) => {
-    let { message } = props;
-
-    //-- If author is the current user, display their profile photo --//
-    if (message.author === user?.sub) {
-      if (user?.picture) {
-        return (
-          <img
-            src={user?.picture}
-            alt={user?.name}
-            className="h-10 w-10 rounded-full"
-          />
-        );
-      } else {
-        <div>{user.name}</div>;
-      }
-    }
-
-    //-- If author is a model, display name of the model --//
-    if (message.author === message.model.api_name) {
-      return (
-        <div className="flex flex-col items-center">
-          <CpuChipIcon className="h-8 w-8 text-zinc-500 dark:text-zinc-400" />
-          <div className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-            {message.model.friendly_name}
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      // TODO - implement logic to show initials or perhaps photo in mulit-user chats(?)
-      <div>human</div>
-    );
-  };
-
-  //-- Message Row MessageData --//
-  const MessageData = (props: { message: IMessage }) => {
-    let { message } = props;
-
-    let date = new Date(parseInt(message.timestamp) * 1000);
-    // let friendlyDate = format(date, "hh:mm:ss");
-    let friendlyDate = new Intl.DateTimeFormat("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      second: "2-digit",
-    }).format(date);
-
-    return (
-      <div className="text-sm text-zinc-500 dark:text-zinc-400">
-        {/* TODO - implement new metatdata ui for rows */}
-        {/* {friendlyDate} */}
-      </div>
-    );
-  };
-
-  //-- Message Row Component --//
-  const Row = (props: { message: IMessage }) => {
-    const { message } = props;
-    return (
-      <div
-        id="chat-row"
-        className={classNames(
-          message.role === "user"
-            ? "rounded-lg bg-zinc-200 dark:bg-zinc-900"
-            : "",
-          "w-full justify-center lg:flex"
-        )}
-      >
-        {/* Mobile Row Top - visible until 'lg' */}
-        <div className="lg:hidden">
-          <div className="flex flex-row items-center justify-center py-2 pl-2 pr-2">
-            <MessageData message={message} />
-            <div className="ml-auto">
-              <Author message={message} />
-            </div>
-          </div>
-        </div>
-
-        {/* Author - visible for 'lg' and larger */}
-        <div
-          id="chat-author-content"
-          className="my-3.5 hidden w-full flex-col items-center justify-start lg:flex lg:w-24"
-        >
-          <Author message={message} />
-        </div>
-
-        {/* MESSAGE - always visible */}
-        <div
-          id="chat-message"
-          className="mx-auto flex w-full max-w-prose lg:mx-0"
-        >
-          <article className="prose prose-zinc w-full max-w-prose dark:prose-invert dark:text-white max-lg:pl-2.5">
-            <li key={message.message_uuid}>
-              <ReactMarkdown
-                children={message.message}
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  p: ({ node, children }) => (
-                    <p className="max-lg:m-0 max-lg:p-0 max-lg:pb-2">
-                      {children}
-                    </p>
-                  ),
-                }}
-              />
-            </li>
-          </article>
-        </div>
-
-        {/* MessageData - visible for 'lg' and larger */}
-        <div
-          id="chat-MessageData-content-lg"
-          className="mt-5 hidden w-full flex-col pr-2 lg:flex lg:w-24"
-        >
-          <div className="flex flex-row justify-end">
-            <MessageData message={message} />
-          </div>
-        </div>
-      </div>
-    );
-  };
-  //-- ***** ***** ***** End of Functions and Components for Message Rows **** ***** ***** --//
-
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div id="chat-session-tld" className="flex max-h-full min-h-full flex-col">
-      {/* CURRENT CHAT or SAMPLE PROPMTS */}
-      {filteredMessages.length > 0 ? (
-        <div id="llm-current-chat" className="flex flex-grow">
-          <div id="chat-rows" className="w-full list-none">
-            {/* Similar implemenatation to https://virtuoso.dev/stick-to-bottom/ */}
-            <Virtuoso
-              ref={virtuosoRef}
-              data={filteredMessages}
-              itemContent={(index, message) => (
-                <Row key={message.message_uuid} message={message} />
-              )}
-              followOutput="smooth"
-              atBottomStateChange={(isAtBottom) => {
-                setAtBottom(isAtBottom);
-              }}
-            />
-          </div>
-        </div>
-      ) : (
-        <div
-          id="llm-sample-prompts"
-          className="flex flex-grow flex-col items-center justify-center"
-        >
-          <p className="font-sans text-4xl font-semibold text-zinc-700 dark:text-zinc-200">
-            ChrtGPT
-          </p>
-          <article className="prose prose-zinc dark:prose-invert">
-            <div className="mb-0 flex flex-col">
-              <p className="mb-0 mt-2.5 font-sans font-medium italic">
-                What is ChrtGPT?
-              </p>
-              <p className="mb-0 mt-1.5 font-sans font-medium italic">
-                How to be a good day trader?
-              </p>
-              <p className="mb-0 mt-1.5 font-sans font-medium italic">
-                What are some risks of day trading?
-              </p>
-            </div>
-          </article>
-        </div>
-      )}
+      {/* CURRENT CHAT, SAMPLE PROPMTS, OR FALLBACK */}
+      <ErrorBoundary FallbackComponent={ChatRowAreaFallback}>
+        <ChatRowArea
+          virtuosoRef={virtuosoRef}
+          setAtBottom={setAtBottom}
+          chatToast={chatToast}
+        />
+      </ErrorBoundary>
 
       {/* STICKY INPUT SECTION */}
-      <div className="sticky bottom-0 flex h-auto flex-col justify-center bg-zinc-50 pb-3 pt-1 dark:bg-zinc-800">
+      <div
+        className={classNames(
+          `${LIGHT_THEME_BG} ${DARK_THEME_BG}`,
+          "sticky bottom-0 flex h-auto flex-col justify-center pb-3 pt-1"
+        )}
+      >
+        {/* ABOVE DIVIDER */}
+
+        {/* Error Alert */}
+        <div className="flex flex-row justify-center">
+          {showError && (
+            <div className="mb-1 w-full max-w-prose rounded-md bg-red-100 dark:bg-red-800">
+              {/* Content */}
+              <div className="flex flex-row justify-between px-2 pb-1 pt-2">
+                <div>
+                  <ExclamationTriangleIcon
+                    className="h-5 w-5 text-red-500 dark:text-red-100"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-red-800 dark:text-red-100">
+                    {showError}
+                  </p>
+                </div>
+                <div className="pl-3">
+                  <div className="-mx-1.5 -my-1.5">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowError(null);
+                      }}
+                      className="inline-flex rounded-full p-1.5 text-red-500 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-red-50 dark:text-red-100 dark:hover:bg-red-950"
+                    >
+                      <span className="sr-only">Dismiss</span>
+                      <XCircleIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              {/* Progress Bar */}
+              <div className="h-1.5 w-full rounded-b bg-red-100 dark:bg-red-900">
+                <div
+                  key={animationKey}
+                  className="h-full w-full rounded-b bg-red-500 dark:bg-red-200"
+                  style={{ animation: "progress 4s linear" }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Token count warning */}
+        <div className="flex flex-row justify-center">
+          <div
+            className={classNames(
+              "mb-1 flex w-full max-w-prose flex-row justify-center rounded-full text-white",
+              promptTooLong && !prompt2XTooLong
+                ? "bg-orange-500  dark:bg-orange-800"
+                : prompt2XTooLong
+                ? "bg-red-500  dark:bg-red-800"
+                : ""
+            )}
+          >
+            {/* Prompt may be too long */}
+            {promptTooLong && !prompt2XTooLong && (
+              <>
+                <p className="py-1 text-sm italic">Prompt may be too long: </p>
+                <p className="px-2 py-1 text-sm font-medium">
+                  ~{numeral(approxTokenCount).format("0,0")} tokens{" "}
+                  <span className="">
+                    (Limit: {numeral(CC.modelTokenLimit).format("0,0")})
+                  </span>
+                </p>
+              </>
+            )}
+            {/* Prompt is way too long */}
+            {prompt2XTooLong && (
+              <>
+                <p className="py-1 text-sm italic">Prompt is way too long: </p>
+                <p className="px-2 py-1 text-sm font-medium">
+                  ~{numeral(approxTokenCount).format("0,0")} tokens{" "}
+                  <span className="">
+                    (Limit: {numeral(CC.modelTokenLimit).format("0,0")})
+                  </span>
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+
         {/* DIVIDER */}
         <div className="flex justify-center">
-          <div className="mb-2 w-full max-w-prose border-t-2 border-zinc-300 dark:border-zinc-600"></div>
+          <div className="mb-2 w-full max-w-prose rounded-full border-t-2 border-zinc-300 dark:border-zinc-600" />
         </div>
 
         {/* CONTROL BAR */}
-        <div className="flex justify-center">
+        <div className="flex flex-row justify-center">
           <div
             id="chat-session-control-bar"
             className="flex w-full max-w-prose flex-row"
           >
-            {/* Stop Response Generation */}
-            <div className="flex w-full flex-row items-center justify-center">
-              {/* DEV - always 'false' for now, when streaming in use, add logic here */}
-              {false && ChatContext.completionLoading && (
-                <>
-                  <button
-                    onClick={() => console.log("cancel")} // TODO - add logic
-                    type="button"
-                    className="inline-flex items-center gap-x-1.5 rounded-md bg-zinc-600 px-2.5 py-1.5 font-semibold text-white shadow-sm hover:bg-zinc-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
-                  >
-                    <XCircleIcon
-                      className="-ml-0.5 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                    <p className="text-sm">Cancel</p>
-                  </button>
-                </>
-              )}
+            <div
+              id="control-bar-LHS"
+              className="ml-2 flex w-0 flex-shrink-0 flex-grow flex-row items-center justify-start gap-3"
+            >
+              {/* Conversation stats */}
+              <ConversationStats rowArrayLength={CC.rowArray?.length || 0} />
             </div>
 
-            {/* Select LLM Model */}
-            <div className="flex w-full items-center justify-center">
+            <div
+              id="control-bar-CENTER"
+              className="flex w-0 flex-shrink-0 flex-grow flex-row items-center justify-center gap-2.5"
+            >
+              {/* Select LLM Model */}
               <ModelSelector />
+              {/* LLM param settings */}
+              <LLMParams />
             </div>
 
-            {/* Scroll to Bottom */}
-            <div className="flex w-full items-center justify-end">
+            <div
+              id="control-bar-RHS"
+              className="mr-2 flex w-0 flex-shrink-0 flex-grow flex-row items-center justify-end gap-3"
+            >
+              {/* Regnerate and Stop Generation Buttons */}
+              <div className="flex flex-row justify-center">
+                {/* Stop Response Generation */}
+                {/* DEV - always 'false' for now, when streaming in use, add logic here to allow user to stop response generation */}
+                {CC.completionStreaming && (
+                  <>
+                    <button
+                      onClick={() => {
+                        if (CC.abortControllerRef.current) {
+                          CC.abortControllerRef.current.abort();
+                        }
+                      }}
+                      className="flex flex-row rounded-md border-2 border-zinc-600 px-2.5 py-1 text-sm font-semibold text-zinc-600 shadow-sm hover:border-zinc-400 hover:bg-zinc-400 hover:text-zinc-50 hover:shadow-md dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-zinc-600 dark:hover:bg-zinc-600"
+                    >
+                      {/* NOTE - Managing space here on small screens */}
+                      <StopIcon className="h-5 w-5 lg:mr-2" />
+                      <p className="hidden lg:flex">Stop</p>
+                    </button>
+                  </>
+                )}
+                {!CC.completionRequested &&
+                  CC.rowArray &&
+                  CC.rowArray.length > 0 && (
+                    <button
+                      onClick={() => {
+                        regenerateResponse();
+                      }}
+                      className="flex flex-row rounded-md border-2 border-zinc-600 px-2.5 py-1 text-sm font-semibold text-zinc-600 shadow-sm hover:border-zinc-400 hover:bg-zinc-400 hover:text-zinc-50 hover:shadow-md dark:border-zinc-300 dark:text-zinc-100 dark:hover:border-zinc-600 dark:hover:bg-zinc-600"
+                    >
+                      {/* NOTE - Managing space here on small screens */}
+                      <ArrowPathIcon className="h-5 w-5 lg:mr-2" />
+                      <p className="hidden lg:flex">Regenerate</p>
+                    </button>
+                  )}
+              </div>
+
+              {/* Scroll to Bottom */}
               <button
-                className="pr-1.5"
-                disabled={!showButton}
+                // disabled={!showButton}
                 onClick={scrollToBottomHandler}
               >
                 <ChevronDoubleDownIcon
@@ -397,7 +516,7 @@ export default function ChatSession() {
         <div>
           <div
             id="llm-prompt-input"
-            className="mb-2 flex justify-center align-bottom lg:mb-4"
+            className="mb-3 flex justify-center align-bottom lg:mb-4"
           >
             <label htmlFor="prompt-input" className="sr-only">
               Prompt Input
@@ -410,35 +529,42 @@ export default function ChatSession() {
                 id="prompt-input"
                 name="prompt-input"
                 placeholder={textareaPlaceholder()}
-                onFocus={textareaFocusHandler}
-                onBlur={textareaBlurHandler}
                 wrap="hard"
-                value={promptInput}
+                value={promptDraft}
                 onKeyDown={keyDownHandler}
-                onChange={(event) => setPromptInput(event.target.value)}
+                onChange={(event) => setPromptDraft(event.target.value)}
                 className={classNames(
-                  ChatContext.completionLoading ? "bg-zinc-300 ring-2" : "",
-                  "block w-full resize-none rounded-md border-0 bg-white py-1.5 pr-10 text-base text-zinc-900 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-zinc-700 dark:text-white sm:leading-6"
+                  "block w-full resize-none rounded-lg border-0 py-3 pr-10 text-base leading-6",
+                  "text-zinc-900 placeholder:text-zinc-400",
+                  "focus:ring-2 focus:ring-inset focus:ring-green-600",
+                  CC.completionRequested
+                    ? "animate-pulse bg-zinc-300 dark:bg-zinc-500"
+                    : promptTooLong && !prompt2XTooLong
+                    ? "bg-orange-300 ring-1 ring-orange-400 focus:ring-2 focus:ring-orange-400 dark:ring-orange-600 dark:focus:ring-orange-600"
+                    : prompt2XTooLong
+                    ? "bg-red-300 ring-1 ring-red-400 focus:ring-2 focus:ring-red-400 dark:ring-red-600 dark:focus:ring-red-600"
+                    : "bg-white ring-1 ring-inset ring-zinc-300 dark:bg-zinc-700 dark:text-white"
                 )}
               />
-
-              {ChatContext.completionLoading ? (
-                <button className="absolute bottom-0 right-0 flex cursor-wait items-center p-1.5 focus:outline-green-600">
+              {CC.completionRequested ? (
+                <button className="absolute bottom-0 right-0 flex cursor-wait items-center px-1.5 py-3 focus:outline-green-600">
                   <CpuChipIcon className="text h-6 w-6 animate-spin text-green-500" />
                 </button>
               ) : (
                 <button
                   id="submit-prompt-button"
                   onClick={submitPromptHandler}
-                  disabled={!promptInput}
+                  disabled={disableSubmitPrompt}
                   className={classNames(
-                    !promptInput ? "cursor-not-allowed" : "cursor-pointer",
-                    "absolute bottom-0 right-0 flex items-center p-1.5 focus:outline-green-600"
+                    disableSubmitPrompt
+                      ? "cursor-not-allowed"
+                      : "cursor-pointer",
+                    "absolute bottom-0 right-0 flex items-center px-1.5 py-3 focus:outline-green-600"
                   )}
                 >
                   <ArrowUpCircleIcon
                     className={classNames(
-                      promptInput ? "text-green-600" : "text-zinc-300",
+                      disableSubmitPrompt ? "text-zinc-400" : "text-green-600",
                       "h-6 w-6"
                     )}
                     aria-hidden="true"
@@ -446,6 +572,39 @@ export default function ChatSession() {
                 </button>
               )}
             </div>
+          </div>
+          <div className="mb-0.5 lg:mb-1">
+            {/* Smaller than large screens */}
+            <p className="flex-row justify-center text-center font-sans text-xs italic text-zinc-500 dark:text-zinc-400 lg:hidden">
+              Due to the&nbsp;
+              <span className="inline-block">
+                <a
+                  className="underline"
+                  href="https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/"
+                  target="_blank"
+                >
+                  nature of LLMs
+                </a>
+              </span>
+              , ChrtGPT may produce false information. Use with human
+              discretion.
+            </p>
+            {/* Large screens and up */}
+            <p className="hidden flex-row justify-center text-center font-sans text-xs italic text-zinc-500 dark:text-zinc-400 lg:flex">
+              Due to the&nbsp;
+              <span className="inline-block">
+                <a
+                  className="underline"
+                  href="https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/"
+                  target="_blank"
+                >
+                  nature of LLMs
+                </a>
+              </span>
+              , ChrtGPT may produce false information.&nbsp;
+              {/* <br /> */}
+              Use with human discretion.
+            </p>
           </div>
         </div>
       </div>

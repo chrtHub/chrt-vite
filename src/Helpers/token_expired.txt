@@ -1,0 +1,49 @@
+Feb 6 expired 
+
+access_token: 
+
+eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Imp6V2V3WGkyaV81WnpVSHpFZWwzRSJ9.eyJpc3MiOiJodHRwczovL2NocnQtcHJvZC51cy5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTM3MjU1Mjg4MDMwNzIyOTY5NDIiLCJhdWQiOlsiaHR0cHM6Ly9jaHJ0LmNvbSIsImh0dHBzOi8vY2hydC1wcm9kLnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2NzU2MzE1MDksImV4cCI6MTY3NTcxNzkwOSwiYXpwIjoiOGJETEhZZUVVZlBISDgxVlJEQnNDVE41VFlrbEFNQ3UiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIHJlYWQ6am91cm5hbCB3cml0ZTpqb3VybmFsIHJlYWQ6ZGF0YSIsInBlcm1pc3Npb25zIjpbInJlYWQ6ZGF0YSIsInJlYWQ6am91cm5hbCIsIndyaXRlOmpvdXJuYWwiXX0.Q9IRMAgp-_ecbtHTA4ZTIeEaIJqIdZHAKqSzfe8gf_LMQtJd2i33EzHAhnHsia9n-rDaOBJd0KX8Y26UC02HhIWTYXsHcYw0-Phzhdia7Wi-YDrKLurUmhL38QwxeZZusqDTjMCmyi1B-DT7PhahKhQ1OjFvbZB7sP9WrBtrKSXgwmjSaq_7kZfr8ebb9H0IF3PJkc_xImZqKipn-1DV64IrJ6Dh4blEzj0rLiDNdb9sBddgRR8oAW8ZFooJ2WTosUMyU6Sg_bOswymoamJRaXU3HE6UAE-RvP76htE5Wn8iw2u5oU8wTPq_i07OccSRB-WTmHlR9V-6XzlGu8brbw
+
+COPY:
+
+eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Imp6V2V3WGkyaV81WnpVSHpFZWwzRSJ9.eyJpc3MiOiJodHRwczovL2NocnQtcHJvZC51cy5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTM3MjU1Mjg4MDMwNzIyOTY5NDIiLCJhdWQiOlsiaHR0cHM6Ly9jaHJ0LmNvbSIsImh0dHBzOi8vY2hydC1wcm9kLnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2NzU2MzE1MDksImV4cCI6MTY3NTcxNzkwOSwiYXpwIjoiOGJETEhZZUVVZlBISDgxVlJEQnNDVE41VFlrbEFNQ3UiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIHJlYWQ6am91cm5hbCB3cml0ZTpqb3VybmFsIHJlYWQ6ZGF0YSIsInBlcm1pc3Npb25zIjpbInJlYWQ6ZGF0YSIsInJlYWQ6am91cm5hbCIsIndyaXRlOmpvdXJuYWwiXX0.Q9IRMAgp-_ecbtHTA4ZTIeEaIJqIdZHAKqSzfe8gf_LMQtJd2i33EzHAhnHsia9n-rDaOBJd0KX8Y26UC02HhIWTYXsHcYw0-Phzhdia7Wi-YDrKLurUmhL38QwxeZZusqDTjMCmyi1B-DT7PhahKhQ1OjFvbZB7sP9WrBtrKSXgwmjSaq_7kZfr8ebb9H0IF3PJkc_xImZqKipn-1DV64IrJ6Dh4blEzj0rLiDNdb9sBddgRR8oAW8ZFooJ2WTosUMyU6Sg_bOswymoamJRaXU3HE6UAE-RvP76htE5Wn8iw2u5oU8wTPq_i07OccSRB-WTmHlR9V-6XzlGu8brbw
+
+Decoded at jwt.io:
+{
+  "alg": "RS256",
+  "typ": "JWT",
+  "kid": "jzWewXi2i_5ZzUHzEel3E"
+}
+=====
+{
+  "iss": "https://chrt-prod.us.auth0.com/",
+  "sub": "google-oauth2|113725528803072296942",
+  "aud": [
+    "https://chrt.com",
+    "https://chrt-prod.us.auth0.com/userinfo"
+  ],
+  "iat": 1675631509,
+  "exp": 1675717909,
+  "azp": "8bDLHYeEUfPHH81VRDBsCTN5TYklAMCu",
+  "scope": "openid profile email read:journal write:journal read:data",
+  "permissions": [
+    "read:data",
+    "read:journal",
+    "write:journal"
+  ]
+}
+=====
+RSASHA256(
+  base64UrlEncode(header) + "." +
+  base64UrlEncode(payload),
+  
+{
+  "e": "AQAB",
+  "kty": "RSA",
+  "n": "rlotYJLqBdKeOuvYJsLfcNKiSjpY0FaVEhPSyhsgoZomEqIxJ4GauyCYciazEanlYP2SsxSk3kQnlL2UeIWuVccAD2s21L8k36zX0QCNAjilgx9-ft_GJTkW-cqQQFBWaWUwTqaYSH7JMEueRdz6AUrlhg6tIvF5hpjdW12EldaC7U3EqCteOi0F49AGJhuwh2unnpTrbEPMQFqe3Pklbyupuu-daiwTGHuzl7uOveWGEr8pK3RKdwoR1Jr4dFO4juggND42drrznh6vZPU93VkOdHwR0KXFFg8IlAJgptXc8-jItX2-UVZCfHd1mFYoHgQw4jnOp1bu4mZQC_m1sw"
+}
+,
+  
+Private Key in PKCS #8, PKCS #1, or JWK string format. The key never leaves your browser.
+
+)

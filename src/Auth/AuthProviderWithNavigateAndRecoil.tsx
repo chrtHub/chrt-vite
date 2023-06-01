@@ -11,7 +11,6 @@ import { useIsMobile } from "../Util/useUserAgent";
 //-- Icons --//
 
 //-- NPM Functions --//
-import UAParser from "ua-parser-js";
 
 //-- Utility Functions --//
 
@@ -37,7 +36,8 @@ export default function AuthProviderWithNavigateAndRecoil() {
         authorizationParams={{
           redirect_uri: `${window.location.origin}`, //-- redirect_uri NOTE - localhost not allowed by Auth0 for prod tenant (which is 'chrt-prod') --//
           audience: "https://chrt.com", //-- API: 'chrt' (also /userinfo by default) --//
-          scope: "openid profile email read:journal write:journal read:data",
+          scope:
+            "openid profile email read:journal write:journal read:data chat:llm",
           //-- Scope guide:
           //-- 'openid' included by default, indicates app will use OIDC --//
           //-- 'profile' allows name and profile photo --//

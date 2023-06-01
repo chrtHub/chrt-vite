@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
 //-- TSX Components --//
-
+import { axiosErrorToaster } from "../Errors/axiosErrorToaster";
 //-- NPM Components --//
 
 //-- Icons --//
@@ -14,7 +14,9 @@ import axios from "axios";
 //-- Utility Functions --//
 
 //-- Data Objects --//
-
+import { AxiosError } from "axios";
+import classNames from "../Util/classNames";
+import { DARK_THEME_BG, LIGHT_THEME_BG } from "../Theme";
 interface IAnimal {
   type: string;
   url: string;
@@ -38,30 +40,41 @@ export default function NotFoundPage({}: IProps) {
   //-- Fetch image of randomAnimal from S3 bucket --//
   useEffect(() => {
     const fetchImage = async () => {
-      const response = await axios.get(randomAnimal.url, {
-        responseType: "blob",
-      });
-      const imageBlob: Blob = await response.data;
-      const imageURL: string = URL.createObjectURL(imageBlob);
-      setImageSrc(imageURL);
-      setImageLoaded(true);
+      try {
+        const response = await axios.get(randomAnimal.url, {
+          responseType: "blob",
+        });
+        const imageBlob: Blob = await response.data;
+        const imageURL: string = URL.createObjectURL(imageBlob);
+        setImageSrc(imageURL);
+        setImageLoaded(true);
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          axiosErrorToaster(err, "Cute Animal Photo Fetching");
+        }
+      }
     };
     fetchImage();
   }, []);
 
   return (
-    <div className="min-h-full bg-zinc-100 py-16 px-6 sm:py-24  lg:px-8">
+    <div
+      className={classNames(
+        `${LIGHT_THEME_BG} ${DARK_THEME_BG}`,
+        "min-h-full px-6 py-16 sm:py-24 lg:px-8"
+      )}
+    >
       <div className="mx-auto max-w-max">
         <main className="sm:flex">
           <p className="text-4xl font-bold tracking-tight text-green-600 sm:text-5xl">
             404
           </p>
           <div className="sm:ml-6">
-            <div className="sm:border-l sm:border-gray-200 sm:pl-6">
-              <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+            <div className="sm:border-l sm:border-zinc-200 sm:pl-6">
+              <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-5xl">
                 Page not found :(
               </h1>
-              <p className="mt-1 text-base text-gray-500">
+              <p className="mt-1 text-base font-semibold text-zinc-500">
                 Please check the URL in the address bar and try again.
               </p>
             </div>
@@ -77,14 +90,12 @@ export default function NotFoundPage({}: IProps) {
         </main>
         {imageLoaded ? (
           <img
-            className="my-10 aspect-auto" //-- 640x640 using current images --//
+            className="my-10 aspect-auto rounded-2xl" //-- 640x640 using current images --//
             src={imageSrc}
             alt={randomAnimal.type}
           />
         ) : (
-          <div
-            className={`my-10 h-[300px] w-[300px] animate-pulse bg-zinc-200 md:h-[640px] md:w-[640px]`}
-          ></div>
+          <div className="my-10 h-[300px] w-[300px] animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800 md:h-[640px] md:w-[640px]" />
         )}
       </div>
     </div>
