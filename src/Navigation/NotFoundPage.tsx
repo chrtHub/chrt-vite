@@ -16,7 +16,7 @@ import axios from "axios";
 //-- Data Objects --//
 import { AxiosError } from "axios";
 import classNames from "../Util/classNames";
-import { DARK_THEME_BG, LIGHT_THEME_BG } from "../Theme";
+import { DARK_THEME_BG, LIGHT_THEME_BG } from "../Layout/Theme";
 interface IAnimal {
   type: string;
   url: string;

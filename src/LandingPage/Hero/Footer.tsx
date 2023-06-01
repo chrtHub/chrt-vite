@@ -1,4 +1,4 @@
-import { DARK_THEME_BG, LIGHT_THEME_BG } from "../../Theme";
+import { DARK_THEME_BG, LIGHT_THEME_BG } from "../../Layout/Theme";
 import classNames from "../../Util/classNames";
 
 export default function Footer() {

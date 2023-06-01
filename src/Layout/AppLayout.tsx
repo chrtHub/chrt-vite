@@ -39,7 +39,7 @@ import classNames from "../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 import chartLogo from "../Assets/twemoji_bar_chart/android-chrome-192x192.png";
-import { DARK_THEME_BG, LIGHT_THEME_BG } from "../Theme";
+import { DARK_THEME_BG, LIGHT_THEME_BG } from "../Layout/Theme";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 interface IProps {

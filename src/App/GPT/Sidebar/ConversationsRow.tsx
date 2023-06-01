@@ -32,7 +32,7 @@ import { IChatContext } from "../../../Context/ChatContext";
 import { NavigateFunction } from "react-router-dom";
 import { AxiosError } from "axios";
 import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
-import { DARK_THEME_BG, LIGHT_THEME_BG } from "../../../Theme";
+import { DARK_THEME_BG, LIGHT_THEME_BG } from "../../../Layout/Theme";
 
 //-- Conversation Rows with Sticky Header Logic --//
 export const ConversationsRow = (
