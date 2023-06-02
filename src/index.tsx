@@ -34,7 +34,8 @@ import Terms from "./Info/Terms/Terms";
 import Updates from "./Info/Updates/Updates";
 
 //-- TSX Components: Navigation --//
-import NotFoundPage from "./Navigation/NotFoundPage";
+// import NotFoundPage from "./Navigation/NotFoundPage";
+import DallENotFoundPage from "./Navigation/DallENotFoundPage";
 
 //-- TSX Components: Errors --//
 import RouteErrorBoundary from "./Errors/RouteErrorBoundary";
@@ -81,7 +82,7 @@ const router = createBrowserRouter(
       </Route>
 
       {/* Navigation */}
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path="*" element={<DallENotFoundPage />} />
     </Route>
   )
 );
