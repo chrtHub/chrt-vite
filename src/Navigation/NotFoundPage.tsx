@@ -17,6 +17,7 @@ import axios from "axios";
 import { AxiosError } from "axios";
 import classNames from "../Util/classNames";
 import { DARK_THEME_BG, LIGHT_THEME_BG } from "../Layout/Theme";
+import { throwAxiosError } from "../Errors/throwAxiosError";
 
 //-- Styles, animals, emotions --//
 let styles = [
@@ -57,18 +58,22 @@ export default function NotFoundPage({}: IProps) {
   const [imageLoaded, setImageLoaded] = useState<boolean>(false);
 
   //-- Select random style, animal, and emotion --//
-  let style = styles[Math.floor(Math.random() * styles.length)];
-  let animal = animals[Math.floor(Math.random() * animals.length)];
-  let emotion = emotions[Math.floor(Math.random() * emotions.length)];
+  let randomStyle = styles[Math.floor(Math.random() * styles.length)];
+  let randomAnimal = animals[Math.floor(Math.random() * animals.length)];
+  let randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+  const [style, setStyle] = useState<string>(randomStyle);
+  const [animal, setAnimal] = useState<string>(randomAnimal);
+  const [emotion, setEmotion] = useState<string>(randomEmotion);
+
+  console.log(style, animal, emotion);
 
   //-- Fetch image of randomAnimal from S3 bucket --//
   useEffect(() => {
-    console.log("useEffect"); // DEV
+    console.log(style, animal, emotion);
     const fetchImage = async () => {
       try {
         const response = await axios.get(
-          // `https://s3.amazonaws.com/sad-animal-404-images/${style}/${animal}/${emotion}`,
-          `https://s3.amazonaws.com/sad-animal-404-images/claymation/dog/perplexed`,
+          `https://s3.amazonaws.com/sad-animal-404-images/${style}/${animal}/${emotion}`,
           {
             responseType: "blob",
           }
@@ -77,14 +82,10 @@ export default function NotFoundPage({}: IProps) {
         const imageURL: string = URL.createObjectURL(imageBlob);
         setImageSrc(imageURL);
         setImageLoaded(true);
-      } catch (err) {
-        if (err instanceof AxiosError) {
-          axiosErrorToaster(err, "Sad Animal Image Photo Fetching");
-        }
-      }
+      } catch (err) {}
     };
     fetchImage();
-  }, []);
+  }, [style, animal, emotion]);
 
   return (
     <div
@@ -95,19 +96,19 @@ export default function NotFoundPage({}: IProps) {
     >
       <div className="mx-auto max-w-max">
         <main className="sm:flex">
-          <p className="text-4xl font-bold tracking-tight text-green-600 sm:text-5xl">
+          <p className="text-4xl font-bold tracking-tight text-green-600 lg:text-5xl">
             404
           </p>
           <div className="sm:ml-6">
             <div className="sm:border-l sm:border-zinc-200 sm:pl-6">
-              <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-5xl">
+              <h1 className="text-4xl  font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-5xl">
                 Page not found :(
               </h1>
               <p className="mt-1 text-base font-semibold text-zinc-500">
                 Please check the URL in the address bar and try again.
               </p>
             </div>
-            <div className="mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6">
+            <div className="mt-2 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6 lg:mt-10">
               <NavLink
                 to="/"
                 className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
@@ -120,7 +121,7 @@ export default function NotFoundPage({}: IProps) {
         {imageLoaded ? (
           <>
             <img
-              className="my-10 mb-3 aspect-auto rounded-2xl"
+              className="my-4 mb-3 aspect-square w-full rounded-2xl lg:mt-10"
               src={imageSrc}
               alt={`${emotion} ${animal}, ${style}`}
             />
@@ -129,9 +130,11 @@ export default function NotFoundPage({}: IProps) {
             </p>
           </>
         ) : (
-          <div className="mb-3 mt-10 flex h-[300px] w-[300px] animate-pulse flex-col items-center justify-center rounded-2xl bg-zinc-300 dark:bg-zinc-800 md:h-[512px] md:w-[512px]">
+          <div className="my-4 flex aspect-square w-full animate-pulse flex-col items-center justify-center rounded-2xl bg-zinc-300 text-center dark:bg-zinc-800 lg:mt-10 lg:h-[512px] lg:w-[512px]">
             <p className="text-2xl font-semibold text-zinc-600 dark:text-zinc-300">
-              Generating sad animal image...
+              Getting AI-generated
+              <br />
+              animal image...
             </p>
           </div>
         )}
