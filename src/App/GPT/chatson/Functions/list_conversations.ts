@@ -32,7 +32,7 @@ export async function list_conversations(
   try {
     //-- Make POST request --//
     let res = await axios.get<IConversation[]>(
-      `${VITE_ALB_BASE_URL}/llm/list_conversations/${CC.sortBy}/${skip}`,
+      `${VITE_ALB_BASE_URL}/conversation/list_conversations/${CC.sortBy}/${skip}`,
       {
         headers: {
           authorization: `Bearer ${accessToken}`,

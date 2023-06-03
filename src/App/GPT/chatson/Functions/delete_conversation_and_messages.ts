@@ -27,7 +27,7 @@ export async function delete_conversation_and_messages(
   try {
     //-- Make GET request --//
     await axios.delete(
-      `${VITE_ALB_BASE_URL}/llm/delete_conversation_and_messages/${conversation_id}`,
+      `${VITE_ALB_BASE_URL}/conversation/delete_conversation_and_messages/${conversation_id}`,
       {
         headers: {
           authorization: `Bearer ${access_token}`,

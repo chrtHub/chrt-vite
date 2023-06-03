@@ -34,7 +34,7 @@ export async function get_conversation_and_messages(
       conversation: IConversation;
       message_nodes: IMessageNode[];
     }>(
-      `${VITE_ALB_BASE_URL}/llm/get_conversation_and_messages/${conversation_id}`,
+      `${VITE_ALB_BASE_URL}/conversation/get_conversation_and_messages/${conversation_id}`,
       {
         headers: {
           authorization: `Bearer ${access_token}`,
