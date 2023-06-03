@@ -22,7 +22,7 @@ import { throwAxiosError } from "../Errors/throwAxiosError";
 //-- Styles, animals, emotions --//
 let styles = [
   "claymation",
-  "award winning 4K photography",
+  "award-winning 4K photography",
   "flat art",
   "geometric",
   "anime",

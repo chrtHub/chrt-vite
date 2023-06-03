@@ -1,6 +1,6 @@
 //-- react, react-router-dom, recoil, Auth0 --//
 import { Fragment, useState } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 
 //-- TSX Components --//
 import Conversations from "../App/GPT/Sidebar/Conversations";
@@ -199,8 +199,8 @@ export default function AppLayout({ infoMode }: IProps) {
                 </Transition.Child>
                 {/* START OF CHRT LOGO AND NAME */}
                 <div className="ml-2 mt-2 pr-2 lg:pr-0">
-                  <a
-                    href={window.location.origin}
+                  <Link
+                    to="/"
                     className="flex w-full flex-row items-center justify-start rounded-md pb-2 pl-2 pt-2 hover:bg-green-300 hover:dark:bg-green-900"
                   >
                     <img
@@ -211,7 +211,7 @@ export default function AppLayout({ infoMode }: IProps) {
                     <p className="ml-2.5 text-3xl font-semibold text-zinc-600 dark:text-white">
                       chrt
                     </p>
-                  </a>
+                  </Link>
                 </div>
                 {/* END OF CHRT LOGO AND NAME */}
 
@@ -279,8 +279,8 @@ export default function AppLayout({ infoMode }: IProps) {
         >
           {/* START OF CHRT LOGO AND NAME */}
           <div className="ml-2 mt-2">
-            <a
-              href={window.location.origin}
+            <Link
+              to="/"
               className="flex w-full flex-row items-center justify-start rounded-md pb-2 pl-2 pt-2 hover:bg-green-300 hover:dark:bg-green-900"
             >
               <img
@@ -291,7 +291,7 @@ export default function AppLayout({ infoMode }: IProps) {
               <p className="ml-2.5 text-3xl font-semibold text-zinc-600 dark:text-white">
                 chrt
               </p>
-            </a>
+            </Link>
           </div>
           {/* END OF CHRT LOGO AND NAME */}
 
