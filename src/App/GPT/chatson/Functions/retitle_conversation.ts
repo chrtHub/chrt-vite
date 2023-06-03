@@ -24,7 +24,7 @@ export async function retitle_conversation(
 ): Promise<void> {
   try {
     await axios.post(
-      `${VITE_ALB_BASE_URL}/llm/retitle`,
+      `${VITE_ALB_BASE_URL}/conversation/retitle`,
       { conversation_id: conversation_id, new_title: new_title },
       {
         headers: {
