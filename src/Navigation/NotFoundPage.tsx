@@ -17,10 +17,38 @@ import axios from "axios";
 import { AxiosError } from "axios";
 import classNames from "../Util/classNames";
 import { DARK_THEME_BG, LIGHT_THEME_BG } from "../Layout/Theme";
-interface IAnimal {
-  type: string;
-  url: string;
-}
+
+//-- Styles, animals, emotions --//
+let styles = [
+  "claymation",
+  "award winning 4K photography",
+  "flat art",
+  "geometric",
+  "anime",
+  "minimalism",
+  "3D illustration",
+  "futurism",
+  "synthwave",
+  "vector",
+];
+let animals = [
+  "dog",
+  "cat",
+  "squirrel",
+  "cow",
+  "koala bear",
+  "penguin",
+  "sloth",
+];
+let emotions = [
+  "sad",
+  "perplexed",
+  "confused",
+  "disappointed",
+  "frustrated",
+  "furious",
+  "irritated",
+];
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 interface IProps {}
@@ -28,29 +56,30 @@ export default function NotFoundPage({}: IProps) {
   const [imageSrc, setImageSrc] = useState<string | undefined>();
   const [imageLoaded, setImageLoaded] = useState<boolean>(false);
 
-  //-- Randomly select an animal image to display --//
-  const animals: IAnimal[] = [
-    { type: "cat", url: "https://s3.amazonaws.com/chrt.com/catImage.jpeg" },
-    { type: "dog", url: "https://s3.amazonaws.com/chrt.com/dogImage.jpeg" },
-    { type: "puppy", url: "https://s3.amazonaws.com/chrt.com/puppyImage.jpeg" },
-  ];
-  let randomNumber: number = Math.floor(Math.random() * animals.length);
-  let randomAnimal: IAnimal = animals[randomNumber];
+  //-- Select random style, animal, and emotion --//
+  let style = styles[Math.floor(Math.random() * styles.length)];
+  let animal = animals[Math.floor(Math.random() * animals.length)];
+  let emotion = emotions[Math.floor(Math.random() * emotions.length)];
 
   //-- Fetch image of randomAnimal from S3 bucket --//
   useEffect(() => {
+    console.log("useEffect"); // DEV
     const fetchImage = async () => {
       try {
-        const response = await axios.get(randomAnimal.url, {
-          responseType: "blob",
-        });
+        const response = await axios.get(
+          // `https://s3.amazonaws.com/sad-animal-404-images/${style}/${animal}/${emotion}`,
+          `https://s3.amazonaws.com/sad-animal-404-images/claymation/dog/perplexed`,
+          {
+            responseType: "blob",
+          }
+        );
         const imageBlob: Blob = await response.data;
         const imageURL: string = URL.createObjectURL(imageBlob);
         setImageSrc(imageURL);
         setImageLoaded(true);
       } catch (err) {
         if (err instanceof AxiosError) {
-          axiosErrorToaster(err, "Cute Animal Photo Fetching");
+          axiosErrorToaster(err, "Sad Animal Image Photo Fetching");
         }
       }
     };
@@ -89,13 +118,22 @@ export default function NotFoundPage({}: IProps) {
           </div>
         </main>
         {imageLoaded ? (
-          <img
-            className="my-10 aspect-auto rounded-2xl" //-- 640x640 using current images --//
-            src={imageSrc}
-            alt={randomAnimal.type}
-          />
+          <>
+            <img
+              className="my-10 mb-3 aspect-auto rounded-2xl"
+              src={imageSrc}
+              alt={`${emotion} ${animal}, ${style}`}
+            />
+            <p className="font-mono text-lg font-semibold text-zinc-500 dark:text-zinc-300">
+              {emotion} {animal}, {style}
+            </p>
+          </>
         ) : (
-          <div className="my-10 h-[300px] w-[300px] animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800 md:h-[640px] md:w-[640px]" />
+          <div className="mb-3 mt-10 flex h-[300px] w-[300px] animate-pulse flex-col items-center justify-center rounded-2xl bg-zinc-300 dark:bg-zinc-800 md:h-[512px] md:w-[512px]">
+            <p className="text-2xl font-semibold text-zinc-600 dark:text-zinc-300">
+              Generating sad animal image...
+            </p>
+          </div>
         )}
       </div>
     </div>
