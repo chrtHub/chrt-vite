@@ -33,7 +33,7 @@ import {
 } from "@heroicons/react/24/solid";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-const Profile = () => {
+export default function Auth0Profile() {
   const [accessToken, setAccessToken] = useState<string>("");
   const [accessTokenDecoded, setAccessTokenDecoded] = useState<object>({});
   const [viewDecodedToken, setViewDecodedToken] = useState<boolean>(false);
@@ -88,7 +88,7 @@ const Profile = () => {
 
   /** */
   return (
-    <div className="flex h-screen flex-col items-center justify-start">
+    <div className="flex flex-col items-center justify-start">
       {/* START OF IMAGE, NAME, EMAIL */}
       <img
         src={user?.picture}
@@ -252,6 +252,4 @@ const Profile = () => {
       {/* END OF JSON */}
     </div>
   );
-};
-
-export default Profile;
+}
