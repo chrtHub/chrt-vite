@@ -83,7 +83,7 @@ export default function RemoveFreePreviewAccessButton({
       disabled={!isRoleActive(ROLE_NAME, AccountContext)}
       onClick={removeFreePreviewAccesshandler}
       className={classNames(
-        "tex-stm w-64 items-center gap-x-2 rounded-md px-3.5 py-2.5 text-center font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+        "tex-stm w-full items-center gap-x-2 rounded-md px-3.5 py-2.5 text-center font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 md:w-64",
         !AccountContext.rolesFetched
           ? "animate-pulse bg-zinc-200 text-zinc-500"
           : AccountContext.addingFreePreviewAccess ||
