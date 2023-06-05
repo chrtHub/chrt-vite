@@ -1,4 +1,5 @@
 //== react, react-router-dom, recoil, Auth0 ==//
+import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //== TSX Components, Functions ==//
@@ -15,7 +16,8 @@ import { CheckIcon } from "@heroicons/react/20/solid";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import AddFreePreviewAccessButton from "./AddFreePreviewAccessButton";
-import RemoveFreePreviewAccessButton from "./RemoveFreePreviewAccessButton";
+import RemoveFreePreviewAccessModal from "./RemoveFreePreviewAccessModal";
+import CancelFreePreviewAccessButton from "./CancelFreePreviewAccessButton";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 const includedFeatures = [
@@ -28,8 +30,9 @@ const includedFeatures = [
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function Subscriptions() {
   //== React State, Custom Hooks ==//
-  let AccountContext = useAccountContext();
-  const { getAccessTokenSilently, user } = useAuth0();
+  const AccountContext = useAccountContext();
+  const [removeFreePreviewAccessModal, setRemoveFreePreviewAccessModalOpen] =
+    useState<boolean>(false);
 
   //== Auth ==//
   //== Other ==//
@@ -40,6 +43,12 @@ export default function Subscriptions() {
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
     <>
+      {/* Modals */}
+      <RemoveFreePreviewAccessModal
+        modalOpen={removeFreePreviewAccessModal}
+        setModalOpen={setRemoveFreePreviewAccessModalOpen}
+      />
+
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* "Welcome to the Free Preview" Section */}
         <div className="mx-auto max-w-2xl sm:text-center">
@@ -54,7 +63,7 @@ export default function Subscriptions() {
         {/* START OF FREE PREVIEW ACCESS BOX */}
         <div className="mx-auto mt-8 max-w-2xl rounded-3xl bg-zinc-50 ring-1 ring-zinc-200 lg:mx-0 lg:flex lg:max-w-none">
           {/* START OF LHS */}
-          <div className="p-8 sm:p-10 lg:flex-auto">
+          <div className="p-8 lg:flex-auto">
             {/* Header */}
             <h3 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-200">
               Free Preview Access
@@ -91,9 +100,9 @@ export default function Subscriptions() {
           {/* END OF LHS */}
 
           {/* START OF RHS */}
-          <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
+          <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md">
             {/* RHS Box */}
-            <div className="rounded-2xl bg-zinc-100 py-10 text-center ring-1 ring-inset ring-zinc-900/5 dark:bg-zinc-900 lg:flex lg:flex-col lg:justify-center lg:py-16 ">
+            <div className="flex flex-col items-center justify-center rounded-2xl bg-zinc-100 py-10 pb-4 text-center ring-1 ring-inset ring-zinc-900/5 dark:bg-zinc-900 lg:pt-16 ">
               <div className="mx-auto max-w-xs px-8">
                 <p className="text-base font-semibold text-zinc-600">
                   Limited time only
@@ -114,18 +123,17 @@ export default function Subscriptions() {
                   reimbursement...but it's free
                 </p>
               </div>
+              <CancelFreePreviewAccessButton
+                setRemoveFreePreviewAccessModalOpen={
+                  setRemoveFreePreviewAccessModalOpen
+                }
+              />
             </div>
           </div>
           {/* END OF RHS */}
         </div>
         {/* END OF FREE PREVIEW ACCESS BOX */}
       </div>
-
-      {/* START OF REMOVE FREE PREVIEW ACCESS BOX */}
-      <div>
-        <RemoveFreePreviewAccessButton />
-      </div>
-      {/* END OF REMOVE FREE PREVIEW ACCESS BOX */}
     </>
   );
 }

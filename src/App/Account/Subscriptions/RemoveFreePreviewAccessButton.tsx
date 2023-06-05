@@ -25,7 +25,12 @@ let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 const ROLE_NAME = "Free Preview Access";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
-export default function RemoveFreePreviewAccessButton() {
+interface IProps {
+  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export default function RemoveFreePreviewAccessButton({
+  setModalOpen,
+}: IProps) {
   //== React State, Custom Hooks ==//
   let AccountContext = useAccountContext();
   const { getAccessTokenSilently, user } = useAuth0();
@@ -68,6 +73,7 @@ export default function RemoveFreePreviewAccessButton() {
       }
     }
     AccountContext.setRemovingFreePreviewAccess(false);
+    setModalOpen(false);
   };
 
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
@@ -77,7 +83,7 @@ export default function RemoveFreePreviewAccessButton() {
       disabled={!isRoleActive(ROLE_NAME, AccountContext)}
       onClick={removeFreePreviewAccesshandler}
       className={classNames(
-        "tex-stm mt-4 w-64 items-center gap-x-2 rounded-md px-3.5 py-2.5 text-center font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+        "tex-stm w-64 items-center gap-x-2 rounded-md px-3.5 py-2.5 text-center font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
         !AccountContext.rolesFetched
           ? "animate-pulse bg-zinc-200 text-zinc-500"
           : AccountContext.addingFreePreviewAccess ||
