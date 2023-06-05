@@ -66,15 +66,13 @@ export default function NotFoundPage({}: IProps) {
   const [emotion, setEmotion] = useState<string>(randomEmotion);
 
   //-- Shim to hyphenate "award-winning" --//
-  const [displayedStyle, setDisplayedStyle] = useState<string>(style);
+  let displayedStyle = style;
   if (style === "award winning 4K photography") {
-    setDisplayedStyle("award-winning 4k photography");
-    console.log(displayedStyle); // DEV
+    displayedStyle = "award-winning 4K photography";
   }
 
   //-- Fetch image of randomAnimal from S3 bucket --//
   useEffect(() => {
-    console.log(style, animal, emotion);
     const fetchImage = async () => {
       try {
         const response = await axios.get(
