@@ -19,7 +19,7 @@ const AccountContext = createContext<IAccountContext | undefined>(undefined);
 function AccountContextProvider({ children }: PropsWithChildren) {
   //-- Enumerate current model options --//
 
-  //-- State values --//
+  //-- State values for context --//
   const [rolesWithPermissionsList, setRolesWithPermissionsList] = useState<
     RoleWithPermissions[]
   >([]);
@@ -52,8 +52,6 @@ function useAccountContext() {
 
 //-- Export Provider Component and Consumer Hook ---//
 export { AccountContextProvider, useAccountContext };
-
-//-- TO BE SET UP IN THE COMPONENT TREE ABOVE ALL CONSUMERS OF THIS CONTEXT --//
 
 //-- FOR REPEATED USE IN OTHER COMPONENTS --//
 // import { useAccountContext } from "../../Context/AccountContext";

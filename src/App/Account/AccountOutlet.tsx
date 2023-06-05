@@ -1,22 +1,31 @@
-//== react, react-router-dom, recoil, Auth0 ==//
+//-- react, react-router-dom, Auth0 --//
 import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
-//== TSX Components, Functions ==//
+//-- TSX Components and Functions --//
+import { useAccountContext } from "../../Context/AccountContext";
+import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
 
-//== NPM Components ==//
+//-- NPM Components --//
 
-//== Icons ==//
+//-- Icons --//
 
-//== NPM Functions ==//
+//-- NPM Functions --//
+import { AxiosError } from "axios";
 
-//== Utility Functions ==//
+//-- Utility Functions --//
+import { getUsersPermissions } from "./getUserPermissions";
 
-//== Environment Variables, TypeScript Interfaces, Data Objects ==//
+//-- Data Objects, Types --//
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function AccountOutlet() {
   //== React State, Custom Hooks ==//
   const location = useLocation();
+  let AccountContext = useAccountContext();
+  const { getAccessTokenSilently, user } = useAuth0();
 
   //== Auth ==//
   //== Other ==//
@@ -27,9 +36,9 @@ export default function AccountOutlet() {
       current: location.pathname === "/account",
     },
     {
-      name: "Billing",
-      href: "/account/billing",
-      current: location.pathname === "/account/billing",
+      name: "Subscriptions",
+      href: "/account/subscriptions",
+      current: location.pathname === "/account/subscriptions",
     },
     {
       name: "Dev Resources",
@@ -39,6 +48,20 @@ export default function AccountOutlet() {
   ];
 
   //== Side Effects ==//
+  useEffect(() => {
+    async function lambda() {
+      let accessToken = await getAccessTokenSilently();
+      try {
+        getUsersPermissions(accessToken, AccountContext);
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          axiosErrorToaster(err, "Get roles and permissions");
+        }
+      }
+    }
+    lambda();
+  }, []);
+
   //== Event Handlers ==//
 
   //== ***** ***** ***** Component Return ***** ***** ***** ==//

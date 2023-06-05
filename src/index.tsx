@@ -24,7 +24,7 @@ import GPT from "./App/GPT/GPT";
 //-- TSX Components: Account --//
 import AccountOutlet from "./App/Account/AccountOutlet";
 import Account from "./App/Account/Account";
-import Billing from "./App/Account/Billing";
+import Subscriptions from "./App/Account/Subscriptions/Subscriptions";
 import DevResources from "./App/Account/DevResources";
 
 //-- TSX Components: Settings --//
@@ -76,8 +76,8 @@ const router = createBrowserRouter(
         >
           <Route index element={<Account />} />
           <Route
-            path="/account/billing"
-            element={<AuthGuard component={Billing} />}
+            path="/account/subscriptions"
+            element={<AuthGuard component={Subscriptions} />}
           />
           <Route
             path="/account/dev_resources"

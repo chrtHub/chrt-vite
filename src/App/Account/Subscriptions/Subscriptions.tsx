@@ -1,10 +1,11 @@
 //== react, react-router-dom, recoil, Auth0 ==//
+import { useAuth0 } from "@auth0/auth0-react";
 
 //== TSX Components, Functions ==//
+import { useAccountContext } from "../../../Context/AccountContext";
 
 //== NPM Components ==//
 import { CheckIcon } from "@heroicons/react/20/solid";
-import { NavLink } from "react-router-dom";
 
 //== Icons ==//
 
@@ -13,6 +14,9 @@ import { NavLink } from "react-router-dom";
 //== Utility Functions ==//
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
+import AddFreePreviewAccessButton from "./AddFreePreviewAccessButton";
+import RemoveFreePreviewAccessButton from "./RemoveFreePreviewAccessButton";
+let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 const includedFeatures = [
   "Trading Journal",
@@ -22,41 +26,53 @@ const includedFeatures = [
 ];
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
-export default function Billing() {
+export default function Subscriptions() {
   //== React State, Custom Hooks ==//
+  let AccountContext = useAccountContext();
+  const { getAccessTokenSilently, user } = useAuth0();
+
   //== Auth ==//
   //== Other ==//
   //== Side Effects ==//
-  //== Event Handlers ==//
 
-  // TODO - lots of bg and text colors to make nice
+  //== Handlers ==//
 
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="rounded-2xl py-24 dark:bg-zinc-800 sm:py-32">
+    <>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        {/* "Welcome to the Free Preview" Section */}
         <div className="mx-auto max-w-2xl sm:text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-200 sm:text-4xl">
+          <h2 className="mt-8 text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-200 sm:text-4xl">
             Welcome to the Free Preview
           </h2>
           <p className="mt-6 text-lg leading-8 text-zinc-600 dark:text-zinc-400">
             No credit card required
           </p>
         </div>
-        <div className="mx-auto mt-16 max-w-2xl rounded-3xl ring-1 ring-zinc-200 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none">
+
+        {/* START OF FREE PREVIEW ACCESS BOX */}
+        <div className="mx-auto mt-8 max-w-2xl rounded-3xl bg-zinc-50 ring-1 ring-zinc-200 lg:mx-0 lg:flex lg:max-w-none">
+          {/* START OF LHS */}
           <div className="p-8 sm:p-10 lg:flex-auto">
+            {/* Header */}
             <h3 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-200">
               Free Preview Access
             </h3>
+
+            {/* Subheader */}
             <p className="mt-6 text-base leading-7 text-zinc-600 dark:text-zinc-400">
               Enjoy free access to CHRT as a part of our Free Preview
             </p>
+
+            {/* "What's Included" Header */}
             <div className="mt-10 flex items-center gap-x-4">
               <h4 className="flex-none text-sm font-semibold leading-6 text-indigo-600">
                 What’s included
               </h4>
               <div className="h-px flex-auto bg-zinc-100" />
             </div>
+            {/* What's Included List */}
             <ul
               role="list"
               className="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-zinc-600 sm:grid-cols-2 sm:gap-6"
@@ -72,8 +88,12 @@ export default function Billing() {
               ))}
             </ul>
           </div>
+          {/* END OF LHS */}
+
+          {/* START OF RHS */}
           <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
-            <div className="rounded-2xl bg-zinc-50 py-10 text-center ring-1 ring-inset ring-zinc-900/5 dark:bg-zinc-900 lg:flex lg:flex-col lg:justify-center lg:py-16">
+            {/* RHS Box */}
+            <div className="rounded-2xl bg-zinc-100 py-10 text-center ring-1 ring-inset ring-zinc-900/5 dark:bg-zinc-900 lg:flex lg:flex-col lg:justify-center lg:py-16 ">
               <div className="mx-auto max-w-xs px-8">
                 <p className="text-base font-semibold text-zinc-600">
                   Limited time only
@@ -86,12 +106,9 @@ export default function Billing() {
                     USD
                   </span>
                 </p>
-                <NavLink
-                  to="/account"
-                  className="mt-10 block w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  Get access
-                </NavLink>
+                {/* Add Free Preview Access Button */}
+                <AddFreePreviewAccessButton />
+
                 <p className="mt-6 text-xs leading-5 text-zinc-600 dark:text-zinc-500">
                   Invoices and receipts would be available for easy company
                   reimbursement...but it's free
@@ -99,8 +116,16 @@ export default function Billing() {
               </div>
             </div>
           </div>
+          {/* END OF RHS */}
         </div>
+        {/* END OF FREE PREVIEW ACCESS BOX */}
       </div>
-    </div>
+
+      {/* START OF REMOVE FREE PREVIEW ACCESS BOX */}
+      <div>
+        <RemoveFreePreviewAccessButton />
+      </div>
+      {/* END OF REMOVE FREE PREVIEW ACCESS BOX */}
+    </>
   );
 }
