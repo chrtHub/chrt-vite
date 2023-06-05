@@ -48,6 +48,7 @@ export default function AccountOutlet() {
   ];
 
   //== Side Effects ==//
+  //-- On mount, get user permissions --//
   useEffect(() => {
     async function lambda() {
       let accessToken = await getAccessTokenSilently();
