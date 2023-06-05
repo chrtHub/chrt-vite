@@ -23,17 +23,17 @@ import { usePopper } from "react-popper";
 import jwtDecode from "jwt-decode";
 
 //-- Utility Functions --//
-import classNames from "../Util/classNames";
+import classNames from "../../Util/classNames";
 
 //-- Data Objects --//
-import { echartsThemeState } from "../Layout/atoms";
+import { echartsThemeState } from "../../Layout/atoms";
 import {
   ExclamationTriangleIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function Auth0Profile() {
+export default function DevResources() {
   const [accessToken, setAccessToken] = useState<string>("");
   const [accessTokenDecoded, setAccessTokenDecoded] = useState<object>({});
   const [viewDecodedToken, setViewDecodedToken] = useState<boolean>(false);

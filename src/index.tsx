@@ -20,7 +20,14 @@ import Data from "./App/DataService/Data";
 import Journal from "./App/JournalService/Journal";
 import JournalFiles from "./App/JournalFiles/JournalFiles";
 import GPT from "./App/GPT/GPT";
-import Profile from "./App/Profile/Profile";
+
+//-- TSX Components: Account --//
+import AccountOutlet from "./App/Account/AccountOutlet";
+import Account from "./App/Account/Account";
+import Billing from "./App/Account/Billing";
+import DevResources from "./App/Account/DevResources";
+
+//-- TSX Components: Settings --//
 import Settings from "./App/Settings/Settings";
 
 //-- TSX Components: Info --//
@@ -62,9 +69,22 @@ const router = createBrowserRouter(
           path="gpt/:entity_type?/:conversation_id?"
           element={<AuthGuard component={GPT} />}
         />
-        <Route path="/profile" element={<AuthGuard component={Profile} />} />
         <Route
-          path="/settings"
+          path="/account"
+          element={<AuthGuard component={AccountOutlet} />}
+        >
+          <Route index element={<Account />} />
+          <Route
+            path="/account/billing"
+            element={<AuthGuard component={Billing} />}
+          />
+          <Route
+            path="/account/dev_resources"
+            element={<AuthGuard component={DevResources} />}
+          />
+        </Route>
+        <Route
+          path="/account/settings"
           element={<AuthGuard component={Settings} />}
           errorElement={<RouteErrorBoundary />}
         />

@@ -4,7 +4,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components and Functions --//
-import Auth0Profile from "../../Auth/Auth0Profile";
 import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
 
 //-- NPM Components --//
@@ -22,7 +21,7 @@ import { RoleWithPermissions } from "../../Auth/Auth0";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function Profile() {
+export default function Account() {
   //-- State, Context, Custom Hooks --//
   const [rolesWithPermissionsList, setRolesWithPermissionsList] = useState<
     RoleWithPermissions[]
@@ -122,7 +121,6 @@ export default function Profile() {
 
   return (
     <>
-      <Auth0Profile />
       <div className="flex flex-col gap-2">
         <div>
           {rolesWithPermissionsList.map((role, idx) => (

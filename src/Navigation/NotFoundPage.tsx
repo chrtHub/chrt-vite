@@ -22,7 +22,7 @@ import { throwAxiosError } from "../Errors/throwAxiosError";
 //-- Styles, animals, emotions --//
 let styles = [
   "claymation",
-  "award-winning 4K photography",
+  "award winning 4K photography",
   "flat art",
   "geometric",
   "anime",
@@ -58,14 +58,19 @@ export default function NotFoundPage({}: IProps) {
   const [imageLoaded, setImageLoaded] = useState<boolean>(false);
 
   //-- Select random style, animal, and emotion --//
-  let randomStyle = styles[Math.floor(Math.random() * styles.length)];
-  let randomAnimal = animals[Math.floor(Math.random() * animals.length)];
-  let randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+  const randomStyle = styles[Math.floor(Math.random() * styles.length)];
+  const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
+  const randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
   const [style, setStyle] = useState<string>(randomStyle);
   const [animal, setAnimal] = useState<string>(randomAnimal);
   const [emotion, setEmotion] = useState<string>(randomEmotion);
 
-  console.log(style, animal, emotion);
+  //-- Shim to hyphenate "award-winning" --//
+  const [displayedStyle, setDisplayedStyle] = useState<string>(style);
+  if (style === "award winning 4K photography") {
+    setDisplayedStyle("award-winning 4k photography");
+    console.log(displayedStyle); // DEV
+  }
 
   //-- Fetch image of randomAnimal from S3 bucket --//
   useEffect(() => {
@@ -123,10 +128,10 @@ export default function NotFoundPage({}: IProps) {
             <img
               className="my-4 mb-3 aspect-square w-full rounded-2xl lg:mt-10"
               src={imageSrc}
-              alt={`${emotion} ${animal}, ${style}`}
+              alt={`${emotion} ${animal}, ${displayedStyle}`}
             />
             <p className="font-mono text-lg font-semibold text-zinc-500 dark:text-zinc-300">
-              {emotion} {animal}, {style}
+              {emotion} {animal}, {displayedStyle}
             </p>
           </>
         ) : (
