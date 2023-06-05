@@ -1,5 +1,5 @@
 //== react, react-router-dom, recoil, Auth0 ==//
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, useLocation } from "react-router-dom";
 
 //== TSX Components, Functions ==//
 
@@ -13,19 +13,34 @@ import { Outlet, NavLink } from "react-router-dom";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
-const navigation = [
-  { name: "Account", href: "/account", current: true },
-  { name: "Billing", href: "/account/billing", current: false },
-  { name: "Dev Resources", href: "/account/dev_resources", current: false },
-];
-
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function AccountOutlet() {
   //== React State, Custom Hooks ==//
+  const location = useLocation();
+
   //== Auth ==//
   //== Other ==//
+  const navigation = [
+    {
+      name: "Account",
+      href: "/account",
+      current: location.pathname === "/account",
+    },
+    {
+      name: "Billing",
+      href: "/account/billing",
+      current: location.pathname === "/account/billing",
+    },
+    {
+      name: "Dev Resources",
+      href: "/account/dev_resources",
+      current: location.pathname === "/account/dev_resources",
+    },
+  ];
+
   //== Side Effects ==//
   //== Event Handlers ==//
+
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
     <div>
