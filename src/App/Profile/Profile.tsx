@@ -13,6 +13,7 @@ import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
 
 //-- NPM Functions --//
 import axios, { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 //-- Utility Functions --//
 
@@ -63,15 +64,61 @@ export default function Profile() {
   };
 
   //-- Handlers --//
-  const addFreePreviewAccessHandler = () => {
-    console.log("todo - add free preview access");
+  const addFreePreviewAccessHandler = async () => {
+    try {
+      //-- Get access token from memory or request new token --//
+      let accessToken = await getAccessTokenSilently();
+
+      //-- Make POST request --//
+      await axios.post(
+        `${VITE_ALB_BASE_URL}/auth0/api/v2/assign_roles_to_user/free_preview_access`,
+        //-- Body Content --//
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      //----//
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        axiosErrorToaster(err, "");
+      } else if (err instanceof Error) {
+        toast(err.message);
+      }
+    }
+    //-- Update listed permissions --//
+    getUsersPermissions();
   };
 
-  const removeFreePreviewAccesshandler = () => {
-    console.log("todo - remove free preview access");
-  };
+  const removeFreePreviewAccesshandler = async () => {
+    console.log("todo - remove free preview access"); // DEV
+    try {
+      //-- Get access token from memory or request new token --//
+      let accessToken = await getAccessTokenSilently();
 
-  console.log(rolesWithPermissionsList); // DEV
+      //-- Make POST request --//
+      let res = await axios.delete(
+        `${VITE_ALB_BASE_URL}/auth0/api/v2/remove_roles_from_user/free_preview_access`,
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      //----//
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        axiosErrorToaster(err, "");
+      } else if (err instanceof Error) {
+        toast(err.message);
+      }
+    }
+
+    //-- Update listed permissions --//
+    getUsersPermissions();
+  };
 
   return (
     <>
