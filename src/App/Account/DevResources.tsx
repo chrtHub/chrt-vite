@@ -89,18 +89,6 @@ export default function DevResources() {
   /** */
   return (
     <div className="flex flex-col items-center justify-start">
-      {/* START OF IMAGE, NAME, EMAIL */}
-      <img
-        src={user?.picture}
-        alt={user?.name}
-        className="h-24 w-24 rounded-full"
-      />
-      <h2 className="mt-4 text-2xl font-medium text-black dark:text-white">
-        {user?.name}
-      </h2>
-      <p className="mb-2 text-zinc-500 dark:text-zinc-400">{user?.email}</p>
-      {/* END OF IMAGE, NAME, EMAIL */}
-
       <div className="w-full max-w-prose">
         {/* START OF COPY AUTH TOKEN SECTION */}
         <div className="flex flex-col justify-center rounded-md bg-yellow-100 p-4 dark:bg-yellow-950">
