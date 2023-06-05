@@ -56,9 +56,10 @@ export default function AccountOutlet() {
         getUsersPermissions(accessToken, AccountContext);
       } catch (err) {
         if (err instanceof AxiosError) {
-          axiosErrorToaster(err, "Get roles and permissions");
+          axiosErrorToaster(err, "Get subscriptions");
         }
       }
+      AccountContext.setRolesFetched(true);
     }
     lambda();
   }, []);

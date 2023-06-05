@@ -8,9 +8,6 @@ export const getUsersPermissions = async (
   AccountContext: IAccountContext
 ) => {
   try {
-    //-- Get access token from memory or request new token --//
-    // let accessToken = await getAccessTokenSilently();
-
     //-- Make GET request --//
     let res = await axios.get(
       `${VITE_ALB_BASE_URL}/auth0/api/v2/get_user_roles_with_permissions`,
@@ -21,7 +18,7 @@ export const getUsersPermissions = async (
       }
     );
     const data: RoleWithPermissions[] = res.data;
-    AccountContext.setRolesWithPermissionsList(data);
+    AccountContext.setRoles(data);
     //----//
   } catch (err) {
     throw err;

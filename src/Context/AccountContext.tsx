@@ -6,10 +6,14 @@ import { RoleWithPermissions } from "../Auth/Auth0";
 
 //-- Create interface and Context --//
 export interface IAccountContext {
-  rolesWithPermissionsList: RoleWithPermissions[];
-  setRolesWithPermissionsList: React.Dispatch<
-    React.SetStateAction<RoleWithPermissions[]>
-  >;
+  roles: RoleWithPermissions[];
+  setRoles: React.Dispatch<React.SetStateAction<RoleWithPermissions[]>>;
+  rolesFetched: boolean;
+  setRolesFetched: React.Dispatch<React.SetStateAction<boolean>>;
+  freePreviewAccessChanging: boolean;
+  setFreePreviewAccessChanging: React.Dispatch<React.SetStateAction<boolean>>;
+  // freePreviewAccessActive: boolean;
+  // setFreePreviewAccessActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 //-- Create context --//
@@ -20,14 +24,23 @@ function AccountContextProvider({ children }: PropsWithChildren) {
   //-- Enumerate current model options --//
 
   //-- State values for context --//
-  const [rolesWithPermissionsList, setRolesWithPermissionsList] = useState<
-    RoleWithPermissions[]
-  >([]);
+  const [roles, setRoles] = useState<RoleWithPermissions[]>([]);
+  const [rolesFetched, setRolesFetched] = useState<boolean>(false);
+  const [freePreviewAccessChanging, setFreePreviewAccessChanging] =
+    useState<boolean>(false);
+  // const [freePreviewAccessActive, setFreePreviewAccessActive] =
+  //   useState<boolean>(false);
 
   //-- Bundle values into accountContextValue --//
   const accountContextValue: IAccountContext = {
-    rolesWithPermissionsList,
-    setRolesWithPermissionsList,
+    roles,
+    setRoles,
+    rolesFetched,
+    setRolesFetched,
+    // freePreviewAccessActive,
+    // setFreePreviewAccessActive,
+    freePreviewAccessChanging,
+    setFreePreviewAccessChanging,
   };
 
   //-- Return context provider --//

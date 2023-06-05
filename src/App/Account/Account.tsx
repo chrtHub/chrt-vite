@@ -64,9 +64,9 @@ export default function Account() {
                 <h2 className="mb-2 text-sm text-zinc-600 dark:text-zinc-200">
                   {user?.email}
                 </h2>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                <div className="text-xs text-zinc-500 dark:text-zinc-400">
                   {oauth2 && <p>Synced from your {oauth2Provider} account</p>}
-                </p>
+                </div>
                 {!oauth2 && (
                   <p className="mt-1 text-sm leading-6 text-zinc-400">
                     <span className="italic">To change your password:</span>
@@ -98,7 +98,7 @@ export default function Account() {
           <div className="mb-4 grid grid-cols-1">
             <div className="flex flex-col items-center gap-4">
               {/* Subscription Cards */}
-              {AccountContext.rolesWithPermissionsList.map((role, idx) => (
+              {AccountContext.roles.map((role, idx) => (
                 <div
                   key={idx}
                   className="flex w-full flex-col rounded-lg bg-white p-6 shadow md:flex-row"
