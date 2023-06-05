@@ -53,7 +53,7 @@ export default function AccountOutlet() {
     async function lambda() {
       let accessToken = await getAccessTokenSilently();
       try {
-        getUsersPermissions(accessToken, AccountContext);
+        await getUsersPermissions(accessToken, AccountContext);
       } catch (err) {
         if (err instanceof AxiosError) {
           axiosErrorToaster(err, "Get subscriptions");
