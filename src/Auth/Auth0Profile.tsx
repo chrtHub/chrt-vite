@@ -138,23 +138,22 @@ export default function Auth0Profile() {
               <Popover.Button
                 ref={setReferenceElement}
                 className="focus:outline-none"
+                disabled={popoverOpen}
+                onClick={copyHandler}
               >
-                <button
-                  disabled={popoverOpen}
-                  type="button"
+                <div
                   className={classNames(
                     "inline-flex w-56 justify-center gap-x-2 rounded-md py-3 text-sm font-semibold shadow-sm  focus:outline-none",
                     "bg-yellow-400 text-yellow-900 hover:bg-yellow-500",
                     "text-yellow-900 dark:bg-yellow-300 dark:hover:bg-yellow-200"
                   )}
-                  onClick={copyHandler}
                 >
                   Copy Auth Token
                   <ClipboardDocumentIcon
                     className="h-5 w-5"
                     aria-hidden="true"
                   />
-                </button>
+                </div>
               </Popover.Button>
 
               {popoverOpen && (
