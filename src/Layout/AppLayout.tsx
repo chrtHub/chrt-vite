@@ -347,7 +347,7 @@ export default function AppLayout({ infoMode }: IProps) {
       >
         <div
           id="app-layout-rhs-content"
-          className="mx-auto flex h-full max-w-screen-2xl flex-col px-4 xl:px-6"
+          className="mx-auto flex h-full max-w-screen-2xl flex-col px-4 lg:pl-2 lg:pr-4"
         >
           {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
           <div

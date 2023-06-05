@@ -1,5 +1,5 @@
 //== react, react-router-dom, recoil, Auth0 ==//
-import { Outlet } from "react-router-dom";
+import { Outlet, NavLink } from "react-router-dom";
 
 //== TSX Components, Functions ==//
 
@@ -29,32 +29,30 @@ export default function AccountOutlet() {
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
     <div>
-      <div className="bg-zinc-500">
-        <main>
-          {/* Tabs */}
-          <header className="border-b border-white/5">
-            <nav className="flex overflow-x-auto py-4">
-              <ul
-                role="list"
-                className="flex min-w-full flex-none gap-x-6 px-4 text-sm font-semibold leading-6 text-zinc-400 sm:px-6 lg:px-8"
-              >
-                {navigation.map((item) => (
-                  <li key={item.name}>
-                    <a
-                      href={item.href}
-                      className={item.current ? "text-green-400" : ""}
-                    >
-                      {item.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </header>
+      <div className="">
+        {/* Tabs */}
+        <div className="mb-4 border-b border-zinc-500">
+          <nav className="flex overflow-x-auto py-4">
+            <ul
+              role="list"
+              className="flex min-w-full flex-none gap-x-6 px-4 text-sm font-semibold leading-6 text-zinc-400 sm:px-6 lg:px-8"
+            >
+              {navigation.map((item) => (
+                <li key={item.name}>
+                  <NavLink
+                    to={item.href}
+                    className={item.current ? "text-green-400" : ""}
+                  >
+                    {item.name}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
 
-          {/* Outlet */}
-          <Outlet />
-        </main>
+        {/* Outlet */}
+        <Outlet />
       </div>
     </div>
   );

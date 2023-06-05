@@ -4,6 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components and Functions --//
+import { useAccountContext } from "../../Context/AccountContext";
 import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
 
 //-- NPM Components --//
@@ -23,9 +24,8 @@ let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Account() {
   //-- State, Context, Custom Hooks --//
-  const [rolesWithPermissionsList, setRolesWithPermissionsList] = useState<
-    RoleWithPermissions[]
-  >([]);
+
+  let AccountContext = useAccountContext();
   const { getAccessTokenSilently } = useAuth0();
   const { showBoundary } = useErrorBoundary();
 
@@ -51,7 +51,7 @@ export default function Account() {
         }
       );
       const data: RoleWithPermissions[] = res.data;
-      setRolesWithPermissionsList(data);
+      AccountContext.setRolesWithPermissionsList(data);
       //----//
     } catch (err) {
       // console.log(err) // DEV
@@ -123,7 +123,7 @@ export default function Account() {
     <>
       <div className="flex flex-col gap-2">
         <div>
-          {rolesWithPermissionsList.map((role, idx) => (
+          {AccountContext.rolesWithPermissionsList.map((role, idx) => (
             <div key={idx} style={{ marginBottom: "20px" }}>
               <h2>Role: {role.role_name}</h2>
               <p>Description: {role.role_description}</p>

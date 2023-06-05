@@ -61,7 +61,6 @@ const router = createBrowserRouter(
       {/* App */}
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
-
         <Route path="/data" element={<AuthGuard component={Data} />} />
         <Route path="/journal" element={<AuthGuard component={Journal} />} />
         <Route path="/files" element={<AuthGuard component={JournalFiles} />} />
@@ -69,6 +68,8 @@ const router = createBrowserRouter(
           path="gpt/:entity_type?/:conversation_id?"
           element={<AuthGuard component={GPT} />}
         />
+
+        {/* Account */}
         <Route
           path="/account"
           element={<AuthGuard component={AccountOutlet} />}
@@ -83,8 +84,10 @@ const router = createBrowserRouter(
             element={<AuthGuard component={DevResources} />}
           />
         </Route>
+
+        {/* Settings */}
         <Route
-          path="/account/settings"
+          path="/settings"
           element={<AuthGuard component={Settings} />}
           errorElement={<RouteErrorBoundary />}
         />
