@@ -113,7 +113,7 @@ export default function Subscriptions() {
                   <span className="text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
                     $0
                   </span>
-                  <span className="text-sm font-semibold leading-6 tracking-wide text-zinc-600">
+                  <span className="text-sm font-semibold leading-6 tracking-wide text-zinc-600 dark:text-zinc-200">
                     USD
                   </span>
                 </p>
