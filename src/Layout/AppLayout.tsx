@@ -6,7 +6,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 //-- TSX Components --//
 import Conversations from "../App/GPT/Sidebar/Conversations";
 import SignOutModal from "./SignOutModal";
-import MainMenuOld from "./MainMenuOld";
 
 //-- NPM Components --//
 import { Dialog, Transition } from "@headlessui/react";
@@ -339,7 +338,11 @@ export default function AppLayout({ infoMode }: IProps) {
 
           {/* START OF MAIN MENU */}
           <div className="z-30">
-            <MainMenu />
+            <MainMenu
+              signOutModalOpen={signOutModalOpen}
+              setSignOutModalOpen={setSignOutModalOpen}
+              infoMode={infoMode}
+            />
           </div>
           {/* END OF MAIN MENU */}
         </div>
@@ -400,16 +403,6 @@ export default function AppLayout({ infoMode }: IProps) {
                 </form>
               </div>
               {/*END OF SEARCH BAR  */}
-
-              {/* START OF MAIN MENU + PROFILE PICTURE*/}
-              <div className="ml-4 flex items-center lg:ml-6">
-                <MainMenuOld
-                  signOutModalOpen={signOutModalOpen}
-                  setSignOutModalOpen={setSignOutModalOpen}
-                  infoMode={infoMode}
-                />
-              </div>
-              {/* END OF MAIN MENU + PROFILE PICTURE*/}
             </div>
             {/* END OF SEARCH BAR + PROFILE PICTURE + MAIN MENU */}
           </div>
