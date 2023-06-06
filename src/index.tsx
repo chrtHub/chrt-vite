@@ -11,7 +11,7 @@ import { ErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components: Home --//
 import Home from "./App/Home/Home";
-import AuthProviderWithNavigateAndRecoil from "./Auth/AuthProviderWithNavigateAndRecoil";
+import AuthProviderWithNavigateAndContexts from "./Auth/AuthProviderWithNavigateAndContexts";
 import AuthGuard from "./Auth/AuthGuard";
 
 //-- TSX Components: App --//
@@ -56,7 +56,7 @@ import "./index.css";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
-      element={<AuthProviderWithNavigateAndRecoil />}
+      element={<AuthProviderWithNavigateAndContexts />}
       errorElement={<RouteErrorBoundary />}
     >
       {/* App */}

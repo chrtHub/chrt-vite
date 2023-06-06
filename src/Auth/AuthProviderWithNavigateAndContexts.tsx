@@ -17,7 +17,7 @@ import { useIsMobile } from "../Util/useUserAgent";
 //-- Data Objects --//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function AuthProviderWithNavigateAndRecoil() {
+export default function AuthProviderWithNavigateAndContexts() {
   const navigate = useNavigate();
 
   //-- If user requested a Guarded Route, but was sent to login, then upon redirect to this SPA, the Guarded Route's path that the user tried to access is returned by the server as the value appState.returnTo --//
