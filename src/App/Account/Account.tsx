@@ -1,4 +1,5 @@
 //-- react, react-router-dom, Auth0 --//
+import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components and Functions --//
@@ -10,6 +11,9 @@ import { NavLink } from "react-router-dom";
 //-- Icons --//
 
 //-- NPM Functions --//
+import { useCopyToClipboard } from "usehooks-ts";
+import classNames from "../../Util/classNames";
+import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
 
 //-- Utility Functions --//
 
@@ -18,14 +22,24 @@ import { NavLink } from "react-router-dom";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Account() {
   //-- State, Context, Custom Hooks --//
+  const [copyConfirm, setCopyConfirm] = useState<boolean>(false);
   let AccountContext = useAccountContext();
   const { getAccessTokenSilently, user } = useAuth0();
+  const [clipboardValue, copyToClipboard] = useCopyToClipboard();
 
   //-- Other --//
 
   //-- Side Effects --//
 
   //-- Handlers --//
+  const copyHandler = async (contentToCopy: string) => {
+    copyToClipboard(contentToCopy);
+
+    setCopyConfirm(true);
+    setTimeout(() => {
+      setCopyConfirm(false);
+    }, 500);
+  };
 
   //-- Check if using email + password sign in or google account oauth2 sync --//
   let oauth2: boolean = false;
@@ -164,9 +178,9 @@ export default function Account() {
       {/* END OF SUBSCRIPTION SECTION */}
 
       {/*-- START OF DELETE ACCOUNT SECTION --*/}
-      <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 lg:grid-cols-3 lg:px-8">
+      <div className="mb-2 grid grid-cols-3 gap-y-4 pt-5 lg:mb-4 lg:gap-y-0">
         {/* START OF LHS */}
-        <div>
+        <div className="col-span-3 lg:col-span-1">
           <h2 className="text-base font-semibold leading-7 text-zinc-700 dark:text-white">
             Delete account
           </h2>
@@ -178,20 +192,31 @@ export default function Account() {
         {/* END OF LHS */}
 
         {/* START OF RHS */}
-        <div className="flex items-start lg:col-span-2">
+        <div className="col-span-3 flex w-64 flex-col gap-2 lg:col-span-2">
           <button
             type="button"
-            className="rounded-md bg-indigo-50 px-2.5 py-1.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+            onClick={() => {
+              copyHandler("support@chrt.com");
+            }}
+            className={classNames(
+              "flex flex-row items-center justify-center rounded-md px-2.5 py-1.5 text-sm font-semibold shadow-sm ",
+              copyConfirm
+                ? "animate-pulse bg-green-200 text-green-900 dark:bg-green-800 dark:text-green-200"
+                : "bg-fuchsia-100 text-fuchsia-600 hover:bg-fuchsia-100 dark:bg-fuchsia-900 dark:text-fuchsia-100 dark:hover:bg-fuchsia-800"
+            )}
           >
-            Copy Email Address
+            support@chrt.com
+            <ClipboardDocumentIcon
+              className="ml-2 h-6 w-6"
+              aria-hidden="true"
+            />
           </button>
-
-          <button
-            type="button"
-            className="rounded-md bg-indigo-50 px-2.5 py-1.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+          <a
+            href="mailto:support@chrt.com"
+            className="rounded-md bg-fuchsia-100 px-2.5 py-1.5 text-center text-sm font-semibold text-fuchsia-600 shadow-sm hover:bg-fuchsia-100 dark:bg-fuchsia-900 dark:text-fuchsia-100 dark:hover:bg-fuchsia-800"
           >
-            Open Email
-          </button>
+            Open Default Email Client
+          </a>
         </div>
         {/* END OF LHS */}
       </div>
