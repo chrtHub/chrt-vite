@@ -36,10 +36,10 @@ export default function Account() {
 
   return (
     <div className="divide-y divide-zinc-300 px-2 py-2">
-      {/*-- Identity Section --*/}
-      <div className="mb-2 grid grid-cols-1 gap-y-4 md:mb-4 md:grid-cols-3 md:gap-y-0">
-        {/* LHS */}
-        <div className="md:col-span-1">
+      {/*-- START OF IDENTITY SECTION --*/}
+      <div className="mb-2 grid grid-cols-1 gap-y-4 lg:mb-4 lg:grid-cols-3 lg:gap-y-0">
+        {/* START OF LHS */}
+        <div className="lg:col-span-1">
           <h2 className="font-semibold text-zinc-700 dark:text-white">
             Identity
           </h2>
@@ -47,43 +47,48 @@ export default function Account() {
             Basic information about you
           </p>
         </div>
+        {/* END OF LHS */}
 
-        {/* RHS */}
-        <div className="md:col-span-2">
-          <div className="mb-4 grid grid-cols-1">
-            <div className="col-span-full flex items-center gap-x-8">
-              <img
-                src={user?.picture}
-                alt={user?.name}
-                className="h-24 w-24 flex-none rounded-lg bg-zinc-800 object-cover"
-              />
-              <div>
-                <h2 className="mb-2 text-2xl font-semibold text-zinc-800 dark:text-white">
-                  {user?.name}
-                </h2>
-                <h2 className="mb-2 text-sm text-zinc-600 dark:text-zinc-200">
-                  {user?.email}
-                </h2>
-                <div className="text-xs text-zinc-500 dark:text-zinc-400">
-                  {oauth2 && <p>Synced from your {oauth2Provider} account</p>}
-                </div>
-                {!oauth2 && (
-                  <p className="mt-1 text-sm leading-6 text-zinc-400">
-                    <span className="italic">To change your password:</span>
-                    <br />
-                    Sign Out, then go to the Sign In page and select "Forgot
-                    Password"
-                  </p>
-                )}
+        {/* START OF RHS */}
+        <div className="col-span-1 mb-2 lg:col-span-2">
+          <div className="flex flex-row justify-start gap-x-4 lg:gap-x-8">
+            <img
+              src={user?.picture}
+              alt={user?.name}
+              className="mt-1.5 h-24 w-24 rounded-lg object-cover"
+            />
+            <div>
+              {/* Name */}
+              <h2 className="mt-2.5 text-2xl font-semibold text-zinc-800 dark:text-white">
+                {user?.name}
+              </h2>
+              {/* Email */}
+              <h2 className="mt-2 text-sm text-zinc-600 dark:text-zinc-200">
+                {user?.email}
+              </h2>
+              {/* Sync note */}
+              <div className="mt-2.5 text-xs text-zinc-500 dark:text-zinc-400">
+                {oauth2 && <p>Synced from your {oauth2Provider} account</p>}
               </div>
+              {/* Instructions for changing password */}
+              {!oauth2 && (
+                <p className="mt-1.5 text-sm leading-6 text-zinc-400">
+                  <span className="italic">To change your password:</span>
+                  <br />
+                  Sign Out, then go to the Sign In page and select "Forgot
+                  Password"
+                </p>
+              )}
             </div>
           </div>
         </div>
+        {/* END OF RHS */}
       </div>
+      {/* END OF IDENTITY SECTION */}
 
-      {/*-- Subscriptions Section --*/}
-      <div className="mb-2 grid grid-cols-1 gap-y-4 pt-5 md:mb-4 md:grid-cols-3 md:gap-y-0">
-        {/* LHS */}
+      {/*-- START OF SUBSCRIPTION SECTION --*/}
+      <div className="mb-2 grid grid-cols-1 gap-y-4 pt-5 lg:mb-4 lg:grid-cols-3 lg:gap-y-0">
+        {/* START OF LHS */}
         <div>
           <h2 className="font-semibold text-zinc-700 dark:text-white">
             Active Subscriptions
@@ -92,44 +97,52 @@ export default function Account() {
             Your access to CHRT services
           </p>
         </div>
+        {/* END OF LHS */}
 
-        {/* RHS */}
-        <div className="md:col-span-2">
-          <div className="mb-4 grid grid-cols-1">
-            <div className="flex flex-col items-center gap-4">
-              {/* Subscription Cards */}
-              {AccountContext.roles.map((role, idx) => (
-                <div
-                  key={idx}
-                  className="flex w-full flex-col rounded-lg bg-white p-6 shadow md:flex-row"
-                >
+        {/* START OF RHS */}
+        <div className="col-span-1 lg:col-span-2">
+          {/* Start of Grid for Subscription cards */}
+          <div className="grid grid-cols-1 gap-y-4 lg:grid-cols-2">
+            {AccountContext.roles.map((role, idx) => (
+              //-- Start of Subscription Cards --//
+              <div
+                key={idx}
+                className="col-span-1 flex w-full rounded-lg bg-white p-6 shadow lg:col-span-2"
+              >
+                {/* LHS */}
+                <div className="w-3/5">
                   {/* Subscription Name */}
                   <h3 className="text-base font-semibold leading-6 text-gray-900">
                     {role.role_name}
                   </h3>
-                  {/*  */}
-                  <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-                    <div className="max-w-xl text-sm text-gray-500">
-                      <p>{role.role_description}</p>
-                    </div>
-                    {/* Subscription Permissions */}
-                    <ul className="list-disc pl-5 text-zinc-500">
-                      {role.permissions.map((permission, jdx) => (
-                        <li key={jdx}>{permission}</li>
-                      ))}
-                    </ul>
+                  {/* Description  */}
+                  <div className="max-w-xl text-sm text-gray-500">
+                    <p>{role.role_description}</p>
                   </div>
                 </div>
-                //-- End of subscription cards --//
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Delete Account Section */}
-      <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
-        {/* LHS */}
+                {/* RHS */}
+                <div className="w-2/5">
+                  {/* Subscription Permissions */}
+                  <ul className="list-disc pl-5 text-zinc-500">
+                    {role.permissions.map((permission, jdx) => (
+                      <li key={jdx}>{permission}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              //-- End of subscription cards --//
+            ))}
+          </div>
+          {/* End of grid for subscription cards */}
+        </div>
+        {/* END OF RHS */}
+      </div>
+      {/* END OF SUBSCRIPTION SECTION */}
+
+      {/*-- START OF DELETE ACCOUNT SECTION --*/}
+      <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 lg:grid-cols-3 lg:px-8">
+        {/* START OF LHS */}
         <div>
           <h2 className="text-base font-semibold leading-7 text-zinc-700 dark:text-white">
             Delete account
@@ -139,9 +152,10 @@ export default function Account() {
             sending a request to support@chrt.com.
           </p>
         </div>
+        {/* END OF LHS */}
 
-        {/* RHS */}
-        <div className="flex items-start md:col-span-2">
+        {/* START OF RHS */}
+        <div className="flex items-start lg:col-span-2">
           <button
             type="button"
             className="rounded-md bg-indigo-50 px-2.5 py-1.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
@@ -156,7 +170,9 @@ export default function Account() {
             Open Email
           </button>
         </div>
+        {/* END OF LHS */}
       </div>
+      {/* END OF DELETE ACCOUNT SECTION */}
     </div>
   );
 }
