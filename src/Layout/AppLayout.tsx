@@ -6,7 +6,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 //-- TSX Components --//
 import Conversations from "../App/GPT/Sidebar/Conversations";
 import SignOutModal from "./SignOutModal";
-import DropdownMenu from "./DropdownMenu";
+import MainMenuOld from "./MainMenuOld";
 
 //-- NPM Components --//
 import { Dialog, Transition } from "@headlessui/react";
@@ -43,6 +43,7 @@ import classNames from "../Util/classNames";
 //-- Data Objects, Environment Variables --//
 import chartLogo from "../Assets/twemoji_bar_chart/android-chrome-192x192.png";
 import { DARK_THEME_BG, LIGHT_THEME_BG } from "../Layout/Theme";
+import MainMenu from "./MainMenu";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 interface IProps {
@@ -336,34 +337,11 @@ export default function AppLayout({ infoMode }: IProps) {
           </div>
           {/* END OF SECONDARY ITEMS */}
 
-          {/* START OF ACCOUNT AND SETTINGS BUTTONS */}
-          <div className="mb-3 ml-3 flex flex-row items-center justify-start overflow-clip">
-            {/* Account button */}
-            <NavLink
-              to={"/account"}
-              className="flex flex-row items-center justify-start rounded-lg p-1 hover:bg-zinc-300"
-            >
-              <img
-                className="inline-block h-12 w-12 rounded-md"
-                src={user?.picture}
-                alt={user?.name || "user photo"}
-              />
-              <div className="mr-auto">
-                <p className="ml-3 break-words font-medium text-zinc-800">
-                  {user?.name}
-                  {/* von VeryLongLastName SoLongItWontFitInThisComponentWithoutBreaking */}
-                </p>
-              </div>
-            </NavLink>
-
-            {/* Settings button */}
-            <div className="flex h-full flex-col justify-center rounded-lg px-3 hover:bg-zinc-300">
-              <NavLink to="/settings">
-                <Cog8ToothIcon className="h-6 w-6 text-zinc-600" />
-              </NavLink>
-            </div>
+          {/* START OF MAIN MENU */}
+          <div className="z-30">
+            <MainMenu />
           </div>
-          {/* END OF ACCOUNT AND SETTINGS BUTTONS */}
+          {/* END OF MAIN MENU */}
         </div>
       </div>
       {/* END OF STATIC SIDEBAR */}
@@ -377,7 +355,7 @@ export default function AppLayout({ infoMode }: IProps) {
           id="app-layout-rhs-content"
           className="mx-auto flex h-full max-w-screen-2xl flex-col px-4 lg:pl-2 lg:pr-4"
         >
-          {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
+          {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + MAIN MENU */}
           <div
             className={classNames(
               `${LIGHT_THEME_BG} ${DARK_THEME_BG}`,
@@ -395,7 +373,7 @@ export default function AppLayout({ infoMode }: IProps) {
             </button>
             {/* END OF HAMBURGER BUTTON (hidden after lg) */}
 
-            {/* START OF SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
+            {/* START OF SEARCH BAR + PROFILE PICTURE + MAIN MENU */}
             <div className="flex flex-1 justify-between">
               {/* START OF SEARCH BAR */}
               <div className="flex flex-1">
@@ -423,19 +401,19 @@ export default function AppLayout({ infoMode }: IProps) {
               </div>
               {/*END OF SEARCH BAR  */}
 
-              {/* START OF DROPDOWN MENU + PROFILE PICTURE*/}
+              {/* START OF MAIN MENU + PROFILE PICTURE*/}
               <div className="ml-4 flex items-center lg:ml-6">
-                <DropdownMenu
+                <MainMenuOld
                   signOutModalOpen={signOutModalOpen}
                   setSignOutModalOpen={setSignOutModalOpen}
                   infoMode={infoMode}
                 />
               </div>
-              {/* END OF DROPDOWN MENU + PROFILE PICTURE*/}
+              {/* END OF MAIN MENU + PROFILE PICTURE*/}
             </div>
-            {/* END OF SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
+            {/* END OF SEARCH BAR + PROFILE PICTURE + MAIN MENU */}
           </div>
-          {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + DROPDOWN MENU */}
+          {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + MAIN MENU */}
 
           {/* START OF MAIN */}
           <main id="app-layout-react-router-Outlet" className="h-full">

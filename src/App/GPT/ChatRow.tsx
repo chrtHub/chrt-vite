@@ -263,6 +263,7 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
           >
             <img
               src={user?.picture}
+              referrerPolicy="no-referrer" //-- Prevents intermittent 403 error, https://community.auth0.com/t/google-account-picture-request-forbidden/42031/11 --//
               alt={user?.name || "user photo"}
               className={classNames(
                 mobile ? "h-8 w-8 rounded-full" : "h-10 w-10 rounded-full"

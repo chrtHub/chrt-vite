@@ -14,7 +14,11 @@ import { usePopper } from "react-popper";
 
 //-- Icons --//
 import { UserCircleIcon, MoonIcon } from "@heroicons/react/20/solid";
-import { ComputerDesktopIcon, SunIcon } from "@heroicons/react/24/outline";
+import {
+  Cog8ToothIcon,
+  ComputerDesktopIcon,
+  SunIcon,
+} from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
 
@@ -29,7 +33,7 @@ interface IProps {
   setSignOutModalOpen: React.Dispatch<SetStateAction<boolean>>;
   infoMode: boolean;
 }
-export default function DropdownMenu({
+export default function MainMenuOld({
   signOutModalOpen,
   setSignOutModalOpen,
   infoMode,
@@ -138,24 +142,31 @@ export default function DropdownMenu({
 
   //-- ***** COMPONENT RETURN ***** --//
   return (
-    <Menu id="app-layout-dropdown-menu" as="div" className="relative ml-3">
-      {/* START OF PROFILE PICTURE */}
-      <div>
-        <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm hover:outline-none hover:ring-2 hover:ring-green-500 hover:ring-offset-2">
-          <span className="sr-only">Open user menu</span>
-          {user?.picture ? (
-            <img
-              className="h-8 w-8 rounded-full focus:bg-white active:bg-white"
-              src={user.picture}
-              alt="profile image"
-              referrerPolicy="no-referrer" //-- Prevents intermittent 403 error, https://community.auth0.com/t/google-account-picture-request-forbidden/42031/11 --//
-            />
-          ) : (
-            <UserCircleIcon className="h-8 w-8 rounded-full" />
-          )}
-        </Menu.Button>
-      </div>
-      {/* END OF PROFILE PICTURE */}
+    <Menu id="app-layout-main-menu" as="div" className="relative ml-3">
+      {/* START OF MENU BUTTON */}
+      <Menu.Button className="mb-2 flex w-full items-center text-sm">
+        {user?.picture ? (
+          <div className="flex w-full flex-row items-center justify-start overflow-clip">
+            {/* Account button */}
+            <div className="flex w-full flex-row items-center justify-start rounded-lg p-1 hover:bg-zinc-300">
+              <img
+                className="inline-block h-12 w-12 rounded-md"
+                src={user?.picture}
+                referrerPolicy="no-referrer" //-- Prevents intermittent 403 error, https://community.auth0.com/t/google-account-picture-request-forbidden/42031/11 --//
+                alt={user?.name || "user photo"}
+              />
+              <p className="text-md ml-3 break-words font-medium text-zinc-800">
+                {user?.name}
+                {/* von VeryLongLastName SoLongItWontFitInThisComponentWithoutBreaking */}
+                {/* TODO - test with longer names */}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <UserCircleIcon className="inline-block h-12 w-12 rounded-md text-zinc-200 dark:text-zinc-700" />
+        )}
+      </Menu.Button>
+      {/* END OF MENU BUTTON */}
 
       {/* START OF MENU ITEMS */}
       <Transition
@@ -167,7 +178,7 @@ export default function DropdownMenu({
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 z-40 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-900 dark:ring-zinc-500">
+        <Menu.Items className="absolute left-0 z-40 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-900 dark:ring-zinc-500">
           {/* Light/Dark Mode Button - uses onClick isntead of href */}
           <Menu.Item key={"light-dark-mode-button"}>
             {({ active }) => (

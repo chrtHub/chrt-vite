@@ -69,6 +69,7 @@ export default function Account() {
           <div className="flex flex-row justify-start gap-x-4 lg:gap-x-8">
             <img
               src={user?.picture}
+              referrerPolicy="no-referrer" //-- Prevents intermittent 403 error, https://community.auth0.com/t/google-account-picture-request-forbidden/42031/11 --//
               alt={user?.name}
               className="mt-1.5 h-24 w-24 rounded-lg object-cover"
             />
