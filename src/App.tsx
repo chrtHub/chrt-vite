@@ -1,13 +1,11 @@
 //-- react, react-router-dom, recoil, Auth0 --//
-import { useState, useEffect, createContext, ReactNode } from "react";
+import { useState, useEffect, createContext } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
 import AppLayout from "./Layout/AppLayout";
 import LandingPage from "./LandingPage/LandingPage";
-import { ChatContextProvider } from "./Context/ChatContext";
-import { AccountContextProvider } from "./Context/AccountContext";
 
 //-- NPM Components --//
 
@@ -43,18 +41,6 @@ const ScrollToTop = () => {
   return null;
 };
 
-//-- ContextsProvider as nested Contexts Providers --//
-interface IContextsProviderProps {
-  children: ReactNode;
-}
-const ContextsProvider = ({ children }: IContextsProviderProps) => {
-  return (
-    <AccountContextProvider>
-      <ChatContextProvider>{children}</ChatContextProvider>
-    </AccountContextProvider>
-  );
-};
-
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 interface IAppProps {}
 export default function App({}: IAppProps) {
@@ -65,9 +51,7 @@ export default function App({}: IAppProps) {
     return (
       <>
         <ScrollToTop />
-        <ContextsProvider>
-          <AppLayout infoMode={true} />
-        </ContextsProvider>
+        <AppLayout infoMode={true} />
       </>
     );
   }
@@ -99,21 +83,13 @@ export default function App({}: IAppProps) {
 
   //-- Loading is complete, user is authenticated --> show the app --//
   if (isAuthenticated) {
-    return (
-      <ContextsProvider>
-        <AppLayout infoMode={false} />
-      </ContextsProvider>
-    );
+    return <AppLayout infoMode={false} />;
   }
   //-- ***** ***** *****  ***** ***** ***** --//
 
   //-- isLoading starts as 'true'. Only show AppLayout if auth0Stuff found --//
   if (isLoading && auth0Stuff) {
-    return (
-      <ContextsProvider>
-        <AppLayout infoMode={false} />
-      </ContextsProvider>
-    );
+    return <AppLayout infoMode={false} />;
   }
 
   //-- Loading is complete and no authenticated user was found --//
@@ -123,11 +99,7 @@ export default function App({}: IAppProps) {
       return <LandingPage />;
     } else {
       //-- For protected routes, Outlet renders the AuthGuard component, redirecting users to sign in --//
-      return (
-        <ContextsProvider>
-          <AppLayout infoMode={false} />
-        </ContextsProvider>
-      );
+      return <AppLayout infoMode={false} />;
     }
   }
 

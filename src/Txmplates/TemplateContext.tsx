@@ -14,8 +14,6 @@ const TemplateContext = createContext<ITemplateContext | undefined>(undefined);
 
 //-- Custom Provider Component --//
 function TemplateContextProvider({ children }: PropsWithChildren) {
-  //-- Enumerate current model options --//
-
   //-- State values --//
   const [state, setState] = useState<boolean>(false);
 
