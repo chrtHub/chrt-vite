@@ -16,6 +16,7 @@ import AuthGuard from "./Auth/AuthGuard";
 
 //-- TSX Components: App --//
 import App from "./App";
+import RedirectToSignIn from "./Navigation/RedirectToSignIn";
 import Data from "./App/DataService/Data";
 import Journal from "./App/JournalService/Journal";
 import JournalFiles from "./App/JournalFiles/JournalFiles";
@@ -36,9 +37,9 @@ import FAQ from "./Info/FAQ/FAQ";
 import Info from "./Info/Info";
 import OAuth2Google from "./Info/OAuth2Google/OAuth2Google";
 import Privacy from "./Info/Privacy/Privacy";
+import Support from "./Info/Support/Support";
 import SystemRequirements from "./Info/SystemRequirements/SystemRequirements";
 import Terms from "./Info/Terms/Terms";
-import Updates from "./Info/Updates/Updates";
 
 //-- TSX Components: Navigation --//
 import NotFoundPage from "./Navigation/NotFoundPage";
@@ -61,6 +62,10 @@ const router = createBrowserRouter(
       {/* App */}
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
+        <Route
+          path="/signin"
+          element={<AuthGuard component={RedirectToSignIn} />}
+        />
         <Route path="/data" element={<AuthGuard component={Data} />} />
         <Route path="/journal" element={<AuthGuard component={Journal} />} />
         <Route path="/files" element={<AuthGuard component={JournalFiles} />} />
@@ -98,9 +103,9 @@ const router = createBrowserRouter(
         <Route path="/faq" element={<FAQ />} />
         <Route path="/oauth2_google" element={<OAuth2Google />} />
         <Route path="/privacy" element={<Privacy />} />
+        <Route path="/support" element={<Support />} />
         <Route path="/system_requirements" element={<SystemRequirements />} />
         <Route path="/terms" element={<Terms />} />
-        <Route path="/updates" element={<Updates />} />
       </Route>
 
       {/* Navigation */}

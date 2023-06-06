@@ -3,6 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components and Functions --//
 import { useAccountContext } from "../../Context/AccountContext";
+import { NavLink } from "react-router-dom";
 
 //-- NPM Components --//
 
@@ -37,9 +38,9 @@ export default function Account() {
   return (
     <div className="divide-y divide-zinc-300 px-2 py-2">
       {/*-- START OF IDENTITY SECTION --*/}
-      <div className="mb-2 grid grid-cols-1 gap-y-4 lg:mb-4 lg:grid-cols-3 lg:gap-y-0">
+      <div className="mb-2 grid grid-cols-3 gap-y-4 lg:mb-4 lg:gap-y-0">
         {/* START OF LHS */}
-        <div className="lg:col-span-1">
+        <div className="col-span-3 lg:col-span-1">
           <h2 className="font-semibold text-zinc-700 dark:text-white">
             Identity
           </h2>
@@ -50,7 +51,7 @@ export default function Account() {
         {/* END OF LHS */}
 
         {/* START OF RHS */}
-        <div className="col-span-1 mb-2 lg:col-span-2">
+        <div className="col-span-3 mb-2 lg:col-span-2">
           <div className="flex flex-row justify-start gap-x-4 lg:gap-x-8">
             <img
               src={user?.picture}
@@ -87,9 +88,9 @@ export default function Account() {
       {/* END OF IDENTITY SECTION */}
 
       {/*-- START OF SUBSCRIPTION SECTION --*/}
-      <div className="mb-2 grid grid-cols-1 gap-y-4 pt-5 lg:mb-4 lg:grid-cols-3 lg:gap-y-0">
-        {/* START OF LHS */}
-        <div>
+      <div className="mb-2 grid grid-cols-3 gap-y-4 pt-5 lg:mb-4 lg:gap-y-0">
+        {/* START OF LHS/TOP */}
+        <div className="col-span-3 lg:col-span-1">
           <h2 className="font-semibold text-zinc-700 dark:text-white">
             Active Subscriptions
           </h2>
@@ -97,46 +98,68 @@ export default function Account() {
             Your access to CHRT services
           </p>
         </div>
-        {/* END OF LHS */}
+        {/* END OF LHS/TOP */}
 
-        {/* START OF RHS */}
-        <div className="col-span-1 lg:col-span-2">
-          {/* Start of Grid for Subscription cards */}
-          <div className="grid grid-cols-1 gap-y-4 lg:grid-cols-2">
-            {AccountContext.roles.map((role, idx) => (
-              //-- Start of Subscription Cards --//
-              <div
-                key={idx}
-                className="col-span-1 flex w-full rounded-lg bg-white p-6 shadow lg:col-span-2"
+        {/* START OF RHS/BOTTOM */}
+        <div className="col-span-3 flex flex-col lg:col-span-2">
+          {/* Before roles are fetched, show pulsing skeleton */}
+          {!AccountContext.rolesFetched ? (
+            <div className="mb-3 flex h-28 animate-pulse rounded-lg bg-zinc-200 shadow dark:bg-zinc-700" />
+          ) : //-- If roles are fetched but 0 exist, indicate that --//
+          AccountContext.roles.length === 0 ? (
+            <div className="mb-3 flex h-28 flex-col items-center justify-center rounded-lg bg-zinc-200 shadow dark:bg-zinc-700">
+              <p className="mb-2 font-semibold italic text-zinc-600 dark:text-zinc-200">
+                No Active Subscriptions
+              </p>
+              <NavLink
+                to={"/account/subscriptions"}
+                className="w-52 rounded bg-green-600 px-2 py-1 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
               >
-                {/* LHS */}
-                <div className="w-3/5">
-                  {/* Subscription Name */}
-                  <h3 className="text-base font-semibold leading-6 text-gray-900">
-                    {role.role_name}
-                  </h3>
-                  {/* Description  */}
-                  <div className="max-w-xl text-sm text-gray-500">
-                    <p>{role.role_description}</p>
+                Choose a subscription
+              </NavLink>
+            </div>
+          ) : (
+            //-- Show active subscriptions --//
+            <>
+              {AccountContext.roles.map((role, idx) => (
+                //-- Start of Subscription Cards --//
+                <div
+                  key={idx}
+                  className="mb-3 flex w-full rounded-lg bg-white p-6 shadow dark:bg-zinc-800"
+                >
+                  <div className="grid w-full grid-cols-2">
+                    {/* LHS */}
+                    <div className="col-span-2 lg:col-span-1">
+                      {/* Subscription Name */}
+                      <h3 className="text-base font-semibold leading-6 text-zinc-900 dark:text-zinc-100">
+                        {role.role_name}
+                      </h3>
+                      {/* Description  */}
+                      <div className="mb-2 max-w-xl text-sm text-zinc-500 dark:text-zinc-300">
+                        <p>{role.role_description}</p>
+                      </div>
+                    </div>
+
+                    {/* RHS */}
+                    <div className="col-span-2 lg:col-span-1">
+                      {/* Subscription Permissions */}
+                      <h2 className="font-medium text-zinc-800 dark:text-zinc-200">
+                        API Permissions:
+                      </h2>
+                      <ul className="list-disc pl-5 text-zinc-500 dark:text-zinc-300">
+                        {role.permissions.map((permission, jdx) => (
+                          <li key={jdx}>{permission}</li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-
-                {/* RHS */}
-                <div className="w-2/5">
-                  {/* Subscription Permissions */}
-                  <ul className="list-disc pl-5 text-zinc-500">
-                    {role.permissions.map((permission, jdx) => (
-                      <li key={jdx}>{permission}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-              //-- End of subscription cards --//
-            ))}
-          </div>
-          {/* End of grid for subscription cards */}
+                //-- End of subscription cards --//
+              ))}
+            </>
+          )}
         </div>
-        {/* END OF RHS */}
+        {/* END OF RHS/BOTTOM */}
       </div>
       {/* END OF SUBSCRIPTION SECTION */}
 
