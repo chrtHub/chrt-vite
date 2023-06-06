@@ -1,6 +1,7 @@
 //-- react, react-router-dom, recoil, Auth0 --//
 import { Fragment, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
 import Conversations from "../App/GPT/Sidebar/Conversations";
@@ -29,6 +30,7 @@ import {
   CodeBracketIcon,
 } from "@heroicons/react/24/outline";
 import {
+  Cog8ToothIcon,
   ExclamationTriangleIcon,
   XCircleIcon,
 } from "@heroicons/react/24/solid";
@@ -50,6 +52,7 @@ export default function AppLayout({ infoMode }: IProps) {
   //== React State ==//
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [signOutModalOpen, setSignOutModalOpen] = useState<boolean>(false);
+  const { user } = useAuth0();
 
   //-- Synchronize with current pathname: (1) highlighted nav item, (2) secondary items in sidebar --//
   const { pathname } = useLocation();
@@ -224,7 +227,6 @@ export default function AppLayout({ infoMode }: IProps) {
                         key={item.name}
                         to={item.to}
                         onClick={() => {
-                          // setCurrentNavItem(item.to);
                           setSidebarOpen(false);
                         }}
                         className={classNames(
@@ -273,7 +275,6 @@ export default function AppLayout({ infoMode }: IProps) {
         className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col"
       >
         <div
-          id="sidebar-primary-items-list"
           className={classNames(
             `flex h-full flex-col overflow-y-auto ${DARK_THEME_BG} ${LIGHT_THEME_BG}`
           )}
@@ -303,9 +304,6 @@ export default function AppLayout({ infoMode }: IProps) {
                 <NavLink
                   key={item.name}
                   to={item.to}
-                  onClick={() => {
-                    // setCurrentNavItem(item.to);
-                  }}
                   className={classNames(
                     pathname.match(/^\/([^/]+)/)?.[0] === item.to //-- First param of pathname --//
                       ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-800 dark:text-white"
@@ -337,6 +335,35 @@ export default function AppLayout({ infoMode }: IProps) {
             {pathname.startsWith("/gpt") && <Conversations />}
           </div>
           {/* END OF SECONDARY ITEMS */}
+
+          {/* START OF ACCOUNT AND SETTINGS BUTTONS */}
+          <div className="mb-3 ml-3 flex flex-row items-center justify-start overflow-clip">
+            {/* Account button */}
+            <NavLink
+              to={"/account"}
+              className="flex flex-row items-center justify-start rounded-lg p-1 hover:bg-zinc-300"
+            >
+              <img
+                className="inline-block h-12 w-12 rounded-md"
+                src={user?.picture}
+                alt={user?.name || "user photo"}
+              />
+              <div className="mr-auto">
+                <p className="ml-3 break-words font-medium text-zinc-800">
+                  {user?.name}
+                  {/* von VeryLongLastName SoLongItWontFitInThisComponentWithoutBreaking */}
+                </p>
+              </div>
+            </NavLink>
+
+            {/* Settings button */}
+            <div className="flex h-full flex-col justify-center rounded-lg px-3 hover:bg-zinc-300">
+              <NavLink to="/settings">
+                <Cog8ToothIcon className="h-6 w-6 text-zinc-600" />
+              </NavLink>
+            </div>
+          </div>
+          {/* END OF ACCOUNT AND SETTINGS BUTTONS */}
         </div>
       </div>
       {/* END OF STATIC SIDEBAR */}

@@ -263,7 +263,7 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
           >
             <img
               src={user?.picture}
-              alt={user?.name}
+              alt={user?.name || "user photo"}
               className={classNames(
                 mobile ? "h-8 w-8 rounded-full" : "h-10 w-10 rounded-full"
               )}
