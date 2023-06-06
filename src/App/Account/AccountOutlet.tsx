@@ -81,7 +81,9 @@ export default function AccountOutlet() {
                 <li key={item.name}>
                   <NavLink
                     to={item.href}
-                    className={item.current ? "text-green-400" : ""}
+                    className={
+                      item.current ? "text-green-600 dark:text-green-500" : ""
+                    }
                   >
                     {item.name}
                   </NavLink>
