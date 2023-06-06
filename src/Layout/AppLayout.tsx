@@ -18,6 +18,7 @@ import {
   Bars3BottomLeftIcon,
   CalendarDaysIcon,
   ComputerDesktopIcon,
+  CpuChipIcon,
   DocumentTextIcon,
   FolderIcon,
   ChatBubbleLeftRightIcon,
@@ -64,7 +65,7 @@ export default function AppLayout({ infoMode }: IProps) {
     infoMode
       ? (navigationItems = [
           // { name: "Info", to: "/info", icon: InformationCircleIcon },
-          { name: "Product Updates", to: "/updates", icon: CodeBracketIcon },
+          { name: "Support", to: "/support", icon: ComputerDesktopIcon },
           { name: "FAQ", to: "/faq", icon: QuestionMarkCircleIcon },
           { name: "Terms of Service", to: "/terms", icon: DocumentTextIcon },
           {
@@ -76,7 +77,7 @@ export default function AppLayout({ infoMode }: IProps) {
           {
             name: "System Requirements",
             to: "/system_requirements",
-            icon: ComputerDesktopIcon,
+            icon: CpuChipIcon,
           },
           {
             name: "OAuth 2 - Google Accounts",

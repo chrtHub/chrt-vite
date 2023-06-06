@@ -26,9 +26,9 @@ const infoRoutes: string[] = [
   "/oauth2_google",
   "/privacy",
   "/product_specific_terms",
+  "/support",
   "/system_requirements",
   "/terms",
-  "/updates",
 ];
 
 //-- Scroll to top of page whenever pathname changes --//
