@@ -23,17 +23,17 @@ import { usePopper } from "react-popper";
 import jwtDecode from "jwt-decode";
 
 //-- Utility Functions --//
-import classNames from "../Util/classNames";
+import classNames from "../../Util/classNames";
 
 //-- Data Objects --//
-import { echartsThemeState } from "../Layout/atoms";
+import { echartsThemeState } from "../../Layout/atoms";
 import {
   ExclamationTriangleIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-const Profile = () => {
+export default function DevResources() {
   const [accessToken, setAccessToken] = useState<string>("");
   const [accessTokenDecoded, setAccessTokenDecoded] = useState<object>({});
   const [viewDecodedToken, setViewDecodedToken] = useState<boolean>(false);
@@ -88,19 +88,7 @@ const Profile = () => {
 
   /** */
   return (
-    <div className="flex h-screen flex-col items-center justify-start">
-      {/* START OF IMAGE, NAME, EMAIL */}
-      <img
-        src={user?.picture}
-        alt={user?.name}
-        className="h-24 w-24 rounded-full"
-      />
-      <h2 className="mt-4 text-2xl font-medium text-black dark:text-white">
-        {user?.name}
-      </h2>
-      <p className="mb-2 text-zinc-500 dark:text-zinc-400">{user?.email}</p>
-      {/* END OF IMAGE, NAME, EMAIL */}
-
+    <div className="flex flex-col items-center justify-start">
       <div className="w-full max-w-prose">
         {/* START OF COPY AUTH TOKEN SECTION */}
         <div className="flex flex-col justify-center rounded-md bg-yellow-100 p-4 dark:bg-yellow-950">
@@ -138,23 +126,22 @@ const Profile = () => {
               <Popover.Button
                 ref={setReferenceElement}
                 className="focus:outline-none"
+                disabled={popoverOpen}
+                onClick={copyHandler}
               >
-                <button
-                  disabled={popoverOpen}
-                  type="button"
+                <div
                   className={classNames(
                     "inline-flex w-56 justify-center gap-x-2 rounded-md py-3 text-sm font-semibold shadow-sm  focus:outline-none",
                     "bg-yellow-400 text-yellow-900 hover:bg-yellow-500",
                     "text-yellow-900 dark:bg-yellow-300 dark:hover:bg-yellow-200"
                   )}
-                  onClick={copyHandler}
                 >
                   Copy Auth Token
                   <ClipboardDocumentIcon
                     className="h-5 w-5"
                     aria-hidden="true"
                   />
-                </button>
+                </div>
               </Popover.Button>
 
               {popoverOpen && (
@@ -252,6 +239,4 @@ const Profile = () => {
       {/* END OF JSON */}
     </div>
   );
-};
-
-export default Profile;
+}

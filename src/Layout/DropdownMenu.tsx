@@ -43,7 +43,7 @@ export default function DropdownMenu({
     to: string;
   }
   let userNavigationItems: IUserNavigationItem[] = [
-    { name: "Profile", to: "/profile" },
+    { name: "Account & Subscriptions", to: "/account" },
     { name: "Settings", to: "/settings" },
   ];
 

@@ -18,7 +18,7 @@ export default function ComponentName() {
   //== Auth ==//
   //== Other ==//
   //== Side Effects ==//
-  //== Event Handlers ==//
+  //== Handlers ==//
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   // return (
   //   <div>

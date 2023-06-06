@@ -7,6 +7,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import AppLayout from "./Layout/AppLayout";
 import LandingPage from "./LandingPage/LandingPage";
 import { ChatContextProvider } from "./Context/ChatContext";
+import { AccountContextProvider } from "./Context/AccountContext";
 
 //-- NPM Components --//
 
@@ -47,7 +48,11 @@ interface IContextsProviderProps {
   children: ReactNode;
 }
 const ContextsProvider = ({ children }: IContextsProviderProps) => {
-  return <ChatContextProvider>{children}</ChatContextProvider>;
+  return (
+    <AccountContextProvider>
+      <ChatContextProvider>{children}</ChatContextProvider>
+    </AccountContextProvider>
+  );
 };
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//

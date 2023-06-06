@@ -20,7 +20,14 @@ import Data from "./App/DataService/Data";
 import Journal from "./App/JournalService/Journal";
 import JournalFiles from "./App/JournalFiles/JournalFiles";
 import GPT from "./App/GPT/GPT";
-import Profile from "./App/Profile/Profile";
+
+//-- TSX Components: Account --//
+import AccountOutlet from "./App/Account/AccountOutlet";
+import Account from "./App/Account/Account";
+import Subscriptions from "./App/Account/Subscriptions/Subscriptions";
+import DevResources from "./App/Account/DevResources";
+
+//-- TSX Components: Settings --//
 import Settings from "./App/Settings/Settings";
 
 //-- TSX Components: Info --//
@@ -54,7 +61,6 @@ const router = createBrowserRouter(
       {/* App */}
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
-
         <Route path="/data" element={<AuthGuard component={Data} />} />
         <Route path="/journal" element={<AuthGuard component={Journal} />} />
         <Route path="/files" element={<AuthGuard component={JournalFiles} />} />
@@ -62,7 +68,24 @@ const router = createBrowserRouter(
           path="gpt/:entity_type?/:conversation_id?"
           element={<AuthGuard component={GPT} />}
         />
-        <Route path="/profile" element={<AuthGuard component={Profile} />} />
+
+        {/* Account */}
+        <Route
+          path="/account"
+          element={<AuthGuard component={AccountOutlet} />}
+        >
+          <Route index element={<Account />} />
+          <Route
+            path="/account/subscriptions"
+            element={<AuthGuard component={Subscriptions} />}
+          />
+          <Route
+            path="/account/dev_resources"
+            element={<AuthGuard component={DevResources} />}
+          />
+        </Route>
+
+        {/* Settings */}
         <Route
           path="/settings"
           element={<AuthGuard component={Settings} />}
