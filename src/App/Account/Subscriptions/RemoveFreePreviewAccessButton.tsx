@@ -60,14 +60,14 @@ export default function RemoveFreePreviewAccessButton({
         await getUsersPermissions(accessToken, AccountContext);
       } catch (err) {
         if (err instanceof AxiosError) {
-          axiosErrorToaster(err, "Get roles and permissions");
+          axiosErrorToaster(err, "Get subscriptions");
         } else if (err instanceof Error) {
           toast(err.message);
         }
       }
     } catch (err) {
       if (err instanceof AxiosError) {
-        axiosErrorToaster(err, "");
+        axiosErrorToaster(err, "Remove subscription");
       } else if (err instanceof Error) {
         toast(err.message);
       }

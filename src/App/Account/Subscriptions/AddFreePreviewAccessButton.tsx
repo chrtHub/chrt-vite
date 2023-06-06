@@ -57,7 +57,7 @@ export default function AddFreePreviewAccessButton() {
         await getUsersPermissions(accessToken, AccountContext);
       } catch (err) {
         if (err instanceof AxiosError) {
-          axiosErrorToaster(err, "Get roles and permissions");
+          axiosErrorToaster(err, "Get subscriptions");
         } else if (err instanceof Error) {
           toast(err.message);
         }
@@ -66,7 +66,7 @@ export default function AddFreePreviewAccessButton() {
       //----//
     } catch (err) {
       if (err instanceof AxiosError) {
-        axiosErrorToaster(err, "");
+        axiosErrorToaster(err, "Add subscription");
       } else if (err instanceof Error) {
         toast(err.message);
       }
