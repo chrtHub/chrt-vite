@@ -25,7 +25,7 @@ export default function Support() {
   return (
     <>
       <InfoPagesNav />
-      <div className="isolate px-6 py-24 sm:py-32 lg:px-8">
+      <div className="isolate mt-12">
         <div className="mx-auto max-w-2xl sm:text-center">
           <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-4xl">
             Contact Support
