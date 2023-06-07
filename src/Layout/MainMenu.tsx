@@ -60,7 +60,7 @@ export default function MainMenu({ setSignOutModalOpen }: IProps) {
           {user?.picture ? (
             <>
               <div className="flex w-full flex-row items-center justify-start overflow-x-scroll">
-                {/* Account button */}
+                {/* Main Menu Button */}
                 <div className="flex w-full flex-row items-center justify-start rounded-lg">
                   <img
                     className="h-10 w-10 rounded-md"
@@ -81,7 +81,7 @@ export default function MainMenu({ setSignOutModalOpen }: IProps) {
           ) : (
             <>
               <div className="flex w-full flex-row items-center justify-start overflow-x-scroll">
-                {/* Account button */}
+                {/* Main Menu Button */}
                 <div className="flex w-full flex-row items-center justify-start rounded-lg">
                   <UserCircleIcon className="inline-block h-10 w-10 rounded-md text-zinc-300 dark:text-zinc-700" />
                 </div>

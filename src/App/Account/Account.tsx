@@ -51,7 +51,7 @@ export default function Account() {
   }
 
   return (
-    <div className="divide-y divide-zinc-300 px-2 py-2">
+    <div className="divide-y divide-zinc-200 px-2 py-2 dark:divide-zinc-500">
       {/*-- START OF IDENTITY SECTION --*/}
       <div className="mb-2 grid grid-cols-3 gap-y-4 lg:mb-4 lg:gap-y-0">
         {/* START OF LHS */}

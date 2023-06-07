@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- TSX Components --//
+import InfoPagesNav from "../InfoPagesNav";
 import TypographyWrapper from "../TypographyWrapper";
 import SystemRequirementsDoc from "./SystemRequirementsDoc";
 //-- NPM Components --//
@@ -16,8 +17,11 @@ import SystemRequirementsDoc from "./SystemRequirementsDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function SystemRequirements() {
   return (
-    <TypographyWrapper>
-      <SystemRequirementsDoc />
-    </TypographyWrapper>
+    <>
+      <InfoPagesNav />
+      <TypographyWrapper>
+        <SystemRequirementsDoc />
+      </TypographyWrapper>
+    </>
   );
 }

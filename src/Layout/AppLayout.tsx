@@ -1,8 +1,6 @@
 //-- react, react-router-dom, Auth0 --//
 import { Fragment, useState, useEffect } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useSiteContext } from "../Context/SiteContext";
 
 //-- TSX Components --//
 import Conversations from "../App/GPT/Sidebar/Conversations";
@@ -18,19 +16,12 @@ import "react-toastify/dist/ReactToastify.css";
 import {
   Bars3BottomLeftIcon,
   CalendarDaysIcon,
-  ComputerDesktopIcon,
-  CpuChipIcon,
-  DocumentTextIcon,
   FolderIcon,
   ChatBubbleLeftRightIcon,
   HomeIcon,
-  LockClosedIcon,
-  QuestionMarkCircleIcon,
   XMarkIcon,
-  CodeBracketIcon,
 } from "@heroicons/react/24/outline";
 import {
-  Cog8ToothIcon,
   ExclamationTriangleIcon,
   XCircleIcon,
 } from "@heroicons/react/24/solid";
@@ -48,11 +39,31 @@ import MainMenu from "./MainMenu";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function AppLayout() {
   //== React State ==//
-  const SiteContext = useSiteContext();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [signOutModalOpen, setSignOutModalOpen] = useState<boolean>(false);
 
-  //-- When in infoMode, scroll to top of page whenever pathname changes --//
+  //-- Synchronize with current pathname: (1) highlighted nav item, (2) secondary items in sidebar --//
+  const { pathname } = useLocation();
+
+  //-- When showing infoModePages, scroll to top of page whenever pathname changes --//
+  const infoPagesPaths = [
+    "/support",
+    "/terms",
+    "/privacy",
+    "/cookies",
+    "/system_requirements",
+    "/oauth2_google",
+    "/faq",
+  ];
+
+  const [infoPagesMode, setInfoPagesMode] = useState<boolean>(
+    infoPagesPaths.includes(pathname)
+  );
+
+  useEffect(() => {
+    setInfoPagesMode(infoPagesPaths.includes(pathname));
+  }, [pathname]);
+
   const ScrollToTop = () => {
     const { pathname } = useLocation();
 
@@ -64,53 +75,23 @@ export default function AppLayout() {
     return null;
   };
 
-  //-- Synchronize with current pathname: (1) highlighted nav item, (2) secondary items in sidebar --//
-  const { pathname } = useLocation();
-
-  //--- Navigation array depend on infoMode --//
+  //--- Navigation Items --//
   interface INavigationItem {
     name: string;
     to: string;
     icon: React.ComponentType<any>;
   }
-  let navigationItems: INavigationItem[];
-  {
-    SiteContext.infoMode
-      ? (navigationItems = [
-          // { name: "Info", to: "/info", icon: InformationCircleIcon },
-          { name: "Support", to: "/support", icon: ComputerDesktopIcon },
-          { name: "FAQ", to: "/faq", icon: QuestionMarkCircleIcon },
-          { name: "Terms of Service", to: "/terms", icon: DocumentTextIcon },
-          {
-            name: "Privacy Statement",
-            to: "/privacy",
-            icon: DocumentTextIcon,
-          },
-          { name: "Cookies Policy", to: "/cookies", icon: DocumentTextIcon },
-          {
-            name: "System Requirements",
-            to: "/system_requirements",
-            icon: CpuChipIcon,
-          },
-          {
-            name: "OAuth 2 - Google Accounts",
-            to: "/oauth2_google",
-            icon: LockClosedIcon,
-          },
-        ])
-      : (navigationItems = [
-          { name: "Home", to: "/", icon: HomeIcon },
-          { name: "Journal", to: "/journal", icon: CalendarDaysIcon },
-          { name: "Journal Files", to: "/files", icon: FolderIcon },
-          { name: "ChrtGPT", to: "/gpt", icon: ChatBubbleLeftRightIcon },
-          // { name: "Market Data", to: "/data", icon: PresentationChartLineIcon },
-        ]);
-  }
+  let navigationItems: INavigationItem[] = [
+    { name: "Home", to: "/", icon: HomeIcon },
+    { name: "Journal", to: "/journal", icon: CalendarDaysIcon },
+    { name: "Journal Files", to: "/files", icon: FolderIcon },
+    { name: "ChrtGPT", to: "/gpt", icon: ChatBubbleLeftRightIcon },
+  ];
 
   //-- *********** Component Return ************** --//
   return (
     <>
-      {SiteContext.infoMode && <ScrollToTop />}
+      {infoPagesMode && <ScrollToTop />}
       <div
         id="app-layout-top-level-div"
         //-- With use of 'overflow-hidden', scroll behavior is to be handles by Outlet components (?) --//
@@ -244,7 +225,7 @@ export default function AppLayout() {
                           className={classNames(
                             pathname.match(/^\/([^/]+)/)?.[0] === item.to //-- First param of pathname --//
                               ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-800 dark:text-white"
-                              : "text-zinc-700 hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-white",
+                              : "text-zinc-700 hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white",
                             "group flex items-center rounded-md px-2 py-2 text-base font-medium"
                           )}
                         >
@@ -325,7 +306,7 @@ export default function AppLayout() {
                     className={classNames(
                       pathname.match(/^\/([^/]+)/)?.[0] === item.to //-- First param of pathname --//
                         ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-800 dark:text-white"
-                        : "text-zinc-700 hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-white",
+                        : "text-zinc-700 hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white",
                       "group flex items-center rounded-md px-2 py-1.5 text-sm font-medium"
                     )}
                   >
