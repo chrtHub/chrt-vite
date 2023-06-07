@@ -21,8 +21,6 @@ const AccountContext = createContext<IAccountContext | undefined>(undefined);
 
 //-- Custom Provider Component --//
 function AccountContextProvider({ children }: PropsWithChildren) {
-  //-- Enumerate current model options --//
-
   //-- State values for context --//
   const [roles, setRoles] = useState<RoleWithPermissions[]>([]);
   const [rolesFetched, setRolesFetched] = useState<boolean>(false);

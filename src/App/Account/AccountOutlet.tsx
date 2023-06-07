@@ -41,9 +41,9 @@ export default function AccountOutlet() {
       current: location.pathname === "/account/subscriptions",
     },
     {
-      name: "Dev Resources",
-      href: "/account/dev_resources",
-      current: location.pathname === "/account/dev_resources",
+      name: "Settings",
+      href: "/account/settings",
+      current: location.pathname === "/account/settings",
     },
   ];
 

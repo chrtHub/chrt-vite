@@ -88,6 +88,7 @@ function SiteContextProvider({ children }: PropsWithChildren) {
   const [infoMode, setInfoMode] = useState<boolean>(
     infoModeRoutes.includes(window.location.pathname)
   );
+  console.log("SiteContext infoMode: ", infoMode); // DEV
 
   //-- If theme set in localStorage, use that ("light" | "dark" | null) --//
   let initialTheme: string | null = localStorage.getItem("theme");

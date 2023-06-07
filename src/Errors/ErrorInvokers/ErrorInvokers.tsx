@@ -1,8 +1,8 @@
 import { useState } from "react";
-import InvokeErrors from "./InvokeErrors";
+import Errors from "./Errors";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function DevSandbox() {
+export default function ErrorInvokers() {
   const DEV_MODE_BOOLEAN = import.meta.env.DEV;
   const [showSandbox, setShowSandbox] = useState(DEV_MODE_BOOLEAN);
 
@@ -12,7 +12,7 @@ export default function DevSandbox() {
       <div className="flex items-center justify-between">
         <div className="min-w-0 flex-1">
           <h2 className="truncate text-2xl font-semibold leading-7 tracking-tight text-zinc-900 dark:text-zinc-200">
-            Developer Sandbox
+            Error Invokers
           </h2>
         </div>
         <div className="mt-4 flex gap-2 p-2">
@@ -37,7 +37,7 @@ export default function DevSandbox() {
 
       {/* Content Section(s) */}
       <div className="flex flex-col items-center">
-        {showSandbox && <InvokeErrors />}
+        {showSandbox && <Errors />}
       </div>
     </div>
   );

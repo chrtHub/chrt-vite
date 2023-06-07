@@ -51,7 +51,6 @@ export default function AppLayout() {
   const SiteContext = useSiteContext();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [signOutModalOpen, setSignOutModalOpen] = useState<boolean>(false);
-  const { user } = useAuth0();
 
   //-- When in infoMode, scroll to top of page whenever pathname changes --//
   const ScrollToTop = () => {

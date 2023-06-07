@@ -62,6 +62,7 @@ const router = createBrowserRouter(
       {/* App */}
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
+        <Route path="/dev" element={<AuthGuard component={DevResources} />} />
         <Route
           path="/signin"
           element={<AuthGuard component={RedirectToSignIn} />}
@@ -85,17 +86,11 @@ const router = createBrowserRouter(
             element={<AuthGuard component={Subscriptions} />}
           />
           <Route
-            path="/account/dev_resources"
-            element={<AuthGuard component={DevResources} />}
+            path="/account/settings"
+            element={<AuthGuard component={Settings} />}
+            errorElement={<RouteErrorBoundary />}
           />
         </Route>
-
-        {/* Settings */}
-        <Route
-          path="/settings"
-          element={<AuthGuard component={Settings} />}
-          errorElement={<RouteErrorBoundary />}
-        />
 
         {/* Info */}
         <Route path="/info" element={<Info />} />

@@ -157,7 +157,7 @@ export default function MainMenu({ setSignOutModalOpen }: IProps) {
 
           <div>
             {/* START OF SUPPORT */}
-            <Menu.Item key={"terms-privacy-faq"}>
+            <Menu.Item key={"support"}>
               {({ active }) => (
                 <NavLink
                   to={"/support"}
@@ -228,7 +228,7 @@ export default function MainMenu({ setSignOutModalOpen }: IProps) {
             <Menu.Item>
               {({ active }) => (
                 <NavLink
-                  to={"/settings"}
+                  to={"/account/settings"}
                   className={classNames(
                     "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
                     "text-zinc-700 dark:text-white",
