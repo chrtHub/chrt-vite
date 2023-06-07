@@ -9,7 +9,6 @@ import { send_message } from "./chatson/Functions/send_message";
 import { countTokens } from "./chatson/Util/countTokens";
 
 //== NPM Components ==//
-import { useErrorBoundary } from "react-error-boundary";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import TextareaAutosize from "react-textarea-autosize";

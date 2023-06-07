@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components and Functions --//
 import { useAccountContext } from "../../Context/AccountContext";
@@ -24,7 +25,7 @@ export default function Account() {
   //-- State, Context, Custom Hooks --//
   const [copyConfirm, setCopyConfirm] = useState<boolean>(false);
   let AccountContext = useAccountContext();
-  const { getAccessTokenSilently, user } = useAuth0();
+  const { user } = useAuth0();
   const [clipboardValue, copyToClipboard] = useCopyToClipboard();
 
   //-- Other --//

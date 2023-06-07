@@ -14,8 +14,12 @@ import { Menu, Transition } from "@headlessui/react";
 //== Icons ==//
 import { Cog8ToothIcon } from "@heroicons/react/24/solid";
 import {
+  ArrowLeftOnRectangleIcon,
+  DocumentTextIcon,
   EllipsisHorizontalCircleIcon,
+  KeyIcon,
   UserCircleIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline";
 import classNames from "../Util/classNames";
 
@@ -185,6 +189,26 @@ export default function MainMenu({
           </div>
           {/* END OF THEME */}
 
+          {/* START OF TERMS */}
+          <div className="px-1 py-1 ">
+            <Menu.Item key={"terms-privacy-faq"}>
+              {({ active }) => (
+                <NavLink
+                  to={"/terms"}
+                  className={classNames(
+                    "flex flex-row items-center justify-start gap-3",
+                    active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                    "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                  )}
+                >
+                  <DocumentTextIcon className="h-6 w-6" />
+                  Terms, Privacy, etc.
+                </NavLink>
+              )}
+            </Menu.Item>
+          </div>
+          {/* END OF TERMS */}
+
           {/* START OF ACCOUNT, SUBSCRIPTIONS, SETTINGS */}
           <div className="px-1 py-1 ">
             <Menu.Item>
@@ -192,10 +216,12 @@ export default function MainMenu({
                 <NavLink
                   to={"/account"}
                   className={classNames(
+                    "flex flex-row items-center justify-start gap-3",
                     active ? "bg-zinc-100 dark:bg-zinc-800" : "",
                     "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
                   )}
                 >
+                  <UserIcon className="h-6 w-6" />
                   Account
                 </NavLink>
               )}
@@ -205,10 +231,12 @@ export default function MainMenu({
                 <NavLink
                   to={"/account/subscriptions"}
                   className={classNames(
+                    "flex flex-row items-center justify-start gap-3",
                     active ? "bg-zinc-100 dark:bg-zinc-800" : "",
                     "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
                   )}
                 >
+                  <KeyIcon className="h-6 w-6" />
                   Subscriptions
                 </NavLink>
               )}
@@ -218,10 +246,12 @@ export default function MainMenu({
                 <NavLink
                   to={"/settings"}
                   className={classNames(
+                    "flex flex-row items-center justify-start gap-3",
                     active ? "bg-zinc-100 dark:bg-zinc-800" : "",
                     "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
                   )}
                 >
+                  <Cog8ToothIcon className="h-6 w-6" />
                   Settings
                 </NavLink>
               )}
@@ -229,22 +259,8 @@ export default function MainMenu({
           </div>
           {/* END OF ACCOUNT, SUBSCRIPTIONS, SETTINGS */}
 
-          {/* START OF TERMS+PRIVACY+FAQ AND SIGN OUT */}
+          {/* START OF SIGN OUT */}
           <div className="px-1 py-1 ">
-            <Menu.Item key={"terms-privacy-faq"}>
-              {({ active }) => (
-                <NavLink
-                  to={"/terms"}
-                  className={classNames(
-                    active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                    "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
-                  )}
-                >
-                  Terms, Privacy, FAQ, etc.
-                </NavLink>
-              )}
-            </Menu.Item>
-
             {/* Sign Out Button  */}
             <Menu.Item key={"sign-out-button"}>
               {({ active }) => (
@@ -254,16 +270,18 @@ export default function MainMenu({
                     setSignOutModalOpen(true);
                   }}
                   className={classNames(
+                    "flex flex-row items-center justify-start gap-3",
                     active ? "bg-zinc-100 dark:bg-zinc-800" : "",
                     "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
                   )}
                 >
-                  {user ? <p>Sign Out</p> : <p>Homepage</p>}
+                  <ArrowLeftOnRectangleIcon className="h-6 w-6" />
+                  <p>Sign Out</p>
                 </a>
               )}
             </Menu.Item>
           </div>
-          {/* END OF TERMS+PRIVACY+FAQ AND SIGN OUT */}
+          {/* END OF SIGN OUT */}
         </Menu.Items>
       </Transition>
     </Menu>
