@@ -260,6 +260,16 @@ export default function AppLayout({ infoMode }: IProps) {
                   {pathname.startsWith("/gpt") && <Conversations />}
                 </div>
                 {/* END OF SECONDARY ITEMS */}
+
+                {/* START OF MAIN MENU */}
+                <div className="z-30">
+                  <MainMenu
+                    signOutModalOpen={signOutModalOpen}
+                    setSignOutModalOpen={setSignOutModalOpen}
+                    infoMode={infoMode}
+                  />
+                </div>
+                {/* END OF MAIN MENU */}
               </Dialog.Panel>
             </Transition.Child>
             {/* SPACER FOR 'CLOSE' ICON */}
