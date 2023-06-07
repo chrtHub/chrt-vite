@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- TSX Components --//
+import InfoPagesNav from "../InfoPagesNav";
 import TypographyWrapper from "../TypographyWrapper";
 import TermsDoc from "./TermsDoc";
 
@@ -17,8 +18,11 @@ import TermsDoc from "./TermsDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Terms() {
   return (
-    <TypographyWrapper>
-      <TermsDoc />
-    </TypographyWrapper>
+    <>
+      <InfoPagesNav />
+      <TypographyWrapper>
+        <TermsDoc />
+      </TypographyWrapper>
+    </>
   );
 }

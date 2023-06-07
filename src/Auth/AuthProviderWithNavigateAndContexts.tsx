@@ -2,10 +2,6 @@
 import { ReactNode } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Auth0Provider, AppState, User } from "@auth0/auth0-react";
-import { SiteContextProvider } from "../Context/SiteContext";
-import { AccountContextProvider } from "../Context/AccountContext";
-import { JournalContextProvider } from "../Context/JournalContext";
-import { ChatContextProvider } from "../Context/ChatContext";
 
 //-- TSX Components --//
 import { useIsMobile } from "../Util/useUserAgent";
@@ -30,46 +26,24 @@ export default function AuthProviderWithNavigateAndContexts() {
     navigate(appState?.returnTo || window.location.pathname);
   };
 
-  //-- ContextsProvider as nested Contexts Providers --//
-  interface IContextsProviderProps {
-    children: ReactNode;
-  }
-  const ContextsProvider = ({ children }: IContextsProviderProps) => {
-    return (
-      <SiteContextProvider>
-        <AccountContextProvider>
-          <JournalContextProvider>
-            <ChatContextProvider>
-              {children}
-              {/*----*/}
-            </ChatContextProvider>
-          </JournalContextProvider>
-        </AccountContextProvider>
-      </SiteContextProvider>
-    );
-  };
-
   return (
     <Auth0Provider
       domain="chrt-prod.us.auth0.com" //-- Tenant: 'chrt-prod' --//
       clientId="8bDLHYeEUfPHH81VRDBsCTN5TYklAMCu" //-- Application: 'chrt-prod-app' --//
       cacheLocation={mobile ? "localstorage" : "memory"}
       authorizationParams={{
-        redirect_uri: `${window.location.origin}`, //-- redirect_uri NOTE - localhost not allowed by Auth0 for prod tenant (which is 'chrt-prod') --//
+        redirect_uri: `${window.location.origin}`, //-- redirect_uri NOTE - localhost "not allowed" by Auth0 for prod tenant (which is 'chrt-prod')...but seems to work fine. --//
         audience: "https://chrt.com", //-- API: 'chrt' (also /userinfo by default) --//
-        scope:
-          "openid profile email read:journal write:journal read:data chat:llm",
+        scope: "openid profile email",
         //-- Scope guide:
         //-- 'openid' included by default, indicates app will use OIDC --//
         //-- 'profile' allows name and profile photo --//
         //-- 'email' allows email --//
-        //-- 'read:journal' and other custom API claims will get included in the access token's 'scope' and 'permissions' only if the user has those permissions granted either directly or via a role --//
+        //-- API-level scopes, such as "write:journal", seem to be included per user's roles/permissions --//
       }}
       onRedirectCallback={onRedirectCallback}
     >
-      <ContextsProvider>
-        <Outlet />
-      </ContextsProvider>
+      <Outlet />
     </Auth0Provider>
   );
 }

@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- TSX Components --//
+import InfoPagesNav from "../InfoPagesNav";
 import TypographyWrapper from "../TypographyWrapper";
 import PrivacyDoc from "./PrivacyDoc";
 
@@ -17,8 +18,11 @@ import PrivacyDoc from "./PrivacyDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Privacy() {
   return (
-    <TypographyWrapper>
-      <PrivacyDoc />
-    </TypographyWrapper>
+    <>
+      <InfoPagesNav />
+      <TypographyWrapper>
+        <PrivacyDoc />
+      </TypographyWrapper>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- TSX Components --//
+import InfoPagesNav from "../InfoPagesNav";
 import TypographyWrapper from "../TypographyWrapper";
 import FAQDoc from "./FAQDoc";
 
@@ -17,8 +18,11 @@ import FAQDoc from "./FAQDoc";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function FAQ() {
   return (
-    <TypographyWrapper>
-      <FAQDoc />
-    </TypographyWrapper>
+    <>
+      <InfoPagesNav />
+      <TypographyWrapper>
+        <FAQDoc />
+      </TypographyWrapper>
+    </>
   );
 }

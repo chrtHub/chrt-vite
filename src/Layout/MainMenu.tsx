@@ -60,7 +60,7 @@ export default function MainMenu({ setSignOutModalOpen }: IProps) {
           {user?.picture ? (
             <>
               <div className="flex w-full flex-row items-center justify-start overflow-x-scroll">
-                {/* Account button */}
+                {/* Main Menu Button */}
                 <div className="flex w-full flex-row items-center justify-start rounded-lg">
                   <img
                     className="h-10 w-10 rounded-md"
@@ -81,7 +81,7 @@ export default function MainMenu({ setSignOutModalOpen }: IProps) {
           ) : (
             <>
               <div className="flex w-full flex-row items-center justify-start overflow-x-scroll">
-                {/* Account button */}
+                {/* Main Menu Button */}
                 <div className="flex w-full flex-row items-center justify-start rounded-lg">
                   <UserCircleIcon className="inline-block h-10 w-10 rounded-md text-zinc-300 dark:text-zinc-700" />
                 </div>
@@ -157,7 +157,7 @@ export default function MainMenu({ setSignOutModalOpen }: IProps) {
 
           <div>
             {/* START OF SUPPORT */}
-            <Menu.Item key={"terms-privacy-faq"}>
+            <Menu.Item key={"support"}>
               {({ active }) => (
                 <NavLink
                   to={"/support"}
@@ -228,7 +228,7 @@ export default function MainMenu({ setSignOutModalOpen }: IProps) {
             <Menu.Item>
               {({ active }) => (
                 <NavLink
-                  to={"/settings"}
+                  to={"/account/settings"}
                   className={classNames(
                     "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
                     "text-zinc-700 dark:text-white",

@@ -2,7 +2,7 @@ import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import { getErrorDetails } from "../../../Errors/getErrorDetails";
+import { getErrorDetails } from "../getErrorDetails";
 import {
   ArrowPathIcon,
   ExclamationTriangleIcon,
@@ -60,7 +60,7 @@ const ErrorTypes: ErrorType[] = [
 ];
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function InvokeErrors() {
+export default function Errors() {
   return (
     <div className="flex w-full max-w-prose flex-col gap-2">
       {/* Map error types into components with buttons that invoke an error */}
