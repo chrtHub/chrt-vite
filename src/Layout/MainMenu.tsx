@@ -117,6 +117,7 @@ export default function MainMenu({
             "dark:divide-zinc-600 dark:bg-zinc-800 dark:ring-zinc-700"
           )}
         >
+          {/* START OF THEME */}
           <div className="flex w-full flex-row pb-0.5 pt-1">
             <Tooltip placement="top" content="Light Mode">
               <button
@@ -158,9 +159,28 @@ export default function MainMenu({
               </button>
             </Tooltip>
           </div>
+          {/* END OF THEME */}
 
-          {/* START OF TERMS */}
           <div>
+            {/* START OF SUPPORT */}
+            <Menu.Item key={"terms-privacy-faq"}>
+              {({ active }) => (
+                <NavLink
+                  to={"/support"}
+                  className={classNames(
+                    "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
+                    "text-zinc-700 dark:text-white",
+                    active ? "bg-zinc-200 dark:bg-zinc-700" : ""
+                  )}
+                >
+                  <ComputerDesktopIcon className="h-6 w-6" />
+                  Support
+                </NavLink>
+              )}
+            </Menu.Item>
+            {/* END OF SUPPORT */}
+
+            {/* START OF TERMS */}
             <Menu.Item key={"terms-privacy-faq"}>
               {({ active }) => (
                 <NavLink
