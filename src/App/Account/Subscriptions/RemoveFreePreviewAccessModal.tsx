@@ -1,4 +1,4 @@
-//== react, react-router-dom, recoil, Auth0 ==//
+//== react, react-router-dom, Auth0 ==//
 import { Fragment, SetStateAction, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 

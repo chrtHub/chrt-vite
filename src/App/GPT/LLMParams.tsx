@@ -1,4 +1,4 @@
-//-- react, react-router-dom, recoil, Auth0 --//
+//-- react, react-router-dom, Auth0 --//
 import { Fragment, useState } from "react";
 import { useChatContext } from "../../Context/ChatContext";
 
@@ -27,7 +27,6 @@ export default function LLMParams() {
   const CC = useChatContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  //-- Recoil State --//
   //-- Auth --//
   //-- Other [] --//
 

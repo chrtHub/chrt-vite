@@ -2,9 +2,10 @@
 import { ReactNode } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Auth0Provider, AppState, User } from "@auth0/auth0-react";
-import { ChatContextProvider } from "../Context/ChatContext";
-import { AccountContextProvider } from "../Context/AccountContext";
 import { SiteContextProvider } from "../Context/SiteContext";
+import { AccountContextProvider } from "../Context/AccountContext";
+import { JournalContextProvider } from "../Context/JournalContext";
+import { ChatContextProvider } from "../Context/ChatContext";
 
 //-- TSX Components --//
 import { useIsMobile } from "../Util/useUserAgent";
@@ -37,10 +38,12 @@ export default function AuthProviderWithNavigateAndContexts() {
     return (
       <SiteContextProvider>
         <AccountContextProvider>
-          <ChatContextProvider>
-            {children}
-            {/*----*/}
-          </ChatContextProvider>
+          <JournalContextProvider>
+            <ChatContextProvider>
+              {children}
+              {/*----*/}
+            </ChatContextProvider>
+          </JournalContextProvider>
         </AccountContextProvider>
       </SiteContextProvider>
     );

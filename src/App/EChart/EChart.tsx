@@ -1,6 +1,6 @@
-//-- react, react-router-dom, recoil, Auth0 --//
+//-- react, react-router-dom, Auth0 --//
 import { useState, useEffect, useRef } from "react";
-import { useRecoilValue } from "recoil";
+import { useSiteContext } from "../../Context/SiteContext";
 
 //-- TSX Components --//
 
@@ -58,7 +58,6 @@ echarts.use([
 //-- Utility Functions --//
 
 //-- Data Objects, Environment Variables --//
-import { echartsThemeState } from "../../Layout/atoms.jsx";
 
 //-- Types --//
 
@@ -70,9 +69,7 @@ interface IProps {
 }
 export default function EChart({ option, height, width }: IProps) {
   //-- React State --//
-
-  //-- Recoil State --//
-  const echartsTheme = useRecoilValue(echartsThemeState);
+  let SiteContext = useSiteContext();
 
   //-- Auth --//
 
@@ -94,7 +91,10 @@ export default function EChart({ option, height, width }: IProps) {
   useEffect(() => {
     //-- Initialize chart with provided 'option' object--//
     if (chartRef.current) {
-      chart = echarts.init(chartRef.current, echartsTheme);
+      chart = echarts.init(
+        chartRef.current,
+        SiteContext.eChartsTheme || undefined
+      );
       chart.setOption(option);
 
       //-- Listen for resize events --//
@@ -106,7 +106,7 @@ export default function EChart({ option, height, width }: IProps) {
         window.removeEventListener("resize", handleResize);
       };
     }
-  }, [option, echartsTheme]);
+  }, [option, SiteContext.eChartsTheme]);
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return <div ref={chartRef} style={{ width: width, height: height }} />;

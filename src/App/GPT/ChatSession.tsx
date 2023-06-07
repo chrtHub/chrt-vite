@@ -1,4 +1,4 @@
-//== react, react-router-dom, recoil, Auth0 ==//
+//== react, react-router-dom, Auth0 ==//
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -72,8 +72,6 @@ export default function ChatSession() {
   const virtuosoRef = useRef<VirtuosoHandle | null>(null);
   const [atBottom, setAtBottom] = useState<boolean>(true);
   const [showButton, setShowButton] = useState<boolean>(false);
-
-  //== Recoil State ==//
 
   //== Auth ==//
   const { getAccessTokenSilently, user } = useAuth0();

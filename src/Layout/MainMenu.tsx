@@ -1,4 +1,4 @@
-//== react, react-router-dom, recoil, Auth0 ==//
+//== react, react-router-dom, Auth0 ==//
 import { Fragment, useEffect, useRef, useState, SetStateAction } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";

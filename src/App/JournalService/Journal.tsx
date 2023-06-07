@@ -1,4 +1,4 @@
-//-- react, react-router-dom, recoil, Auth0 --//
+//-- react, react-router-dom, Auth0 --//
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
@@ -17,8 +17,6 @@ import CTA401Fallback from "./CTA401Fallback";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Journal() {
   //-- React State --//
-
-  //-- Recoil State --//
 
   //-- Auth0 --//
 

@@ -1,4 +1,4 @@
-//== react, react-router-dom, recoil, Auth0 ==//
+//== react, react-router-dom, Auth0 ==//
 
 //== TSX Components and Functions ==//
 import { reset_conversation } from "./reset_conversation";
