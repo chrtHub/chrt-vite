@@ -35,8 +35,12 @@ import { ComputerDesktopIcon, SunIcon } from "@heroicons/react/24/outline";
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 interface IProps {
   setSignOutModalOpen: React.Dispatch<SetStateAction<boolean>>;
+  setMobileSidebarOpen?: React.Dispatch<SetStateAction<boolean>>;
 }
-export default function MainMenu({ setSignOutModalOpen }: IProps) {
+export default function MainMenu({
+  setSignOutModalOpen,
+  setMobileSidebarOpen,
+}: IProps) {
   //== React State, Custom Hooks ==//
   let SiteContext = useSiteContext();
   const { user } = useAuth0();
@@ -47,7 +51,10 @@ export default function MainMenu({ setSignOutModalOpen }: IProps) {
   //== Handlers ==//
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <Menu as="div" className="relative mb-2 w-full pl-3 text-left">
+    <Menu
+      as="div"
+      className="relative mb-0 w-full pl-3 pr-3 text-left lg:mb-2 lg:pr-0"
+    >
       <div>
         <Menu.Button
           className={classNames(
@@ -161,6 +168,11 @@ export default function MainMenu({ setSignOutModalOpen }: IProps) {
               {({ active }) => (
                 <NavLink
                   to={"/support"}
+                  onClick={() => {
+                    if (setMobileSidebarOpen) {
+                      setMobileSidebarOpen(false);
+                    }
+                  }}
                   className={classNames(
                     "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
                     "text-zinc-700 dark:text-white",
@@ -179,6 +191,11 @@ export default function MainMenu({ setSignOutModalOpen }: IProps) {
               {({ active }) => (
                 <NavLink
                   to={"/terms"}
+                  onClick={() => {
+                    if (setMobileSidebarOpen) {
+                      setMobileSidebarOpen(false);
+                    }
+                  }}
                   className={classNames(
                     "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
                     "text-zinc-700 dark:text-white",
@@ -199,6 +216,11 @@ export default function MainMenu({ setSignOutModalOpen }: IProps) {
               {({ active }) => (
                 <NavLink
                   to={"/account"}
+                  onClick={() => {
+                    if (setMobileSidebarOpen) {
+                      setMobileSidebarOpen(false);
+                    }
+                  }}
                   className={classNames(
                     "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
                     "text-zinc-700 dark:text-white",
@@ -214,6 +236,11 @@ export default function MainMenu({ setSignOutModalOpen }: IProps) {
               {({ active }) => (
                 <NavLink
                   to={"/account/subscriptions"}
+                  onClick={() => {
+                    if (setMobileSidebarOpen) {
+                      setMobileSidebarOpen(false);
+                    }
+                  }}
                   className={classNames(
                     "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
                     "text-zinc-700 dark:text-white",
@@ -229,6 +256,11 @@ export default function MainMenu({ setSignOutModalOpen }: IProps) {
               {({ active }) => (
                 <NavLink
                   to={"/account/settings"}
+                  onClick={() => {
+                    if (setMobileSidebarOpen) {
+                      setMobileSidebarOpen(false);
+                    }
+                  }}
                   className={classNames(
                     "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
                     "text-zinc-700 dark:text-white",
@@ -252,6 +284,9 @@ export default function MainMenu({ setSignOutModalOpen }: IProps) {
                   onClick={() => {
                     //-- Open "Confirm Sign Out" Modal --//
                     setSignOutModalOpen(true);
+                    if (setMobileSidebarOpen) {
+                      setMobileSidebarOpen(false);
+                    }
                   }}
                   className={classNames(
                     "flex w-full flex-row items-center justify-start gap-3 rounded-b-md px-4 py-2 text-sm",
