@@ -39,7 +39,7 @@ import MainMenu from "./MainMenu";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function AppLayout() {
   //== React State ==//
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
   const [signOutModalOpen, setSignOutModalOpen] = useState<boolean>(false);
 
   //-- Synchronize with current pathname: (1) highlighted nav item, (2) secondary items in sidebar --//
@@ -136,12 +136,12 @@ export default function AppLayout() {
         {/* END OF TOAST CONTAINER */}
 
         {/* START OF MOBILE SIDEBAR */}
-        <Transition.Root show={sidebarOpen} as={Fragment}>
+        <Transition.Root show={mobileSidebarOpen} as={Fragment}>
           <Dialog
             id="app-layout-mobile-sidebar"
             as="div"
             className="relative z-40 lg:hidden"
-            onClose={setSidebarOpen}
+            onClose={setMobileSidebarOpen}
           >
             <Transition.Child
               as={Fragment}
@@ -184,7 +184,7 @@ export default function AppLayout() {
                       <button
                         type="button"
                         className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black dark:focus:ring-white"
-                        onClick={() => setSidebarOpen(false)}
+                        onClick={() => setMobileSidebarOpen(false)}
                       >
                         <span className="sr-only">Close sidebar</span>
                         <XMarkIcon
@@ -220,7 +220,7 @@ export default function AppLayout() {
                           key={item.name}
                           to={item.to}
                           onClick={() => {
-                            setSidebarOpen(false);
+                            setMobileSidebarOpen(false);
                           }}
                           className={classNames(
                             pathname.match(/^\/([^/]+)/)?.[0] === item.to //-- First param of pathname --//
@@ -256,7 +256,10 @@ export default function AppLayout() {
 
                   {/* START OF MAIN MENU */}
                   <div className="z-30">
-                    <MainMenu setSignOutModalOpen={setSignOutModalOpen} />
+                    <MainMenu
+                      setSignOutModalOpen={setSignOutModalOpen}
+                      setMobileSidebarOpen={setMobileSidebarOpen}
+                    />
                   </div>
                   {/* END OF MAIN MENU */}
                 </Dialog.Panel>
@@ -364,7 +367,7 @@ export default function AppLayout() {
               <button
                 type="button"
                 className="pr-4 text-zinc-500 hover:text-green-600 hover:outline-none hover:ring-2 hover:ring-inset hover:ring-transparent lg:hidden"
-                onClick={() => setSidebarOpen(true)}
+                onClick={() => setMobileSidebarOpen(true)}
               >
                 <span className="sr-only">Open sidebar</span>
                 <Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
