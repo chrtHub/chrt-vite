@@ -113,92 +113,73 @@ export default function MainMenu({
           className={classNames(
             "absolute bottom-full left-3 mb-1.5 w-56 divide-y rounded-md shadow-lg",
             "ring-2 ring-inset focus:outline-none",
-            "divide-zinc-400 bg-zinc-200 ring-zinc-400",
-            "dark:divide-zinc-700 dark:bg-zinc-800 dark:ring-zinc-700"
+            "divide-zinc-300 bg-zinc-100 ring-zinc-200",
+            "dark:divide-zinc-600 dark:bg-zinc-800 dark:ring-zinc-700"
           )}
         >
           {/* START OF THEME */}
-          <div className="px-1 py-1 ">
+          <div>
             <Menu.Item key={"light-dark-mode-button"}>
-              {({ active }) => (
-                <a
-                  className={classNames(
-                    active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                    "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
-                  )}
-                >
-                  <span className="isolate inline-flex rounded-md shadow-sm">
-                    {/* Light Mode Button */}
-                    <Tooltip placement="top" content="Light Mode">
-                      <button
-                        type="button"
-                        onClick={SiteContext.setManualLightMode}
-                        className={classNames(
-                          SiteContext.themeButtonSelection === "light"
-                            ? "bg-zinc-700 text-white"
-                            : "bg-white text-zinc-700 hover:bg-zinc-300",
-                          "relative inline-flex items-center rounded-l-md border border-zinc-700 px-4 py-2 text-sm font-medium focus:z-10 focus:outline-none dark:border-zinc-700 "
-                        )}
-                      >
-                        <span className="sr-only">Light Mode</span>
-                        <SunIcon className="h-5 w-5" aria-hidden="true" />
-                      </button>
-                    </Tooltip>
+              <div className="w-full">
+                {/* Light Mode Button */}
+                <Tooltip placement="top" content="Light Mode">
+                  <button
+                    type="button"
+                    onClick={SiteContext.setManualLightMode}
+                    className={classNames(
+                      "relative inline-flex w-1/3 items-center justify-center rounded-tl-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10",
+                      SiteContext.themeButtonSelection === "light" ? "" : ""
+                    )}
+                  >
+                    <SunIcon className="h-5 w-5" aria-hidden="true" />
+                  </button>
+                </Tooltip>
 
-                    {/* Match System Mode Button + Tooltip */}
-                    <Tooltip placement="top" content="System Mode">
-                      <button
-                        type="button"
-                        onClick={SiteContext.setOSTheme}
-                        className={classNames(
-                          !SiteContext.themeButtonSelection
-                            ? "bg-zinc-700 text-white"
-                            : "bg-white text-zinc-700 hover:bg-zinc-300",
-                          "relative -ml-px inline-flex items-center border border-zinc-700 px-4 py-2 text-sm font-medium focus:z-10 focus:outline-none  dark:border-zinc-700 "
-                        )}
-                      >
-                        <span className="sr-only">Match OS Mode</span>
-                        <ComputerDesktopIcon
-                          className="h-5 w-5"
-                          aria-hidden="true"
-                        />
-                      </button>
-                    </Tooltip>
+                {/* Match System Mode Button + Tooltip */}
+                <Tooltip placement="top" content="System Mode">
+                  <button
+                    type="button"
+                    onClick={SiteContext.setOSTheme}
+                    className={classNames(
+                      "relative -ml-px inline-flex w-1/3 items-center justify-center bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10",
+                      !SiteContext.themeButtonSelection ? "" : ""
+                    )}
+                  >
+                    <ComputerDesktopIcon
+                      className="h-5 w-5"
+                      aria-hidden="true"
+                    />
+                  </button>
+                </Tooltip>
 
-                    {/* Dark Mode Button + Tooltip */}
-                    <Tooltip placement="top" content="Dark Mode">
-                      <button
-                        type="button"
-                        onClick={SiteContext.setManualDarkMode}
-                        data-tooltip="Dark Mode"
-                        className={classNames(
-                          SiteContext.themeButtonSelection === "dark"
-                            ? "bg-zinc-700 text-white"
-                            : "bg-white text-zinc-700 hover:bg-zinc-300",
-                          "relative -ml-px inline-flex items-center rounded-r-md border border-zinc-700 px-4 py-2 text-sm font-medium focus:z-10 focus:outline-none dark:border-zinc-700 "
-                        )}
-                      >
-                        <span className="sr-only">Dark Mode</span>
-                        <MoonIcon className="h-5 w-5" aria-hidden="true" />
-                      </button>
-                    </Tooltip>
-                  </span>
-                </a>
-              )}
+                {/* Dark Mode Button + Tooltip */}
+                <Tooltip placement="top" content="Dark Mode">
+                  <button
+                    type="button"
+                    onClick={SiteContext.setManualDarkMode}
+                    className={classNames(
+                      "relative -ml-px inline-flex w-1/3 items-center justify-center rounded-tr-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10",
+                      SiteContext.themeButtonSelection === "dark" ? "" : ""
+                    )}
+                  >
+                    <MoonIcon className="h-5 w-5" aria-hidden="true" />
+                  </button>
+                </Tooltip>
+              </div>
             </Menu.Item>
           </div>
           {/* END OF THEME */}
 
           {/* START OF TERMS */}
-          <div className="px-1 py-1 ">
+          <div>
             <Menu.Item key={"terms-privacy-faq"}>
               {({ active }) => (
                 <NavLink
                   to={"/terms"}
                   className={classNames(
-                    "flex flex-row items-center justify-start gap-3",
-                    active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                    "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                    "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
+                    "text-zinc-700 dark:text-white",
+                    active ? "bg-zinc-200 dark:bg-zinc-700" : ""
                   )}
                 >
                   <DocumentTextIcon className="h-6 w-6" />
@@ -210,15 +191,15 @@ export default function MainMenu({
           {/* END OF TERMS */}
 
           {/* START OF ACCOUNT, SUBSCRIPTIONS, SETTINGS */}
-          <div className="px-1 py-1 ">
+          <div>
             <Menu.Item>
               {({ active }) => (
                 <NavLink
                   to={"/account"}
                   className={classNames(
-                    "flex flex-row items-center justify-start gap-3",
-                    active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                    "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                    "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
+                    "text-zinc-700 dark:text-white",
+                    active ? "bg-zinc-200 dark:bg-zinc-700" : ""
                   )}
                 >
                   <UserIcon className="h-6 w-6" />
@@ -231,9 +212,9 @@ export default function MainMenu({
                 <NavLink
                   to={"/account/subscriptions"}
                   className={classNames(
-                    "flex flex-row items-center justify-start gap-3",
-                    active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                    "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                    "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
+                    "text-zinc-700 dark:text-white",
+                    active ? "bg-zinc-200 dark:bg-zinc-700" : ""
                   )}
                 >
                   <KeyIcon className="h-6 w-6" />
@@ -246,9 +227,9 @@ export default function MainMenu({
                 <NavLink
                   to={"/settings"}
                   className={classNames(
-                    "flex flex-row items-center justify-start gap-3",
-                    active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                    "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                    "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
+                    "text-zinc-700 dark:text-white",
+                    active ? "bg-zinc-200 dark:bg-zinc-700" : ""
                   )}
                 >
                   <Cog8ToothIcon className="h-6 w-6" />
@@ -260,24 +241,24 @@ export default function MainMenu({
           {/* END OF ACCOUNT, SUBSCRIPTIONS, SETTINGS */}
 
           {/* START OF SIGN OUT */}
-          <div className="px-1 py-1 ">
+          <div>
             {/* Sign Out Button  */}
             <Menu.Item key={"sign-out-button"}>
               {({ active }) => (
-                <a
+                <button
                   onClick={() => {
                     //-- Open "Confirm Sign Out" Modal --//
                     setSignOutModalOpen(true);
                   }}
                   className={classNames(
-                    "flex flex-row items-center justify-start gap-3",
-                    active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                    "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                    "flex w-full flex-row items-center justify-start gap-3 rounded-b-md px-4 py-2 text-sm",
+                    "text-zinc-700 dark:text-white",
+                    active ? "bg-zinc-200 dark:bg-zinc-700" : ""
                   )}
                 >
                   <ArrowLeftOnRectangleIcon className="h-6 w-6" />
                   <p>Sign Out</p>
-                </a>
+                </button>
               )}
             </Menu.Item>
           </div>
