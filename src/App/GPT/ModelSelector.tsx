@@ -1,4 +1,4 @@
-//-- react, react-router-dom, recoil, Auth0 --//
+//-- react, react-router-dom, Auth0 --//
 import { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
@@ -24,7 +24,6 @@ export default function ModelSelector() {
   //-- React State --//
   const CC = useChatContext();
 
-  //-- Recoil State --//
   //-- Auth --//
   //-- Other [] --//
 

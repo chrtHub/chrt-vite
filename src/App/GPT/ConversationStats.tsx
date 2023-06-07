@@ -1,4 +1,4 @@
-//-- react, react-router-dom, recoil, Auth0 --//
+//-- react, react-router-dom, Auth0 --//
 import { useChatContext } from "../../Context/ChatContext";
 import { Fragment, useState, useEffect } from "react";
 
@@ -34,7 +34,6 @@ export default function ConversationStats(props: { rowArrayLength: number }) {
     useState<number>(0);
   const CC = useChatContext();
 
-  //-- Recoil State --//
   //-- Auth --//
   //-- Other [] --//
   const created_at = CC.conversation?.created_at;

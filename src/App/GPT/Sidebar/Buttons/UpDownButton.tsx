@@ -18,7 +18,7 @@ export const UpDownButton: React.FC<StyledButtonProps> = ({
       type="button"
       className={classNames(
         //-- Normal --//
-        "mb-2 mt-0 inline-flex w-full items-center justify-center gap-x-1.5 rounded-md border-2 px-2.5 py-1 text-sm font-semibold shadow-sm",
+        "mb-1.5 mt-0 inline-flex w-full items-center justify-center gap-x-1.5 rounded-md border-2 px-2.5 py-1 text-sm font-semibold shadow-sm",
         //-- Hover --//
         frozen
           ? "cursor-not-allowed border-zinc-300 text-zinc-300 dark:text-zinc-600"

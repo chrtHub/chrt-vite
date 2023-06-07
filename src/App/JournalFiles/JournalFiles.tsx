@@ -1,7 +1,7 @@
-//-- react, react-router-dom, recoil, Auth0 --//
+//-- react, react-router-dom, Auth0 --//
 import { Fragment, useState, useEffect, useRef } from "react";
-import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useJournalContext } from "../../Context/JournalContext";
 
 //-- TSX Components --//
 import FileDropArea from "./FileDropArea";
@@ -35,10 +35,8 @@ import orderBy from "lodash/orderBy";
 import classNames from "../../Util/classNames";
 
 //-- Environment Variables, TypeScript Interfaces, Data Objects --//
+import { IFileMetadata } from "./types";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
-import { filesListState } from "./atoms";
-import { IFileMetadata } from "./atoms";
-
 interface IBrokerage {
   id: number;
   nickname: string;
@@ -74,6 +72,9 @@ const tableColumns: ITableRow[] = [
 interface IProps {}
 export default function JournalFiles({}: IProps) {
   //-- React State --//
+
+  let JournalContext = useJournalContext();
+
   const [selectedBrokerage, setSelectedBrokerage] = useState<IBrokerage>(
     brokerages[0]
   );
@@ -92,10 +93,6 @@ export default function JournalFiles({}: IProps) {
 
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false); //-- <Transition show={} /> requies false, not null --//
   const cancelButtonRef = useRef<HTMLButtonElement | null>(null);
-
-  //-- Recoil State --//
-  const [filesList, setFilesList] =
-    useRecoilState<IFileMetadata[]>(filesListState);
 
   //-- Auth --//
   const { getAccessTokenSilently } = useAuth0();
@@ -117,7 +114,7 @@ export default function JournalFiles({}: IProps) {
           },
         }
       );
-      setFilesList(res.data);
+      JournalContext.setFilesList(res.data);
       //----//
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -266,11 +263,11 @@ export default function JournalFiles({}: IProps) {
   const sortByHandler = (columnName: string) => {
     //-- Sort ('_.orderBy') descending. But if already sorted descending, sort ascending. --//
     const sortedFilesList = orderBy(
-      filesList, //-- array --//
+      JournalContext.filesListState, //-- array --// // TODO - test this
       [columnName], //-- column to order by --//
       [currentSort === `${columnName}_desc` ? "asc" : "desc"] //-- asc or desc --//
     );
-    setFilesList(sortedFilesList);
+    JournalContext.setFilesList(sortedFilesList);
     setCurrentSort(
       currentSort === `${columnName}_desc`
         ? `${columnName}_asc`
@@ -476,7 +473,7 @@ export default function JournalFiles({}: IProps) {
 
                   {/* Table Body */}
                   <tbody className="divide-y divide-zinc-200 bg-white dark:divide-zinc-800 dark:bg-zinc-800">
-                    {filesList.map((file, fileIdx) => (
+                    {JournalContext.filesListState.map((file, fileIdx) => (
                       <tr
                         key={file.id}
                         className={classNames(
@@ -543,7 +540,7 @@ export default function JournalFiles({}: IProps) {
         <button
           disabled={
             !tableSelectionFile?.filename ||
-            filesList[0].filename === "exampleFileName.csv"
+            JournalContext.filesListState[0].filename === "exampleFileName.csv"
           }
           type="button"
           className={classNames(
@@ -560,7 +557,7 @@ export default function JournalFiles({}: IProps) {
         <button
           disabled={
             !tableSelectionFile?.filename ||
-            filesList[0].filename === "exampleFileName.csv"
+            JournalContext.filesListState[0].filename === "exampleFileName.csv"
           }
           type="button"
           className={classNames(

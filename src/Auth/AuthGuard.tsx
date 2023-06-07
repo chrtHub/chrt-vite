@@ -5,7 +5,6 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 //-- TSX Components --//
 
 //-- NPM Components --//
-import { LockClosedIcon } from "@heroicons/react/24/outline";
 
 //-- Icons --//
 

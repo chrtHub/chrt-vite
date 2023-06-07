@@ -1,4 +1,4 @@
-//== react, react-router-dom, recoil, Auth0 ==//
+//== react, react-router-dom, Auth0 ==//
 import { useState } from "react";
 
 //== TSX Components, Functions ==//
@@ -51,14 +51,14 @@ export default function Subscriptions() {
       />
 
       {/* "Welcome to the Free Preview" Section */}
-      <div className="mx-auto text-center">
+      {/* <div className="mx-auto text-center">
         <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-200 lg:text-4xl">
           Welcome to the Free Preview
         </h2>
         <p className="mt-2 text-lg leading-8 text-zinc-600 dark:text-zinc-300">
           No credit card required
         </p>
-      </div>
+      </div> */}
 
       {/* START OF FREE PREVIEW ACCESS BOX */}
       <div className="mx-auto mb-4 mt-2 rounded-3xl bg-zinc-50 ring-1 ring-zinc-200 dark:bg-zinc-800 dark:ring-zinc-700 lg:mx-0 lg:flex">
@@ -107,13 +107,16 @@ export default function Subscriptions() {
               <p className="text-base font-semibold text-zinc-600 dark:text-zinc-100">
                 Limited time only
               </p>
+              <p className="mt-2 text-base font-semibold text-zinc-600 dark:text-zinc-100">
+                No credit card required
+              </p>
               {/* Price */}
               {!isRoleActive(ROLE_NAME, AccountContext) && (
-                <p className="mt-6 flex items-baseline justify-center gap-x-2">
+                <p className="mt-2 flex items-baseline justify-center gap-x-2">
                   <span className="text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
                     $0
                   </span>
-                  <span className="text-sm font-semibold leading-6 tracking-wide text-zinc-600">
+                  <span className="text-sm font-semibold leading-6 tracking-wide text-zinc-600 dark:text-zinc-200">
                     USD
                   </span>
                 </p>

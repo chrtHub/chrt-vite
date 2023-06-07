@@ -1,4 +1,4 @@
-//-- react, react-router-dom, recoil, Auth0 --//
+//-- react, react-router-dom, Auth0 --//
 import { RefObject, SetStateAction } from "react";
 
 //-- TSX Components and Functions --//

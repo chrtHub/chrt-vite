@@ -1,7 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState, useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import { useSiteContext } from "../../Context/SiteContext";
 
 //-- TSX Components --//
 
@@ -26,7 +26,6 @@ import jwtDecode from "jwt-decode";
 import classNames from "../../Util/classNames";
 
 //-- Data Objects --//
-import { echartsThemeState } from "../../Layout/atoms";
 import {
   ExclamationTriangleIcon,
   InformationCircleIcon,
@@ -34,6 +33,7 @@ import {
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function DevResources() {
+  let SiteContext = useSiteContext();
   const [accessToken, setAccessToken] = useState<string>("");
   const [accessTokenDecoded, setAccessTokenDecoded] = useState<object>({});
   const [viewDecodedToken, setViewDecodedToken] = useState<boolean>(false);
@@ -64,16 +64,15 @@ export default function DevResources() {
   };
 
   /** JSON theme */
-  const echartsTheme = useRecoilValue(echartsThemeState);
   useEffect(() => {
-    if (echartsTheme === "light") {
+    if (SiteContext.theme === "light") {
       let theme: ThemeKeys = "rjv-default";
       setJSONTheme(theme);
-    } else if (echartsTheme === "dark") {
+    } else if (SiteContext.theme === "dark") {
       let theme: ThemeKeys = "brewer";
       setJSONTheme(theme);
     }
-  }, [echartsTheme]);
+  }, [SiteContext.theme]);
 
   useEffect(() => {
     const fetchToken = async () => {

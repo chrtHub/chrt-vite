@@ -1,6 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
 import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components and Functions --//
 import { useAccountContext } from "../../Context/AccountContext";
@@ -24,7 +25,7 @@ export default function Account() {
   //-- State, Context, Custom Hooks --//
   const [copyConfirm, setCopyConfirm] = useState<boolean>(false);
   let AccountContext = useAccountContext();
-  const { getAccessTokenSilently, user } = useAuth0();
+  const { user } = useAuth0();
   const [clipboardValue, copyToClipboard] = useCopyToClipboard();
 
   //-- Other --//
@@ -69,6 +70,7 @@ export default function Account() {
           <div className="flex flex-row justify-start gap-x-4 lg:gap-x-8">
             <img
               src={user?.picture}
+              referrerPolicy="no-referrer" //-- Prevents intermittent 403 error, https://community.auth0.com/t/google-account-picture-request-forbidden/42031/11 --//
               alt={user?.name}
               className="mt-1.5 h-24 w-24 rounded-lg object-cover"
             />

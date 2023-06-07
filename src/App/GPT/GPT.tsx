@@ -1,4 +1,4 @@
-//-- react, react-router-dom, recoil, Auth0 --//
+//-- react, react-router-dom, Auth0 --//
 import { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useParams } from "react-router-dom";
@@ -22,8 +22,6 @@ import { ObjectId } from "bson";
 export default function GPT() {
   //-- React State --//
   const { entity_type, conversation_id } = useParams();
-
-  //-- Recoil State --//
 
   //-- Auth --//
   //-- Redirect to sign in if token is expired --//

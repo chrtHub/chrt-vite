@@ -37,7 +37,6 @@
 - [React Router 6](https://reactrouter.com/en/main)
 - [Tailwind](https://tailwindcss.com/)
 - [Headless UI](https://headlessui.com/)
-- [Recoil](https://recoiljs.org/) - same shape as useState, but for global objects
 - [S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) - for static hosting of SPA
 - [CloudFront CDN](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
 

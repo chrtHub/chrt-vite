@@ -1,4 +1,4 @@
-//== react, react-router-dom, recoil, Auth0 ==//
+//== react, react-router-dom, Auth0 ==//
 import { useState, useEffect, useRef } from "react";
 import { useChatContext } from "../../Context/ChatContext";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -9,7 +9,6 @@ import { send_message } from "./chatson/Functions/send_message";
 import { countTokens } from "./chatson/Util/countTokens";
 
 //== NPM Components ==//
-import { useErrorBoundary } from "react-error-boundary";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import TextareaAutosize from "react-textarea-autosize";
@@ -263,7 +262,8 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
           >
             <img
               src={user?.picture}
-              alt={user?.name}
+              referrerPolicy="no-referrer" //-- Prevents intermittent 403 error, https://community.auth0.com/t/google-account-picture-request-forbidden/42031/11 --//
+              alt={user?.name || "user photo"}
               className={classNames(
                 mobile ? "h-8 w-8 rounded-full" : "h-10 w-10 rounded-full"
               )}

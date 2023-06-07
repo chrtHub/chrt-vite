@@ -1,7 +1,7 @@
-//-- react, react-router-dom, recoil, Auth0 --//
+//-- react, react-router-dom, Auth0 --//
 import { useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useJournalContext } from "../../Context/JournalContext";
 
 //-- TSX Components --//
 import EChart from "../EChart/EChart";
@@ -19,7 +19,6 @@ import numeral from "numeral";
 import classNames from "../../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
-import { journalPL45DaysAtom } from "./atoms";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
@@ -27,10 +26,7 @@ let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 export default function PL_45_Days() {
   //-- React State --//
   const [loading, setLoading] = useState<boolean>(false);
-
-  //-- Recoil State --//
-  const [journalPL45Days, setJournalPL45Days] =
-    useRecoilState(journalPL45DaysAtom);
+  let JournalContext = useJournalContext();
 
   //-- Auth --//
   const { getAccessTokenSilently } = useAuth0();
@@ -100,7 +96,7 @@ export default function PL_45_Days() {
       {
         name: "Quantity",
         type: "bar",
-        data: journalPL45Days,
+        data: JournalContext.journalPL45Days,
         itemStyle: {
           normal: {
             color: function (params: any) {
@@ -145,8 +141,8 @@ export default function PL_45_Days() {
         });
         let reversedDatesAndProfits = datesAndProfits.reverse();
 
-        //-- Set Recoil state --//
-        setJournalPL45Days(reversedDatesAndProfits);
+        //-- Set state --//
+        JournalContext.setJournalPL45Days(reversedDatesAndProfits);
       } catch (err) {
         if (err instanceof AxiosError) {
           axiosErrorToaster(err);
