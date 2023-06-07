@@ -117,58 +117,47 @@ export default function MainMenu({
             "dark:divide-zinc-600 dark:bg-zinc-800 dark:ring-zinc-700"
           )}
         >
-          {/* START OF THEME */}
-          <div>
-            <Menu.Item key={"light-dark-mode-button"}>
-              <div className="w-full">
-                {/* Light Mode Button */}
-                <Tooltip placement="top" content="Light Mode">
-                  <button
-                    type="button"
-                    onClick={SiteContext.setManualLightMode}
-                    className={classNames(
-                      "relative inline-flex w-1/3 items-center justify-center rounded-tl-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10",
-                      SiteContext.themeButtonSelection === "light" ? "" : ""
-                    )}
-                  >
-                    <SunIcon className="h-5 w-5" aria-hidden="true" />
-                  </button>
-                </Tooltip>
-
-                {/* Match System Mode Button + Tooltip */}
-                <Tooltip placement="top" content="System Mode">
-                  <button
-                    type="button"
-                    onClick={SiteContext.setOSTheme}
-                    className={classNames(
-                      "relative -ml-px inline-flex w-1/3 items-center justify-center bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10",
-                      !SiteContext.themeButtonSelection ? "" : ""
-                    )}
-                  >
-                    <ComputerDesktopIcon
-                      className="h-5 w-5"
-                      aria-hidden="true"
-                    />
-                  </button>
-                </Tooltip>
-
-                {/* Dark Mode Button + Tooltip */}
-                <Tooltip placement="top" content="Dark Mode">
-                  <button
-                    type="button"
-                    onClick={SiteContext.setManualDarkMode}
-                    className={classNames(
-                      "relative -ml-px inline-flex w-1/3 items-center justify-center rounded-tr-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10",
-                      SiteContext.themeButtonSelection === "dark" ? "" : ""
-                    )}
-                  >
-                    <MoonIcon className="h-5 w-5" aria-hidden="true" />
-                  </button>
-                </Tooltip>
-              </div>
-            </Menu.Item>
+          <div className="flex w-full flex-row pb-0.5 pt-1">
+            <Tooltip placement="top" content="Light Mode">
+              <button
+                onClick={SiteContext.setManualLightMode}
+                className={classNames(
+                  "mx-3 flex w-1/3 flex-row items-center justify-center rounded-full py-2",
+                  SiteContext.themeButtonSelection === "light"
+                    ? "bg-yellow-300 text-zinc-600"
+                    : "text-zinc-700 hover:bg-zinc-500 hover:text-zinc-100 dark:text-zinc-100"
+                )}
+              >
+                <SunIcon className="h-5 w-5" />
+              </button>
+            </Tooltip>
+            <Tooltip placement="top" content="System Mode">
+              <button
+                onClick={SiteContext.setOSTheme}
+                className={classNames(
+                  "mx-3 flex w-1/3 flex-row items-center justify-center rounded-full py-2",
+                  !SiteContext.themeButtonSelection
+                    ? "bg-green-600 text-white dark:bg-green-800"
+                    : "text-zinc-700 hover:bg-zinc-500 hover:text-zinc-100 dark:text-zinc-100"
+                )}
+              >
+                <ComputerDesktopIcon className="h-5 w-5" />
+              </button>
+            </Tooltip>
+            <Tooltip placement="top" content="Dark Mode">
+              <button
+                onClick={SiteContext.setManualDarkMode}
+                className={classNames(
+                  "mx-3 flex w-1/3 flex-row items-center justify-center rounded-full py-2",
+                  SiteContext.themeButtonSelection === "dark"
+                    ? "bg-zinc-900 text-zinc-100"
+                    : "text-zinc-700 hover:bg-zinc-500 hover:text-zinc-100 dark:text-zinc-100"
+                )}
+              >
+                <MoonIcon className="h-5 w-5" />
+              </button>
+            </Tooltip>
           </div>
-          {/* END OF THEME */}
 
           {/* START OF TERMS */}
           <div>
