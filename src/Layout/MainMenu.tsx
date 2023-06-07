@@ -45,17 +45,6 @@ export default function MainMenu({
 
   //== Auth ==//
   //== Other ==//
-
-  //-- userNavigationItems array depend on infoMode --//
-  interface IUserNavigationItem {
-    name: string;
-    to: string;
-  }
-  let userNavigationItems: IUserNavigationItem[] = [
-    { name: "Account & Subscriptions", to: "/account" },
-    { name: "Settings", to: "/settings" },
-  ];
-
   //== Side Effects ==//
   //== Handlers ==//
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
@@ -124,273 +113,157 @@ export default function MainMenu({
             "dark:divide-zinc-700 dark:bg-zinc-800 dark:ring-zinc-700"
           )}
         >
+          {/* START OF THEME */}
+          <div className="px-1 py-1 ">
+            <Menu.Item key={"light-dark-mode-button"}>
+              {({ active }) => (
+                <a
+                  className={classNames(
+                    active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                    "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                  )}
+                >
+                  <span className="isolate inline-flex rounded-md shadow-sm">
+                    {/* Light Mode Button */}
+                    <Tooltip placement="top" content="Light Mode">
+                      <button
+                        type="button"
+                        onClick={SiteContext.setManualLightMode}
+                        className={classNames(
+                          SiteContext.themeButtonSelection === "light"
+                            ? "bg-zinc-700 text-white"
+                            : "bg-white text-zinc-700 hover:bg-zinc-300",
+                          "relative inline-flex items-center rounded-l-md border border-zinc-700 px-4 py-2 text-sm font-medium focus:z-10 focus:outline-none dark:border-zinc-700 "
+                        )}
+                      >
+                        <span className="sr-only">Light Mode</span>
+                        <SunIcon className="h-5 w-5" aria-hidden="true" />
+                      </button>
+                    </Tooltip>
+
+                    {/* Match System Mode Button + Tooltip */}
+                    <Tooltip placement="top" content="System Mode">
+                      <button
+                        type="button"
+                        onClick={SiteContext.setOSTheme}
+                        className={classNames(
+                          !SiteContext.themeButtonSelection
+                            ? "bg-zinc-700 text-white"
+                            : "bg-white text-zinc-700 hover:bg-zinc-300",
+                          "relative -ml-px inline-flex items-center border border-zinc-700 px-4 py-2 text-sm font-medium focus:z-10 focus:outline-none  dark:border-zinc-700 "
+                        )}
+                      >
+                        <span className="sr-only">Match OS Mode</span>
+                        <ComputerDesktopIcon
+                          className="h-5 w-5"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </Tooltip>
+
+                    {/* Dark Mode Button + Tooltip */}
+                    <Tooltip placement="top" content="Dark Mode">
+                      <button
+                        type="button"
+                        onClick={SiteContext.setManualDarkMode}
+                        data-tooltip="Dark Mode"
+                        className={classNames(
+                          SiteContext.themeButtonSelection === "dark"
+                            ? "bg-zinc-700 text-white"
+                            : "bg-white text-zinc-700 hover:bg-zinc-300",
+                          "relative -ml-px inline-flex items-center rounded-r-md border border-zinc-700 px-4 py-2 text-sm font-medium focus:z-10 focus:outline-none dark:border-zinc-700 "
+                        )}
+                      >
+                        <span className="sr-only">Dark Mode</span>
+                        <MoonIcon className="h-5 w-5" aria-hidden="true" />
+                      </button>
+                    </Tooltip>
+                  </span>
+                </a>
+              )}
+            </Menu.Item>
+          </div>
+          {/* END OF THEME */}
+
+          {/* START OF ACCOUNT, SUBSCRIPTIONS, SETTINGS */}
           <div className="px-1 py-1 ">
             <Menu.Item>
               {({ active }) => (
-                <button
-                  className={`${
-                    active
-                      ? "bg-zinc-500 text-white"
-                      : "text-zinc-900 dark:text-zinc-200"
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                >
-                  {active ? (
-                    <Cog8ToothIcon
-                      className="mr-2 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                  ) : (
-                    <Cog8ToothIcon
-                      className="mr-2 h-5 w-5"
-                      aria-hidden="true"
-                    />
+                <NavLink
+                  to={"/account"}
+                  className={classNames(
+                    active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                    "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
                   )}
-                  Edit
-                </button>
+                >
+                  Account
+                </NavLink>
               )}
             </Menu.Item>
             <Menu.Item>
               {({ active }) => (
-                <button
-                  className={`${
-                    active
-                      ? "bg-zinc-500 text-white"
-                      : "text-zinc-900 dark:text-zinc-200"
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                >
-                  {active ? (
-                    <Cog8ToothIcon
-                      className="mr-2 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                  ) : (
-                    <Cog8ToothIcon
-                      className="mr-2 h-5 w-5"
-                      aria-hidden="true"
-                    />
+                <NavLink
+                  to={"/account/subscriptions"}
+                  className={classNames(
+                    active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                    "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
                   )}
-                  Duplicate
-                </button>
+                >
+                  Subscriptions
+                </NavLink>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <NavLink
+                  to={"/settings"}
+                  className={classNames(
+                    active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                    "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
+                  )}
+                >
+                  Settings
+                </NavLink>
               )}
             </Menu.Item>
           </div>
-          <div className="px-1 py-1">
-            <Menu.Item>
+          {/* END OF ACCOUNT, SUBSCRIPTIONS, SETTINGS */}
+
+          {/* START OF TERMS+PRIVACY+FAQ AND SIGN OUT */}
+          <div className="px-1 py-1 ">
+            <Menu.Item key={"terms-privacy-faq"}>
               {({ active }) => (
-                <button
-                  className={`${
-                    active
-                      ? "bg-zinc-500 text-white"
-                      : "text-zinc-900 dark:text-zinc-200"
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                >
-                  {active ? (
-                    <Cog8ToothIcon
-                      className="mr-2 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                  ) : (
-                    <Cog8ToothIcon
-                      className="mr-2 h-5 w-5"
-                      aria-hidden="true"
-                    />
+                <NavLink
+                  to={"/terms"}
+                  className={classNames(
+                    active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                    "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
                   )}
-                  Archive
-                </button>
+                >
+                  Terms, Privacy, FAQ, etc.
+                </NavLink>
               )}
             </Menu.Item>
-            <Menu.Item>
+
+            {/* Sign Out Button  */}
+            <Menu.Item key={"sign-out-button"}>
               {({ active }) => (
-                <button
-                  className={`${
-                    active
-                      ? "bg-zinc-500 text-white"
-                      : "text-zinc-900 dark:text-zinc-200"
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                >
-                  {active ? (
-                    <Cog8ToothIcon
-                      className="mr-2 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                  ) : (
-                    <Cog8ToothIcon
-                      className="mr-2 h-5 w-5"
-                      aria-hidden="true"
-                    />
+                <a
+                  onClick={() => {
+                    //-- Open "Confirm Sign Out" Modal --//
+                    setSignOutModalOpen(true);
+                  }}
+                  className={classNames(
+                    active ? "bg-zinc-100 dark:bg-zinc-800" : "",
+                    "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
                   )}
-                  Move
-                </button>
+                >
+                  {user ? <p>Sign Out</p> : <p>Homepage</p>}
+                </a>
               )}
             </Menu.Item>
           </div>
-          <div className="px-1 py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  className={`${
-                    active
-                      ? "bg-zinc-500 text-white"
-                      : "text-zinc-900 dark:text-zinc-200"
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                >
-                  {active ? (
-                    <Cog8ToothIcon
-                      className="mr-2 h-5 w-5 text-zinc-400"
-                      aria-hidden="true"
-                    />
-                  ) : (
-                    <Cog8ToothIcon
-                      className="mr-2 h-5 w-5 text-zinc-400"
-                      aria-hidden="true"
-                    />
-                  )}
-                  Delete
-                </button>
-              )}
-            </Menu.Item>
-          </div>
-
-          {/* NEW */}
-          <Menu.Item key={"light-dark-mode-button"}>
-            {({ active }) => (
-              <a
-                className={classNames(
-                  active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                  "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
-                )}
-              >
-                <span className="isolate inline-flex rounded-md shadow-sm">
-                  {/* Light Mode Button */}
-                  <Tooltip placement="top" content="Light Mode">
-                    <button
-                      type="button"
-                      onClick={SiteContext.setManualLightMode}
-                      className={classNames(
-                        SiteContext.themeButtonSelection === "light"
-                          ? "bg-zinc-700 text-white"
-                          : "bg-white text-zinc-700 hover:bg-zinc-300",
-                        "relative inline-flex items-center rounded-l-md border border-zinc-700 px-4 py-2 text-sm font-medium focus:z-10 focus:outline-none dark:border-zinc-700 "
-                      )}
-                    >
-                      <span className="sr-only">Light Mode</span>
-                      <SunIcon className="h-5 w-5" aria-hidden="true" />
-                    </button>
-                  </Tooltip>
-
-                  {/* Match System Mode Button + Tooltip */}
-                  <Tooltip placement="top" content="System Mode">
-                    <button
-                      type="button"
-                      onClick={SiteContext.setOSTheme}
-                      className={classNames(
-                        !SiteContext.themeButtonSelection
-                          ? "bg-zinc-700 text-white"
-                          : "bg-white text-zinc-700 hover:bg-zinc-300",
-                        "relative -ml-px inline-flex items-center border border-zinc-700 px-4 py-2 text-sm font-medium focus:z-10 focus:outline-none  dark:border-zinc-700 "
-                      )}
-                    >
-                      <span className="sr-only">Match OS Mode</span>
-                      <ComputerDesktopIcon
-                        className="h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    </button>
-                  </Tooltip>
-
-                  {/* Dark Mode Button + Tooltip */}
-                  <Tooltip placement="top" content="Dark Mode">
-                    <button
-                      type="button"
-                      onClick={SiteContext.setManualDarkMode}
-                      data-tooltip="Dark Mode"
-                      className={classNames(
-                        SiteContext.themeButtonSelection === "dark"
-                          ? "bg-zinc-700 text-white"
-                          : "bg-white text-zinc-700 hover:bg-zinc-300",
-                        "relative -ml-px inline-flex items-center rounded-r-md border border-zinc-700 px-4 py-2 text-sm font-medium focus:z-10 focus:outline-none dark:border-zinc-700 "
-                      )}
-                    >
-                      <span className="sr-only">Dark Mode</span>
-                      <MoonIcon className="h-5 w-5" aria-hidden="true" />
-                    </button>
-                  </Tooltip>
-                </span>
-              </a>
-            )}
-          </Menu.Item>
-
-          {/* !infomode to use NavLink (react router links) */}
-          {!infoMode &&
-            userNavigationItems.map((item) => (
-              <Menu.Item key={item.name}>
-                {({ active }) => (
-                  <NavLink
-                    to={item.to}
-                    // onClick={() => setCurrentNavItem(item.to)}
-                    className={classNames(
-                      active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                      "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
-                    )}
-                  >
-                    {item.name}
-                  </NavLink>
-                )}
-              </Menu.Item>
-            ))}
-
-          {/* infomode to use a + href (to cause browser to reload) */}
-          {infoMode &&
-            userNavigationItems.map((item) => (
-              <Menu.Item key={item.name}>
-                {({ active }) => (
-                  <a
-                    href={`${window.location.origin}${item.to}`}
-                    className={classNames(
-                      active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                      "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
-                    )}
-                  >
-                    {item.name}
-                  </a>
-                )}
-              </Menu.Item>
-            ))}
-
-          {/* Terms, Privacy, & More */}
-          <Menu.Item key={"terms-privacy-faq"}>
-            {({ active }) => (
-              <a
-                href={`${window.location.origin}/terms`}
-                className={classNames(
-                  active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                  "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
-                )}
-              >
-                Terms, Privacy, FAQ, etc.
-              </a>
-            )}
-          </Menu.Item>
-
-          {/* Sign Out Button  */}
-          <Menu.Item key={"sign-out-button"}>
-            {({ active }) => (
-              <a
-                onClick={() => {
-                  //-- Open "Confirm Sign Out" Modal --//
-                  setSignOutModalOpen(true);
-                }}
-                className={classNames(
-                  active ? "bg-zinc-100 dark:bg-zinc-800" : "",
-                  "block px-4 py-2 text-sm text-zinc-700 dark:text-white"
-                )}
-              >
-                {user ? <p>Sign Out</p> : <p>Homepage</p>}
-              </a>
-            )}
-          </Menu.Item>
-
-          {/* NEW */}
+          {/* END OF TERMS+PRIVACY+FAQ AND SIGN OUT */}
         </Menu.Items>
       </Transition>
     </Menu>
