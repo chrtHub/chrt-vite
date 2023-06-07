@@ -34,15 +34,9 @@ import { ComputerDesktopIcon, SunIcon } from "@heroicons/react/24/outline";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 interface IProps {
-  signOutModalOpen: boolean;
   setSignOutModalOpen: React.Dispatch<SetStateAction<boolean>>;
-  infoMode: boolean;
 }
-export default function MainMenu({
-  signOutModalOpen,
-  setSignOutModalOpen,
-  infoMode,
-}: IProps) {
+export default function MainMenu({ setSignOutModalOpen }: IProps) {
   //== React State, Custom Hooks ==//
   let SiteContext = useSiteContext();
   const { user } = useAuth0();

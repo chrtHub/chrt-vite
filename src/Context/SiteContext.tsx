@@ -11,6 +11,7 @@ import {
 
 //-- Create interface and Context --//
 export interface ISiteContext {
+  infoMode: boolean;
   theme: string | null;
   setTheme: React.Dispatch<React.SetStateAction<string | null>>;
   eChartsTheme: string | null;
@@ -72,6 +73,22 @@ function SiteContextProvider({ children }: PropsWithChildren) {
     setThemeButtonSelection("light");
   };
 
+  //-- State values --//
+  const infoModeRoutes: string[] = [
+    "/info",
+    "/cookies",
+    "/faq",
+    "/oauth2_google",
+    "/privacy",
+    "/product_specific_terms",
+    "/support",
+    "/system_requirements",
+    "/terms",
+  ];
+  const [infoMode, setInfoMode] = useState<boolean>(
+    infoModeRoutes.includes(window.location.pathname)
+  );
+
   //-- If theme set in localStorage, use that ("light" | "dark" | null) --//
   let initialTheme: string | null = localStorage.getItem("theme");
   //-- Else use OS preference --//
@@ -80,8 +97,6 @@ function SiteContextProvider({ children }: PropsWithChildren) {
       ? (initialTheme = "dark")
       : (initialTheme = "light");
   }
-
-  //-- State values --//
   const [theme, setTheme] = useState<string | null>(initialTheme);
   const [eChartsTheme, setEChartsTheme] = useState<string | null>(initialTheme);
   const [themeButtonSelection, setThemeButtonSelection] = useState<
@@ -90,6 +105,7 @@ function SiteContextProvider({ children }: PropsWithChildren) {
 
   //-- Bundle values into siteContextValue --//
   const siteContextValue: ISiteContext = {
+    infoMode,
     theme,
     setTheme,
     eChartsTheme,
