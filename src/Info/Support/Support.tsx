@@ -43,17 +43,7 @@ export default function Support() {
   return (
     <>
       {/* <InfoPagesNav /> */}
-      <div className="isolate mt-12 bg-pink-200">
-        <div className="mx-auto text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-4xl">
-            Contact Support
-          </h2>
-          <p className="mt-2 text-lg leading-8 text-zinc-600 dark:text-zinc-300">
-            Is something not working?
-            <br />
-            Contact us! :)
-          </p>
-        </div>
+      <div className="isolate">
         <div className="mx-auto mt-6 space-y-16">
           {/* Technical Support */}
           <div className="flex gap-x-6">
