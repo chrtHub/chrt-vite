@@ -43,7 +43,6 @@ export default function Support() {
   const supportRequestSubject = encodeURIComponent(
     `Support request from user ${user?.email} - topic: ...`
   );
-  console.log(supportRequestSubject); // DEV
 
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
