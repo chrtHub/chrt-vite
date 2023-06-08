@@ -144,14 +144,15 @@ export default function OAuth2GoogleDoc() {
       <h3 id="other">Other</h3>
       <ul>
         <li>
-          CHRT&#39;s{" "}
+          <a href={`${window.location.origin}/terms`}>Terms of Service</a>
+        </li>
+        <li>
           <a href={`${window.location.origin}/privacy`}>
             Privacy Statement (a.k.a. Privacy Policy)
           </a>
         </li>
         <li>
-          Other info, such as our Terms of Service and Cookies policy, can be
-          found at <a href={`${window.location.origin}/info`}>chrt.com/info</a>
+          <a href={`${window.location.origin}/cookies`}>Cookies Policy</a>
         </li>
       </ul>
     </>
