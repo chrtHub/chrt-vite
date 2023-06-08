@@ -162,6 +162,71 @@ export default function MainMenu({
           </div>
           {/* END OF THEME */}
 
+          {/* START OF ACCOUNT, SETTINGS, SUBSCRIPTIONS */}
+          <div>
+            <Menu.Item>
+              {({ active }) => (
+                <NavLink
+                  to={"/account"}
+                  onClick={() => {
+                    if (setMobileSidebarOpen) {
+                      setMobileSidebarOpen(false);
+                    }
+                  }}
+                  className={classNames(
+                    "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
+                    "text-zinc-700 dark:text-white",
+                    active ? "bg-zinc-200 dark:bg-zinc-700" : ""
+                  )}
+                >
+                  <UserIcon className="h-6 w-6" />
+                  Account
+                </NavLink>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <NavLink
+                  to={"/account/settings"}
+                  onClick={() => {
+                    if (setMobileSidebarOpen) {
+                      setMobileSidebarOpen(false);
+                    }
+                  }}
+                  className={classNames(
+                    "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
+                    "text-zinc-700 dark:text-white",
+                    active ? "bg-zinc-200 dark:bg-zinc-700" : ""
+                  )}
+                >
+                  <Cog8ToothIcon className="h-6 w-6" />
+                  Settings
+                </NavLink>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <NavLink
+                  to={"/account/subscriptions"}
+                  onClick={() => {
+                    if (setMobileSidebarOpen) {
+                      setMobileSidebarOpen(false);
+                    }
+                  }}
+                  className={classNames(
+                    "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
+                    "text-zinc-700 dark:text-white",
+                    active ? "bg-zinc-200 dark:bg-zinc-700" : ""
+                  )}
+                >
+                  <KeyIcon className="h-6 w-6" />
+                  Subscriptions
+                </NavLink>
+              )}
+            </Menu.Item>
+          </div>
+          {/* END OF ACCOUNT, SETTINGS, SUBSCRIPTIONS */}
+
           <div>
             {/* START OF SUPPORT */}
             <Menu.Item key={"support"}>
@@ -209,71 +274,6 @@ export default function MainMenu({
             </Menu.Item>
           </div>
           {/* END OF TERMS */}
-
-          {/* START OF ACCOUNT, SUBSCRIPTIONS, SETTINGS */}
-          <div>
-            <Menu.Item>
-              {({ active }) => (
-                <NavLink
-                  to={"/account"}
-                  onClick={() => {
-                    if (setMobileSidebarOpen) {
-                      setMobileSidebarOpen(false);
-                    }
-                  }}
-                  className={classNames(
-                    "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
-                    "text-zinc-700 dark:text-white",
-                    active ? "bg-zinc-200 dark:bg-zinc-700" : ""
-                  )}
-                >
-                  <UserIcon className="h-6 w-6" />
-                  Account
-                </NavLink>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <NavLink
-                  to={"/account/subscriptions"}
-                  onClick={() => {
-                    if (setMobileSidebarOpen) {
-                      setMobileSidebarOpen(false);
-                    }
-                  }}
-                  className={classNames(
-                    "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
-                    "text-zinc-700 dark:text-white",
-                    active ? "bg-zinc-200 dark:bg-zinc-700" : ""
-                  )}
-                >
-                  <KeyIcon className="h-6 w-6" />
-                  Subscriptions
-                </NavLink>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <NavLink
-                  to={"/account/settings"}
-                  onClick={() => {
-                    if (setMobileSidebarOpen) {
-                      setMobileSidebarOpen(false);
-                    }
-                  }}
-                  className={classNames(
-                    "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
-                    "text-zinc-700 dark:text-white",
-                    active ? "bg-zinc-200 dark:bg-zinc-700" : ""
-                  )}
-                >
-                  <Cog8ToothIcon className="h-6 w-6" />
-                  Settings
-                </NavLink>
-              )}
-            </Menu.Item>
-          </div>
-          {/* END OF ACCOUNT, SUBSCRIPTIONS, SETTINGS */}
 
           {/* START OF SIGN OUT */}
           <div>

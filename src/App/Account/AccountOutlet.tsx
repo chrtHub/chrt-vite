@@ -29,16 +29,16 @@ export default function AccountOutlet() {
       icon: UserIcon,
     },
     {
-      name: "Subscriptions",
-      href: "/account/subscriptions",
-      current: location.pathname === "/account/subscriptions",
-      icon: KeyIcon,
-    },
-    {
       name: "Settings",
       href: "/account/settings",
       current: location.pathname === "/account/settings",
       icon: Cog8ToothIcon,
+    },
+    {
+      name: "Subscriptions",
+      href: "/account/subscriptions",
+      current: location.pathname === "/account/subscriptions",
+      icon: KeyIcon,
     },
   ];
 
