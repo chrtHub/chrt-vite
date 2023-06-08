@@ -110,10 +110,8 @@ export default function ConfirmSignOutModal({
                       "sm:ml-3 sm:w-auto"
                     )}
                     onClick={() => {
-                      //-- Remove localStorage items --//
-                      // localStorage.clear()
-                      localStorage.removeItem("theme");
-                      localStorage.removeItem("sortBy");
+                      //-- Clear localStorage --//
+                      localStorage.clear();
                       //-- Logout --//
                       logout({
                         logoutParams: {

@@ -109,8 +109,8 @@ export default function DevResources() {
                 staff.
               </li>
               <li>
-                Your Auth Token rotates each ~7 days and provides full access to
-                your account.
+                Your Auth Token rotates daily (86,400s) and provides full access
+                to your account.
               </li>
               <li>
                 If you are familiar with keeping an Auth Token secure, you may
