@@ -110,8 +110,8 @@ export default function InfoPagesNav() {
                   className={classNames(
                     "flex h-full flex-row items-center rounded-lg px-2 py-2 text-sm",
                     item.current
-                      ? "bg-zinc-300 text-green-600 dark:bg-zinc-600 dark:text-green-400"
-                      : "text-zinc-500 hover:bg-zinc-200 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-300"
+                      ? "bg-zinc-400 text-zinc-50 dark:bg-zinc-600 dark:text-zinc-50"
+                      : "bg-zinc bg-zinc-200 text-zinc-500 hover:bg-zinc-300 hover:text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-200"
                   )}
                 >
                   {renderIcon(item.icon)}
