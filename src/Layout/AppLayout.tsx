@@ -5,6 +5,7 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 //-- TSX Components --//
 import Conversations from "../App/GPT/Sidebar/Conversations";
 import SignOutModal from "./SignOutModal";
+import InfoPagesNav from "../Info/InfoPagesNav";
 
 //-- NPM Components --//
 import { Dialog, Transition } from "@headlessui/react";
@@ -408,6 +409,7 @@ export default function AppLayout() {
 
             {/* START OF MAIN */}
             <main id="app-layout-react-router-Outlet" className="h-full">
+              {infoPagesMode && <InfoPagesNav />}
               <Outlet />
             </main>
             {/* END OF MAIN */}
