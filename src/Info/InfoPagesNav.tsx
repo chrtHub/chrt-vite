@@ -118,7 +118,11 @@ export default function InfoPagesNav() {
                   <div className="flex flex-col items-start justify-center">
                     <p
                       className={classNames(
-                        item.nameLine1 === "FAQ" ? "pr-4" : ""
+                        item.nameLine1 === "FAQ"
+                          ? "pr-4"
+                          : item.nameLine1 === "OAuth 2:"
+                          ? "pr-2"
+                          : ""
                       )}
                     >
                       {item.nameLine1}
