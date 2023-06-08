@@ -32,7 +32,6 @@ export default function ActiveSubscriptionsWithFallback() {
 const Component = () => {
   //== React State, Custom Hooks ==//
   let AccountContext = useAccountContext();
-  console.log("AccountContext.rolesFetched: ", AccountContext.rolesFetched); // DEV
 
   const { showBoundary } = useErrorBoundary();
   const { getAccessTokenSilently } = useAuth0();

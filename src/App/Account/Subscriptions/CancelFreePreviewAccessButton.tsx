@@ -13,8 +13,6 @@ import { useAccountContext } from "../../../Context/AccountContext";
 import { isRoleActive } from "./isRoleActive";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
-const ROLE_NAME = "Free Preview Access";
-
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 interface IProps {
   setRemoveFreePreviewAccessModalOpen: React.Dispatch<
