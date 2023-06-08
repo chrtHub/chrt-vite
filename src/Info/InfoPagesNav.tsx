@@ -116,7 +116,13 @@ export default function InfoPagesNav() {
                 >
                   {renderIcon(item.icon)}
                   <div className="flex flex-col items-start justify-center">
-                    <p>{item.nameLine1}</p>
+                    <p
+                      className={classNames(
+                        item.nameLine1 === "FAQ" ? "pr-4" : ""
+                      )}
+                    >
+                      {item.nameLine1}
+                    </p>
                     <p>{item?.nameLine2}</p>
                   </div>
                 </NavLink>
