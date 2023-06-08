@@ -1,21 +1,15 @@
 //-- react, react-router-dom, Auth0 --//
 import { Outlet, NavLink, useLocation } from "react-router-dom";
-import { useEffect } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
 
-//-- TSX Components and Functions --//
-import { useAccountContext } from "../../Context/AccountContext";
-import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
+//-- TSX Components and Functions --//;
 
 //-- NPM Components --//
 
 //-- Icons --//
 
 //-- NPM Functions --//
-import { AxiosError } from "axios";
 
 //-- Utility Functions --//
-import { getUsersPermissions } from "./getUserPermissions";
 import { KeyIcon, UserIcon } from "@heroicons/react/24/outline";
 import { Cog8ToothIcon } from "@heroicons/react/24/solid";
 import classNames from "../../Util/classNames";
@@ -26,8 +20,6 @@ import classNames from "../../Util/classNames";
 export default function AccountOutlet() {
   //== React State, Custom Hooks ==//
   const location = useLocation();
-  let AccountContext = useAccountContext();
-  const { getAccessTokenSilently, user } = useAuth0();
 
   const navigation = [
     {
@@ -59,21 +51,6 @@ export default function AccountOutlet() {
   ) => <Icon className="mr-2 h-5 w-5" aria-hidden="true" />;
 
   //== Side Effects ==//
-  //-- On mount, get user permissions --//
-  useEffect(() => {
-    async function lambda() {
-      let accessToken = await getAccessTokenSilently();
-      try {
-        await getUsersPermissions(accessToken, AccountContext);
-      } catch (err) {
-        if (err instanceof AxiosError) {
-          axiosErrorToaster(err, "Get subscriptions");
-        }
-      }
-      AccountContext.setRolesFetched(true);
-    }
-    lambda();
-  }, []);
 
   //== Event Handlers ==//
 

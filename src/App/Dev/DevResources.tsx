@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSiteContext } from "../../Context/SiteContext";
 
 //-- TSX Components --//
-import DevSandbox from "../../Errors/ErrorInvokers/ErrorInvokers";
+import ErrorInvokers from "../../Errors/ErrorInvokers/ErrorInvokers";
 
 //-- NPM Components --//
 import { Popover } from "@headlessui/react";
@@ -239,7 +239,7 @@ export default function DevResources() {
       {/* END OF JSON */}
 
       {/* START OF ERROR INVOKERS */}
-      <DevSandbox />
+      <ErrorInvokers />
       {/* END OF ERROR INVOKERS */}
     </div>
   );

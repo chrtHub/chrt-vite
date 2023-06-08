@@ -24,9 +24,9 @@ import GPT from "./App/GPT/GPT";
 
 //-- TSX Components: Account --//
 import AccountOutlet from "./App/Account/AccountOutlet";
-import Account from "./App/Account/Account";
+import Account from "./App/Account/Account/Account";
 import Subscriptions from "./App/Account/Subscriptions/Subscriptions";
-import DevResources from "./App/Account/DevResources";
+import DevResources from "./App/Dev/DevResources";
 
 //-- TSX Components: Settings --//
 import Settings from "./App/Settings/Settings";

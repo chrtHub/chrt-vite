@@ -16,7 +16,7 @@ import { getErrorDetails } from "../Errors/getErrorDetails";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
-export default function ComponentName() {
+export default function ComponentNameWithFallback() {
   return (
     <ErrorBoundary FallbackComponent={Fallback}>
       <Component />
@@ -24,11 +24,12 @@ export default function ComponentName() {
   );
 }
 
+//-- ***** ***** ***** COMPONENT ***** ***** ***** --//
 const Component = () => {
   //== React State, Custom Hooks ==//
   //== Auth ==//
   //== Other ==//
-  throwAxiosError(400);
+  throwAxiosError(400); // DEV
 
   //== Side Effects ==//
   //== Event Handlers ==//
@@ -40,6 +41,7 @@ const Component = () => {
   );
 };
 
+//-- ***** ***** ***** FALLBACK ***** ***** ***** --//
 const Fallback = ({ error }: { error: Error }) => {
   const {
     errorMessage,
