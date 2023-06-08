@@ -1,5 +1,5 @@
 //-- react, react-router-dom, Auth0 --//
-import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 //-- TSX Components and Functions --//
 
@@ -135,9 +135,6 @@ export default function InfoPagesNav() {
           </ul>
         </nav>
       </div>
-
-      {/* Outlet */}
-      <Outlet />
     </div>
   );
 }

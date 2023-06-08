@@ -1,7 +1,6 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- TSX Components --//
-import InfoPagesNav from "../InfoPagesNav";
 import TypographyWrapper from "../TypographyWrapper";
 import CookiesDoc from "./CookiesDoc";
 
@@ -19,7 +18,6 @@ import CookiesDoc from "./CookiesDoc";
 export default function Cookies() {
   return (
     <>
-      <InfoPagesNav />
       <TypographyWrapper>
         <CookiesDoc />
       </TypographyWrapper>

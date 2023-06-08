@@ -11,9 +11,9 @@ import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
 import { useCopyToClipboard } from "usehooks-ts";
-import classNames from "../../../Util/classNames";
 
 //-- Utility Functions --//
+import classNames from "../../../Util/classNames";
 
 //-- Data Objects, Types --//
 import ActiveSubscriptionsWithFallback from "./ActiveSubscriptionsWithFallback";
@@ -137,7 +137,7 @@ export default function Account() {
         {/* END OF LHS */}
 
         {/* START OF RHS */}
-        <div className="col-span-3 flex w-64 flex-col gap-2 lg:col-span-2">
+        <div className="col-span-3 flex w-80 flex-col gap-2 lg:col-span-2">
           <button
             type="button"
             onClick={() => {
@@ -157,10 +157,14 @@ export default function Account() {
             />
           </button>
           <a
-            href="mailto:support@chrt.com"
+            href={`mailto:support@chrt.com?subject=${encodeURIComponent(
+              `Delete Account for user ${user?.email}`
+            )}&body=${encodeURIComponent(
+              "Please delete my account. Thank you!"
+            )}`}
             className="rounded-md bg-fuchsia-100 px-2.5 py-1.5 text-center text-sm font-semibold text-fuchsia-600 shadow-sm hover:bg-fuchsia-100 dark:bg-fuchsia-900 dark:text-fuchsia-100 dark:hover:bg-fuchsia-800"
           >
-            Open Default Email Client
+            Open "Delete Account" Email Draft
           </a>
         </div>
         {/* END OF LHS */}
