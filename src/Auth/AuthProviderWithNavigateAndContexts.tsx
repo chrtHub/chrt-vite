@@ -28,7 +28,8 @@ export default function AuthProviderWithNavigateAndContexts() {
 
   return (
     <Auth0Provider
-      domain="chrt-prod.us.auth0.com" //-- Tenant: 'chrt-prod' --//
+      // domain="chrt-prod.us.auth0.com" //-- Tenant: 'chrt-prod' --//
+      domain="auth.chrt.com" //-- Tenant: 'chrt-prod' --//
       clientId="8bDLHYeEUfPHH81VRDBsCTN5TYklAMCu" //-- Application: 'chrt-prod-app' --//
       cacheLocation={mobile ? "localstorage" : "memory"}
       authorizationParams={{
