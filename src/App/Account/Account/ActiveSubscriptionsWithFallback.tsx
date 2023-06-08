@@ -32,6 +32,8 @@ export default function ActiveSubscriptionsWithFallback() {
 const Component = () => {
   //== React State, Custom Hooks ==//
   let AccountContext = useAccountContext();
+  console.log("AccountContext.rolesFetched: ", AccountContext.rolesFetched); // DEV
+
   const { showBoundary } = useErrorBoundary();
   const { getAccessTokenSilently } = useAuth0();
 
@@ -122,9 +124,12 @@ const Component = () => {
 const Fallback = () => {
   return (
     <div>
-      <div className="mb-3 flex h-28 flex-col items-center justify-center rounded-lg bg-yellow-200 shadow dark:bg-zinc-700">
-        <p className="mb-2 font-semibold italic text-zinc-600 dark:text-zinc-200">
-          Failed to fetch active subscriptions
+      <div className="mb-3 flex h-28 flex-col items-center justify-center rounded-lg bg-yellow-200 shadow dark:bg-yellow-900">
+        <p className="text-base font-semibold text-zinc-600 dark:text-zinc-100">
+          Auth Server temporarily unavailable
+        </p>
+        <p className="mt-2 text-base text-zinc-500 dark:text-zinc-200">
+          Please refresh the page to try again
         </p>
       </div>
     </div>

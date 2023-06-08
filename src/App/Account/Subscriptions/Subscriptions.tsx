@@ -1,12 +1,9 @@
 //== react, react-router-dom, Auth0 ==//
-import { useState, useEffect } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useState } from "react";
 
 //== TSX Components, Functions ==//
 
 import RemoveFreePreviewAccessModal from "./RemoveFreePreviewAccessModal";
-import { useAccountContext } from "../../../Context/AccountContext";
-import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
 import RHSWithFallback from "./RHSWithFallback";
 
 //== NPM Components ==//
@@ -17,10 +14,8 @@ import { CheckIcon } from "@heroicons/react/20/solid";
 //== NPM Functions ==//
 
 //== Utility Functions ==//
-import { getUsersPermissions } from "../getUserPermissions";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { AxiosError } from "axios";
 
 const includedFeatures = [
   "Trading Journal",
@@ -32,30 +27,12 @@ const includedFeatures = [
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function Subscriptions() {
   //== React State, Custom Hooks ==//
-  const { getAccessTokenSilently } = useAuth0();
-  const AccountContext = useAccountContext();
   const [removeFreePreviewAccessModal, setRemoveFreePreviewAccessModalOpen] =
     useState<boolean>(false);
 
   //== Auth ==//
   //== Other ==//
   //== Side Effects ==//
-  //-- On mount, get user permissions --//
-  useEffect(() => {
-    console.log("AccountOutlet useEffect"); // DEV
-    async function lambda() {
-      let accessToken = await getAccessTokenSilently();
-      try {
-        await getUsersPermissions(accessToken, AccountContext);
-      } catch (err) {
-        if (err instanceof AxiosError) {
-          axiosErrorToaster(err, "Get subscriptions");
-        }
-      }
-      AccountContext.setRolesFetched(true);
-    }
-    lambda();
-  }, []);
 
   //== Handlers ==//
 

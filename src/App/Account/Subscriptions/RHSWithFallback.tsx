@@ -1,12 +1,13 @@
 //== react, react-router-dom, Auth0 ==//
+import { useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useErrorBoundary } from "react-error-boundary";
 
 //== TSX Components, Functions ==//
 import AddFreePreviewAccessButton from "./AddFreePreviewAccessButton";
 import CancelFreePreviewAccessButton from "./CancelFreePreviewAccessButton";
 import { useAccountContext } from "../../../Context/AccountContext";
 import { ErrorBoundary } from "react-error-boundary";
-import { throwAxiosError } from "../../../Errors/throwAxiosError";
-import { getErrorDetails } from "../../../Errors/getErrorDetails";
 
 //== NPM Components ==//
 
@@ -15,6 +16,7 @@ import { getErrorDetails } from "../../../Errors/getErrorDetails";
 //== NPM Functions ==//
 
 //== Utility Functions ==//
+import { getUsersPermissions } from "../getUserPermissions";
 import { isRoleActive } from "./isRoleActive";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
@@ -45,13 +47,27 @@ export default function RHSWithFallback({
 const Component = ({ setRemoveFreePreviewAccessModalOpen }: IProps) => {
   //== React State, Custom Hooks ==//
   const AccountContext = useAccountContext();
+  const { getAccessTokenSilently } = useAuth0();
+  const { showBoundary } = useErrorBoundary();
 
   //== Auth ==//
 
   //== Other ==//
-  throwAxiosError(400); // DEV
+  async function fetchPermissions() {
+    let accessToken = await getAccessTokenSilently();
+    try {
+      await getUsersPermissions(accessToken, AccountContext);
+    } catch (err) {
+      showBoundary(err);
+    }
+    AccountContext.setRolesFetched(true);
+  }
 
   //== Side Effects ==//
+  //-- On mount, get user permissions --//
+  useEffect(() => {
+    fetchPermissions();
+  }, []);
 
   //== Event Handlers ==//
 
@@ -96,7 +112,7 @@ const Component = ({ setRemoveFreePreviewAccessModalOpen }: IProps) => {
 //-- ***** ***** ***** FALLBACK ***** ***** ***** --//
 const Fallback = () => {
   return (
-    <div className="flex h-full flex-col items-center justify-center rounded-2xl bg-yellow-100 py-10 pb-4 text-center ring-1 ring-inset ring-zinc-900/5 dark:bg-zinc-700 lg:pt-8">
+    <div className="flex h-full flex-col items-center justify-center rounded-2xl bg-yellow-200 py-10 pb-4 text-center ring-1 ring-inset ring-zinc-900/5 dark:bg-yellow-900 lg:pt-8">
       <div className="mx-auto px-8">
         <p className="text-base font-semibold text-zinc-600 dark:text-zinc-100">
           Auth Server temporarily unavailable
