@@ -46,7 +46,7 @@ export default function Support() {
 
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="mt-3 grid grid-cols-2 gap-3 rounded-lg p-3 dark:bg-zinc-800">
+    <div className="mt-3 grid grid-cols-2 gap-3 rounded-lg bg-zinc-200 p-3 dark:bg-zinc-800">
       {/* START OF LHS/TOP */}
       <div className="col-span-2 flex flex-row items-center justify-start lg:col-span-1">
         {/* Icon */}
@@ -75,7 +75,7 @@ export default function Support() {
         {/* Start of Email Buttons */}
         <div className="col-span-3 flex w-80 max-w-full flex-col gap-2 lg:col-span-2">
           {/* Copy Email Text */}
-          <h2 className="border-b pb-1 text-sm font-semibold dark:border-zinc-400 dark:text-zinc-100">
+          <h2 className="border-b border-zinc-400 pb-1 text-sm font-semibold text-zinc-900 dark:border-zinc-400 dark:text-zinc-100">
             Copy Email
           </h2>
           <button
@@ -97,7 +97,7 @@ export default function Support() {
             />
           </button>
           {/* Email Draft Text */}
-          <h2 className="border-b py-1 text-sm font-semibold dark:border-zinc-400 dark:text-zinc-100">
+          <h2 className="border-b border-zinc-400 py-1 text-sm font-semibold text-zinc-900 dark:border-zinc-400 dark:text-zinc-100">
             Open "Support Request" Email Draft
           </h2>
           {/* Gmail Button */}

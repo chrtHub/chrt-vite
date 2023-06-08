@@ -139,7 +139,7 @@ export default function Account() {
         {/* START OF RHS */}
         <div className="col-span-3 flex w-80 max-w-full flex-col gap-2 lg:col-span-2">
           {/* Copy Email Text */}
-          <h2 className="border-b pb-1 text-sm font-semibold dark:border-zinc-400 dark:text-zinc-100">
+          <h2 className="border-b border-zinc-300 pb-1 text-sm font-semibold text-zinc-800 dark:border-zinc-400 dark:text-zinc-100">
             Copy Email
           </h2>
           {/* Copy Email Button */}
@@ -162,7 +162,7 @@ export default function Account() {
             />
           </button>
           {/* Email Draft Text */}
-          <h2 className="border-b py-1 text-sm font-semibold dark:border-zinc-400 dark:text-zinc-100">
+          <h2 className="border-b border-zinc-300 py-1 text-sm font-semibold text-zinc-800 dark:border-zinc-400 dark:text-zinc-100">
             Open "Delete Account" Email Draft
           </h2>
           {/* Gmail button */}
