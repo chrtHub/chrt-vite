@@ -52,6 +52,9 @@ export default function AddFreePreviewAccessButton() {
         }
       );
 
+      //-- Force a fetch of the new auth token with added permissions from Auth0 --//
+      accessToken = await getAccessTokenSilently({ cacheMode: "off" });
+
       //-- Update listed permissions --//
       try {
         await getUsersPermissions(accessToken, AccountContext);
