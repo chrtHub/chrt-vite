@@ -137,7 +137,12 @@ export default function Account() {
         {/* END OF LHS */}
 
         {/* START OF RHS */}
-        <div className="col-span-3 flex w-80 flex-col gap-2 lg:col-span-2">
+        <div className="col-span-3 flex w-80 max-w-full flex-col gap-2 lg:col-span-2">
+          {/* Copy Email Text */}
+          <h2 className="border-b pb-1 text-sm font-semibold dark:border-zinc-400 dark:text-zinc-100">
+            Copy Email
+          </h2>
+          {/* Copy Email Button */}
           <button
             type="button"
             onClick={() => {
@@ -147,7 +152,7 @@ export default function Account() {
               "flex flex-row items-center justify-center rounded-md px-2.5 py-1.5 text-sm font-semibold shadow-sm ",
               copyConfirm
                 ? "animate-pulse bg-green-200 text-green-900 dark:bg-green-800 dark:text-green-200"
-                : "bg-fuchsia-100 text-fuchsia-600 hover:bg-fuchsia-100 dark:bg-fuchsia-900 dark:text-fuchsia-100 dark:hover:bg-fuchsia-800"
+                : "bg-rose-100 text-rose-600 hover:bg-rose-200 dark:bg-rose-900 dark:text-rose-100 dark:hover:bg-rose-800"
             )}
           >
             support@chrt.com
@@ -156,15 +161,35 @@ export default function Account() {
               aria-hidden="true"
             />
           </button>
+          {/* Email Draft Text */}
+          <h2 className="border-b py-1 text-sm font-semibold dark:border-zinc-400 dark:text-zinc-100">
+            Open "Delete Account" Email Draft
+          </h2>
+          {/* Gmail button */}
+          <a
+            href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+              "support@chrt.com"
+            )}&su=${encodeURIComponent(
+              `Delete Account for user ${user?.email}`
+            )}&body=${encodeURIComponent(
+              "Please delete my account. Thank you!"
+            )}`}
+            className="rounded-md bg-rose-100 px-2.5 py-1.5 text-center text-sm font-semibold text-rose-600 shadow-sm hover:bg-rose-200 dark:bg-rose-900 dark:text-rose-100 dark:hover:bg-rose-800"
+          >
+            Gmail (in browser)
+          </a>
+          {/* Default email client button */}
           <a
             href={`mailto:support@chrt.com?subject=${encodeURIComponent(
               `Delete Account for user ${user?.email}`
             )}&body=${encodeURIComponent(
               "Please delete my account. Thank you!"
             )}`}
-            className="rounded-md bg-fuchsia-100 px-2.5 py-1.5 text-center text-sm font-semibold text-fuchsia-600 shadow-sm hover:bg-fuchsia-100 dark:bg-fuchsia-900 dark:text-fuchsia-100 dark:hover:bg-fuchsia-800"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-md bg-rose-100 px-2.5 py-1.5 text-center text-sm font-semibold text-rose-600 shadow-sm hover:bg-rose-200 dark:bg-rose-900 dark:text-rose-100 dark:hover:bg-rose-800"
           >
-            Open "Delete Account" Email Draft
+            Default Email Client
           </a>
         </div>
         {/* END OF LHS */}

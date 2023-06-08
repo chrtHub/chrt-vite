@@ -39,63 +39,91 @@ export default function Support() {
     }, 500);
   };
 
+  //-- Email contents --//
+  const supportRequestSubject = encodeURIComponent(
+    `Support request from user ${user?.email} - topic: ...`
+  );
+  console.log(supportRequestSubject); // DEV
+
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <>
-      {/* <InfoPagesNav /> */}
-      <div className="isolate">
-        <div className="mx-auto mt-6 space-y-16">
-          {/* Technical Support */}
-          <div className="flex gap-x-6">
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-indigo-600">
-              <ComputerDesktopIcon
-                className="h-8 w-8 text-white"
-                aria-hidden="true"
-              />
-            </div>
-            <div>
-              <h3 className="text-base font-semibold leading-7 text-zinc-900 dark:text-zinc-100">
-                Technical support
-              </h3>
-              <p className="mt-2 leading-7 text-zinc-600 dark:text-zinc-300">
-                You can reach us by email at support@chrt.com
-              </p>
-            </div>
-
-            {/* Start of Email Buttons */}
-            <div className="col-span-3 flex w-80 flex-col gap-2 lg:col-span-2">
-              <button
-                type="button"
-                onClick={() => {
-                  copyHandler("support@chrt.com");
-                }}
-                className={classNames(
-                  "flex flex-row items-center justify-center rounded-md px-2.5 py-1.5 text-sm font-semibold shadow-sm ",
-                  copyConfirm
-                    ? "animate-pulse bg-green-200 text-green-900 dark:bg-green-800 dark:text-green-200"
-                    : "bg-fuchsia-100 text-fuchsia-600 hover:bg-fuchsia-100 dark:bg-fuchsia-900 dark:text-fuchsia-100 dark:hover:bg-fuchsia-800"
-                )}
-              >
-                support@chrt.com
-                <ClipboardDocumentIcon
-                  className="ml-2 h-6 w-6"
-                  aria-hidden="true"
-                />
-              </button>
-              <a
-                href={`mailto:support@chrt.com?subject=${encodeURIComponent(
-                  `Support request from user ${user?.email} - topic: ...`
-                )}`}
-                className="rounded-md bg-fuchsia-100 px-2.5 py-1.5 text-center text-sm font-semibold text-fuchsia-600 shadow-sm hover:bg-fuchsia-100 dark:bg-fuchsia-900 dark:text-fuchsia-100 dark:hover:bg-fuchsia-800"
-              >
-                Open "Support Request" Email Draft
-              </a>
-            </div>
-            {/* End of Email Buttons */}
+    <div className="mt-3 grid grid-cols-2 gap-3 rounded-lg p-3 dark:bg-zinc-800">
+      {/* START OF LHS/TOP */}
+      <div className="col-span-2 flex flex-row items-center justify-start lg:col-span-1">
+        {/* Icon */}
+        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-indigo-600">
+          <ComputerDesktopIcon
+            className="h-8 w-8 text-white"
+            aria-hidden="true"
+          />
+        </div>
+        <div className="ml-3 flex flex-col items-center justify-start">
+          {/* Header, subheader */}
+          <div>
+            <h3 className="text-base font-semibold leading-7 text-zinc-900 dark:text-zinc-100">
+              Technical support
+            </h3>
+            <p className="mt-2 leading-7 text-zinc-600 dark:text-zinc-300">
+              You can reach us by email
+            </p>
           </div>
-          {/* End of Technical Support */}
         </div>
       </div>
-    </>
+      {/* END OF LHS/TOP */}
+
+      {/* RHS/BOTTOM */}
+      <div className="col-span-2 lg:col-span-1">
+        {/* Start of Email Buttons */}
+        <div className="col-span-3 flex w-80 max-w-full flex-col gap-2 lg:col-span-2">
+          {/* Copy Email Text */}
+          <h2 className="border-b pb-1 text-sm font-semibold dark:border-zinc-400 dark:text-zinc-100">
+            Copy Email
+          </h2>
+          <button
+            type="button"
+            onClick={() => {
+              copyHandler("support@chrt.com");
+            }}
+            className={classNames(
+              "flex flex-row items-center justify-center rounded-md px-2.5 py-1.5 text-sm font-semibold shadow-sm ",
+              copyConfirm
+                ? "animate-pulse bg-green-200 text-green-900 dark:bg-green-800 dark:text-green-200"
+                : "bg-indigo-100 text-indigo-600 hover:bg-indigo-200 dark:bg-indigo-900 dark:text-indigo-100 dark:hover:bg-indigo-800"
+            )}
+          >
+            support@chrt.com
+            <ClipboardDocumentIcon
+              className="ml-2 h-6 w-6"
+              aria-hidden="true"
+            />
+          </button>
+          {/* Email Draft Text */}
+          <h2 className="border-b py-1 text-sm font-semibold dark:border-zinc-400 dark:text-zinc-100">
+            Open "Support Request" Email Draft
+          </h2>
+          {/* Gmail Button */}
+          <a
+            href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+              "support@chrt.com"
+            )}&su=${supportRequestSubject}`}
+            className="rounded-md bg-indigo-100 px-2.5 py-1.5 text-center text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-200 dark:bg-indigo-900 dark:text-indigo-100 dark:hover:bg-indigo-800"
+          >
+            Gmail (in browser)
+          </a>
+
+          {/* Default email client button */}
+          <a
+            href={`mailto:support@chrt.com?subject=${supportRequestSubject}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-md bg-indigo-100 px-2.5 py-1.5 text-center text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-200 dark:bg-indigo-900 dark:text-indigo-100 dark:hover:bg-indigo-800"
+          >
+            Default Email Client
+          </a>
+        </div>
+        {/* End of Email Buttons */}
+      </div>
+      {/* END OF RHS/BOTTOM */}
+    </div>
   );
 }
