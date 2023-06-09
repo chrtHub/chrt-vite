@@ -80,7 +80,6 @@ export default function ChatSession() {
   const OS_NAME = useOSName();
 
   //-- ***** ***** ***** ***** start of chatson ***** ***** ***** ***** --//
-
   //-- When conversation_id is updated (via param or CC.setConversationId), load that conversation --//
   let { entity_type, conversation_id } = useParams();
   useEffect(() => {
@@ -197,7 +196,6 @@ export default function ChatSession() {
       }
     }
   };
-
   //-- ***** ***** ***** ***** end of chatson ***** ***** ***** ***** --//
 
   //-- Chat Toast --//

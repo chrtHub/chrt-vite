@@ -18,6 +18,7 @@ import {
   DocumentTextIcon,
   EllipsisHorizontalCircleIcon,
   KeyIcon,
+  ShieldCheckIcon,
   UserCircleIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
@@ -221,6 +222,26 @@ export default function MainMenu({
                 >
                   <KeyIcon className="h-6 w-6" />
                   Subscriptions
+                </NavLink>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <NavLink
+                  to={"/account/data_privacy"}
+                  onClick={() => {
+                    if (setMobileSidebarOpen) {
+                      setMobileSidebarOpen(false);
+                    }
+                  }}
+                  className={classNames(
+                    "flex flex-row items-center justify-start gap-3 px-4 py-2 text-sm",
+                    "text-zinc-700 dark:text-white",
+                    active ? "bg-zinc-200 dark:bg-zinc-700" : ""
+                  )}
+                >
+                  <ShieldCheckIcon className="h-6 w-6" />
+                  Data Privacy
                 </NavLink>
               )}
             </Menu.Item>

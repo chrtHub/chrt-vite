@@ -14,7 +14,7 @@ import Home from "./App/Home/Home";
 import AuthProviderWithNavigateAndContexts from "./Auth/AuthProviderWithNavigateAndContexts";
 import AuthGuard from "./Auth/AuthGuard";
 
-//-- TSX Components: App --//
+//-- TSX Components: Services--//
 import App from "./App";
 import RedirectToSignIn from "./Navigation/RedirectToSignIn";
 import Data from "./App/DataService/Data";
@@ -25,11 +25,12 @@ import GPT from "./App/GPT/GPT";
 //-- TSX Components: Account --//
 import AccountOutlet from "./App/Account/AccountOutlet";
 import Account from "./App/Account/Account/Account";
+import Settings from "./App/Account/Settings/Settings";
 import Subscriptions from "./App/Account/Subscriptions/Subscriptions";
-import DevResources from "./App/Dev/DevResources";
+import DataPrivacy from "./App/Account/DataPrivacy/DataPrivacy";
 
-//-- TSX Components: Settings --//
-import Settings from "./App/Settings/Settings";
+//-- TSX Components: Special --//
+import DevResources from "./App/Dev/DevResources";
 
 //-- TSX Components: Info --//
 import Cookies from "./Info/Cookies/Cookies";
@@ -83,7 +84,10 @@ const router = createBrowserRouter(
           <Route
             path="/account/settings"
             element={<AuthGuard component={Settings} />}
-            errorElement={<RouteErrorBoundary />}
+          />
+          <Route
+            path="/account/data_privacy"
+            element={<AuthGuard component={DataPrivacy} />}
           />
         </Route>
 

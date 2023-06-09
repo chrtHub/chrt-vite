@@ -19,7 +19,6 @@ import classNames from "../../../Util/classNames";
 //-- Data Objects, Environment Variables --//
 import { useChatContext } from "../../../Context/ChatContext";
 import ConversationsRows from "./ConversationsRows";
-import { DARK_THEME_BG } from "../../../Layout/Theme";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Conversations() {

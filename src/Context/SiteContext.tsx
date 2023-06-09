@@ -11,15 +11,15 @@ import {
 
 //-- Create interface and Context --//
 export interface ISiteContext {
+  setManualDarkMode: () => void;
+  setOSTheme: () => void;
+  setManualLightMode: () => void;
   theme: string | null;
   setTheme: React.Dispatch<React.SetStateAction<string | null>>;
   eChartsTheme: string | null;
   setEChartsTheme: React.Dispatch<React.SetStateAction<string | null>>;
   themeButtonSelection: string | null;
   setThemeButtonSelection: React.Dispatch<React.SetStateAction<string | null>>;
-  setManualDarkMode: () => void;
-  setOSTheme: () => void;
-  setManualLightMode: () => void;
 }
 
 //-- Create context --//
@@ -90,15 +90,15 @@ function SiteContextProvider({ children }: PropsWithChildren) {
 
   //-- Bundle values into siteContextValue --//
   const siteContextValue: ISiteContext = {
+    setManualDarkMode,
+    setOSTheme,
+    setManualLightMode,
     theme,
     setTheme,
     eChartsTheme,
     setEChartsTheme,
     themeButtonSelection,
     setThemeButtonSelection,
-    setManualDarkMode,
-    setOSTheme,
-    setManualLightMode,
   };
 
   useEffect(() => {
