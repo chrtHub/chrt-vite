@@ -163,7 +163,7 @@ export default function MainMenu({
           </div>
           {/* END OF THEME */}
 
-          {/* START OF ACCOUNT, SETTINGS, SUBSCRIPTIONS */}
+          {/* START OF ACCOUNT, SETTINGS, SUBSCRIPTIONS, DATA PRIVACY */}
           <div>
             <Menu.Item>
               {({ active }) => (
@@ -246,7 +246,7 @@ export default function MainMenu({
               )}
             </Menu.Item>
           </div>
-          {/* END OF ACCOUNT, SETTINGS, SUBSCRIPTIONS */}
+          {/* END OF ACCOUNT, SETTINGS, SUBSCRIPTIONS, DATA PRIVACY */}
 
           <div>
             {/* START OF SUPPORT */}
