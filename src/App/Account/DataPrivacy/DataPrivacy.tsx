@@ -1,97 +1,109 @@
+import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAccountContext } from "../../../Context/AccountContext";
-import { Fragment } from "react";
+import classNames from "../../../Util/classNames";
 
 export default function DataPrivacy() {
   let AccountContext = useAccountContext();
   let { getAccessTokenSilently, user } = useAuth0();
 
+  const [termsChecked, setTermsChecked] = useState<boolean>(false);
+  const [privacyChecked, setPrivacyChecked] = useState<boolean>(false);
+  const [cookiesChecked, setCookiesChecked] = useState<boolean>(false);
+  const [ageChecked, setAgeChecked] = useState<boolean>(false);
+  const [allChecked, setAllChecked] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (termsChecked && privacyChecked && cookiesChecked && ageChecked) {
+      setAllChecked(true);
+    } else {
+      setAllChecked(false);
+    }
+  }, [termsChecked, privacyChecked, cookiesChecked, ageChecked]);
+
+  interface doc {
+    name: string;
+    href: string;
+    setterFn: React.Dispatch<React.SetStateAction<boolean>>;
+  }
+  const docs: doc[] = [
+    {
+      name: "Terms of Service",
+      href: "https://chrt.com/terms",
+      setterFn: setTermsChecked,
+    },
+    {
+      name: "Privacy Statement",
+      href: "https://chrt.com/privacy",
+      setterFn: setPrivacyChecked,
+    },
+    {
+      name: "Cookies Policy",
+      href: "https://chrt.com/cookies",
+      setterFn: setCookiesChecked,
+    },
+  ];
+
   return (
     <div className="max-w-lg rounded-lg bg-zinc-200 px-6 py-1 shadow">
-      {/* START OF CHECKBOXES */}
-      <fieldset className="border-b border-t border-gray-200">
-        <div className="divide-y divide-gray-200">
-          <div className="relative flex items-start pb-4 pt-3.5">
+      {/* CHECKBOXES */}
+      {docs.map((doc) => {
+        return (
+          <div className="relative flex items-start pt-3">
+            {/* Text and link */}
             <div className="min-w-0 flex-1 text-sm leading-6">
-              <label htmlFor="comments" className="font-medium text-gray-900">
-                Agreements
-              </label>
-              <p id="comments-description" className="text-gray-500">
-                I have reviewed and I agree to CHRT's{" "}
+              <p className="font-medium text-zinc-900">
+                I agree to CHRT's{" "}
                 <a
-                  href="https://chrt.com/terms"
+                  href={doc.href}
                   rel="noopener noreferrer"
                   target="_blank"
                   className="text-blue-600 underline"
                 >
-                  Terms of Service
+                  {doc.name}
                 </a>
-                ,{" "}
-                <a
-                  href="https://chrt.com/privacy"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  className="text-blue-600 underline"
-                >
-                  <br />
-                  Privacy Statement
-                </a>
-                , and{" "}
-                <a
-                  href="https://chrt.com/cookies"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  className="text-blue-600 underline"
-                >
-                  Cookies Policy
-                </a>
-                .
               </p>
             </div>
-            <div className="ml-3 flex h-6 items-center">
+            {/* Checkbox */}
+            <div className="flex h-6 w-10 items-center">
               <input
-                id="comments"
-                aria-describedby="comments-description"
-                name="comments"
                 type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                onChange={(event) => doc.setterFn(event.target.checked)}
+                className="h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-600"
               />
             </div>
           </div>
+        );
+      })}
 
-          <div className="relative flex items-start pb-4 pt-3.5">
-            <div className="min-w-0 flex-1 text-sm leading-6">
-              <label htmlFor="offers" className="font-medium text-gray-900">
-                Age Requirement
-              </label>
-              <p id="offers-description" className="text-gray-500">
-                I am at least 18 years of age
-              </p>
-            </div>
-            <div className="ml-3 flex h-6 items-center">
-              <input
-                id="offers"
-                aria-describedby="offers-description"
-                name="offers"
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-              />
-            </div>
-          </div>
+      {/* Age */}
+      <div className="relative flex items-start pt-3">
+        {/* Text */}
+        <div className="min-w-0 flex-1 text-sm leading-6">
+          <label className="font-medium text-zinc-900">
+            I am at least 18 years of age
+          </label>
         </div>
-      </fieldset>
-      {/* END OF CHECKBOXES */}
+        {/* Checkbox */}
+        <div className="ml-3 flex h-6 w-10 items-center">
+          <input
+            type="checkbox"
+            onChange={(event) => setAgeChecked(event.target.checked)}
+            className="h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-600"
+          />
+        </div>
+      </div>
 
       {/* START OF AGREEMENT STATEMENT AND BUTTON */}
-      <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-        <div className="text-sm text-zinc-500">
+      <div className="mt-2 flex items-start justify-between">
+        <div className="text-sm text-zinc-600">
           <p>
             By clicking "Agree" you agree to CHRT's{" "}
             <a
               href="https://chrt.com/terms"
               rel="noopener noreferrer"
               target="_blank"
-              className="text-blue-600 underline"
+              className="text-zinc-800 underline"
             >
               Terms of Service
             </a>
@@ -100,7 +112,7 @@ export default function DataPrivacy() {
               href="https://chrt.com/privacy"
               rel="noopener noreferrer"
               target="_blank"
-              className="text-blue-600 underline"
+              className="text-zinc-800 underline"
             >
               Privacy Statement
             </a>
@@ -109,7 +121,7 @@ export default function DataPrivacy() {
               href="https://chrt.com/cookies"
               rel="noopener noreferrer"
               target="_blank"
-              className="text-blue-600 underline"
+              className="text-zinc-800 underline"
             >
               Cookies Policy
             </a>
@@ -118,13 +130,19 @@ export default function DataPrivacy() {
         </div>
 
         <button
+          disabled={!allChecked}
           type="button"
-          className="inline-flex items-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
+          onClick={() => console.log("clickwrap time")}
+          className={classNames(
+            "flex items-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+            !allChecked
+              ? "cursor-not-allowed bg-zinc-400 text-white"
+              : "bg-green-600 text-white hover:bg-green-500 focus-visible:outline-green-500"
+          )}
         >
           Agree
         </button>
       </div>
-      {/* END OF AGREEMENT STATEMENT AND BUTTON */}
     </div>
   );
 }
