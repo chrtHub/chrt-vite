@@ -14,6 +14,7 @@ let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 const TERMS_VERSION_EFFECTIVE_DATE = "2023-06-09";
 const PRIVACY_VERSION_EFFECTIVE_DATE = "2023-06-09";
 const COOKIES_VERSION_EFFECTIVE_DATE = "2023-06-09";
+const AGE_REQUIREMENT_STATEMENT = "I am at least 18 years of age";
 
 export default function DataPrivacy() {
   let AccountContext = useAccountContext();
@@ -26,6 +27,35 @@ export default function DataPrivacy() {
   const [ageChecked, setAgeChecked] = useState<boolean>(false);
   const [allChecked, setAllChecked] = useState<boolean>(false);
 
+  useEffect(() => {
+    const getClickwrapUserStatus = async () => {
+      try {
+        //-- Get access token from memory or request new token --//
+        let accessToken = await getAccessTokenSilently();
+
+        //-- Make GET request --//
+        let res = await axios.get(
+          `${VITE_ALB_BASE_URL}/legal/check_clickwrap_status`,
+          {
+            headers: {
+              authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        console.log(res); // DEV
+        //----//
+      } catch (err) {
+        // console.log(err)
+        // showBoundary(err)
+        if (err instanceof AxiosError) {
+          axiosErrorToaster(err, "Check agreements"); // TODO - show error boundary within component here
+        }
+      }
+    };
+    getClickwrapUserStatus();
+  }, []);
+
+  //-- Endable/disable submit button --//
   useEffect(() => {
     if (termsChecked && privacyChecked && cookiesChecked && ageChecked) {
       setAllChecked(true);
@@ -70,12 +100,13 @@ export default function DataPrivacy() {
 
       //-- Make POST request --//
       let res = await axios.post(
-        `${VITE_ALB_BASE_URL}/legal/grant_consent`,
+        `${VITE_ALB_BASE_URL}/legal/grant_clickwrap`,
         //-- Body Content --//
         {
           TERMS_VERSION_EFFECTIVE_DATE: TERMS_VERSION_EFFECTIVE_DATE,
           PRIVACY_VERSION_EFFECTIVE_DATE: PRIVACY_VERSION_EFFECTIVE_DATE,
           COOKIES_VERSION_EFFECTIVE_DATE: COOKIES_VERSION_EFFECTIVE_DATE,
+          AGE_REQUIREMENT_STATEMENT: AGE_REQUIREMENT_STATEMENT,
         },
         {
           headers: {
@@ -89,7 +120,7 @@ export default function DataPrivacy() {
       console.log(err);
       // showBoundary(err)
       if (err instanceof AxiosError) {
-        axiosErrorToaster(err, "");
+        axiosErrorToaster(err, "Agreements");
       }
     }
 
@@ -139,7 +170,7 @@ export default function DataPrivacy() {
         {/* Text */}
         <div className="min-w-0 flex-1 text-sm leading-6">
           <label className="font-medium text-zinc-900">
-            I am at least 18 years of age
+            {AGE_REQUIREMENT_STATEMENT}
           </label>
         </div>
         {/* Checkbox */}
