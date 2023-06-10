@@ -15,6 +15,12 @@ import axios, { AxiosError } from "axios";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
+import {
+  CURRENT_TERMS_EFFECTIVE_DATE,
+  CURRENT_PRIVACY_EFFECTIVE_DATE,
+  CURRENT_COOKIES_EFFECTIVE_DATE,
+  CURRENT_AGE_REQUIREMENT_STATEMENT,
+} from "./currentAgreements";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 interface IProps {
@@ -41,7 +47,12 @@ export default function ClickwrapWithdrawButton({ setModalOpen }: IProps) {
       let res = await axios.post(
         `${VITE_ALB_BASE_URL}/legal/withdraw_clickwrap`,
         //-- Body Content --//
-        {},
+        {
+          TERMS_VERSION_EFFECTIVE_DATE: CURRENT_TERMS_EFFECTIVE_DATE,
+          PRIVACY_VERSION_EFFECTIVE_DATE: CURRENT_PRIVACY_EFFECTIVE_DATE,
+          COOKIES_VERSION_EFFECTIVE_DATE: CURRENT_COOKIES_EFFECTIVE_DATE,
+          AGE_REQUIREMENT_STATEMENT: CURRENT_AGE_REQUIREMENT_STATEMENT,
+        },
         {
           headers: {
             authorization: `Bearer ${accessToken}`,

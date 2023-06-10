@@ -18,11 +18,12 @@ import classNames from "../../../Util/classNames";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
-//-- Version effective dates --//
-const TERMS_VERSION_EFFECTIVE_DATE = "2023-06-09";
-const PRIVACY_VERSION_EFFECTIVE_DATE = "2023-06-09";
-const COOKIES_VERSION_EFFECTIVE_DATE = "2023-06-09";
-const AGE_REQUIREMENT_STATEMENT = "I am at least 18 years of age";
+import {
+  CURRENT_TERMS_EFFECTIVE_DATE,
+  CURRENT_PRIVACY_EFFECTIVE_DATE,
+  CURRENT_COOKIES_EFFECTIVE_DATE,
+  CURRENT_AGE_REQUIREMENT_STATEMENT,
+} from "./currentAgreements";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ClickwrapGrant() {
@@ -48,19 +49,19 @@ export default function ClickwrapGrant() {
   const docs: doc[] = [
     {
       name: "Terms of Service",
-      versionEffectiveDate: TERMS_VERSION_EFFECTIVE_DATE,
+      versionEffectiveDate: CURRENT_TERMS_EFFECTIVE_DATE,
       href: "https://chrt.com/terms",
       setterFn: setTermsChecked,
     },
     {
       name: "Privacy Statement",
-      versionEffectiveDate: PRIVACY_VERSION_EFFECTIVE_DATE,
+      versionEffectiveDate: CURRENT_PRIVACY_EFFECTIVE_DATE,
       href: "https://chrt.com/privacy",
       setterFn: setPrivacyChecked,
     },
     {
       name: "Cookies Policy",
-      versionEffectiveDate: COOKIES_VERSION_EFFECTIVE_DATE,
+      versionEffectiveDate: CURRENT_COOKIES_EFFECTIVE_DATE,
       href: "https://chrt.com/cookies",
       setterFn: setCookiesChecked,
     },
@@ -89,10 +90,10 @@ export default function ClickwrapGrant() {
         `${VITE_ALB_BASE_URL}/legal/grant_clickwrap`,
         //-- Body Content --//
         {
-          TERMS_VERSION_EFFECTIVE_DATE: TERMS_VERSION_EFFECTIVE_DATE,
-          PRIVACY_VERSION_EFFECTIVE_DATE: PRIVACY_VERSION_EFFECTIVE_DATE,
-          COOKIES_VERSION_EFFECTIVE_DATE: COOKIES_VERSION_EFFECTIVE_DATE,
-          AGE_REQUIREMENT_STATEMENT: AGE_REQUIREMENT_STATEMENT,
+          TERMS_VERSION_EFFECTIVE_DATE: CURRENT_TERMS_EFFECTIVE_DATE,
+          PRIVACY_VERSION_EFFECTIVE_DATE: CURRENT_PRIVACY_EFFECTIVE_DATE,
+          COOKIES_VERSION_EFFECTIVE_DATE: CURRENT_COOKIES_EFFECTIVE_DATE,
+          AGE_REQUIREMENT_STATEMENT: CURRENT_AGE_REQUIREMENT_STATEMENT,
         },
         {
           headers: {
@@ -151,7 +152,7 @@ export default function ClickwrapGrant() {
         {/* Text */}
         <div className="text-sm">
           <label className="font-medium text-zinc-900">
-            {AGE_REQUIREMENT_STATEMENT}
+            {CURRENT_AGE_REQUIREMENT_STATEMENT}
           </label>
         </div>
         {/* Checkbox */}
