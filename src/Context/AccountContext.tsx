@@ -3,7 +3,7 @@ import { useState, createContext, useContext, PropsWithChildren } from "react";
 
 //-- types --//
 import { RoleWithPermissions } from "../Auth/Auth0";
-import { IClickwrapAgreement } from "../App/Account/DataPrivacy/clickwrap_types";
+import { IClickwrapAgreement } from "../App/Account/DataPrivacy/Clickwrap/Types/clickwrap_types";
 
 //-- Create interface and Context --//
 export interface IAccountContext {

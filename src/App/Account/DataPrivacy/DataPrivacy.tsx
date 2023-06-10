@@ -1,7 +1,7 @@
 //== react, react-router-dom, Auth0 ==//
 
 //== TSX Components, Functions ==//
-import ClickwrapWithFallback from "./ClickwrapWithFallback";
+import ClickwrapWithFallback from "./Clickwrap/ClickwrapWithFallback";
 
 //== NPM Components ==//
 

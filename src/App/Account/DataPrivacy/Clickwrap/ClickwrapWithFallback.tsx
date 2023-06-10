@@ -4,25 +4,24 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
 //== TSX Components, Functions ==//
-import ClickwrapGrant from "./ClickwrapGrant";
-import ClickwrapAgreements from "./ClickwrapAgreements";
-import { useAccountContext } from "../../../Context/AccountContext";
-import { throwAxiosError } from "../../../Errors/throwAxiosError";
-import { getErrorDetails } from "../../../Errors/getErrorDetails";
-import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
-import { getClickwrapUserStatus } from "./getClickwrapUserStatus";
+import GrantConsentForm from "./GrantConsentForm";
+import ActiveAgreements from "./ActiveAgreements";
+import { useAccountContext } from "../../../../Context/AccountContext";
+import { getErrorDetails } from "../../../../Errors/getErrorDetails";
+import { getClickwrapUserStatus } from "./Util/getClickwrapUserStatus";
+
 //== NPM Components ==//
 
 //== Icons ==//
 
 //== NPM Functions ==//
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 
 //== Utility Functions ==//
-import classNames from "../../../Util/classNames";
+import classNames from "../../../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { IClickwrapUserStatus } from "./clickwrap_types";
+import { IClickwrapUserStatus } from "./Types/clickwrap_types";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 // TODO - CCPA/CRPA
@@ -90,11 +89,11 @@ const Component = () => {
       ) : // -- Else if status fetched and inactive, show clickwrap form --//
       AccountContext.clickwrapStatusFetched &&
         !AccountContext.clickwrapActive ? (
-        <ClickwrapGrant />
+        <GrantConsentForm />
       ) : //-- Else if clickwrap status is active, show list of agreements --//
       AccountContext.clickwrapStatusFetched &&
         AccountContext.clickwrapActive ? (
-        <ClickwrapAgreements />
+        <ActiveAgreements />
       ) : (
         <></>
       )}

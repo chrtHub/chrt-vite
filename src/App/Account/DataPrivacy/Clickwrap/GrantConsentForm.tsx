@@ -1,7 +1,7 @@
 //== react, react-router-dom, Auth0 ==//
 import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useAccountContext } from "../../../Context/AccountContext";
+import { useAccountContext } from "../../../../Context/AccountContext";
 import { useErrorBoundary } from "react-error-boundary";
 
 //== TSX Components, Functions ==//
@@ -13,7 +13,7 @@ import { useErrorBoundary } from "react-error-boundary";
 //== NPM Functions ==//
 import axios from "axios";
 //== Utility Functions ==//
-import classNames from "../../../Util/classNames";
+import classNames from "../../../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
@@ -23,10 +23,10 @@ import {
   CURRENT_PRIVACY_EFFECTIVE_DATE,
   CURRENT_COOKIES_EFFECTIVE_DATE,
   CURRENT_AGE_REQUIREMENT_STATEMENT,
-} from "./currentAgreements";
+} from "./Util/currentAgreements";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
-export default function ClickwrapGrant() {
+export default function GrantConsentForm() {
   //== React State, Custom Hooks ==//
   const AccountContext = useAccountContext();
   const { showBoundary } = useErrorBoundary();

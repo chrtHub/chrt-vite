@@ -1,5 +1,5 @@
-import { IAccountContext } from "../../../Context/AccountContext";
-import { IClickwrapUserStatus } from "./clickwrap_types";
+import { IAccountContext } from "../../../../../Context/AccountContext";
+import { IClickwrapUserStatus } from "../Types/clickwrap_types";
 import axios from "axios";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
