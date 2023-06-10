@@ -65,7 +65,7 @@ const Component = () => {
   let { getAccessTokenSilently, user } = useAuth0();
 
   //== Other ==//
-  throwAxiosError(400); // DEV
+  // throwAxiosError(400); // DEV
 
   const getClickwrapUserStatus = async () => {
     try {
@@ -79,7 +79,7 @@ const Component = () => {
         },
       });
       const data: IClickwrapUserStatus = res.data;
-      AccountContext.setClickwrapAgreementsActive(data.activeAgreement);
+      AccountContext.setClickwrapActive(data.activeAgreement);
       AccountContext.setClickwrapAgreements(data.agreements);
       //----//
     } catch (err) {
@@ -169,13 +169,13 @@ const Component = () => {
 
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="max-w-lg rounded-lg bg-zinc-200 px-6 py-1 shadow">
+    <div className="max-w-lg rounded-lg bg-zinc-200 px-6 py-6 shadow">
       {/* CHECKBOXES */}
       {docs.map((doc) => {
         return (
-          <div className="relative flex items-start pt-3" key={doc.name}>
+          <div className="flex flex-row items-start pb-3" key={doc.name}>
             {/* Text and link */}
-            <div className="min-w-0 flex-1 text-sm leading-6">
+            <div className="text-sm">
               <p className="font-medium text-zinc-900">
                 I agree to CHRT's{" "}
                 <a
@@ -188,45 +188,43 @@ const Component = () => {
                 </a>
               </p>
 
-              {/* NEW - version effective date*/}
               <p className="text-sm text-zinc-600">
                 Version Effective Date: {doc.versionEffectiveDate}
               </p>
             </div>
 
             {/* Checkbox */}
-            <div className="flex h-6 w-10 items-center">
+            <div className="ml-auto flex w-12 items-center justify-center">
               <input
                 type="checkbox"
                 onChange={(event) => doc.setterFn(event.target.checked)}
-                className="h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-600"
+                className="h-5 w-5 rounded border-zinc-300 text-green-600 focus:ring-green-600"
               />
             </div>
           </div>
         );
       })}
-
       {/* Age */}
-      <div className="relative flex items-start pt-3">
+      <div className="flex flex-row items-start pb-3">
         {/* Text */}
-        <div className="min-w-0 flex-1 text-sm leading-6">
+        <div className="text-sm">
           <label className="font-medium text-zinc-900">
             {AGE_REQUIREMENT_STATEMENT}
           </label>
         </div>
         {/* Checkbox */}
-        <div className="ml-3 flex h-6 w-10 items-center">
+        <div className="ml-auto flex w-12 items-center justify-center">
           <input
             type="checkbox"
             onChange={(event) => setAgeChecked(event.target.checked)}
-            className="h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-600"
+            className="h-5 w-5 rounded border-zinc-300 text-green-600 focus:ring-green-600"
           />
         </div>
       </div>
 
       {/* START OF AGREEMENT STATEMENT AND BUTTON */}
-      <div className="mt-2 flex items-start justify-between">
-        <div className="text-sm text-zinc-600">
+      <div className="flex flex-row pt-3">
+        <div className="max-w-xs text-sm text-zinc-600">
           <p>
             By clicking "Agree" you agree to CHRT's{" "}
             <a
@@ -237,7 +235,7 @@ const Component = () => {
             >
               Terms of Service
             </a>
-            , <br />
+            ,{" "}
             <a
               href="https://chrt.com/privacy"
               rel="noopener noreferrer"
@@ -258,20 +256,23 @@ const Component = () => {
             . You also confirm that you are at least 18 years of age.
           </p>
         </div>
-
-        <button
-          disabled={!allChecked}
-          type="button"
-          onClick={submitClickwrapHandler}
-          className={classNames(
-            "flex items-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
-            !allChecked
-              ? "cursor-not-allowed bg-zinc-400 text-white"
-              : "bg-green-600 text-white hover:bg-green-500 focus-visible:outline-green-500"
-          )}
-        >
-          Agree
-        </button>
+        {/* Agree Button */}
+        <div className="ml-auto flex w-32 flex-col justify-end">
+          <button
+            disabled={!allChecked}
+            type="button"
+            onClick={submitClickwrapHandler}
+            className={classNames(
+              "flex w-full items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+              !allChecked
+                ? "cursor-not-allowed bg-zinc-400 text-white"
+                : "bg-green-600 text-white hover:bg-green-500 focus-visible:outline-green-500"
+            )}
+          >
+            Agree
+          </button>
+        </div>
+        {/* End of agree button */}
       </div>
     </div>
   );
