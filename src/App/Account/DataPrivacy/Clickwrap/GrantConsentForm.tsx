@@ -5,6 +5,7 @@ import { useAccountContext } from "../../../../Context/AccountContext";
 import { useErrorBoundary } from "react-error-boundary";
 
 //== TSX Components, Functions ==//
+import { getClickwrapUserStatus } from "./Util/getClickwrapUserStatus";
 
 //== NPM Components ==//
 
@@ -16,6 +17,7 @@ import axios from "axios";
 import classNames from "../../../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
+import { doc } from "./Types/clickwrap_types";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 import {
@@ -40,12 +42,6 @@ export default function GrantConsentForm() {
   let { getAccessTokenSilently, user } = useAuth0();
 
   //== Other ==//
-  interface doc {
-    name: string;
-    versionEffectiveDate: string;
-    href: string;
-    setterFn: React.Dispatch<React.SetStateAction<boolean>>;
-  }
   const docs: doc[] = [
     {
       name: "Terms of Service",
@@ -79,7 +75,7 @@ export default function GrantConsentForm() {
 
   //== Handlers ==//
   //-- Submit Clickwrap Handler --//
-  const submitClickwrapHandler = async () => {
+  const grantConsentHandler = async () => {
     AccountContext.setClickwrapStatusChanging(true);
     try {
       //-- Get access token from memory or request new token --//
@@ -102,10 +98,12 @@ export default function GrantConsentForm() {
         }
       );
       AccountContext.setClickwrapStatusChanging(false);
+
+      //-- Fetch and update user's clickwrap status --//
+      await getClickwrapUserStatus(accessToken, AccountContext);
       //----//
     } catch (err) {
       AccountContext.setClickwrapStatusChanging(false);
-      console.log(err);
       showBoundary(err);
     }
   };
@@ -204,7 +202,7 @@ export default function GrantConsentForm() {
           <button
             disabled={!allChecked}
             type="button"
-            onClick={submitClickwrapHandler}
+            onClick={grantConsentHandler}
             className={classNames(
               "flex w-full items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
               !allChecked

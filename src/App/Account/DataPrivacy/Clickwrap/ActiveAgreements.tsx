@@ -30,12 +30,16 @@ export default function Agreements() {
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
     <div className="max-w-sm rounded-lg bg-zinc-200">
+      {/* START OF AGREEMENTS */}
       <p>
         {AccountContext.clickwrapAgreements.map((agreement) => {
           return <p>{agreement.name}</p>;
         })}
       </p>
       <ShieldCheckIcon className="h-12 w-12 text-green-600" />
+      {/* END OF AGREEMENTS */}
+
+      {/* WITHDRAW CONSENT BUTTON AND MODAL */}
       <WithdrawConsentButtonAndModal />
     </div>
   );

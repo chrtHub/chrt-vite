@@ -22,6 +22,8 @@ import classNames from "../../../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { IClickwrapUserStatus } from "./Types/clickwrap_types";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { throwAxiosError } from "../../../../Errors/throwAxiosError";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 // TODO - CCPA/CRPA
@@ -75,30 +77,38 @@ const Component = () => {
   //== Event Handlers ==//
 
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
-  return (
-    <>
-      {/*-- Before fetch, show skeleton --*/}
-      {!AccountContext.clickwrapStatusFetched ? (
-        <div className="flex h-32 max-w-sm animate-pulse items-center justify-center rounded-lg bg-zinc-200">
-          <p className="text-zinc-500">Loading...</p>
-        </div>
-      ) : AccountContext.clickwrapStatusChanging ? (
-        <div className="flex h-32 max-w-sm animate-pulse items-center justify-center rounded-lg bg-zinc-200">
-          <p className="text-zinc-500">Updating...</p>
-        </div>
-      ) : // -- Else if status fetched and inactive, show clickwrap form --//
-      AccountContext.clickwrapStatusFetched &&
-        !AccountContext.clickwrapActive ? (
-        <GrantConsentForm />
-      ) : //-- Else if clickwrap status is active, show list of agreements --//
-      AccountContext.clickwrapStatusFetched &&
-        AccountContext.clickwrapActive ? (
-        <ActiveAgreements />
-      ) : (
-        <></>
-      )}
-    </>
-  );
+  //-- Before fetch, show "Loading..." skeleton --//
+  if (!AccountContext.clickwrapStatusFetched) {
+    return (
+      <div className="flex h-32 max-w-lg animate-pulse items-center justify-center rounded-lg bg-zinc-200">
+        <p className="text-zinc-500">Loading...</p>
+      </div>
+    );
+  }
+  //-- Else if status is changing, show "Updating..." skeleton --//
+  else if (AccountContext.clickwrapStatusChanging) {
+    return (
+      <div className="flex h-32 max-w-lg animate-pulse items-center justify-center rounded-lg bg-zinc-200">
+        <p className="text-zinc-500">Updating...</p>
+      </div>
+    );
+  }
+  //-- Else if status fetched and inactive, show clickwrap form --//
+  else if (
+    AccountContext.clickwrapStatusFetched &&
+    !AccountContext.clickwrapActive
+  ) {
+    return <GrantConsentForm />;
+  }
+  //-- Else if clickwrap status is active, show list of agreements --//
+  else if (
+    AccountContext.clickwrapStatusFetched &&
+    AccountContext.clickwrapActive
+  ) {
+    return <ActiveAgreements />;
+  }
+  //-- For type safety, always return something --//
+  return <></>;
 };
 
 //-- ***** ***** ***** FALLBACK ***** ***** ***** --//
@@ -110,25 +120,29 @@ const Fallback = ({ error }: { error: Error }) => {
     axiosHTTPStatus,
     axiosHTTPStatusText,
   } = getErrorDetails(error);
-  const is401Error = axiosHTTPStatus === "401";
 
-  //-- 401 errors --//
-  if (is401Error) {
-    return (
-      <div>
-        <p>{axiosHTTPStatus}</p>
+  //-- Generic error skeleton with message and icon --//
+  return (
+    <div className="flex h-full flex-col items-center justify-center rounded-2xl bg-amber-200 py-3 text-center ring-1 ring-inset ring-amber-300 dark:bg-amber-900">
+      {/* Icon */}
+      <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-amber-300">
+        <ExclamationTriangleIcon
+          className="h-6 w-6 text-amber-700"
+          aria-hidden="true"
+        />
       </div>
-    );
-  }
-  //-- non-401 errors --//
-  else {
-    return (
-      <div>
-        <p>{errorMessage}</p>
-        <p>{axiosServerMessage}</p>
-        <p>{axiosHTTPStatus}</p>
-        <p>{axiosHTTPStatusText}</p>
+      {/* Text */}
+      <div className="mx-auto px-8">
+        <p className="mt-3 text-base font-semibold text-zinc-600 dark:text-zinc-100">
+          Server temporarily unavailable
+        </p>
+        <p className="mt-2 text-base text-zinc-500 dark:text-zinc-200">
+          Please refresh the page to try again
+        </p>
+        <p className="mt-2 text-base italic text-zinc-400 dark:text-zinc-300">
+          {axiosHTTPStatus}
+        </p>
       </div>
-    );
-  }
+    </div>
+  );
 };

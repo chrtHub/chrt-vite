@@ -48,7 +48,7 @@ export default function WithdrawConsentButton() {
       let accessToken = await getAccessTokenSilently();
 
       //-- Make POST request --//
-      let res = await axios.post(
+      await axios.post(
         `${VITE_ALB_BASE_URL}/legal/withdraw_clickwrap`,
         //-- Body Content --//
         {
@@ -63,14 +63,11 @@ export default function WithdrawConsentButton() {
           },
         }
       );
-      const data = res.data;
-      console.log(data); // DEV
 
-      // TODO - fetch agreements again
+      //-- Fetch and update user's clickwrap status --//
       await getClickwrapUserStatus(accessToken, AccountContext);
       //----//
     } catch (err) {
-      console.log(err); // DEV
       throw err;
     }
   };
