@@ -43,36 +43,6 @@ export default function ClickwrapWithdrawModal({
   //== Side Effects ==//
   //== Handlers ==//
 
-  const withdrawClickwrapHandler = async () => {
-    try {
-      //-- Get access token from memory or request new token --//
-      let accessToken = await getAccessTokenSilently();
-
-      //-- Make POST request --//
-      let res = await axios.post(
-        `${VITE_ALB_BASE_URL}/legal/withdraw_clickwrap`,
-        //-- Body Content --//
-        {},
-        {
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      const data = res.data;
-      console.log(data); // DEV
-
-      // TODO - fetch agreements again
-      //----//
-    } catch (err) {
-      console.log(err);
-      // showBoundary(err)
-      if (err instanceof AxiosError) {
-        axiosErrorToaster(err, "Agreements");
-      }
-    }
-  };
-
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
     <Transition.Root show={modalOpen} as={Fragment}>
