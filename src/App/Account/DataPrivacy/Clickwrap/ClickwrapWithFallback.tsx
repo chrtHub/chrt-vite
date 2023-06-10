@@ -26,7 +26,13 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { throwAxiosError } from "../../../../Errors/throwAxiosError";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
-// TODO - CCPA/CRPA
+// TODO
+
+// Cookies list
+
+// Data request - request email link to download all your data
+
+// CCPA/CRPA
 // // right to know
 // // right to delete
 // // right to opt-out
@@ -34,7 +40,7 @@ let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 // // right to correct
 // // right to limit
 
-// TODO - GDPR
+// GDPR
 // <<>>
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
@@ -69,7 +75,7 @@ const Component = () => {
   };
 
   //== Side Effects ==//
-  //-- On mount, get user clickwrap status --//
+  //-- On mount, get user's clickwrap status --//
   useEffect(() => {
     fetchClickwrapUserStatus();
   }, []);
@@ -77,19 +83,19 @@ const Component = () => {
   //== Event Handlers ==//
 
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
-  //-- Before fetch, show "Loading..." skeleton --//
-  if (!AccountContext.clickwrapStatusFetched) {
-    return (
-      <div className="flex h-32 max-w-lg animate-pulse items-center justify-center rounded-lg bg-zinc-200">
-        <p className="text-zinc-500">Loading...</p>
-      </div>
-    );
-  }
   //-- Else if status is changing, show "Updating..." skeleton --//
-  else if (AccountContext.clickwrapStatusChanging) {
+  if (AccountContext.clickwrapStatusChanging) {
     return (
       <div className="flex h-32 max-w-lg animate-pulse items-center justify-center rounded-lg bg-zinc-200">
         <p className="text-zinc-500">Updating...</p>
+      </div>
+    );
+  }
+  //-- Before fetch, show "Loading..." skeleton --//
+  else if (!AccountContext.clickwrapStatusFetched) {
+    return (
+      <div className="flex h-32 max-w-lg animate-pulse items-center justify-center rounded-lg bg-zinc-200">
+        <p className="text-zinc-500">Loading...</p>
       </div>
     );
   }

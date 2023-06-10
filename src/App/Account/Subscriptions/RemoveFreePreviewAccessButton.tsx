@@ -55,8 +55,8 @@ export default function RemoveFreePreviewAccessButton({
         }
       );
 
-      //-- Force a fetch of the new auth token with added permissions from Auth0 --//
-      accessToken = await getAccessTokenSilently({ cacheMode: "off" });
+      //-- Force non-cache refresh of access token --//
+      accessToken = await getAccessTokenSilently({ cacheMode: "off" }); //-- Security --//
 
       //-- Update listed permissions --//
       try {

@@ -97,10 +97,10 @@ export default function GrantConsentForm() {
           },
         }
       );
-      AccountContext.setClickwrapStatusChanging(false);
 
       //-- Fetch and update user's clickwrap status --//
       await getClickwrapUserStatus(accessToken, AccountContext);
+      AccountContext.setClickwrapStatusChanging(false);
       //----//
     } catch (err) {
       AccountContext.setClickwrapStatusChanging(false);

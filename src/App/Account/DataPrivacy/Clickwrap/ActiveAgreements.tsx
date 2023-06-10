@@ -15,7 +15,7 @@ import WithdrawConsentButtonAndModal from "./WithdrawConsentButtonAndModal";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
-export default function Agreements() {
+export default function ActiveAgreements() {
   //== React State, Custom Hooks ==//
   let AccountContext = useAccountContext();
 
@@ -31,11 +31,11 @@ export default function Agreements() {
   return (
     <div className="max-w-sm rounded-lg bg-zinc-200">
       {/* START OF AGREEMENTS */}
-      <p>
+      <div>
         {AccountContext.clickwrapAgreements.map((agreement) => {
-          return <p>{agreement.name}</p>;
+          return <p key={agreement.name}>{agreement.name}</p>;
         })}
-      </p>
+      </div>
       <ShieldCheckIcon className="h-12 w-12 text-green-600" />
       {/* END OF AGREEMENTS */}
 

@@ -43,6 +43,7 @@ export default function WithdrawConsentButton() {
 
   //== Handlers ==//
   const withdrawConsentHandler = async () => {
+    AccountContext.setClickwrapStatusChanging(true);
     try {
       //-- Get access token from memory or request new token --//
       let accessToken = await getAccessTokenSilently();
@@ -64,8 +65,12 @@ export default function WithdrawConsentButton() {
         }
       );
 
+      //-- Force a fetch of the new auth token with added permissions from Auth0 because all subscriptions should have been frozen (server-side) when user withdrew clickwrap agreements --//
+      await getAccessTokenSilently({ cacheMode: "off" }); //-- Security --//
+
       //-- Fetch and update user's clickwrap status --//
       await getClickwrapUserStatus(accessToken, AccountContext);
+      AccountContext.setClickwrapStatusChanging(false);
       //----//
     } catch (err) {
       throw err;
@@ -125,7 +130,7 @@ export default function WithdrawConsentButton() {
                         <div className="mt-2">
                           <p className="text-sm text-gray-500">
                             By cancelling your agreements, you will immediately
-                            lose access to your subscription. We cannot provide
+                            lose access to all subscriptions. We cannot provide
                             our services to you without these agreements in
                             place.
                           </p>
