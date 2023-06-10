@@ -3,9 +3,16 @@ import { useState, createContext, useContext, PropsWithChildren } from "react";
 
 //-- types --//
 import { RoleWithPermissions } from "../Auth/Auth0";
+import { IClickwrapAgreement } from "../App/Account/DataPrivacy/clickwrap_types";
 
 //-- Create interface and Context --//
 export interface IAccountContext {
+  clickwrapAgreementsActive: boolean;
+  setClickwrapAgreementsActive: React.Dispatch<React.SetStateAction<boolean>>;
+  clickwrapAgreements: IClickwrapAgreement[];
+  setClickwrapAgreements: React.Dispatch<
+    React.SetStateAction<IClickwrapAgreement[]>
+  >;
   roles: RoleWithPermissions[];
   setRoles: React.Dispatch<React.SetStateAction<RoleWithPermissions[]>>;
   rolesFetched: boolean;
@@ -22,6 +29,11 @@ const AccountContext = createContext<IAccountContext | undefined>(undefined);
 //-- Custom Provider Component --//
 function AccountContextProvider({ children }: PropsWithChildren) {
   //-- State values for context --//
+  const [clickwrapAgreementsActive, setClickwrapAgreementsActive] =
+    useState<boolean>(false);
+  const [clickwrapAgreements, setClickwrapAgreements] = useState<
+    IClickwrapAgreement[]
+  >([]);
   const [roles, setRoles] = useState<RoleWithPermissions[]>([]);
   const [rolesFetched, setRolesFetched] = useState<boolean>(false);
   const [addingFreePreviewAccess, setAddingFreePreviewAccess] =
@@ -31,6 +43,10 @@ function AccountContextProvider({ children }: PropsWithChildren) {
 
   //-- Bundle values into accountContextValue --//
   const accountContextValue: IAccountContext = {
+    clickwrapAgreementsActive,
+    setClickwrapAgreementsActive,
+    clickwrapAgreements,
+    setClickwrapAgreements,
     roles,
     setRoles,
     rolesFetched,

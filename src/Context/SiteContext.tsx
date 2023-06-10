@@ -72,7 +72,6 @@ function SiteContextProvider({ children }: PropsWithChildren) {
     setThemeButtonSelection("light");
   };
 
-  //-- State values --//
   //-- If theme set in localStorage, use that ("light" | "dark" | null) --//
   let initialTheme: string | null = localStorage.getItem("theme");
   let initialThemeButtonSelection = initialTheme; //-- Don't use the window.matchMedia value here --//
@@ -82,6 +81,8 @@ function SiteContextProvider({ children }: PropsWithChildren) {
       ? (initialTheme = "dark")
       : (initialTheme = "light");
   }
+
+  //-- State values --//
   const [theme, setTheme] = useState<string | null>(initialTheme);
   const [eChartsTheme, setEChartsTheme] = useState<string | null>(initialTheme);
   const [themeButtonSelection, setThemeButtonSelection] = useState<
