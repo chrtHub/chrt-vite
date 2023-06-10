@@ -16,6 +16,8 @@ export interface IAccountContext {
   >;
   clickwrapStatusFetched: boolean;
   setClickwrapStatusFetched: React.Dispatch<React.SetStateAction<boolean>>;
+  clickwrapStatusChanging: boolean;
+  setClickwrapStatusChanging: React.Dispatch<React.SetStateAction<boolean>>;
   //-- Roles --//
   roles: RoleWithPermissions[];
   setRoles: React.Dispatch<React.SetStateAction<RoleWithPermissions[]>>;
@@ -40,6 +42,8 @@ function AccountContextProvider({ children }: PropsWithChildren) {
   >([]);
   const [clickwrapStatusFetched, setClickwrapStatusFetched] =
     useState<boolean>(false);
+  const [clickwrapStatusChanging, setClickwrapStatusChanging] =
+    useState<boolean>(false);
 
   //-- Roles --//
   const [roles, setRoles] = useState<RoleWithPermissions[]>([]);
@@ -58,6 +62,8 @@ function AccountContextProvider({ children }: PropsWithChildren) {
     setClickwrapAgreements,
     clickwrapStatusFetched,
     setClickwrapStatusFetched,
+    clickwrapStatusChanging,
+    setClickwrapStatusChanging,
     //-- Roles --//
     roles,
     setRoles,
