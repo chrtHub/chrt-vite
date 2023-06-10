@@ -35,7 +35,7 @@ export default function CancelFreePreviewAccessButton({
         <button
           type="button"
           onClick={() => setRemoveFreePreviewAccessModalOpen(true)}
-          className="mt-6 w-16 rounded-full bg-red-50 px-1 py-0.5 text-xs font-semibold text-red-500 shadow-sm ring-1 ring-inset ring-red-200 hover:bg-red-100 dark:bg-red-900 dark:text-red-100 dark:ring-red-900 dark:hover:bg-red-800"
+          className="mt-6 w-16 rounded-full bg-rose-50 px-1 py-0.5 text-xs font-semibold text-rose-500 shadow-sm ring-1 ring-inset ring-rose-200 hover:bg-rose-100 dark:bg-rose-900 dark:text-rose-100 dark:ring-rose-900 dark:hover:bg-rose-800"
         >
           Cancel
         </button>
