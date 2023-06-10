@@ -1,37 +1,78 @@
 //== react, react-router-dom, Auth0 ==//
-import { Fragment, SetStateAction, useRef, useState } from "react";
+import { useState, useRef, useEffect, Fragment } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import { Dialog, Transition } from "@headlessui/react";
 
 //== TSX Components, Functions ==//
-import RemoveFreePreviewAccessButton from "./RemoveFreePreviewAccessButton";
+import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
+import ClickwrapWithdrawButton from "./ClickwrapWithdrawButton";
 
 //== NPM Components ==//
 
 //== Icons ==//
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 
 //== NPM Functions ==//
+import axios, { AxiosError } from "axios";
 
 //== Utility Functions ==//
+import classNames from "../../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
+let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 interface IProps {
   modalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export default function RemoveFreePreviewAccessModal({
+export default function ClickwrapWithdrawModal({
   modalOpen,
   setModalOpen,
 }: IProps) {
   //== React State, Custom Hooks ==//
   const cancelButtonRef = useRef(null);
 
+  // const AccountContext = useAccountContext();
+  // const { showBoundary } = useErrorBoundary();
+
   //== Auth ==//
+  let { getAccessTokenSilently, user } = useAuth0();
+
   //== Other ==//
   //== Side Effects ==//
   //== Handlers ==//
+
+  const withdrawClickwrapHandler = async () => {
+    try {
+      //-- Get access token from memory or request new token --//
+      let accessToken = await getAccessTokenSilently();
+
+      //-- Make POST request --//
+      let res = await axios.post(
+        `${VITE_ALB_BASE_URL}/legal/withdraw_clickwrap`,
+        //-- Body Content --//
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const data = res.data;
+      console.log(data); // DEV
+
+      // TODO - fetch agreements again
+      //----//
+    } catch (err) {
+      console.log(err);
+      // showBoundary(err)
+      if (err instanceof AxiosError) {
+        axiosErrorToaster(err, "Agreements");
+      }
+    }
+  };
+
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
     <Transition.Root show={modalOpen} as={Fragment}>
@@ -82,8 +123,9 @@ export default function RemoveFreePreviewAccessModal({
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
-                          As this preview is free, you can sign up again if you
-                          want.
+                          By cancelling your agreements, you will immediately
+                          lose access to your subscription. We cannot provide
+                          our services to you without these agreements in place.
                         </p>
                       </div>
                     </div>
@@ -100,7 +142,7 @@ export default function RemoveFreePreviewAccessModal({
                   </button>
 
                   {/* Remove Free Preview Access Button */}
-                  <RemoveFreePreviewAccessButton setModalOpen={setModalOpen} />
+                  <ClickwrapWithdrawButton setModalOpen={setModalOpen} />
                 </div>
               </Dialog.Panel>
             </Transition.Child>

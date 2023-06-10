@@ -1,17 +1,17 @@
 //== react, react-router-dom, Auth0 ==//
 import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useAccountContext } from "../../../Context/AccountContext";
+import { useErrorBoundary } from "react-error-boundary";
 
 //== TSX Components, Functions ==//
-import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
 
 //== NPM Components ==//
 
 //== Icons ==//
 
 //== NPM Functions ==//
-import axios, { AxiosError } from "axios";
-
+import axios from "axios";
 //== Utility Functions ==//
 import classNames from "../../../Util/classNames";
 
@@ -25,8 +25,10 @@ const COOKIES_VERSION_EFFECTIVE_DATE = "2023-06-09";
 const AGE_REQUIREMENT_STATEMENT = "I am at least 18 years of age";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
-export default function ComponentName() {
+export default function ClickwrapGrant() {
   //== React State, Custom Hooks ==//
+  const AccountContext = useAccountContext();
+  const { showBoundary } = useErrorBoundary();
   const [termsChecked, setTermsChecked] = useState<boolean>(false);
   const [privacyChecked, setPrivacyChecked] = useState<boolean>(false);
   const [cookiesChecked, setCookiesChecked] = useState<boolean>(false);
@@ -77,13 +79,13 @@ export default function ComponentName() {
   //== Handlers ==//
   //-- Submit Clickwrap Handler --//
   const submitClickwrapHandler = async () => {
-    console.log("clickwrap time");
+    AccountContext.setClickwrapStatusChanging(true);
     try {
       //-- Get access token from memory or request new token --//
       let accessToken = await getAccessTokenSilently();
 
       //-- Make POST request --//
-      let res = await axios.post(
+      await axios.post(
         `${VITE_ALB_BASE_URL}/legal/grant_clickwrap`,
         //-- Body Content --//
         {
@@ -98,14 +100,12 @@ export default function ComponentName() {
           },
         }
       );
-      console.log(res); // DEV
+      AccountContext.setClickwrapStatusChanging(false);
       //----//
     } catch (err) {
+      AccountContext.setClickwrapStatusChanging(false);
       console.log(err);
-      // showBoundary(err)
-      if (err instanceof AxiosError) {
-        axiosErrorToaster(err, "Agreements");
-      }
+      showBoundary(err);
     }
   };
 

@@ -1,8 +1,9 @@
 //== react, react-router-dom, Auth0 ==//
 
 //== TSX Components, Functions ==//
+import { ShieldCheckIcon } from "@heroicons/react/24/outline";
 import { useAccountContext } from "../../../Context/AccountContext";
-
+import ClickwrapWithdraw from "./ClickwrapWithdraw";
 //== NPM Components ==//
 
 //== Icons ==//
@@ -28,12 +29,14 @@ export default function ClickwrapAgreements() {
 
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div>
+    <div className="max-w-sm rounded-lg bg-zinc-200">
       <p>
         {AccountContext.clickwrapAgreements.map((agreement) => {
           return <p>{agreement.name}</p>;
         })}
       </p>
+      <ShieldCheckIcon className="h-12 w-12 text-green-600" />
+      <ClickwrapWithdraw />
     </div>
   );
 }

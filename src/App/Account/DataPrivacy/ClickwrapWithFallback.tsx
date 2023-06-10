@@ -4,13 +4,13 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 
 //== TSX Components, Functions ==//
-import ClickwrapForm from "./ClickwrapForm";
+import ClickwrapGrant from "./ClickwrapGrant";
 import ClickwrapAgreements from "./ClickwrapAgreements";
 import { useAccountContext } from "../../../Context/AccountContext";
 import { throwAxiosError } from "../../../Errors/throwAxiosError";
 import { getErrorDetails } from "../../../Errors/getErrorDetails";
 import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
-
+import { getClickwrapUserStatus } from "./getClickwrapUserStatus";
 //== NPM Components ==//
 
 //== Icons ==//
@@ -57,24 +57,12 @@ const Component = () => {
   //== Other ==//
   // throwAxiosError(400); // DEV
 
-  const getClickwrapUserStatus = async () => {
+  const fetchClickwrapUserStatus = async () => {
+    //-- Get access token from memory or request new token --//
+    let accessToken = await getAccessTokenSilently();
     try {
-      //-- Get access token from memory or request new token --//
-      let accessToken = await getAccessTokenSilently();
-
-      //-- Make GET request --//
-      let res = await axios.get(`${VITE_ALB_BASE_URL}/legal/clickwrap_status`, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      });
-      const data: IClickwrapUserStatus = res.data;
-      AccountContext.setClickwrapActive(data.activeAgreement);
-      AccountContext.setClickwrapAgreements(data.agreements);
-      AccountContext.setClickwrapStatusFetched(true);
-      //----//
+      await getClickwrapUserStatus(accessToken, AccountContext);
     } catch (err) {
-      console.log(err); // DEV
       showBoundary(err);
     }
   };
@@ -82,7 +70,7 @@ const Component = () => {
   //== Side Effects ==//
   //-- On mount, get user clickwrap status --//
   useEffect(() => {
-    getClickwrapUserStatus();
+    fetchClickwrapUserStatus();
   }, []);
 
   //== Event Handlers ==//
@@ -92,17 +80,23 @@ const Component = () => {
     <>
       {/*-- Before fetch, show skeleton --*/}
       {!AccountContext.clickwrapStatusFetched ? (
-        <div>skeleton</div>
+        <div className="flex h-32 max-w-sm animate-pulse items-center justify-center rounded-lg bg-zinc-200">
+          <p className="text-zinc-500">Loading...</p>
+        </div>
+      ) : AccountContext.clickwrapStatusChanging ? (
+        <div className="flex h-32 max-w-sm animate-pulse items-center justify-center rounded-lg bg-zinc-200">
+          <p className="text-zinc-500">Updating...</p>
+        </div>
       ) : // -- Else if status fetched and inactive, show clickwrap form --//
       AccountContext.clickwrapStatusFetched &&
         !AccountContext.clickwrapActive ? (
-        <ClickwrapForm />
+        <ClickwrapGrant />
       ) : //-- Else if clickwrap status is active, show list of agreements --//
       AccountContext.clickwrapStatusFetched &&
         AccountContext.clickwrapActive ? (
         <ClickwrapAgreements />
       ) : (
-        <p>foo</p>
+        <></>
       )}
     </>
   );

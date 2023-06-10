@@ -35,7 +35,7 @@ const AccountContext = createContext<IAccountContext | undefined>(undefined);
 //-- Custom Provider Component --//
 function AccountContextProvider({ children }: PropsWithChildren) {
   //-- State values for context --//
-  //-- Clickwrap --//
+  //-- Clickwrap State --//
   const [clickwrapActive, setClickwrapActive] = useState<boolean>(false);
   const [clickwrapAgreements, setClickwrapAgreements] = useState<
     IClickwrapAgreement[]
@@ -45,7 +45,7 @@ function AccountContextProvider({ children }: PropsWithChildren) {
   const [clickwrapStatusChanging, setClickwrapStatusChanging] =
     useState<boolean>(false);
 
-  //-- Roles --//
+  //-- Roles State --//
   const [roles, setRoles] = useState<RoleWithPermissions[]>([]);
   const [rolesFetched, setRolesFetched] = useState<boolean>(false);
   const [addingFreePreviewAccess, setAddingFreePreviewAccess] =

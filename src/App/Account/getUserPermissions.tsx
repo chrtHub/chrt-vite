@@ -1,7 +1,7 @@
-import axios, { AxiosError } from "axios";
-let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 import { RoleWithPermissions } from "../../Auth/Auth0";
 import { IAccountContext } from "../../Context/AccountContext";
+import axios from "axios";
+let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 export const getUsersPermissions = async (
   accessToken: string,
