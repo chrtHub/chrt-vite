@@ -26,7 +26,7 @@ import { MinusCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import classNames from "../../../../Util/classNames";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
-const ROLE_NAME = "Free Preview Access";
+const ROLE_NAME = "Free Preview";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 interface IProps {
@@ -56,7 +56,7 @@ export default function RemoveFreePreviewModal({
       //-- Get access token from memory or request new token --//
       let accessToken = await getAccessTokenSilently();
 
-      await removeRole(accessToken, ROLE_NAME);
+      await removeRole(accessToken, "free_preview");
 
       //-- Force non-cache refresh of access token --//
       accessToken = await getAccessTokenSilently({ cacheMode: "off" }); //-- Security --//

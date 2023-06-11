@@ -54,7 +54,7 @@ export default function FreePreview() {
         <div className="p-6">
           {/* Header */}
           <h3 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-200">
-            Free Preview Access
+            Free Preview
           </h3>
 
           {/* Subheader */}

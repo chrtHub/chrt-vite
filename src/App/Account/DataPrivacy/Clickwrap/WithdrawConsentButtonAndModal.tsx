@@ -148,7 +148,7 @@ export default function WithdrawConsentButton() {
                       Cancel
                     </button>
 
-                    {/* Remove Free Preview Access Button */}
+                    {/* Remove Free Preview Button */}
                     <button onClick={withdrawConsentHandler}>submit</button>
                   </div>
                 </Dialog.Panel>

@@ -21,7 +21,7 @@ import { isRoleActive } from "../Util/isRoleActive";
 import classNames from "../../../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-const ROLE_NAME = "Free Preview Access"; //-- BASED ON AUTH0 --//
+const ROLE_NAME = "Free Preview"; //-- BASED ON AUTH0 --//
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 interface IProps {
@@ -75,7 +75,7 @@ const Component = ({ setRemoveFreePreviewModalOpen }: IProps) => {
       let accessToken = await getAccessTokenSilently();
 
       //-- Add role --//
-      await addRole(accessToken, AccountContext, ROLE_NAME);
+      await addRole(accessToken, AccountContext, "free_preview");
 
       //-- Force a fetch of the new auth token with added permissions from Auth0 --//
       accessToken = await getAccessTokenSilently({ cacheMode: "off" });
@@ -163,7 +163,7 @@ const Component = ({ setRemoveFreePreviewModalOpen }: IProps) => {
       </div>
 
       {/* START OF CANCEL FREE PREVIEW BUTTON */}
-      {isRoleActive("Free Preview Access", AccountContext) && (
+      {isRoleActive("Free Preview", AccountContext) && (
         <button
           type="button"
           onClick={() => setRemoveFreePreviewModalOpen(true)}
