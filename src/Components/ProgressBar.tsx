@@ -5,7 +5,7 @@ export const ProgressBar = () => {
   return (
     <div>
       <div
-        className="h-full bg-red-500"
+        className="h-full bg-rose-500"
         style={{ animation: "progress 5s linear" }}
       />
     </div>

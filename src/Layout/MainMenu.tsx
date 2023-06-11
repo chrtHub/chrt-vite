@@ -127,7 +127,7 @@ export default function MainMenu({
                 className={classNames(
                   "mx-3 flex w-1/3 flex-row items-center justify-center rounded-full py-2",
                   SiteContext.themeButtonSelection === "light"
-                    ? "bg-yellow-300 text-zinc-600"
+                    ? "bg-amber-300 text-zinc-600"
                     : "text-zinc-700 hover:bg-zinc-500 hover:text-zinc-100 dark:text-zinc-100"
                 )}
               >

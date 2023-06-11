@@ -122,7 +122,7 @@ const Component = () => {
 const Fallback = () => {
   return (
     <div>
-      <div className="mb-3 flex h-28 flex-col items-center justify-center rounded-lg bg-yellow-200 shadow dark:bg-yellow-900">
+      <div className="mb-3 flex h-28 flex-col items-center justify-center rounded-lg bg-amber-200 shadow dark:bg-amber-900">
         <p className="text-base font-semibold text-zinc-600 dark:text-zinc-100">
           Auth Server temporarily unavailable
         </p>

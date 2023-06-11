@@ -507,7 +507,7 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
                   : promptTooLong && !prompt2XTooLong
                   ? "bg-orange-300 ring-1 ring-orange-400 focus:ring-2 focus:ring-orange-400 dark:ring-orange-600 dark:focus:ring-orange-600"
                   : prompt2XTooLong
-                  ? "bg-red-300 ring-1 ring-red-400 focus:ring-2 focus:ring-red-400 dark:ring-red-600 dark:focus:ring-red-600"
+                  ? "bg-rose-300 ring-1 ring-rose-400 focus:ring-2 focus:ring-rose-400 dark:ring-rose-600 dark:focus:ring-rose-600"
                   : "bg-white ring-1 ring-inset ring-zinc-300 dark:bg-zinc-700 dark:text-white"
               )}
             />

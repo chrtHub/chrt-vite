@@ -77,7 +77,7 @@ export default function LLMParams() {
                     {/*-- Icon --*/}
                     <div
                       className={classNames(
-                        "rounded-lg bg-yellow-600 p-3 dark:bg-yellow-700"
+                        "rounded-lg bg-amber-600 p-3 dark:bg-amber-700"
                       )}
                     >
                       <FireIcon

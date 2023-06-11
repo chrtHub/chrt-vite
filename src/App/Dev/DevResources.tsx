@@ -91,18 +91,18 @@ export default function DevResources() {
     <div className="flex flex-col items-center justify-start">
       <div className="w-full max-w-prose">
         {/* START OF COPY AUTH TOKEN SECTION */}
-        <div className="flex flex-col justify-center rounded-md bg-yellow-100 p-4 dark:bg-yellow-950">
+        <div className="flex flex-col justify-center rounded-md bg-amber-100 p-4 dark:bg-amber-950">
           <div className="flex flex-row">
             <ExclamationTriangleIcon
-              className="h-5 w-5 text-yellow-400 dark:text-yellow-100"
+              className="h-5 w-5 text-amber-400 dark:text-amber-100"
               aria-hidden="true"
             />
-            <h3 className="ml-2 text-sm font-medium text-yellow-800 dark:text-yellow-100">
+            <h3 className="ml-2 text-sm font-medium text-amber-800 dark:text-amber-100">
               Caution - Auth Tokens are intended for developer use only
             </h3>
           </div>
 
-          <div className="mt-2 text-sm text-yellow-700 dark:text-yellow-100">
+          <div className="mt-2 text-sm text-amber-700 dark:text-amber-100">
             <ul role="list" className="list-disc space-y-1 pl-5">
               <li>
                 Do not share you Auth Token with anyone - not even chrt.com
@@ -132,8 +132,8 @@ export default function DevResources() {
                 <div
                   className={classNames(
                     "inline-flex w-56 justify-center gap-x-2 rounded-md py-3 text-sm font-semibold shadow-sm  focus:outline-none",
-                    "bg-yellow-400 text-yellow-900 hover:bg-yellow-500",
-                    "text-yellow-900 dark:bg-yellow-300 dark:hover:bg-yellow-200"
+                    "bg-amber-400 text-amber-900 hover:bg-amber-500",
+                    "text-amber-900 dark:bg-amber-300 dark:hover:bg-amber-200"
                   )}
                 >
                   Copy Auth Token

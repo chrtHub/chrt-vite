@@ -7,6 +7,7 @@ import { useEffect } from "react";
 //== TSX Components, Functions ==//
 import { useAccountContext } from "../../../../Context/AccountContext";
 import addRole from "../Util/addRole";
+import { CompleteUserAgreementsButton } from "../CompleteUserAgreementsButton";
 
 //== NPM Components ==//
 
@@ -104,7 +105,7 @@ const Component = ({ setRemoveFreePreviewModalOpen }: IProps) => {
         </p>
         {/* Price */}
         {!isRoleActive(ROLE_NAME, AccountContext) && (
-          <p className="mt-2 flex items-baseline justify-center gap-x-2">
+          <p className="mb-6 mt-2 flex items-baseline justify-center gap-x-2">
             <span className="text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
               $0
             </span>
@@ -116,46 +117,50 @@ const Component = ({ setRemoveFreePreviewModalOpen }: IProps) => {
         {/* END OF TOP */}
 
         {/* START OF COMPLETE USER AGREEMENT BUTTON */}
-        {!AccountContext.clickwrapIsActive && (
-          <button
-            onClick={() => navigate("/account/data_privacy")}
-            className="mb-3 rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-          >
-            Complete user agreements <span aria-hidden="true">→</span>
-          </button>
-        )}
+        <div className="mb-3">
+          {!AccountContext.clickwrapIsActive && (
+            <CompleteUserAgreementsButton />
+          )}
+        </div>
         {/* END OF COMPLETE USER AGREEMENT BUTTON */}
 
         {/* START OF ADD FREE PREVIEW BUTTON */}
         <button
           type="button"
           disabled={
-            isRoleActive(ROLE_NAME, AccountContext) ||
-            !AccountContext.clickwrapIsActive
+            !AccountContext.clickwrapIsActive ||
+            isRoleActive(ROLE_NAME, AccountContext)
           } //-- Disable button if (a) role is already active, or (b) clickwrap agreement is not active
           onClick={addFreePreviewHandler}
           className={classNames(
-            "tex-stm mt-4 w-64 items-center gap-x-2 rounded-md px-3.5 py-2.5 text-center font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
-            !AccountContext.rolesFetched
+            "w-64 items-center gap-x-2 rounded-md px-3.5 py-2.5 text-center text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+            !AccountContext.rolesFetched ||
+              !AccountContext.clickwrapStatusFetched
               ? "animate-pulse bg-zinc-200 text-zinc-500"
               : AccountContext.changingFreePreview
               ? "animate-pulse cursor-not-allowed bg-zinc-200 text-zinc-900"
-              : isRoleActive(ROLE_NAME, AccountContext)
-              ? "cursor-not-allowed bg-green-800 text-white"
               : !AccountContext.clickwrapIsActive
               ? "cursor-not-allowed bg-zinc-200 text-zinc-400"
+              : isRoleActive(ROLE_NAME, AccountContext)
+              ? "cursor-not-allowed bg-green-800 text-white"
               : !isRoleActive(ROLE_NAME, AccountContext)
               ? "bg-blue-600 text-white hover:bg-blue-500 focus-visible:outline-blue-600"
               : ""
           )}
         >
-          {!AccountContext.rolesFetched ? (
+          {!AccountContext.rolesFetched ||
+          !AccountContext.clickwrapStatusFetched ? (
             <div className="flex flex-row items-center justify-center">
               <p className="mr-2 text-sm">Loading...</p>
             </div>
           ) : AccountContext.changingFreePreview ? (
             <div className="flex flex-row items-center justify-center">
               <p className="mr-2 text-sm">Updating...</p>
+            </div>
+          ) : !AccountContext.clickwrapIsActive ? (
+            <div className="flex flex-row items-center justify-center">
+              <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
+              <p className="ml-2 text-sm">Add {ROLE_NAME}</p>
             </div>
           ) : isRoleActive(ROLE_NAME, AccountContext) ? (
             <div className="flex flex-row items-center justify-center">
@@ -197,7 +202,7 @@ const Component = ({ setRemoveFreePreviewModalOpen }: IProps) => {
 //-- ***** ***** ***** FALLBACK ***** ***** ***** --//
 const Fallback = () => {
   return (
-    <div className="flex h-full flex-col items-center justify-center rounded-2xl bg-yellow-200 py-10 pb-4 text-center ring-1 ring-inset ring-zinc-900/5 dark:bg-yellow-900 lg:pt-8">
+    <div className="flex h-full flex-col items-center justify-center rounded-2xl bg-amber-200 py-10 pb-4 text-center ring-1 ring-inset ring-zinc-900/5 dark:bg-amber-900 lg:pt-8">
       <div className="mx-auto px-8">
         <p className="text-base font-semibold text-zinc-600 dark:text-zinc-100">
           Auth Server temporarily unavailable

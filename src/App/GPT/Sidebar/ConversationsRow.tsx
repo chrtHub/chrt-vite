@@ -281,8 +281,8 @@ export const ConversationsRow = (
                     <div
                       className={classNames(
                         "-mt-0.5 ml-1 flex cursor-pointer flex-row justify-center rounded-full p-0.5",
-                        "text-zinc-500 hover:bg-red-600 hover:bg-opacity-20 hover:text-red-600",
-                        " dark:text-zinc-500 dark:hover:bg-red-600 dark:hover:bg-opacity-20 dark:hover:text-red-600"
+                        "text-zinc-500 hover:bg-rose-600 hover:bg-opacity-20 hover:text-rose-600",
+                        " dark:text-zinc-500 dark:hover:bg-rose-600 dark:hover:bg-opacity-20 dark:hover:text-rose-600"
                       )}
                       onClick={deleteConversationHandler}
                     >

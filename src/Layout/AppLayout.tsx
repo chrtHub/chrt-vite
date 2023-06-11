@@ -111,7 +111,7 @@ export default function AppLayout() {
         {/* START OF TOAST CONTAINER */}
         <ToastContainer
           role="alert" //-- aria --//
-          icon={<ExclamationTriangleIcon className="text-yellow-500" />}
+          icon={<ExclamationTriangleIcon className="text-amber-500" />}
           position="top-right"
           autoClose={5000}
           closeOnClick
@@ -119,7 +119,7 @@ export default function AppLayout() {
           pauseOnFocusLoss
           className={"z-20 mt-11"}
           toastClassName={"dark:bg-zinc-800 dark:text-zinc-100"}
-          progressClassName={"bg-yellow-500 dark:bg-yellow-500"}
+          progressClassName={"bg-amber-500 dark:bg-amber-500"}
           closeButton={({ closeToast }) => {
             return (
               <div
