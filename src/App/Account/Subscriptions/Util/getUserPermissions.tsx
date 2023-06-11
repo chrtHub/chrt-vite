@@ -3,7 +3,7 @@ import { IAccountContext } from "../../../../Context/AccountContext";
 import axios from "axios";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
-export const getUsersPermissions = async (
+export const getUserPermissions = async (
   accessToken: string,
   AccountContext: IAccountContext
 ) => {
@@ -19,6 +19,7 @@ export const getUsersPermissions = async (
     );
     const data: RoleWithPermissions[] = res.data;
     AccountContext.setRoles(data);
+    AccountContext.setRolesFetched(true);
     //----//
   } catch (err) {
     throw err;

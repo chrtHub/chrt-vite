@@ -15,7 +15,7 @@ import { ErrorBoundary } from "react-error-boundary";
 //== NPM Functions ==//
 
 //== Utility Functions ==//
-import { getUsersPermissions } from "../Subscriptions/Util/getUserPermissions";
+import { getUserPermissions } from "../Subscriptions/Util/getUserPermissions";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
@@ -39,20 +39,19 @@ const Component = () => {
   //== Auth ==//
 
   //== Other ==//
-  async function fetchPermissions() {
+  async function fetchUserPermissions() {
     let accessToken = await getAccessTokenSilently();
     try {
-      await getUsersPermissions(accessToken, AccountContext);
+      await getUserPermissions(accessToken, AccountContext);
     } catch (err) {
       showBoundary(err);
     }
-    AccountContext.setRolesFetched(true);
   }
 
   //== Side Effects ==//
   //-- On mount, get user permissions --//
   useEffect(() => {
-    fetchPermissions();
+    fetchUserPermissions();
   }, []);
 
   //== Event Handlers ==//

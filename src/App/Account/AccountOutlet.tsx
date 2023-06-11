@@ -1,30 +1,44 @@
 //-- react, react-router-dom, Auth0 --//
 import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
+import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components and Functions --//;
+import { useAccountContext } from "../../Context/AccountContext";
+import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
 
 //-- NPM Components --//
 
 //-- Icons --//
-
-//-- NPM Functions --//
-
-//-- Utility Functions --//
 import {
   KeyIcon,
   ShieldCheckIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
 import { Cog8ToothIcon } from "@heroicons/react/24/solid";
+
+//-- NPM Functions --//
+import { toast } from "react-toastify";
+
+//-- Utility Functions --//
 import classNames from "../../Util/classNames";
+import { renderIcon } from "../../Util/renderIcon";
+import { getUserPermissions } from "./Subscriptions/Util/getUserPermissions";
+import { getUserClickwrapData } from "./DataPrivacy/Clickwrap/Util/getUserClickwrapData";
 
 //-- Data Objects, Types --//
+import { AxiosError } from "axios";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function AccountOutlet() {
   //== React State, Custom Hooks ==//
+  const AccountContext = useAccountContext();
+  const { getAccessTokenSilently } = useAuth0();
+  const { showBoundary } = useErrorBoundary();
   const location = useLocation();
 
+  //-- Navigation items, determine current item --//
   const navigation = [
     {
       name: "Account",
@@ -55,12 +69,22 @@ export default function AccountOutlet() {
   //== Auth ==//
 
   //== Other ==//
-  //-- Render Icon Helper Function --//
-  const renderIcon = (
-    Icon: React.ForwardRefExoticComponent<React.SVGProps<SVGSVGElement>>
-  ) => <Icon className="mr-2 h-5 w-5" aria-hidden="true" />;
+  async function fetchUserPermissionsAndClickwrapData() {
+    let accessToken = await getAccessTokenSilently();
+    try {
+      await getUserPermissions(accessToken, AccountContext);
+      await getUserClickwrapData(accessToken, AccountContext);
+    } catch (err) {
+      //-- Calling 'getUserPermissions' within ActiveSubscriptionsWithFallback. Using ErrorBoundary there. --//
+      //-- Calling 'getUserClickwrapData' within ClickwrapWithFallback. Using ErrorBoundary there. --//
+    }
+  }
 
   //== Side Effects ==//
+  //-- On mount, get user agreements and permissions --//
+  useEffect(() => {
+    fetchUserPermissionsAndClickwrapData();
+  }, []);
 
   //== Event Handlers ==//
 

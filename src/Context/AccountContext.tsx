@@ -8,8 +8,8 @@ import { IClickwrapAgreement } from "../App/Account/DataPrivacy/Clickwrap/Types/
 //-- Create interface and Context --//
 export interface IAccountContext {
   //-- Clickwrap --//
-  clickwrapActive: boolean;
-  setClickwrapActive: React.Dispatch<React.SetStateAction<boolean>>;
+  clickwrapIsActive: boolean;
+  setClickwrapIsActive: React.Dispatch<React.SetStateAction<boolean>>;
   clickwrapAgreements: IClickwrapAgreement[];
   setClickwrapAgreements: React.Dispatch<
     React.SetStateAction<IClickwrapAgreement[]>
@@ -34,7 +34,7 @@ const AccountContext = createContext<IAccountContext | undefined>(undefined);
 function AccountContextProvider({ children }: PropsWithChildren) {
   //-- State values for context --//
   //-- Clickwrap State --//
-  const [clickwrapActive, setClickwrapActive] = useState<boolean>(false);
+  const [clickwrapIsActive, setClickwrapIsActive] = useState<boolean>(false);
   const [clickwrapAgreements, setClickwrapAgreements] = useState<
     IClickwrapAgreement[]
   >([]);
@@ -52,8 +52,8 @@ function AccountContextProvider({ children }: PropsWithChildren) {
   //-- Bundle values into accountContextValue --//
   const accountContextValue: IAccountContext = {
     //-- Clickwrap --//
-    clickwrapActive,
-    setClickwrapActive,
+    clickwrapIsActive,
+    setClickwrapIsActive,
     clickwrapAgreements,
     setClickwrapAgreements,
     clickwrapStatusFetched,

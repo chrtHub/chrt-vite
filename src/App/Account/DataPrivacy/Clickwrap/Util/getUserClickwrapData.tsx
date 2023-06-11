@@ -3,7 +3,8 @@ import { IClickwrapUserStatus } from "../Types/clickwrap_types";
 import axios from "axios";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
-export const getClickwrapUserStatus = async (
+// ErrorPreference: "axios toast errors" | "silent errors" | "error boundary"
+export const getUserClickwrapData = async (
   accessToken: string,
   AccountContext: IAccountContext
 ) => {
@@ -15,12 +16,11 @@ export const getClickwrapUserStatus = async (
       },
     });
     const data: IClickwrapUserStatus = res.data;
-    AccountContext.setClickwrapActive(data.activeAgreement);
+    AccountContext.setClickwrapIsActive(data.activeAgreement);
     AccountContext.setClickwrapAgreements(data.agreements);
     AccountContext.setClickwrapStatusFetched(true);
     //----//
   } catch (err) {
-    console.log(err); // DEV
     throw err;
   }
 };
