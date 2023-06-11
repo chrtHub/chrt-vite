@@ -15,7 +15,7 @@ import { ErrorBoundary } from "react-error-boundary";
 //== NPM Functions ==//
 
 //== Utility Functions ==//
-import { getUsersPermissions } from "../Util/getUserPermissions";
+import { getUsersPermissions } from "../Subscriptions/Util/getUserPermissions";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 

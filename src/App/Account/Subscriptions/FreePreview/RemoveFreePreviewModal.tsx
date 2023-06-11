@@ -6,6 +6,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 //== TSX Components, Functions ==//
 import { useAccountContext } from "../../../../Context/AccountContext";
 import { axiosErrorToaster } from "../../../../Errors/axiosErrorToaster";
+import removeRole from "../Util/removeRole";
 
 //== NPM Components ==//
 import axios, { AxiosError } from "axios";
@@ -17,7 +18,7 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 //== NPM Functions ==//
 
 //== Utility Functions ==//
-import { getUsersPermissions } from "../../Util/getUserPermissions";
+import { getUsersPermissions } from "../Util/getUserPermissions";
 import { isRoleActive } from "../Util/isRoleActive";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
@@ -50,19 +51,12 @@ export default function RemoveFreePreviewModal({
   //== Handlers ==//
   const removeFreePreviewhandler = async () => {
     AccountContext.setChangingFreePreview(true);
+
     try {
       //-- Get access token from memory or request new token --//
       let accessToken = await getAccessTokenSilently();
 
-      //-- Make DELETE request --//
-      await axios.delete(
-        `${VITE_ALB_BASE_URL}/auth0/api/v2/remove_roles_from_user/free_preview_access`,
-        {
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      await removeRole(accessToken, ROLE_NAME);
 
       //-- Force non-cache refresh of access token --//
       accessToken = await getAccessTokenSilently({ cacheMode: "off" }); //-- Security --//
@@ -84,6 +78,7 @@ export default function RemoveFreePreviewModal({
         toast(err.message);
       }
     }
+
     AccountContext.setChangingFreePreview(false);
     setModalOpen(false);
   };

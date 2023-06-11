@@ -16,7 +16,7 @@ import { CheckCircleIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
 //== NPM Functions ==//
 
 //== Utility Functions ==//
-import { getUsersPermissions } from "../../Util/getUserPermissions";
+import { getUsersPermissions } from "../Util/getUserPermissions";
 import { isRoleActive } from "../Util/isRoleActive";
 import classNames from "../../../../Util/classNames";
 

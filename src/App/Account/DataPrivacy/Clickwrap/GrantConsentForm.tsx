@@ -25,7 +25,7 @@ import {
   CURRENT_PRIVACY_EFFECTIVE_DATE,
   CURRENT_COOKIES_EFFECTIVE_DATE,
   CURRENT_AGE_REQUIREMENT_STATEMENT,
-} from "./Util/currentAgreements";
+} from "./Util/CURRENT_AGREEMENT_DATES";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function GrantConsentForm() {
