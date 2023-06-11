@@ -10,7 +10,11 @@ import { Outlet, NavLink, useLocation } from "react-router-dom";
 //-- NPM Functions --//
 
 //-- Utility Functions --//
-import { KeyIcon, UserIcon } from "@heroicons/react/24/outline";
+import {
+  KeyIcon,
+  ShieldCheckIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
 import { Cog8ToothIcon } from "@heroicons/react/24/solid";
 import classNames from "../../Util/classNames";
 
@@ -39,6 +43,12 @@ export default function AccountOutlet() {
       href: "/account/subscriptions",
       current: location.pathname === "/account/subscriptions",
       icon: KeyIcon,
+    },
+    {
+      name: "Data Privacy",
+      href: "/account/data_privacy",
+      current: location.pathname === "/account/data_privacy",
+      icon: ShieldCheckIcon,
     },
   ];
 

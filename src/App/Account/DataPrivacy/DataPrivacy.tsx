@@ -1,7 +1,7 @@
 //== react, react-router-dom, Auth0 ==//
 
 //== TSX Components, Functions ==//
-import FreePreview from "./FreePreview/FreePreview";
+import ClickwrapWithFallback from "./Clickwrap/ClickwrapWithFallback";
 
 //== NPM Components ==//
 
@@ -14,21 +14,16 @@ import FreePreview from "./FreePreview/FreePreview";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
-export default function Subscriptions() {
+export default function DataPrivacy() {
   //== React State, Custom Hooks ==//
-
   //== Auth ==//
-
   //== Other ==//
-
   //== Side Effects ==//
-
   //== Handlers ==//
-
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="px-3 pb-3 lg:px-0">
-      <FreePreview />
+    <div>
+      <ClickwrapWithFallback />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { IAccountContext } from "../../../Context/AccountContext";
+import { IAccountContext } from "../../../../Context/AccountContext";
 
 export function isRoleActive(
   roleName: string,

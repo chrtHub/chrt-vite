@@ -11,15 +11,15 @@ import {
 
 //-- Create interface and Context --//
 export interface ISiteContext {
+  setManualDarkMode: () => void;
+  setOSTheme: () => void;
+  setManualLightMode: () => void;
   theme: string | null;
   setTheme: React.Dispatch<React.SetStateAction<string | null>>;
   eChartsTheme: string | null;
   setEChartsTheme: React.Dispatch<React.SetStateAction<string | null>>;
   themeButtonSelection: string | null;
   setThemeButtonSelection: React.Dispatch<React.SetStateAction<string | null>>;
-  setManualDarkMode: () => void;
-  setOSTheme: () => void;
-  setManualLightMode: () => void;
 }
 
 //-- Create context --//
@@ -72,7 +72,6 @@ function SiteContextProvider({ children }: PropsWithChildren) {
     setThemeButtonSelection("light");
   };
 
-  //-- State values --//
   //-- If theme set in localStorage, use that ("light" | "dark" | null) --//
   let initialTheme: string | null = localStorage.getItem("theme");
   let initialThemeButtonSelection = initialTheme; //-- Don't use the window.matchMedia value here --//
@@ -82,6 +81,8 @@ function SiteContextProvider({ children }: PropsWithChildren) {
       ? (initialTheme = "dark")
       : (initialTheme = "light");
   }
+
+  //-- State values --//
   const [theme, setTheme] = useState<string | null>(initialTheme);
   const [eChartsTheme, setEChartsTheme] = useState<string | null>(initialTheme);
   const [themeButtonSelection, setThemeButtonSelection] = useState<
@@ -90,15 +91,15 @@ function SiteContextProvider({ children }: PropsWithChildren) {
 
   //-- Bundle values into siteContextValue --//
   const siteContextValue: ISiteContext = {
+    setManualDarkMode,
+    setOSTheme,
+    setManualLightMode,
     theme,
     setTheme,
     eChartsTheme,
     setEChartsTheme,
     themeButtonSelection,
     setThemeButtonSelection,
-    setManualDarkMode,
-    setOSTheme,
-    setManualLightMode,
   };
 
   useEffect(() => {
