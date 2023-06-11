@@ -1,4 +1,5 @@
 //== react, react-router-dom, Auth0 ==//
+import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 import { useEffect } from "react";
@@ -45,6 +46,7 @@ const Component = ({ setRemoveFreePreviewModalOpen }: IProps) => {
   const AccountContext = useAccountContext();
   const { getAccessTokenSilently } = useAuth0();
   const { showBoundary } = useErrorBoundary();
+  const navigate = useNavigate();
 
   //== Auth ==//
 
@@ -113,10 +115,24 @@ const Component = ({ setRemoveFreePreviewModalOpen }: IProps) => {
         )}
         {/* END OF TOP */}
 
+        {/* START OF COMPLETE USER AGREEMENT BUTTON */}
+        {!AccountContext.clickwrapIsActive && (
+          <button
+            onClick={() => navigate("/account/data_privacy")}
+            className="mb-3 rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+          >
+            Complete user agreements <span aria-hidden="true">→</span>
+          </button>
+        )}
+        {/* END OF COMPLETE USER AGREEMENT BUTTON */}
+
         {/* START OF ADD FREE PREVIEW BUTTON */}
         <button
           type="button"
-          disabled={isRoleActive(ROLE_NAME, AccountContext)}
+          disabled={
+            isRoleActive(ROLE_NAME, AccountContext) ||
+            !AccountContext.clickwrapIsActive
+          } //-- Disable button if (a) role is already active, or (b) clickwrap agreement is not active
           onClick={addFreePreviewHandler}
           className={classNames(
             "tex-stm mt-4 w-64 items-center gap-x-2 rounded-md px-3.5 py-2.5 text-center font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
@@ -126,6 +142,8 @@ const Component = ({ setRemoveFreePreviewModalOpen }: IProps) => {
               ? "animate-pulse cursor-not-allowed bg-zinc-200 text-zinc-900"
               : isRoleActive(ROLE_NAME, AccountContext)
               ? "cursor-not-allowed bg-green-800 text-white"
+              : !AccountContext.clickwrapIsActive
+              ? "cursor-not-allowed bg-zinc-200 text-zinc-400"
               : !isRoleActive(ROLE_NAME, AccountContext)
               ? "bg-blue-600 text-white hover:bg-blue-500 focus-visible:outline-blue-600"
               : ""
@@ -166,7 +184,7 @@ const Component = ({ setRemoveFreePreviewModalOpen }: IProps) => {
         <button
           type="button"
           onClick={() => setRemoveFreePreviewModalOpen(true)}
-          className="mt-6 w-16 rounded-full bg-rose-50 px-1 py-0.5 text-xs font-semibold text-rose-500 shadow-sm ring-1 ring-inset ring-rose-200 hover:bg-rose-100 dark:bg-rose-900 dark:text-rose-100 dark:ring-rose-900 dark:hover:bg-rose-800"
+          className="w-16 rounded-full bg-rose-50 px-1 py-0.5 text-xs font-semibold text-rose-500 shadow-sm ring-1 ring-inset ring-rose-200 hover:bg-rose-100 dark:bg-rose-900 dark:text-rose-100 dark:ring-rose-900 dark:hover:bg-rose-800"
         >
           Cancel
         </button>
