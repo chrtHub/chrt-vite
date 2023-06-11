@@ -8,30 +8,22 @@ import GrantConsentForm from "./GrantConsentForm";
 import ActiveAgreements from "./ActiveAgreements";
 import { useAccountContext } from "../../../../Context/AccountContext";
 import { getErrorDetails } from "../../../../Errors/getErrorDetails";
-import { getClickwrapUserStatus } from "./Util/getClickwrapUserStatus";
+import { getUserClickwrapData } from "./Util/getUserClickwrapData";
 
 //== NPM Components ==//
 
 //== Icons ==//
 
 //== NPM Functions ==//
-import axios from "axios";
 
 //== Utility Functions ==//
-import classNames from "../../../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { IClickwrapUserStatus } from "./Types/clickwrap_types";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { throwAxiosError } from "../../../../Errors/throwAxiosError";
-let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 // TODO
-
 // Cookies list
-
 // Data request - request email link to download all your data
-
 // CCPA/CRPA
 // // right to know
 // // right to delete
@@ -39,7 +31,6 @@ let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 // // right to non-discrimination
 // // right to correct
 // // right to limit
-
 // GDPR
 // <<>>
 
@@ -64,11 +55,10 @@ const Component = () => {
   //== Other ==//
   // throwAxiosError(400); // DEV
 
-  const fetchClickwrapUserStatus = async () => {
-    //-- Get access token from memory or request new token --//
+  const fetchClickwrapUserData = async () => {
     let accessToken = await getAccessTokenSilently();
     try {
-      await getClickwrapUserStatus(accessToken, AccountContext);
+      await getUserClickwrapData(accessToken, AccountContext);
     } catch (err) {
       showBoundary(err);
     }
@@ -77,7 +67,7 @@ const Component = () => {
   //== Side Effects ==//
   //-- On mount, get user's clickwrap status --//
   useEffect(() => {
-    fetchClickwrapUserStatus();
+    fetchClickwrapUserData();
   }, []);
 
   //== Event Handlers ==//
@@ -102,14 +92,14 @@ const Component = () => {
   //-- Else if status fetched and inactive, show clickwrap form --//
   else if (
     AccountContext.clickwrapStatusFetched &&
-    !AccountContext.clickwrapActive
+    !AccountContext.clickwrapIsActive
   ) {
     return <GrantConsentForm />;
   }
   //-- Else if clickwrap status is active, show list of agreements --//
   else if (
     AccountContext.clickwrapStatusFetched &&
-    AccountContext.clickwrapActive
+    AccountContext.clickwrapIsActive
   ) {
     return <ActiveAgreements />;
   }

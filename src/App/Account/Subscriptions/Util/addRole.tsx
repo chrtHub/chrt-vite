@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getClickwrapUserStatus } from "../../DataPrivacy/Clickwrap/Util/getClickwrapUserStatus";
+import { getUserClickwrapData } from "../../DataPrivacy/Clickwrap/Util/getUserClickwrapData";
 
 import { IAccountContext } from "../../../../Context/AccountContext";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
@@ -11,9 +11,9 @@ export default async function addRole(
 ) {
   try {
     //-- Before assigning a role, check that clickwrap status is active --//
-    await getClickwrapUserStatus(accessToken, AccountContext);
+    await getUserClickwrapData(accessToken, AccountContext);
 
-    if (AccountContext.clickwrapActive) {
+    if (AccountContext.clickwrapIsActive) {
       //-- Make POST request --//
       await axios.post(
         `${VITE_ALB_BASE_URL}/auth0/api/v2/assign_roles_to_user/${role_route}`,

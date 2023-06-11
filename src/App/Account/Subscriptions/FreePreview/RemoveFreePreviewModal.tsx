@@ -18,7 +18,7 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 //== NPM Functions ==//
 
 //== Utility Functions ==//
-import { getUsersPermissions } from "../Util/getUserPermissions";
+import { getUserPermissions } from "../Util/getUserPermissions";
 import { isRoleActive } from "../Util/isRoleActive";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
@@ -63,7 +63,7 @@ export default function RemoveFreePreviewModal({
 
       //-- Update listed permissions --//
       try {
-        await getUsersPermissions(accessToken, AccountContext);
+        await getUserPermissions(accessToken, AccountContext);
       } catch (err) {
         if (err instanceof AxiosError) {
           axiosErrorToaster(err, "Get subscriptions");

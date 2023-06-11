@@ -5,7 +5,7 @@ import { useAccountContext } from "../../../../Context/AccountContext";
 import { useErrorBoundary } from "react-error-boundary";
 
 //== TSX Components, Functions ==//
-import { getClickwrapUserStatus } from "./Util/getClickwrapUserStatus";
+import { getUserClickwrapData } from "./Util/getUserClickwrapData";
 
 //== NPM Components ==//
 
@@ -99,7 +99,7 @@ export default function GrantConsentForm() {
       );
 
       //-- Fetch and update user's clickwrap status --//
-      await getClickwrapUserStatus(accessToken, AccountContext);
+      await getUserClickwrapData(accessToken, AccountContext);
       AccountContext.setClickwrapStatusChanging(false);
       //----//
     } catch (err) {

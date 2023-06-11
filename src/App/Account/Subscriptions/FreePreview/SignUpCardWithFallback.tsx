@@ -1,11 +1,10 @@
 //== react, react-router-dom, Auth0 ==//
-import { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useErrorBoundary } from "react-error-boundary";
+import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
+import { useEffect } from "react";
 
 //== TSX Components, Functions ==//
 import { useAccountContext } from "../../../../Context/AccountContext";
-import { ErrorBoundary } from "react-error-boundary";
 import addRole from "../Util/addRole";
 
 //== NPM Components ==//
@@ -16,7 +15,8 @@ import { CheckCircleIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
 //== NPM Functions ==//
 
 //== Utility Functions ==//
-import { getUsersPermissions } from "../Util/getUserPermissions";
+import { getUserPermissions } from "../Util/getUserPermissions";
+import { getUserClickwrapData } from "../../DataPrivacy/Clickwrap/Util/getUserClickwrapData";
 import { isRoleActive } from "../Util/isRoleActive";
 import classNames from "../../../../Util/classNames";
 
@@ -49,24 +49,23 @@ const Component = ({ setRemoveFreePreviewModalOpen }: IProps) => {
   //== Auth ==//
 
   //== Other ==//
-  async function fetchPermissions() {
+  async function fetchUserPermissionsAndClickwrapData() {
     let accessToken = await getAccessTokenSilently();
     try {
-      await getUsersPermissions(accessToken, AccountContext);
+      await getUserPermissions(accessToken, AccountContext);
+      await getUserClickwrapData(accessToken, AccountContext);
     } catch (err) {
       showBoundary(err);
     }
-    AccountContext.setRolesFetched(true);
   }
 
   //== Side Effects ==//
   //-- On mount, get user permissions --//
   useEffect(() => {
-    fetchPermissions();
+    fetchUserPermissionsAndClickwrapData();
   }, []);
 
   //== Event Handlers ==//
-
   const addFreePreviewHandler = async () => {
     try {
       AccountContext.setChangingFreePreview(true);
@@ -81,7 +80,7 @@ const Component = ({ setRemoveFreePreviewModalOpen }: IProps) => {
       accessToken = await getAccessTokenSilently({ cacheMode: "off" });
 
       //-- Update listed permissions --//
-      await getUsersPermissions(accessToken, AccountContext);
+      await getUserPermissions(accessToken, AccountContext);
 
       AccountContext.setChangingFreePreview(false);
     } catch (err) {

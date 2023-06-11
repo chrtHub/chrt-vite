@@ -5,7 +5,8 @@ import { Dialog, Transition } from "@headlessui/react";
 
 //== TSX Components, Functions ==//
 import { useAccountContext } from "../../../../Context/AccountContext";
-import { getClickwrapUserStatus } from "./Util/getClickwrapUserStatus";
+import { getUserClickwrapData } from "./Util/getUserClickwrapData";
+import { axiosErrorToaster } from "../../../../Errors/axiosErrorToaster";
 
 //== NPM Components ==//
 
@@ -15,6 +16,7 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 
 //== NPM Functions ==//
 import axios, { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 //== Utility Functions ==//
 import classNames from "../../../../Util/classNames";
@@ -69,11 +71,17 @@ export default function WithdrawConsentButton() {
       await getAccessTokenSilently({ cacheMode: "off" }); //-- Security --//
 
       //-- Fetch and update user's clickwrap status --//
-      await getClickwrapUserStatus(accessToken, AccountContext);
+      await getUserClickwrapData(accessToken, AccountContext);
+
       AccountContext.setClickwrapStatusChanging(false);
       //----//
     } catch (err) {
-      throw err;
+      AccountContext.setClickwrapStatusChanging(false);
+      if (err instanceof AxiosError) {
+        axiosErrorToaster(err, "Withdraw agreements");
+      } else if (err instanceof Error) {
+        toast(err.message);
+      }
     }
   };
 

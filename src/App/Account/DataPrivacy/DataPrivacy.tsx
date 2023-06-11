@@ -16,10 +16,15 @@ import ClickwrapWithFallback from "./Clickwrap/ClickwrapWithFallback";
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function DataPrivacy() {
   //== React State, Custom Hooks ==//
+
   //== Auth ==//
+
   //== Other ==//
+
   //== Side Effects ==//
+
   //== Handlers ==//
+
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
     <div>
