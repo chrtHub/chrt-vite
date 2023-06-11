@@ -53,6 +53,7 @@
 - [Docker](https://www.docker.com/)
 - [Amazon Linux 2](https://aws.amazon.com/amazon-linux-2/)
 - [Postgres](https://www.postgresql.org/) on [AWS RDS (Relational Database Service)](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html)
+- [DocumentDB 5.0 (MongoDB Compatible)](https://docs.aws.amazon.com/documentdb/latest/developerguide/what-is.html)
 
 ### Back-end Serverless Stack
 
