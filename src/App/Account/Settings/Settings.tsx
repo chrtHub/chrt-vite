@@ -21,7 +21,7 @@ export default function Settings() {
       <div className="flex w-2/3 flex-col items-center justify-center rounded-lg bg-zinc-200 dark:bg-zinc-700">
         <Cog8ToothIcon className="h-12 w-12 text-zinc-400" />
         <p className="mt-3 text-lg font-semibold text-zinc-400">
-          Intentionally Blank for Now
+          For future use
         </p>
       </div>
     </div>
