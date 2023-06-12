@@ -30,11 +30,11 @@ export default function Subscriptions() {
 
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="px-3 pb-3 lg:px-0">
+    <div className="pb-1">
       {/* START OF "USER AGREEMENTS REQUIRED" COMPONENT */}
       {AccountContext.clickwrapStatusFetched &&
         !AccountContext.clickwrapIsActive && (
-          <div className="flex h-32 flex-col items-center justify-center rounded-lg bg-emerald-200 dark:bg-emerald-400">
+          <div className="flex flex-col items-center justify-center rounded-lg bg-emerald-200 px-3 py-3 dark:bg-emerald-400">
             <div className="max-w-prose">
               <p className="mb-3 text-center font-semibold text-zinc-700 dark:text-emerald-900">
                 User agreements are required before previews or subscriptions
