@@ -14,7 +14,7 @@ import { CURRENT_AGREEMENTS } from "../../App/Account/DataPrivacy/Clickwrap/Util
 //-- Utility Functions --//
 
 //-- Data Objects --//
-const pdfURL = CURRENT_AGREEMENTS.privacyStatement.link;
+const pdfURL = CURRENT_AGREEMENTS.privacyStatement.permanentPDFLink;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Privacy() {
