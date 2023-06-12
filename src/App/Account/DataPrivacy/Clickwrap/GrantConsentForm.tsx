@@ -18,14 +18,8 @@ import classNames from "../../../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { doc } from "./Types/clickwrap_types";
+import { CURRENT_AGREEMENTS } from "./Util/CURRENT_AGREEMENTS";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
-
-import {
-  CURRENT_TERMS_EFFECTIVE_DATE,
-  CURRENT_PRIVACY_EFFECTIVE_DATE,
-  CURRENT_COOKIES_EFFECTIVE_DATE,
-  CURRENT_AGE_REQUIREMENT_STATEMENT,
-} from "./Util/CURRENT_AGREEMENT_DATES";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function GrantConsentForm() {
@@ -155,7 +149,7 @@ export default function GrantConsentForm() {
         {/* Text */}
         <div className="text-sm">
           <label className="font-medium text-zinc-900 dark:text-zinc-50">
-            {CURRENT_AGE_REQUIREMENT_STATEMENT}
+            {CURRENT_AGREEMENTS.ageRequirement.statement}
           </label>
         </div>
         {/* Checkbox */}

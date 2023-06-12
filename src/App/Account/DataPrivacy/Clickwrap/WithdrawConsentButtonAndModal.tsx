@@ -22,13 +22,8 @@ import { toast } from "react-toastify";
 import classNames from "../../../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
+import { CURRENT_AGREEMENTS } from "./Util/CURRENT_AGREEMENTS";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
-import {
-  CURRENT_TERMS_EFFECTIVE_DATE,
-  CURRENT_PRIVACY_EFFECTIVE_DATE,
-  CURRENT_COOKIES_EFFECTIVE_DATE,
-  CURRENT_AGE_REQUIREMENT_STATEMENT,
-} from "./Util/CURRENT_AGREEMENT_DATES";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function WithdrawConsentButton() {

@@ -8,11 +8,12 @@ interface doc {
   setterFn: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-//-- Clickwrap Agreement --//
+//-- Agreement --//
 export interface IClickwrapAgreement {
   name: string;
-  versionEffectiveDate: string;
-  links: string[];
+  date: string;
+  link: string;
+  statement?: string;
 }
 
 //-- Clickwrap Log --//

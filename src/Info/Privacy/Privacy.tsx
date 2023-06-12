@@ -3,6 +3,7 @@
 //-- TSX Components --//
 import TypographyWrapper from "../TypographyWrapper";
 import PrivacyStatement from "./PrivacyStatement.mdx";
+import { CURRENT_AGREEMENTS } from "../../App/Account/DataPrivacy/Clickwrap/Util/CURRENT_AGREEMENTS";
 
 //-- NPM Components --//
 
@@ -13,9 +14,7 @@ import PrivacyStatement from "./PrivacyStatement.mdx";
 //-- Utility Functions --//
 
 //-- Data Objects --//
-
-const pdfURL =
-  "https://chrt-legal-public.s3.amazonaws.com/2023-06-12-PrivacyStatement.pdf";
+const pdfURL = CURRENT_AGREEMENTS.privacyStatement.link;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Privacy() {

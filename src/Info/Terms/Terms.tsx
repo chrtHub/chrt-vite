@@ -3,6 +3,7 @@
 //-- TSX Components --//
 import TypographyWrapper from "../TypographyWrapper";
 import TermsOfService from "./TermsOfService.mdx";
+import { CURRENT_AGREEMENTS } from "../../App/Account/DataPrivacy/Clickwrap/Util/CURRENT_AGREEMENTS";
 
 //-- NPM Components --//
 
@@ -14,8 +15,7 @@ import TermsOfService from "./TermsOfService.mdx";
 
 //-- Data Objects --//
 
-const pdfURL =
-  "https://chrt-legal-public.s3.amazonaws.com/2023-06-12-TermsOfService.pdf";
+const pdfURL = CURRENT_AGREEMENTS.termsOfService.link;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Terms() {

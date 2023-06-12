@@ -3,6 +3,7 @@
 //-- TSX Components --//
 import TypographyWrapper from "../TypographyWrapper";
 import CookiesPolicy from "./CookiesPolicy.mdx";
+import { CURRENT_AGREEMENTS } from "../../App/Account/DataPrivacy/Clickwrap/Util/CURRENT_AGREEMENTS";
 
 //-- NPM Components --//
 
@@ -14,8 +15,7 @@ import CookiesPolicy from "./CookiesPolicy.mdx";
 
 //-- Data Objects --//
 
-const pdfURL =
-  "https://chrt-legal-public.s3.amazonaws.com/2023-06-12-CookiesPolicy.pdf";
+const pdfURL = CURRENT_AGREEMENTS.cookiesPolicy.link;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Privacy() {
