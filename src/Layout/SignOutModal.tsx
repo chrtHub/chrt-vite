@@ -60,9 +60,9 @@ export default function ConfirmSignOutModal({
                 {/* Start of icon, title, subtitle */}
                 <div className="sm:flex sm:items-start">
                   {/* Exclamation Icon */}
-                  <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-950 sm:mx-0 sm:h-10 sm:w-10">
+                  <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-950 sm:mx-0 sm:h-10 sm:w-10">
                     <ExclamationTriangleIcon
-                      className="h-6 w-6 text-red-600 dark:text-red-300"
+                      className="h-6 w-6 text-rose-600 dark:text-rose-300"
                       aria-hidden="true"
                     />
                   </div>
@@ -105,8 +105,8 @@ export default function ConfirmSignOutModal({
                     type="button"
                     className={classNames(
                       "flex w-full items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm",
-                      "bg-red-600 text-white hover:bg-red-500",
-                      "dark:bg-red-800 dark:text-red-100 dark:hover:bg-red-600",
+                      "bg-rose-600 text-white hover:bg-rose-500",
+                      "dark:bg-rose-800 dark:text-rose-100 dark:hover:bg-rose-600",
                       "sm:ml-3 sm:w-auto"
                     )}
                     onClick={() => {

@@ -249,7 +249,7 @@ const Fallback = ({ error }: { error: Error }) => {
     return (
       <div
         className={classNames(
-          "mb-2 mt-0.5 flex h-full w-full flex-col items-center justify-center rounded-md bg-orange-100 p-3  text-center font-medium text-orange-800 dark:bg-yellow-950 dark:text-orange-200"
+          "mb-2 mt-0.5 flex h-full w-full flex-col items-center justify-center rounded-md bg-orange-100 p-3  text-center font-medium text-orange-800 dark:bg-amber-950 dark:text-orange-200"
         )}
       >
         {/* Non-401 errors */}

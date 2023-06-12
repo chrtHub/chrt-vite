@@ -2,6 +2,7 @@
 import { Fragment, useEffect, useRef, useState, SetStateAction } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useAccountContext } from "../Context/AccountContext";
 
 import { useSiteContext } from "../Context/SiteContext";
 
@@ -43,13 +44,19 @@ export default function MainMenu({
   setMobileSidebarOpen,
 }: IProps) {
   //== React State, Custom Hooks ==//
-  let SiteContext = useSiteContext();
-  const { user } = useAuth0();
+  const SiteContext = useSiteContext();
+  const AccountContext = useAccountContext();
 
   //== Auth ==//
+  const { user } = useAuth0();
+
   //== Other ==//
+  const MainMenuNotificationsCount = 3;
+
   //== Side Effects ==//
+
   //== Handlers ==//
+
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
     <Menu
@@ -81,10 +88,27 @@ export default function MainMenu({
                   </p>
                 </div>
               </div>
-              <EllipsisHorizontalCircleIcon
-                className="ml-auto h-7 w-7 text-zinc-600 dark:text-zinc-400"
-                aria-hidden="true"
-              />
+              {/* START OF NOTIFICATIONS BADGE OR ELLIPSIS */}
+              {!AccountContext.clickwrapIsActive ? (
+                <span className="ml-auto flex items-center gap-x-1.5 rounded-full bg-emerald-200 px-2 py-1 text-xs font-medium text-emerald-800">
+                  <svg
+                    className="h-1.5 w-1.5 fill-emerald-500"
+                    viewBox="0 0 6 6"
+                    aria-hidden="true"
+                  >
+                    <circle cx={3} cy={3} r={3} />
+                  </svg>
+                  {/* Notification Count */}
+                  <p>{!AccountContext.clickwrapIsActive && 1}</p>
+                </span>
+              ) : (
+                <EllipsisHorizontalCircleIcon
+                  className="ml-auto h-7 w-7 text-zinc-600 dark:text-zinc-400"
+                  aria-hidden="true"
+                />
+              )}
+
+              {/* END OF NOTIFICATIONS BADGE OR ELLIPSIS */}
             </>
           ) : (
             <>
@@ -127,7 +151,7 @@ export default function MainMenu({
                 className={classNames(
                   "mx-3 flex w-1/3 flex-row items-center justify-center rounded-full py-2",
                   SiteContext.themeButtonSelection === "light"
-                    ? "bg-yellow-300 text-zinc-600"
+                    ? "bg-amber-300 text-zinc-600"
                     : "text-zinc-700 hover:bg-zinc-500 hover:text-zinc-100 dark:text-zinc-100"
                 )}
               >
@@ -180,8 +204,13 @@ export default function MainMenu({
                     active ? "bg-zinc-200 dark:bg-zinc-700" : ""
                   )}
                 >
+                  {/* START OF ICON AND MENU ITEM NAME */}
                   <UserIcon className="h-6 w-6" />
                   Account
+                  {/* END OF ICON AND MENU ITEM NAME */}
+                  {/* START OF NOTIFICATION BADGE */}
+                  {/* TODO */}
+                  {/* END OF NOTIFICATION BADGE */}
                 </NavLink>
               )}
             </Menu.Item>
@@ -200,8 +229,13 @@ export default function MainMenu({
                     active ? "bg-zinc-200 dark:bg-zinc-700" : ""
                   )}
                 >
+                  {/* START OF ICON AND MENU ITEM NAME */}
                   <Cog8ToothIcon className="h-6 w-6" />
                   Settings
+                  {/* END OF ICON AND MENU ITEM NAME */}
+                  {/* START OF NOTIFICATION BADGE */}
+                  {/* TODO */}
+                  {/* END OF NOTIFICATION BADGE */}
                 </NavLink>
               )}
             </Menu.Item>
@@ -220,8 +254,13 @@ export default function MainMenu({
                     active ? "bg-zinc-200 dark:bg-zinc-700" : ""
                   )}
                 >
+                  {/* START OF ICON AND MENU ITEM NAME */}
                   <KeyIcon className="h-6 w-6" />
                   Subscriptions
+                  {/* END OF ICON AND MENU ITEM NAME */}
+                  {/* START OF NOTIFICATION BADGE */}
+                  {/* TODO */}
+                  {/* END OF NOTIFICATION BADGE */}
                 </NavLink>
               )}
             </Menu.Item>
@@ -240,8 +279,26 @@ export default function MainMenu({
                     active ? "bg-zinc-200 dark:bg-zinc-700" : ""
                   )}
                 >
+                  {/* START OF ICON AND MENU ITEM NAME */}
                   <ShieldCheckIcon className="h-6 w-6" />
-                  Data Privacy
+                  <p>Data Privacy</p>
+                  {/* END OF ICON AND MENU ITEM NAME */}
+
+                  {/* START OF NOTIFICATION BADGE */}
+                  {!AccountContext.clickwrapIsActive && (
+                    <span className="ml-auto flex items-center gap-x-1.5 rounded-full bg-emerald-200 px-2 py-1 text-xs font-medium text-emerald-800">
+                      <svg
+                        className="h-1.5 w-1.5 fill-emerald-500"
+                        viewBox="0 0 6 6"
+                        aria-hidden="true"
+                      >
+                        <circle cx={3} cy={3} r={3} />
+                      </svg>
+                      {/* Notification Count */}
+                      <p>{!AccountContext.clickwrapIsActive && 1}</p>
+                    </span>
+                  )}
+                  {/* END OF NOTIFICATION BADGE */}
                 </NavLink>
               )}
             </Menu.Item>
@@ -265,8 +322,13 @@ export default function MainMenu({
                     active ? "bg-zinc-200 dark:bg-zinc-700" : ""
                   )}
                 >
+                  {/* START OF ICON AND MENU ITEM NAME */}
                   <ComputerDesktopIcon className="h-6 w-6" />
                   Support
+                  {/* END OF ICON AND MENU ITEM NAME */}
+                  {/* START OF NOTIFICATION BADGE */}
+                  {/* TODO */}
+                  {/* END OF NOTIFICATION BADGE */}
                 </NavLink>
               )}
             </Menu.Item>
@@ -288,8 +350,13 @@ export default function MainMenu({
                     active ? "bg-zinc-200 dark:bg-zinc-700" : ""
                   )}
                 >
+                  {/* START OF ICON AND MENU ITEM NAME */}
                   <DocumentTextIcon className="h-6 w-6" />
                   Terms, Privacy, etc.
+                  {/* END OF ICON AND MENU ITEM NAME */}
+                  {/* START OF NOTIFICATION BADGE */}
+                  {/* TODO */}
+                  {/* END OF NOTIFICATION BADGE */}
                 </NavLink>
               )}
             </Menu.Item>

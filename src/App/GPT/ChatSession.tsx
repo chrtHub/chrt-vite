@@ -341,17 +341,17 @@ export default function ChatSession() {
         {/* Error Alert */}
         <div className="flex flex-row justify-center">
           {showError && (
-            <div className="mb-1 w-full max-w-prose rounded-md bg-red-100 dark:bg-red-800">
+            <div className="mb-1 w-full max-w-prose rounded-md bg-rose-100 dark:bg-rose-800">
               {/* Content */}
               <div className="flex flex-row justify-between px-2 pb-1 pt-2">
                 <div>
                   <ExclamationTriangleIcon
-                    className="h-5 w-5 text-red-500 dark:text-red-100"
+                    className="h-5 w-5 text-rose-500 dark:text-rose-100"
                     aria-hidden="true"
                   />
                 </div>
                 <div className="ml-3">
-                  <p className="text-sm font-medium text-red-800 dark:text-red-100">
+                  <p className="text-sm font-medium text-rose-800 dark:text-rose-100">
                     {showError}
                   </p>
                 </div>
@@ -362,7 +362,7 @@ export default function ChatSession() {
                       onClick={() => {
                         setShowError(null);
                       }}
-                      className="inline-flex rounded-full p-1.5 text-red-500 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-red-50 dark:text-red-100 dark:hover:bg-red-950"
+                      className="inline-flex rounded-full p-1.5 text-rose-500 hover:bg-rose-200 focus:outline-none focus:ring-2 focus:ring-rose-600 focus:ring-offset-2 focus:ring-offset-rose-50 dark:text-rose-100 dark:hover:bg-rose-950"
                     >
                       <span className="sr-only">Dismiss</span>
                       <XCircleIcon className="h-5 w-5" aria-hidden="true" />
@@ -371,10 +371,10 @@ export default function ChatSession() {
                 </div>
               </div>
               {/* Progress Bar */}
-              <div className="h-1.5 w-full rounded-b bg-red-100 dark:bg-red-900">
+              <div className="h-1.5 w-full rounded-b bg-rose-100 dark:bg-rose-900">
                 <div
                   key={animationKey}
-                  className="h-full w-full rounded-b bg-red-500 dark:bg-red-200"
+                  className="h-full w-full rounded-b bg-rose-500 dark:bg-rose-200"
                   style={{ animation: "progress 4s linear" }}
                 />
               </div>
@@ -390,7 +390,7 @@ export default function ChatSession() {
               promptTooLong && !prompt2XTooLong
                 ? "bg-orange-500  dark:bg-orange-800"
                 : prompt2XTooLong
-                ? "bg-red-500  dark:bg-red-800"
+                ? "bg-rose-500  dark:bg-rose-800"
                 : ""
             )}
           >
@@ -538,7 +538,7 @@ export default function ChatSession() {
                     : promptTooLong && !prompt2XTooLong
                     ? "bg-orange-300 ring-1 ring-orange-400 focus:ring-2 focus:ring-orange-400 dark:ring-orange-600 dark:focus:ring-orange-600"
                     : prompt2XTooLong
-                    ? "bg-red-300 ring-1 ring-red-400 focus:ring-2 focus:ring-red-400 dark:ring-red-600 dark:focus:ring-red-600"
+                    ? "bg-rose-300 ring-1 ring-rose-400 focus:ring-2 focus:ring-rose-400 dark:ring-rose-600 dark:focus:ring-rose-600"
                     : "bg-white ring-1 ring-inset ring-zinc-300 dark:bg-zinc-700 dark:text-white"
                 )}
               />

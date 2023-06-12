@@ -110,26 +110,30 @@ export default function GrantConsentForm() {
 
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="max-w-lg rounded-lg bg-zinc-200 px-6 py-6 shadow">
+    <div className="max-w-lg divide-y divide-zinc-300 rounded-lg bg-white px-6 pb-6 pt-3 shadow dark:divide-zinc-600 dark:bg-zinc-950">
+      <h2 className="mb-2 flex w-full items-center justify-center font-semibold text-zinc-600 dark:text-zinc-100">
+        User Agreements
+      </h2>
       {/* CHECKBOXES */}
       {docs.map((doc) => {
         return (
-          <div className="flex flex-row items-start pb-3" key={doc.name}>
+          //-- Start of Terms, Privacy, Cookies --//
+          <div className="flex flex-row items-start py-3" key={doc.name}>
             {/* Text and link */}
-            <div className="text-sm">
-              <p className="font-medium text-zinc-900">
+            <div>
+              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
                 I agree to CHRT's{" "}
                 <a
                   href={doc.href}
                   rel="noopener noreferrer"
                   target="_blank"
-                  className="text-blue-600 underline"
+                  className="text-blue-600 underline dark:text-blue-400"
                 >
                   {doc.name}
                 </a>
               </p>
 
-              <p className="text-sm text-zinc-600">
+              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                 Version Effective Date: {doc.versionEffectiveDate}
               </p>
             </div>
@@ -143,13 +147,14 @@ export default function GrantConsentForm() {
               />
             </div>
           </div>
+          //-- End of Terms, Privacy, Cookies --//
         );
       })}
       {/* Age */}
-      <div className="flex flex-row items-start pb-3">
+      <div className="flex flex-row items-start py-3">
         {/* Text */}
         <div className="text-sm">
-          <label className="font-medium text-zinc-900">
+          <label className="font-medium text-zinc-900 dark:text-zinc-50">
             {CURRENT_AGE_REQUIREMENT_STATEMENT}
           </label>
         </div>
@@ -162,17 +167,16 @@ export default function GrantConsentForm() {
           />
         </div>
       </div>
-
       {/* START OF AGREEMENT STATEMENT AND BUTTON */}
       <div className="flex flex-row pt-3">
-        <div className="max-w-xs text-sm text-zinc-600">
+        <div className="max-w-xs pr-2 text-sm text-zinc-600 dark:text-zinc-200">
           <p>
             By clicking "Agree" you agree to CHRT's{" "}
             <a
               href="https://chrt.com/terms"
               rel="noopener noreferrer"
               target="_blank"
-              className="text-zinc-800 underline"
+              className="text-zinc-800 underline dark:text-zinc-200"
             >
               Terms of Service
             </a>
@@ -181,7 +185,7 @@ export default function GrantConsentForm() {
               href="https://chrt.com/privacy"
               rel="noopener noreferrer"
               target="_blank"
-              className="text-zinc-800 underline"
+              className="text-zinc-800 underline dark:text-zinc-200"
             >
               Privacy Statement
             </a>
@@ -190,7 +194,7 @@ export default function GrantConsentForm() {
               href="https://chrt.com/cookies"
               rel="noopener noreferrer"
               target="_blank"
-              className="text-zinc-800 underline"
+              className="text-zinc-800 underline dark:text-zinc-200"
             >
               Cookies Policy
             </a>
