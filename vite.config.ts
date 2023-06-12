@@ -4,12 +4,17 @@ import mdx from "@mdx-js/rollup";
 import topLevelAwait from "vite-plugin-top-level-await";
 import { visualizer } from "rollup-plugin-visualizer";
 import Inspect from "vite-plugin-inspect";
+import gfm from "remark-gfm";
 
 //-- https://vitejs.dev/config/ --//
 export default defineConfig({
   plugins: [
     [react() as PluginOption],
-    [mdx() as PluginOption],
+    [
+      mdx({
+        remarkPlugins: [gfm],
+      }) as PluginOption,
+    ],
     [
       topLevelAwait({
         promiseExportName: "__tla",

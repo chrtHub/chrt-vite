@@ -1,17 +1,12 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- TSX Components --//
-import Tooltip from "../../Components/Tooltip";
 import TypographyWrapper from "../TypographyWrapper";
 import TermsOfService from "./TermsOfService.mdx";
 
 //-- NPM Components --//
 
 //-- Icons --//
-import {
-  ArrowDownOnSquareIcon,
-  PrinterIcon,
-} from "@heroicons/react/24/outline";
 
 //-- NPM Functions --//
 
