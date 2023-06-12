@@ -15,7 +15,7 @@ import { CURRENT_AGREEMENTS } from "../../App/Account/DataPrivacy/Clickwrap/Util
 
 //-- Data Objects --//
 
-const pdfURL = CURRENT_AGREEMENTS.termsOfService.link;
+const pdfURL = CURRENT_AGREEMENTS.termsOfService.permanentPDFLink;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Terms() {
