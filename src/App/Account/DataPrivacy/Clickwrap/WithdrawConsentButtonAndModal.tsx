@@ -138,7 +138,7 @@ export default function WithdrawConsentButton() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col justify-end bg-zinc-100 px-6 py-3 dark:bg-zinc-800 md:flex-row">
+                  <div className="flex flex-col justify-end gap-y-2 bg-zinc-100 px-6 py-3 dark:bg-zinc-800 md:flex-row">
                     {/* Cancel Button */}
                     <button
                       type="button"
