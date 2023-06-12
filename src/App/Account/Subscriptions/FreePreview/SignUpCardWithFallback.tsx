@@ -118,9 +118,10 @@ const Component = ({ setRemoveFreePreviewModalOpen }: IProps) => {
 
         {/* START OF COMPLETE USER AGREEMENT BUTTON */}
         <div className="mb-3">
-          {!AccountContext.clickwrapIsActive && (
-            <CompleteUserAgreementsButton />
-          )}
+          {AccountContext.clickwrapStatusFetched &&
+            !AccountContext.clickwrapIsActive && (
+              <CompleteUserAgreementsButton />
+            )}
         </div>
         {/* END OF COMPLETE USER AGREEMENT BUTTON */}
 

@@ -24,10 +24,6 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 //     name: "Trading Journal",
 //     href: `${window.location.origin}/journal`,
 //   },
-//   {
-//     name: "Market Data",
-//     href: `${window.location.origin}/data`,
-//   },
 // ];
 
 import classNames from "../../Util/classNames";

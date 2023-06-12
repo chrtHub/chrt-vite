@@ -30,16 +30,17 @@ export default function DataPrivacy() {
   return (
     <div>
       {/* START OF "USER AGREEMENTS REQUIRED" COMPONENT */}
-      {!AccountContext.clickwrapIsActive && (
-        <div className="flex h-24 max-w-lg flex-col items-center justify-center rounded-lg bg-emerald-200 dark:bg-emerald-400">
-          <div className="max-w-md">
-            <p className="text-center font-semibold text-zinc-700 dark:text-emerald-900">
-              The user agreements below are required before previews or
-              subscriptions can be accessed
-            </p>
+      {AccountContext.clickwrapStatusFetched &&
+        !AccountContext.clickwrapIsActive && (
+          <div className="flex h-24 max-w-lg flex-col items-center justify-center rounded-lg bg-emerald-200 dark:bg-emerald-400">
+            <div className="max-w-md">
+              <p className="text-center font-semibold text-zinc-700 dark:text-emerald-900">
+                The user agreements below are required before previews or
+                subscriptions can be accessed
+              </p>
+            </div>
           </div>
-        </div>
-      )}
+        )}
       {/* END OF "USER AGREEMENTS REQUIRED" COMPONENT */}
       <div className="mt-3">
         <ClickwrapWithFallback />

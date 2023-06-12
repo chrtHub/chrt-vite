@@ -17,7 +17,6 @@ import AuthGuard from "./Auth/AuthGuard";
 //-- TSX Components: Services--//
 import App from "./App";
 import RedirectToSignIn from "./Navigation/RedirectToSignIn";
-import Data from "./App/DataService/Data";
 import Journal from "./App/JournalService/Journal";
 import JournalFiles from "./App/JournalFiles/JournalFiles";
 import GPT from "./App/GPT/GPT";
@@ -63,7 +62,6 @@ const router = createBrowserRouter(
       <Route path="/" element={<App />}>
         {/* Services */}
         <Route index element={<Home />} />
-        <Route path="/data" element={<AuthGuard component={Data} />} />
         <Route path="/journal" element={<AuthGuard component={Journal} />} />
         <Route path="/files" element={<AuthGuard component={JournalFiles} />} />
         <Route

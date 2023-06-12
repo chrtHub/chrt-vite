@@ -16,8 +16,8 @@ export const getUserClickwrapData = async (
       },
     });
     const data: IClickwrapUserStatus = res.data;
-    AccountContext.setClickwrapIsActive(data.activeAgreement);
-    AccountContext.setClickwrapAgreements(data.agreements);
+    AccountContext.setClickwrapIsActive(data?.activeAgreement || false);
+    AccountContext.setClickwrapAgreements(data?.agreements || []);
     AccountContext.setClickwrapStatusFetched(true);
     //----//
   } catch (err) {

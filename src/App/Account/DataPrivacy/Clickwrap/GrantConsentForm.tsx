@@ -17,15 +17,8 @@ import axios from "axios";
 import classNames from "../../../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { doc } from "./Types/clickwrap_types";
+import { CURRENT_AGREEMENTS } from "./Util/CURRENT_AGREEMENTS";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
-
-import {
-  CURRENT_TERMS_EFFECTIVE_DATE,
-  CURRENT_PRIVACY_EFFECTIVE_DATE,
-  CURRENT_COOKIES_EFFECTIVE_DATE,
-  CURRENT_AGE_REQUIREMENT_STATEMENT,
-} from "./Util/CURRENT_AGREEMENT_DATES";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function GrantConsentForm() {
@@ -42,26 +35,6 @@ export default function GrantConsentForm() {
   let { getAccessTokenSilently, user } = useAuth0();
 
   //== Other ==//
-  const docs: doc[] = [
-    {
-      name: "Terms of Service",
-      versionEffectiveDate: CURRENT_TERMS_EFFECTIVE_DATE,
-      href: "https://chrt.com/terms",
-      setterFn: setTermsChecked,
-    },
-    {
-      name: "Privacy Statement",
-      versionEffectiveDate: CURRENT_PRIVACY_EFFECTIVE_DATE,
-      href: "https://chrt.com/privacy",
-      setterFn: setPrivacyChecked,
-    },
-    {
-      name: "Cookies Policy",
-      versionEffectiveDate: CURRENT_COOKIES_EFFECTIVE_DATE,
-      href: "https://chrt.com/cookies",
-      setterFn: setCookiesChecked,
-    },
-  ];
 
   //== Side Effects ==//
   //-- Endable/disable submit button --//
@@ -86,10 +59,7 @@ export default function GrantConsentForm() {
         `${VITE_ALB_BASE_URL}/legal/grant_clickwrap`,
         //-- Body Content --//
         {
-          TERMS_VERSION_EFFECTIVE_DATE: CURRENT_TERMS_EFFECTIVE_DATE,
-          PRIVACY_VERSION_EFFECTIVE_DATE: CURRENT_PRIVACY_EFFECTIVE_DATE,
-          COOKIES_VERSION_EFFECTIVE_DATE: CURRENT_COOKIES_EFFECTIVE_DATE,
-          AGE_REQUIREMENT_STATEMENT: CURRENT_AGE_REQUIREMENT_STATEMENT,
+          CURRENT_AGREEMENTS: CURRENT_AGREEMENTS,
         },
         {
           headers: {
@@ -114,48 +84,108 @@ export default function GrantConsentForm() {
       <h2 className="mb-2 flex w-full items-center justify-center font-semibold text-zinc-600 dark:text-zinc-100">
         User Agreements
       </h2>
-      {/* CHECKBOXES */}
-      {docs.map((doc) => {
-        return (
-          //-- Start of Terms, Privacy, Cookies --//
-          <div className="flex flex-row items-start py-3" key={doc.name}>
-            {/* Text and link */}
-            <div>
-              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
-                I agree to CHRT's{" "}
-                <a
-                  href={doc.href}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  className="text-blue-600 underline dark:text-blue-400"
-                >
-                  {doc.name}
-                </a>
-              </p>
+      {/* Start of Terms of Service */}
+      <div className="flex flex-row items-start py-3">
+        {/* Text and link */}
+        <div>
+          <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+            I agree to CHRT's{" "}
+            <a
+              href={"https://chrt.com/terms"}
+              rel="noopener noreferrer"
+              target="_blank"
+              className="text-blue-600 underline dark:text-blue-400"
+            >
+              {CURRENT_AGREEMENTS.termsOfService.name}
+            </a>
+          </p>
 
-              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                Version Effective Date: {doc.versionEffectiveDate}
-              </p>
-            </div>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            Effective: {CURRENT_AGREEMENTS.termsOfService.date}
+          </p>
+        </div>
 
-            {/* Checkbox */}
-            <div className="ml-auto flex w-12 items-center justify-center">
-              <input
-                type="checkbox"
-                onChange={(event) => doc.setterFn(event.target.checked)}
-                className="h-5 w-5 rounded border-zinc-300 text-green-600 focus:ring-green-600"
-              />
-            </div>
-          </div>
-          //-- End of Terms, Privacy, Cookies --//
-        );
-      })}
-      {/* Age */}
+        {/* Checkbox */}
+        <div className="ml-auto flex w-12 items-center justify-center">
+          <input
+            type="checkbox"
+            onChange={(event) => setTermsChecked(event.target.checked)}
+            className="h-5 w-5 rounded border-zinc-300 text-green-600 focus:ring-green-600"
+          />
+        </div>
+      </div>
+      {/* End of Terms of Service */}
+
+      {/* Start of Privacy Statement */}
+      <div className="flex flex-row items-start py-3">
+        {/* Text and link */}
+        <div>
+          <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+            I agree to CHRT's{" "}
+            <a
+              href={"https://chrt.com/privacy"}
+              rel="noopener noreferrer"
+              target="_blank"
+              className="text-blue-600 underline dark:text-blue-400"
+            >
+              {CURRENT_AGREEMENTS.privacyStatement.name}
+            </a>
+          </p>
+
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            Effective: {CURRENT_AGREEMENTS.privacyStatement.date}
+          </p>
+        </div>
+
+        {/* Checkbox */}
+        <div className="ml-auto flex w-12 items-center justify-center">
+          <input
+            type="checkbox"
+            onChange={(event) => setPrivacyChecked(event.target.checked)}
+            className="h-5 w-5 rounded border-zinc-300 text-green-600 focus:ring-green-600"
+          />
+        </div>
+      </div>
+      {/* End of Privacy Statement */}
+
+      {/* Start of Cookies Policy */}
+      <div className="flex flex-row items-start py-3">
+        {/* Text and link */}
+        <div>
+          <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+            I agree to CHRT's{" "}
+            <a
+              href={"https://chrt.com/cookies"}
+              rel="noopener noreferrer"
+              target="_blank"
+              className="text-blue-600 underline dark:text-blue-400"
+            >
+              {CURRENT_AGREEMENTS.cookiesPolicy.name}
+            </a>
+          </p>
+
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            Effective: {CURRENT_AGREEMENTS.cookiesPolicy.date}
+          </p>
+        </div>
+
+        {/* Checkbox */}
+        <div className="ml-auto flex w-12 items-center justify-center">
+          <input
+            type="checkbox"
+            onChange={(event) => setCookiesChecked(event.target.checked)}
+            className="h-5 w-5 rounded border-zinc-300 text-green-600 focus:ring-green-600"
+          />
+        </div>
+      </div>
+      {/* End of Cookies Policy */}
+
+      {/* Start of Age Requirement */}
       <div className="flex flex-row items-start py-3">
         {/* Text */}
         <div className="text-sm">
           <label className="font-medium text-zinc-900 dark:text-zinc-50">
-            {CURRENT_AGE_REQUIREMENT_STATEMENT}
+            {CURRENT_AGREEMENTS.ageRequirement.statement}
           </label>
         </div>
         {/* Checkbox */}
@@ -167,6 +197,8 @@ export default function GrantConsentForm() {
           />
         </div>
       </div>
+      {/* End of Age Requirement */}
+
       {/* START OF AGREEMENT STATEMENT AND BUTTON */}
       <div className="flex flex-row pt-3">
         <div className="max-w-xs pr-2 text-sm text-zinc-600 dark:text-zinc-200">
