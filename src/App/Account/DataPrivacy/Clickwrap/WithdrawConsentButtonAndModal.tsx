@@ -12,7 +12,7 @@ import { axiosErrorToaster } from "../../../../Errors/axiosErrorToaster";
 
 //== Icons ==//
 import { ShieldExclamationIcon } from "@heroicons/react/24/solid";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 //== NPM Functions ==//
 import axios, { AxiosError } from "axios";
@@ -105,7 +105,7 @@ export default function WithdrawConsentButton() {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            <div className="fixed inset-0 bg-zinc-500 bg-opacity-75 transition-opacity dark:bg-zinc-900 dark:bg-opacity-75" />
           </Transition.Child>
 
           <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -119,24 +119,24 @@ export default function WithdrawConsentButton() {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                  <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all dark:bg-zinc-950 sm:my-8 sm:w-full sm:max-w-lg">
+                  <div className="bg-white px-4 pb-4 pt-5 dark:bg-zinc-950 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
-                      <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-rose-100 sm:mx-0 sm:h-10 sm:w-10">
+                      <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-800 sm:mx-0 sm:h-10 sm:w-10">
                         <ExclamationTriangleIcon
-                          className="h-6 w-6 text-rose-600"
+                          className="h-6 w-6 text-rose-600 dark:text-rose-200"
                           aria-hidden="true"
                         />
                       </div>
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                         <Dialog.Title
                           as="h3"
-                          className="text-base font-semibold leading-6 text-gray-900"
+                          className="text-base font-semibold leading-6 text-zinc-900 dark:text-zinc-50"
                         >
                           Are you sure?
                         </Dialog.Title>
                         <div className="mt-2">
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-zinc-500 dark:text-zinc-100">
                             By cancelling your agreements, you will immediately
                             lose access to all subscriptions. We cannot provide
                             our services to you without these agreements in
@@ -146,18 +146,31 @@ export default function WithdrawConsentButton() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col justify-end gap-2 bg-gray-50 px-6 py-3 md:flex-row md:px-4">
+                  <div className="flex flex-col justify-end bg-zinc-100 px-6 py-3 dark:bg-zinc-800 md:flex-row">
+                    {/* Cancel Button */}
                     <button
                       type="button"
-                      className="flex w-full flex-row justify-center rounded-md bg-white px-3 py-2 text-center align-middle text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 md:w-auto"
+                      className="flex w-full flex-row justify-center rounded-md bg-white px-3 py-2 text-center align-middle text-sm font-semibold text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 hover:bg-zinc-50 dark:bg-zinc-700 dark:text-zinc-100 dark:ring-zinc-700 dark:hover:bg-zinc-600 sm:mt-0 md:w-auto"
                       onClick={() => setModalOpen(false)}
                       ref={cancelButtonRef}
                     >
                       Cancel
                     </button>
 
-                    {/* Remove Free Preview Button */}
-                    <button onClick={withdrawConsentHandler}>submit</button>
+                    {/* Confirm Button */}
+                    <button
+                      type="button"
+                      className={classNames(
+                        "flex w-full items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm",
+                        "bg-rose-600 text-white hover:bg-rose-500",
+                        "dark:bg-rose-800 dark:text-rose-50 dark:hover:bg-rose-600",
+                        "sm:ml-3 sm:w-auto"
+                      )}
+                      onClick={withdrawConsentHandler}
+                    >
+                      Confirm
+                    </button>
+                    {/*  */}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
@@ -171,7 +184,7 @@ export default function WithdrawConsentButton() {
       <button
         type="button"
         onClick={() => setModalOpen(true)}
-        className="inline-flex items-center gap-x-1.5 rounded-md bg-rose-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600"
+        className="inline-flex items-center gap-x-1.5 rounded-md bg-rose-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600 dark:bg-rose-600 dark:hover:bg-rose-700"
       >
         Withdraw Agreements
         <ShieldExclamationIcon

@@ -76,16 +76,16 @@ const Component = () => {
   //-- Else if status is changing, show "Updating..." skeleton --//
   if (AccountContext.clickwrapStatusChanging) {
     return (
-      <div className="flex h-32 max-w-lg animate-pulse items-center justify-center rounded-lg bg-zinc-200">
-        <p className="text-zinc-500">Updating...</p>
+      <div className="flex h-32 max-w-lg animate-pulse items-center justify-center rounded-lg bg-zinc-200 dark:bg-zinc-700">
+        <p className="text-zinc-500 dark:text-zinc-200">Updating...</p>
       </div>
     );
   }
   //-- Before fetch, show "Loading..." skeleton --//
   else if (!AccountContext.clickwrapStatusFetched) {
     return (
-      <div className="flex h-32 max-w-lg animate-pulse items-center justify-center rounded-lg bg-zinc-200">
-        <p className="text-zinc-500">Loading...</p>
+      <div className="flex h-32 max-w-lg animate-pulse items-center justify-center rounded-lg bg-zinc-200 dark:bg-zinc-700">
+        <p className="text-zinc-500 dark:text-zinc-200">Loading...</p>
       </div>
     );
   }

@@ -1,6 +1,7 @@
 //== react, react-router-dom, Auth0 ==//
 
 //== TSX Components, Functions ==//
+import { useAccountContext } from "../../../Context/AccountContext";
 import ClickwrapWithFallback from "./Clickwrap/ClickwrapWithFallback";
 
 //== NPM Components ==//
@@ -16,7 +17,7 @@ import ClickwrapWithFallback from "./Clickwrap/ClickwrapWithFallback";
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function DataPrivacy() {
   //== React State, Custom Hooks ==//
-
+  const AccountContext = useAccountContext();
   //== Auth ==//
 
   //== Other ==//
@@ -28,7 +29,21 @@ export default function DataPrivacy() {
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
     <div>
-      <ClickwrapWithFallback />
+      {/* START OF "USER AGREEMENTS REQUIRED" COMPONENT */}
+      {!AccountContext.clickwrapIsActive && (
+        <div className="flex h-24 max-w-lg flex-col items-center justify-center rounded-lg bg-emerald-200 dark:bg-emerald-400">
+          <div className="max-w-md">
+            <p className="text-center font-semibold text-zinc-700 dark:text-emerald-900">
+              The user agreements below are required before previews or
+              subscriptions can be accessed
+            </p>
+          </div>
+        </div>
+      )}
+      {/* END OF "USER AGREEMENTS REQUIRED" COMPONENT */}
+      <div className="mt-3">
+        <ClickwrapWithFallback />
+      </div>
     </div>
   );
 }

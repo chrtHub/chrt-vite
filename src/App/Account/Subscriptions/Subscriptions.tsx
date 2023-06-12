@@ -1,5 +1,4 @@
 //== react, react-router-dom, Auth0 ==//
-import { useNavigate } from "react-router-dom";
 
 //== TSX Components, Functions ==//
 import FreePreview from "./FreePreview/FreePreview";
@@ -20,7 +19,6 @@ import { CompleteUserAgreementsButton } from "./CompleteUserAgreementsButton";
 export default function Subscriptions() {
   //== React State, Custom Hooks ==//
   const AccountContext = useAccountContext();
-  const navigate = useNavigate();
 
   //== Auth ==//
 
@@ -35,9 +33,9 @@ export default function Subscriptions() {
     <div className="px-3 pb-3 lg:px-0">
       {/* START OF "USER AGREEMENTS REQUIRED" COMPONENT */}
       {!AccountContext.clickwrapIsActive && (
-        <div className="flex h-32 flex-col items-center justify-center rounded-lg bg-amber-200 dark:bg-amber-400">
+        <div className="flex h-32 flex-col items-center justify-center rounded-lg bg-emerald-200 dark:bg-emerald-400">
           <div className="max-w-prose">
-            <p className="mb-3 text-center font-semibold text-zinc-700 dark:text-amber-900">
+            <p className="mb-3 text-center font-semibold text-zinc-700 dark:text-emerald-900">
               User agreements are required before previews or subscriptions can
               be accessed
             </p>
