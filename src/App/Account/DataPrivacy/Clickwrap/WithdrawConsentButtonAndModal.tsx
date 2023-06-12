@@ -50,10 +50,7 @@ export default function WithdrawConsentButton() {
         `${VITE_ALB_BASE_URL}/legal/withdraw_clickwrap`,
         //-- Body Content --//
         {
-          TERMS_VERSION_EFFECTIVE_DATE: CURRENT_TERMS_EFFECTIVE_DATE,
-          PRIVACY_VERSION_EFFECTIVE_DATE: CURRENT_PRIVACY_EFFECTIVE_DATE,
-          COOKIES_VERSION_EFFECTIVE_DATE: CURRENT_COOKIES_EFFECTIVE_DATE,
-          AGE_REQUIREMENT_STATEMENT: CURRENT_AGE_REQUIREMENT_STATEMENT,
+          CURRENT_AGREEMENTS: CURRENT_AGREEMENTS,
         },
         {
           headers: {

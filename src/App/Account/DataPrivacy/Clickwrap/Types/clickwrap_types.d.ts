@@ -1,18 +1,11 @@
 import { ObjectId } from "bson";
 
-//-- Clickwrap doc --//
-interface doc {
-  name: string;
-  versionEffectiveDate: string;
-  href: string;
-  setterFn: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
 //-- Agreement --//
 export interface IClickwrapAgreement {
   name: string;
   date: string;
-  link: string;
+  temporarySiteLink: string;
+  permanentPDFLink: string;
   statement?: string;
 }
 
