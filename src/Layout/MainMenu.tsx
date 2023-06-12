@@ -89,7 +89,8 @@ export default function MainMenu({
                 </div>
               </div>
               {/* START OF NOTIFICATIONS BADGE OR ELLIPSIS */}
-              {!AccountContext.clickwrapIsActive ? (
+              {/* TODO - notifications badge with count */}
+              {false ? (
                 <span className="ml-auto flex items-center gap-x-1.5 rounded-full bg-emerald-200 px-2 py-1 text-xs font-medium text-emerald-800">
                   <svg
                     className="h-1.5 w-1.5 fill-emerald-500"
@@ -285,19 +286,7 @@ export default function MainMenu({
                   {/* END OF ICON AND MENU ITEM NAME */}
 
                   {/* START OF NOTIFICATION BADGE */}
-                  {!AccountContext.clickwrapIsActive && (
-                    <span className="ml-auto flex items-center gap-x-1.5 rounded-full bg-emerald-200 px-2 py-1 text-xs font-medium text-emerald-800">
-                      <svg
-                        className="h-1.5 w-1.5 fill-emerald-500"
-                        viewBox="0 0 6 6"
-                        aria-hidden="true"
-                      >
-                        <circle cx={3} cy={3} r={3} />
-                      </svg>
-                      {/* Notification Count */}
-                      <p>{!AccountContext.clickwrapIsActive && 1}</p>
-                    </span>
-                  )}
+                  {/* TODO */}
                   {/* END OF NOTIFICATION BADGE */}
                 </NavLink>
               )}
