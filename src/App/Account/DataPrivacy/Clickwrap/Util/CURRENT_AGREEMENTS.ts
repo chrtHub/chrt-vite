@@ -20,7 +20,7 @@ export const CURRENT_AGREEMENTS: Record<string, IClickwrapAgreement> = {
     date: "2023-06-12",
     temporarySiteLink: "https://chrt.com/cookies",
     permanentPDFLink:
-      "https://chrt-legal-public.s3.amazonaws.com/2023-06-12-TermsOfService.pdf",
+      "https://chrt-legal-public.s3.amazonaws.com/2023-06-12-CookiesPolicy.pdf",
   },
   ageRequirement: {
     name: "Age Requirement",
