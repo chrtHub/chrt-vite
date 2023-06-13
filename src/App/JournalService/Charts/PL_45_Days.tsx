@@ -8,6 +8,7 @@ import EChart from "../../EChart/EChart";
 import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
 
 //-- NPM Components --//
+
 //-- Icons --//
 
 //-- NPM Functions --//
@@ -18,7 +19,8 @@ import numeral from "numeral";
 //-- Utility Functions --//
 import classNames from "../../../Util/classNames";
 
-//-- Data Objects, Environment Variables --//
+//== Environment Variables, TypeScript Interfaces, Data Objects ==//
+import { DateAndProfitRow, pl45DayRow } from "../Types/journal_types";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
@@ -131,15 +133,13 @@ export default function PL_45_Days() {
             },
           }
         );
-        let data = res.data; // TODO - add type interface
+        let data: DateAndProfitRow[] = res.data;
 
         //-- Make array for dates and profits --//
-        let datesAndProfits = data.map((x: any) => {
+        let datesAndProfits: pl45DayRow[] = data.map((x) => {
           return [x.date, x.profit];
         });
         let reversedDatesAndProfits = datesAndProfits.reverse();
-
-        console.log(reversedDatesAndProfits); // DEV
 
         //-- Set state --//
         JournalContext.setPL45Days(reversedDatesAndProfits);

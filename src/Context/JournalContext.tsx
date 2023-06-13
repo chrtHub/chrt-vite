@@ -2,13 +2,16 @@
 import { useState, createContext, useContext, PropsWithChildren } from "react";
 
 //-- types --//
+import { PL45DayRow } from "../App/JournalService/Types/journal_types";
 
 //-- Create interface and Context --//
 export interface IJournalContext {
+  //-- Files --//
   filesListState: IFileMetadata[];
   setFilesList: React.Dispatch<React.SetStateAction<IFileMetadata[]>>;
-  pl45Days: [] | null; // TODO - add type interface
-  setPL45Days: React.Dispatch<React.SetStateAction<[] | null>>;
+  //-- Charts --//
+  pl45Days: PL45DayRow[] | null;
+  setPL45Days: React.Dispatch<React.SetStateAction<PL45DayRow[] | null>>;
 }
 
 //-- Create context --//
@@ -30,14 +33,18 @@ function JournalContextProvider({ children }: PropsWithChildren) {
   ];
 
   //-- State values --//
+  //-- Files --//
   const [filesListState, setFilesList] =
     useState<IFileMetadata[]>(defaultFilesList);
-  const [pl45Days, setPL45Days] = useState<[] | null>(null); // TODO - add type interface
+  //-- Charts --//
+  const [pl45Days, setPL45Days] = useState<PL45DayRow[] | null>(null);
 
   //-- Bundle values into journalContextValue --//
   const journalContextValue: IJournalContext = {
+    //-- Files --//
     filesListState,
     setFilesList,
+    //-- Charts --//
     pl45Days,
     setPL45Days,
   };
