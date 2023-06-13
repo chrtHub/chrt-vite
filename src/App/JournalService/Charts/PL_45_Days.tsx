@@ -20,7 +20,7 @@ import numeral from "numeral";
 import classNames from "../../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { DateAndProfitRow, pl45DayRow } from "../Types/journal_types";
+import { DateAndProfitRow, PL45DayRow } from "../Types/journal_types";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
@@ -136,7 +136,7 @@ export default function PL_45_Days() {
         let data: DateAndProfitRow[] = res.data;
 
         //-- Make array for dates and profits --//
-        let datesAndProfits: pl45DayRow[] = data.map((x) => {
+        let datesAndProfits: PL45DayRow[] = data.map((x) => {
           return [x.date, x.profit];
         });
         let reversedDatesAndProfits = datesAndProfits.reverse();
