@@ -88,7 +88,7 @@ export default function DevResources() {
 
   /** */
   return (
-    <div className="flex flex-col items-center justify-start">
+    <div className="flex flex-col items-center justify-start pb-3">
       <div className="w-full max-w-prose">
         {/* START OF COPY AUTH TOKEN SECTION */}
         <div className="flex flex-col justify-center rounded-md bg-amber-100 p-4 dark:bg-amber-950">

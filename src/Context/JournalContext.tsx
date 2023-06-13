@@ -2,25 +2,16 @@
 import { useState, createContext, useContext, PropsWithChildren } from "react";
 
 //-- types --//
+import { PL45DayRow } from "../App/JournalService/Types/journal_types";
 
 //-- Create interface and Context --//
 export interface IJournalContext {
+  //-- Files --//
   filesListState: IFileMetadata[];
   setFilesList: React.Dispatch<React.SetStateAction<IFileMetadata[]>>;
-  journalPL45Days: [] | null;
-  setJournalPL45Days: React.Dispatch<React.SetStateAction<[] | null>>;
-  journalPLDayOfWeekState: [] | null;
-  setJournalPLDayOfWeekState: React.Dispatch<React.SetStateAction<[] | null>>;
-  journalTradeUUIDsByDateState: [] | null;
-  setJournalTradeUUIDsByDateState: React.Dispatch<
-    React.SetStateAction<[] | null>
-  >;
-  tradeSummaryByTradeUUIDState: [] | null;
-  setTradeSummaryByTradeUUIDState: React.Dispatch<
-    React.SetStateAction<[] | null>
-  >;
-  txnsByTradeUUIDState: [] | null;
-  setTxnsByTradeUUIDState: React.Dispatch<React.SetStateAction<[] | null>>;
+  //-- Charts --//
+  pl45Days: PL45DayRow[] | null;
+  setPL45Days: React.Dispatch<React.SetStateAction<PL45DayRow[] | null>>;
 }
 
 //-- Create context --//
@@ -42,34 +33,20 @@ function JournalContextProvider({ children }: PropsWithChildren) {
   ];
 
   //-- State values --//
+  //-- Files --//
   const [filesListState, setFilesList] =
     useState<IFileMetadata[]>(defaultFilesList);
-  const [journalPL45Days, setJournalPL45Days] = useState<[] | null>(null);
-  const [journalPLDayOfWeekState, setJournalPLDayOfWeekState] = useState<
-    [] | null
-  >(null);
-  const [journalTradeUUIDsByDateState, setJournalTradeUUIDsByDateState] =
-    useState<[] | null>(null);
-  const [tradeSummaryByTradeUUIDState, setTradeSummaryByTradeUUIDState] =
-    useState<[] | null>(null);
-  const [txnsByTradeUUIDState, setTxnsByTradeUUIDState] = useState<[] | null>(
-    null
-  );
+  //-- Charts --//
+  const [pl45Days, setPL45Days] = useState<PL45DayRow[] | null>(null);
 
   //-- Bundle values into journalContextValue --//
   const journalContextValue: IJournalContext = {
+    //-- Files --//
     filesListState,
     setFilesList,
-    journalPL45Days,
-    setJournalPL45Days,
-    journalPLDayOfWeekState,
-    setJournalPLDayOfWeekState,
-    journalTradeUUIDsByDateState,
-    setJournalTradeUUIDsByDateState,
-    tradeSummaryByTradeUUIDState,
-    setTradeSummaryByTradeUUIDState,
-    txnsByTradeUUIDState,
-    setTxnsByTradeUUIDState,
+    //-- Charts --//
+    pl45Days,
+    setPL45Days,
   };
 
   //-- Return context provider --//
@@ -94,8 +71,6 @@ function useJournalContext() {
 
 //-- Export Provider Component and Consumer Hook ---//
 export { JournalContextProvider, useJournalContext };
-
-//-- TO BE SET UP IN THE COMPONENT TREE ABOVE ALL CONSUMERS OF THIS CONTEXT --//
 
 //-- FOR USE IN OTHER COMPONENTS --//
 // import { useJournalContext } from "../../Context/JournalContext";
