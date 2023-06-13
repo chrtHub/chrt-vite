@@ -131,13 +131,15 @@ export default function PL_45_Days() {
             },
           }
         );
-        let data = res.data;
+        let data = res.data; // TODO - add type interface
 
         //-- Make array for dates and profits --//
         let datesAndProfits = data.map((x: any) => {
           return [x.date, x.profit];
         });
         let reversedDatesAndProfits = datesAndProfits.reverse();
+
+        console.log(reversedDatesAndProfits); // DEV
 
         //-- Set state --//
         JournalContext.setPL45Days(reversedDatesAndProfits);

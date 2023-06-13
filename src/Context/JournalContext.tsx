@@ -7,7 +7,7 @@ import { useState, createContext, useContext, PropsWithChildren } from "react";
 export interface IJournalContext {
   filesListState: IFileMetadata[];
   setFilesList: React.Dispatch<React.SetStateAction<IFileMetadata[]>>;
-  pl45Days: [] | null;
+  pl45Days: [] | null; // TODO - add type interface
   setPL45Days: React.Dispatch<React.SetStateAction<[] | null>>;
 }
 
@@ -32,7 +32,7 @@ function JournalContextProvider({ children }: PropsWithChildren) {
   //-- State values --//
   const [filesListState, setFilesList] =
     useState<IFileMetadata[]>(defaultFilesList);
-  const [pl45Days, setPL45Days] = useState<[] | null>(null);
+  const [pl45Days, setPL45Days] = useState<[] | null>(null); // TODO - add type interface
 
   //-- Bundle values into journalContextValue --//
   const journalContextValue: IJournalContext = {

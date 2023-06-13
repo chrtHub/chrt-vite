@@ -1,1 +1,4 @@
-// TODO
+interface DateAndProfitRow {
+  date: string;
+  profit: number;
+}
