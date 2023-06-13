@@ -35,6 +35,7 @@ export default function PL_45_Days() {
 
   //-- Other [ECharts options] --//
   const option = {
+    backgroundColor: "#3F3F46",
     grid: {
       left: "12",
       right: "12",
@@ -47,7 +48,7 @@ export default function PL_45_Days() {
       axisPointer: {
         type: "cross",
         label: {
-          show: false, // REMOVE TO SHOW AXIS POINTER LABELS
+          show: false, //-- REMOVE TO SHOW AXIS POINTER LABELS --//
           backgroundColor: "#6a7985",
           formatter: function (params: any) {
             let data = params.seriesData?.data;
@@ -161,8 +162,8 @@ export default function PL_45_Days() {
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <div className="rounded-2xl bg-zinc-200 px-3 py-3">
-      <p className="text-center">
+    <div className="rounded-2xl bg-zinc-200 px-3 py-3 dark:bg-zinc-700 dark:text-zinc-100">
+      <p className="mb-3 text-center font-medium">
         Profit & Loss, Trading Days in Past 45 Calendar Days
       </p>
       <div className="">
