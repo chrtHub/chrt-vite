@@ -88,6 +88,7 @@ export default function AppLayout() {
     { name: "Journal Files", to: "/files", icon: FolderIcon },
     { name: "ChrtGPT", to: "/gpt", icon: ChatBubbleLeftRightIcon },
   ];
+  const pathMatchForNavItems = pathname.match(/^\/([^/]+)/)?.[0] || "/";
 
   //-- *********** Component Return ************** --//
   return (
@@ -224,7 +225,7 @@ export default function AppLayout() {
                             setMobileSidebarOpen(false);
                           }}
                           className={classNames(
-                            pathname.match(/^\/([^/]+)/)?.[0] === item.to //-- First param of pathname --//
+                            pathMatchForNavItems === item.to //-- First param of pathname --//
                               ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-800 dark:text-white"
                               : "text-zinc-700 hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white",
                             "group flex items-center rounded-md px-2 py-2 text-base font-medium"
@@ -232,7 +233,7 @@ export default function AppLayout() {
                         >
                           <item.icon
                             className={classNames(
-                              pathname.match(/^\/([^/]+)/)?.[0] === item.to //-- First param of pathname --//
+                              pathMatchForNavItems === item.to //-- First param of pathname --//
                                 ? "text-zinc-800 dark:text-zinc-300"
                                 : "text-zinc-900 group-hover:text-zinc-600  dark:text-zinc-400 dark:group-hover:text-zinc-300",
                               "mr-4 h-6 w-6 flex-shrink-0"
@@ -308,7 +309,7 @@ export default function AppLayout() {
                     key={item.name}
                     to={item.to}
                     className={classNames(
-                      pathname.match(/^\/([^/]+)/)?.[0] === item.to //-- First param of pathname --//
+                      pathMatchForNavItems === item.to //-- First param of pathname --//
                         ? "bg-zinc-300 text-zinc-900 dark:bg-zinc-800 dark:text-white"
                         : "text-zinc-700 hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white",
                       "group flex items-center rounded-md px-2 py-1.5 text-sm font-medium"
@@ -316,7 +317,7 @@ export default function AppLayout() {
                   >
                     <item.icon
                       className={classNames(
-                        pathname.match(/^\/([^/]+)/)?.[0] === item.to //-- First param of pathname --//
+                        pathMatchForNavItems === item.to //-- First param of pathname --//
                           ? "text-zinc-900 dark:text-white"
                           : "text-zinc-700 group-hover:text-zinc-800 dark:text-zinc-400 dark:group-hover:text-zinc-300",
                         "mr-3 h-6 w-6 flex-shrink-0"
@@ -357,7 +358,7 @@ export default function AppLayout() {
             id="app-layout-rhs-content"
             className="mx-auto flex h-full max-w-screen-2xl flex-col px-4 lg:pl-2 lg:pr-4"
           >
-            {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + MAIN MENU */}
+            {/* START OF TOP BAR */}
             <div
               className={classNames(
                 `${LIGHT_THEME_BG} ${DARK_THEME_BG}`,
@@ -374,38 +375,8 @@ export default function AppLayout() {
                 <Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
               </button>
               {/* END OF HAMBURGER BUTTON (hidden after lg) */}
-
-              {/* START OF SEARCH BAR + PROFILE PICTURE + MAIN MENU */}
-              <div className="flex flex-1 justify-between">
-                {/* START OF SEARCH BAR */}
-                <div className="flex flex-1">
-                  <form className="flex w-full lg:ml-0" action="#" method="GET">
-                    <label htmlFor="search-field" className="sr-only">
-                      Search
-                    </label>
-                    <div className="relative w-full text-zinc-600 focus-within:text-zinc-800 dark:text-zinc-400  dark:focus-within:text-white">
-                      {/* <div className="pointer-events-none absolute inset-y-0 left-0 ml-2 flex items-center lg:ml-0">
-                      <MagnifyingGlassIcon
-                        className="h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    </div> */}
-                      {/* <input
-                      id="search-field"
-                      disabled={showLockIcon}
-                      className="block h-full w-full border-transparent border-b-zinc-300 bg-zinc-50 py-2 pl-10 pr-3 text-zinc-900 placeholder-zinc-500 focus:border-transparent focus:border-b-zinc-400 focus:placeholder-zinc-400 focus:outline-none focus:ring-0 dark:border-b-zinc-500 dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-400 dark:focus:border-b-zinc-400 dark:focus:placeholder-zinc-500 lg:pl-8"
-                      placeholder="Search"
-                      type="search"
-                      name="search"
-                    /> */}
-                    </div>
-                  </form>
-                </div>
-                {/*END OF SEARCH BAR  */}
-              </div>
-              {/* END OF SEARCH BAR + PROFILE PICTURE + MAIN MENU */}
             </div>
-            {/* START OF HAMBURGER BUTTON + SEARCH BAR + PROFILE PICTURE + MAIN MENU */}
+            {/* END OF TOP BAR */}
 
             {/* START OF MAIN */}
             <main id="app-layout-react-router-Outlet" className="h-full">

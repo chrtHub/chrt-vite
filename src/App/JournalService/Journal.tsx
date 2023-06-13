@@ -2,7 +2,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
-import PL_45_Days from "./PL_45_Days";
+import PL_45_Days from "./Charts/PL_45_Days";
 import CTA401Fallback from "./CTA401Fallback";
 //-- NPM Components --//
 
@@ -31,8 +31,6 @@ export default function Journal() {
   return (
     <>
       <CTA401Fallback />
-      <PL_45_Days />
-      <PL_45_Days />
       <PL_45_Days />
     </>
   );

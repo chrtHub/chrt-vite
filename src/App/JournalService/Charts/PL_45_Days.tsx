@@ -1,11 +1,11 @@
 //-- react, react-router-dom, Auth0 --//
 import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useJournalContext } from "../../Context/JournalContext";
+import { useJournalContext } from "../../../Context/JournalContext";
 
 //-- TSX Components --//
-import EChart from "../EChart/EChart";
-import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
+import EChart from "../../EChart/EChart";
+import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
 
 //-- NPM Components --//
 //-- Icons --//
@@ -16,7 +16,7 @@ import { format, parseISO } from "date-fns";
 import numeral from "numeral";
 
 //-- Utility Functions --//
-import classNames from "../../Util/classNames";
+import classNames from "../../../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
