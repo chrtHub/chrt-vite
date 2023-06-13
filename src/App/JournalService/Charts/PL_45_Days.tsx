@@ -36,6 +36,10 @@ export default function PL_45_Days() {
   //-- Other [ECharts options] --//
   const option = {
     grid: {
+      left: "12",
+      right: "12",
+      top: "18",
+      bottom: "0",
       containLabel: true,
     },
     tooltip: {
@@ -103,9 +107,9 @@ export default function PL_45_Days() {
           color: function (params: any) {
             const profit = params.data[1];
             if (profit >= 0) {
-              return "#4ade80"; // green 400
+              return "#4ade80"; //-- green 400 --//
             } else {
-              return "#ef4444"; // red 500
+              return "#ef4444"; //-- red 500 --//
             }
           },
         },
@@ -157,13 +161,13 @@ export default function PL_45_Days() {
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <>
+    <div className="rounded-2xl bg-zinc-200 px-3 py-3">
       <p className="text-center">
         Profit & Loss, Trading Days in Past 45 Calendar Days
       </p>
-      <div className="ml-4">
+      <div className="">
         <EChart option={option} height={"400px"} width={"100%"} />
       </div>
-    </>
+    </div>
   );
 }
