@@ -96,17 +96,15 @@ export default function PL_45_Days() {
       {
         name: "Quantity",
         type: "bar",
-        data: JournalContext.journalPL45Days,
+        data: JournalContext.pl45Days,
         itemStyle: {
-          normal: {
-            color: function (params: any) {
-              const profit = params.data[1];
-              if (profit >= 0) {
-                return "#4ade80"; // green 400
-              } else {
-                return "#ef4444"; // red 500
-              }
-            },
+          color: function (params: any) {
+            const profit = params.data[1];
+            if (profit >= 0) {
+              return "#4ade80"; // green 400
+            } else {
+              return "#ef4444"; // red 500
+            }
           },
         },
       },
@@ -142,7 +140,7 @@ export default function PL_45_Days() {
         let reversedDatesAndProfits = datesAndProfits.reverse();
 
         //-- Set state --//
-        JournalContext.setJournalPL45Days(reversedDatesAndProfits);
+        JournalContext.setPL45Days(reversedDatesAndProfits);
       } catch (err) {
         if (err instanceof AxiosError) {
           axiosErrorToaster(err);
