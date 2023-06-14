@@ -15,7 +15,7 @@ import TextareaAutosize from "react-textarea-autosize";
 
 //== Icons ==//
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import { CheckCircleIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import {
   ClipboardDocumentIcon,
   CpuChipIcon,
@@ -148,7 +148,7 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
     );
   };
 
-  //-- Edit Prompt
+  //-- Edit Prompt --//
   const EditButton = () => {
     return (
       <Tooltip content="Edit" placement="top" hidden={CC.completionRequested}>
@@ -256,7 +256,7 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
           <div
             className={classNames(
               mobile
-                ? "flex w-14 flex-col items-center"
+                ? "flex w-14 flex-col items-start"
                 : "flex w-16 flex-col items-center"
             )}
           >
@@ -271,15 +271,23 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
           </div>
         );
       } else {
-        <div
-          className={classNames(
-            mobile
-              ? "flex w-14 flex-col items-center"
-              : "flex w-16 flex-col items-center"
-          )}
-        >
-          {user.name}
-        </div>;
+        return (
+          <div
+            className={classNames(
+              mobile
+                ? "flex flex-row items-center gap-x-1"
+                : "flex w-16 flex-col items-center"
+            )}
+          >
+            <UserCircleIcon
+              className={classNames(
+                mobile
+                  ? "h-8 w-8 text-zinc-500 dark:text-zinc-400"
+                  : "h-8 w-8 text-zinc-500 dark:text-zinc-400"
+              )}
+            />
+          </div>
+        );
       }
     }
 
@@ -289,7 +297,7 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
         <div
           className={classNames(
             mobile
-              ? "flex w-14 flex-col items-center"
+              ? "flex flex-row items-center gap-x-1"
               : "flex w-16 flex-col items-center"
           )}
         >
@@ -304,20 +312,19 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
         </div>
       );
     }
-
     return (
       <div
         className={classNames(
           mobile
-            ? "flex w-14 flex-col items-center"
+            ? "flex flex-row items-center gap-x-1"
             : "flex w-16 flex-col items-center"
         )}
       >
         <CpuChipIcon
           className={classNames(
             mobile
-              ? "mt-1 h-8 w-8 text-zinc-500 dark:text-zinc-400"
-              : "mt-1 h-8 w-8 text-zinc-500 dark:text-zinc-400"
+              ? "h-8 w-8 text-zinc-500 dark:text-zinc-400"
+              : "h-8 w-8 text-zinc-500 dark:text-zinc-400"
           )}
         />
       </div>
