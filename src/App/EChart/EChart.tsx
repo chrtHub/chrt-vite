@@ -68,8 +68,6 @@ interface IProps {
   width: string;
 }
 export default function EChart({ option, height, width }: IProps) {
-  console.log("--- EChart render---"); // DEV
-
   //-- React State --//
   let SiteContext = useSiteContext();
 
