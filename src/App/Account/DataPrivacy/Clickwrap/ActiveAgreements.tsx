@@ -38,12 +38,12 @@ export default function ActiveAgreements() {
       <div className="pb-3">
         {AccountContext.clickwrapAgreements.map((agreement) => {
           return (
-            <div className="flex flex-row items-center justify-start gap-3 px-3 py-1">
+            <div
+              className="flex flex-row items-center justify-start gap-3 px-3 py-1"
+              key={agreement.name}
+            >
               <ShieldCheckIcon className="h-6 w-6 text-green-600 dark:text-green-500" />
-              <p
-                className="text-zinc-900 dark:text-zinc-50"
-                key={agreement.name}
-              >
+              <p className="text-zinc-900 dark:text-zinc-50">
                 {agreement.name}
               </p>
             </div>

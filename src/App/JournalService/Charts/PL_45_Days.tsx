@@ -17,11 +17,11 @@ import { format, parseISO } from "date-fns";
 import numeral from "numeral";
 
 //-- Utility Functions --//
-import classNames from "../../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { DateAndProfitRow, PL45DayRow } from "../Types/journal_types";
-import { zinc, green, white } from "../../../Util/TailwindPalette";
+import { zinc } from "../../../Util/TailwindPalette";
+import EChartWrapper from "../../EChart/EChartWrapper";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
@@ -162,21 +162,18 @@ export default function PL_45_Days() {
     fetchData();
   }, [getAccessTokenSilently]);
 
+  const height = "300px";
+  const width = "100%";
+
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <div
-      className={classNames(
-        "mt-1 rounded-2xl px-3 pb-3 pt-4",
-        "bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-100",
-        "ring-8 ring-inset ring-zinc-800/10 dark:ring-zinc-100/10"
-      )}
+    <EChartWrapper
+      title="Profit & Loss, Trading Days in Past 45 Calendar Days"
+      loading={loading}
+      height={height}
+      width={width}
     >
-      {/* Title */}
-      <p className="text-center font-medium">
-        Profit & Loss, Trading Days in Past 45 Calendar Days
-      </p>
-      {/* Chart */}
-      <EChart option={option} height={"300px"} width={"100%"} />
-    </div>
+      <EChart option={option} height={height} width={width} />
+    </EChartWrapper>
   );
 }
