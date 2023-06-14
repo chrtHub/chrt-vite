@@ -1,5 +1,5 @@
 //-- react, react-router-dom, Auth0 --//
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useSiteContext } from "../../Context/SiteContext";
 
 //-- TSX Components --//
@@ -91,10 +91,7 @@ export default function EChart({ option, height, width }: IProps) {
   useEffect(() => {
     //-- Initialize chart with provided 'option' object--//
     if (chartRef.current) {
-      chart = echarts.init(
-        chartRef.current,
-        SiteContext.eChartsTheme || undefined
-      );
+      chart = echarts.init(chartRef.current, SiteContext.theme);
       chart.setOption(option);
 
       //-- Listen for resize events --//
@@ -106,7 +103,7 @@ export default function EChart({ option, height, width }: IProps) {
         window.removeEventListener("resize", handleResize);
       };
     }
-  }, [option, SiteContext.eChartsTheme]);
+  }, [option, SiteContext.theme]);
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return <div ref={chartRef} style={{ width: width, height: height }} />;

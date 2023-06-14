@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useJournalContext } from "../../../Context/JournalContext";
-
+import { useSiteContext } from "../../../Context/SiteContext";
 //-- TSX Components --//
 import EChart from "../../EChart/EChart";
 import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
@@ -29,13 +29,14 @@ export default function PL_45_Days() {
   //-- React State --//
   const [loading, setLoading] = useState<boolean>(false);
   let JournalContext = useJournalContext();
+  let SiteContext = useSiteContext();
 
   //-- Auth --//
   const { getAccessTokenSilently } = useAuth0();
 
   //-- Other [ECharts options] --//
   const option = {
-    backgroundColor: "#3F3F46",
+    backgroundColor: SiteContext.theme === "light" ? "#27272a" : "#defdef", //-- zinc-800 --//
     grid: {
       left: "12",
       right: "12",
@@ -49,7 +50,7 @@ export default function PL_45_Days() {
         type: "cross",
         label: {
           show: false, //-- REMOVE TO SHOW AXIS POINTER LABELS --//
-          backgroundColor: "#6a7985",
+          backgroundColor: "#71717a", //-- zinc 500 --//
           formatter: function (params: any) {
             let data = params.seriesData?.data;
 
@@ -162,13 +163,19 @@ export default function PL_45_Days() {
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <div className="rounded-2xl bg-zinc-200 px-3 py-3 dark:bg-zinc-700 dark:text-zinc-100">
+    <div
+      className={classNames(
+        "mt-1 rounded-2xl bg-zinc-200 px-3 py-3 dark:bg-zinc-800 dark:text-zinc-100",
+        "ring-2 ring-zinc-700"
+        // "border-zinc-500 hover:border-2"
+      )}
+    >
+      {/* Title */}
       <p className="mb-3 text-center font-medium">
         Profit & Loss, Trading Days in Past 45 Calendar Days
       </p>
-      <div className="">
-        <EChart option={option} height={"400px"} width={"100%"} />
-      </div>
+      {/* Chart */}
+      <EChart option={option} height={"300px"} width={"100%"} />
     </div>
   );
 }
