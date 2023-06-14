@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useJournalContext } from "../../../Context/JournalContext";
-
+import { useSiteContext } from "../../../Context/SiteContext";
 //-- TSX Components --//
 import EChart from "../../EChart/EChart";
 import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
@@ -21,6 +21,7 @@ import classNames from "../../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { DateAndProfitRow, PL45DayRow } from "../Types/journal_types";
+import { zinc, green, white } from "../../../Util/TailwindPalette";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
@@ -29,13 +30,14 @@ export default function PL_45_Days() {
   //-- React State --//
   const [loading, setLoading] = useState<boolean>(false);
   let JournalContext = useJournalContext();
+  let SiteContext = useSiteContext();
 
   //-- Auth --//
   const { getAccessTokenSilently } = useAuth0();
 
   //-- Other [ECharts options] --//
   const option = {
-    backgroundColor: "#3F3F46",
+    backgroundColor: SiteContext.theme === "light" ? zinc._50 : zinc._800,
     grid: {
       left: "12",
       right: "12",
@@ -49,7 +51,7 @@ export default function PL_45_Days() {
         type: "cross",
         label: {
           show: false, //-- REMOVE TO SHOW AXIS POINTER LABELS --//
-          backgroundColor: "#6a7985",
+          backgroundColor: "#71717a", //-- zinc 500 --//
           formatter: function (params: any) {
             let data = params.seriesData?.data;
 
@@ -162,13 +164,19 @@ export default function PL_45_Days() {
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <div className="rounded-2xl bg-zinc-200 px-3 py-3 dark:bg-zinc-700 dark:text-zinc-100">
-      <p className="mb-3 text-center font-medium">
+    <div
+      className={classNames(
+        "mt-1 rounded-2xl px-3 pb-3 pt-4",
+        "bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-100",
+        "ring-8 ring-inset ring-zinc-800/10 dark:ring-zinc-100/10"
+      )}
+    >
+      {/* Title */}
+      <p className="text-center font-medium">
         Profit & Loss, Trading Days in Past 45 Calendar Days
       </p>
-      <div className="">
-        <EChart option={option} height={"400px"} width={"100%"} />
-      </div>
+      {/* Chart */}
+      <EChart option={option} height={"300px"} width={"100%"} />
     </div>
   );
 }

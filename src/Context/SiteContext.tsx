@@ -14,10 +14,8 @@ export interface ISiteContext {
   setManualDarkMode: () => void;
   setOSTheme: () => void;
   setManualLightMode: () => void;
-  theme: string | null;
-  setTheme: React.Dispatch<React.SetStateAction<string | null>>;
-  eChartsTheme: string | null;
-  setEChartsTheme: React.Dispatch<React.SetStateAction<string | null>>;
+  theme: string;
+  setTheme: React.Dispatch<React.SetStateAction<string>>;
   themeButtonSelection: string | null;
   setThemeButtonSelection: React.Dispatch<React.SetStateAction<string | null>>;
 }
@@ -34,17 +32,13 @@ function SiteContextProvider({ children }: PropsWithChildren) {
   //-- The localStorage 'theme' value nullifies any OS theme change events --//
   //-- (the OS-based event listener in index.html only works if there's no 'theme' value in localstorage) --//
 
-  //-- The ECharts Theme is set here to follow the application theme --//
-  //-- When no localStorage 'theme' value is set, OS theme is listened to --//
-  //-- When localStorage 'theme' value is set, that's used --//
-
   //-- Functions --//
   const setManualDarkMode = () => {
     //-- Set theme to dark in localStorage --//
     localStorage.setItem("theme", "dark");
+    setTheme("dark");
     //-- Update theme to dark mode --//
     document.documentElement.classList.add("dark");
-    setEChartsTheme("dark");
     //-- Update themeButtonSelection --//
     setThemeButtonSelection("dark");
   };
@@ -54,10 +48,10 @@ function SiteContextProvider({ children }: PropsWithChildren) {
     //-- Update theme to match current OS theme --//
     if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       document.documentElement.classList.add("dark");
-      setEChartsTheme("dark");
+      setTheme("dark");
     } else {
       document.documentElement.classList.remove("dark");
-      setEChartsTheme("light");
+      setTheme("light");
     }
     //-- Update themeButtonSelection --//
     setThemeButtonSelection(null);
@@ -65,9 +59,9 @@ function SiteContextProvider({ children }: PropsWithChildren) {
   const setManualLightMode = () => {
     //-- Set theme to light in localStorage --//
     localStorage.setItem("theme", "light");
+    setTheme("light");
     //-- Update theme to light mode --//
     document.documentElement.classList.remove("dark");
-    setEChartsTheme("light");
     //-- Update themeButtonSelection --//
     setThemeButtonSelection("light");
   };
@@ -83,8 +77,7 @@ function SiteContextProvider({ children }: PropsWithChildren) {
   }
 
   //-- State values --//
-  const [theme, setTheme] = useState<string | null>(initialTheme);
-  const [eChartsTheme, setEChartsTheme] = useState<string | null>(initialTheme);
+  const [theme, setTheme] = useState<string>(initialTheme);
   const [themeButtonSelection, setThemeButtonSelection] = useState<
     string | null
   >(initialThemeButtonSelection);
@@ -96,20 +89,18 @@ function SiteContextProvider({ children }: PropsWithChildren) {
     setManualLightMode,
     theme,
     setTheme,
-    eChartsTheme,
-    setEChartsTheme,
     themeButtonSelection,
     setThemeButtonSelection,
   };
 
   useEffect(() => {
-    const handleThemeChange = ({ matches }: MediaQueryListEvent) => {
+    const handleOSThemeChange = ({ matches }: MediaQueryListEvent) => {
       //-- Only react to OS theme changes if no 'theme' value is set in localStorage --//
       if (!("theme" in localStorage)) {
         if (matches) {
-          setEChartsTheme("dark");
+          setTheme("dark");
         } else {
-          setEChartsTheme("light");
+          setTheme("light");
         }
       }
     };
@@ -117,11 +108,11 @@ function SiteContextProvider({ children }: PropsWithChildren) {
     //-- Listen for OS theme changes --//
     window
       .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", handleThemeChange);
+      .addEventListener("change", handleOSThemeChange);
 
     return window
       .matchMedia("(prefers-color-scheme: dark)")
-      .removeEventListener("change", handleThemeChange);
+      .removeEventListener("change", handleOSThemeChange);
   }, []);
 
   //-- Return context provider --//

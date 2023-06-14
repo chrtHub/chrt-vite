@@ -52,7 +52,7 @@ export default function Account() {
       {/*-- START OF IDENTITY SECTION --*/}
       <div className="mb-2 grid grid-cols-3 gap-y-4 lg:mb-4 lg:gap-y-0">
         {/* START OF LHS */}
-        <div className="col-span-3 lg:col-span-1">
+        <div className="col-span-3 lg:col-span-1 lg:pr-6">
           <h2 className="font-semibold text-zinc-700 dark:text-white">
             Identity
           </h2>
@@ -103,7 +103,7 @@ export default function Account() {
       {/*-- START OF SUBSCRIPTION SECTION --*/}
       <div className="mb-2 grid grid-cols-3 gap-y-4 pt-5 lg:mb-4 lg:gap-y-0">
         {/* START OF LHS/TOP */}
-        <div className="col-span-3 lg:col-span-1">
+        <div className="col-span-3 lg:col-span-1 lg:pr-6">
           <h2 className="font-semibold text-zinc-700 dark:text-white">
             Active Subscriptions
           </h2>
@@ -125,7 +125,7 @@ export default function Account() {
       {/*-- START OF DELETE ACCOUNT SECTION --*/}
       <div className="mb-2 grid grid-cols-3 gap-y-4 pt-5 lg:mb-4 lg:gap-y-0">
         {/* START OF LHS */}
-        <div className="col-span-3 lg:col-span-1">
+        <div className="col-span-3 lg:col-span-1 lg:pr-6">
           <h2 className="text-base font-semibold leading-7 text-zinc-700 dark:text-white">
             Delete account
           </h2>
