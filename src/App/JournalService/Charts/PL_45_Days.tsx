@@ -4,7 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useJournalContext } from "../../../Context/JournalContext";
 import { useSiteContext } from "../../../Context/SiteContext";
 //-- TSX Components --//
-import EChart from "../../EChart/EChart";
+import EChart from "../../ECharts/EChart";
 import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
 
 //-- NPM Components --//
@@ -21,13 +21,16 @@ import numeral from "numeral";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { DateAndProfitRow, PL45DayRow } from "../Types/journal_types";
 import { zinc } from "../../../Util/TailwindPalette";
-import EChartWrapper from "../../EChart/EChartWrapper";
+import EChartWrapperWithFallback from "../../ECharts/EChartWrapperWithFallback";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 
 export default function PL_45_Days() {
   //-- React State --//
+  // TODO - implement FUED
+  // fetched
+  // updating
   const [loading, setLoading] = useState<boolean>(false);
   let JournalContext = useJournalContext();
   let SiteContext = useSiteContext();
@@ -36,6 +39,8 @@ export default function PL_45_Days() {
   const { getAccessTokenSilently } = useAuth0();
 
   //-- Other [ECharts options] --//
+  const height = "300px";
+  const width = "100%";
   const option = {
     backgroundColor: SiteContext.theme === "light" ? zinc._50 : zinc._800,
     grid: {
@@ -162,18 +167,15 @@ export default function PL_45_Days() {
     fetchData();
   }, [getAccessTokenSilently]);
 
-  const height = "300px";
-  const width = "100%";
-
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <EChartWrapper
+    <EChartWrapperWithFallback
       title="Profit & Loss, Trading Days in Past 45 Calendar Days"
       loading={loading}
       height={height}
       width={width}
     >
       <EChart option={option} height={height} width={width} />
-    </EChartWrapper>
+    </EChartWrapperWithFallback>
   );
 }
