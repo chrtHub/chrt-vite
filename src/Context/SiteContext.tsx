@@ -36,6 +36,7 @@ function SiteContextProvider({ children }: PropsWithChildren) {
   const setManualDarkMode = () => {
     //-- Set theme to dark in localStorage --//
     localStorage.setItem("theme", "dark");
+    setTheme("dark");
     //-- Update theme to dark mode --//
     document.documentElement.classList.add("dark");
     //-- Update themeButtonSelection --//
@@ -47,8 +48,10 @@ function SiteContextProvider({ children }: PropsWithChildren) {
     //-- Update theme to match current OS theme --//
     if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       document.documentElement.classList.add("dark");
+      setTheme("dark");
     } else {
       document.documentElement.classList.remove("dark");
+      setTheme("light");
     }
     //-- Update themeButtonSelection --//
     setThemeButtonSelection(null);
@@ -56,6 +59,7 @@ function SiteContextProvider({ children }: PropsWithChildren) {
   const setManualLightMode = () => {
     //-- Set theme to light in localStorage --//
     localStorage.setItem("theme", "light");
+    setTheme("light");
     //-- Update theme to light mode --//
     document.documentElement.classList.remove("dark");
     //-- Update themeButtonSelection --//
@@ -89,28 +93,26 @@ function SiteContextProvider({ children }: PropsWithChildren) {
     setThemeButtonSelection,
   };
 
-  // NEW
   useEffect(() => {
-    const handleThemeChange = ({ matches }: MediaQueryListEvent) => {
+    const handleOSThemeChange = ({ matches }: MediaQueryListEvent) => {
       //-- Only react to OS theme changes if no 'theme' value is set in localStorage --//
-      // if (!("theme" in localStorage)) {
-      if (matches) {
-        setTheme("dark");
-      } else {
-        setTheme("light");
+      if (!("theme" in localStorage)) {
+        if (matches) {
+          setTheme("dark");
+        } else {
+          setTheme("light");
+        }
       }
-      // }
     };
-    // NEW
 
     //-- Listen for OS theme changes --//
     window
       .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", handleThemeChange);
+      .addEventListener("change", handleOSThemeChange);
 
     return window
       .matchMedia("(prefers-color-scheme: dark)")
-      .removeEventListener("change", handleThemeChange);
+      .removeEventListener("change", handleOSThemeChange);
   }, []);
 
   //-- Return context provider --//
