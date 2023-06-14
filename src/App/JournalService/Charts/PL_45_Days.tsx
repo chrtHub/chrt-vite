@@ -18,6 +18,7 @@ import numeral from "numeral";
 
 //-- Utility Functions --//
 import classNames from "../../../Util/classNames";
+import { getHex, zinc } from "../Util/getHex";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { DateAndProfitRow, PL45DayRow } from "../Types/journal_types";
@@ -34,9 +35,11 @@ export default function PL_45_Days() {
   //-- Auth --//
   const { getAccessTokenSilently } = useAuth0();
 
+  console.log(SiteContext.theme); // DEV
+
   //-- Other [ECharts options] --//
   const option = {
-    backgroundColor: SiteContext.theme === "light" ? "#27272a" : "#defdef", //-- zinc-800 --//
+    backgroundColor: SiteContext.theme === "light" ? "#e4e4e7" : "#27272a",
     grid: {
       left: "12",
       right: "12",

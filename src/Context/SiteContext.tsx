@@ -1,5 +1,11 @@
 //-- react --//
-import { useState, createContext, useContext, PropsWithChildren } from "react";
+import {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  PropsWithChildren,
+} from "react";
 
 //-- types --//
 
@@ -82,6 +88,30 @@ function SiteContextProvider({ children }: PropsWithChildren) {
     themeButtonSelection,
     setThemeButtonSelection,
   };
+
+  // NEW
+  useEffect(() => {
+    const handleThemeChange = ({ matches }: MediaQueryListEvent) => {
+      //-- Only react to OS theme changes if no 'theme' value is set in localStorage --//
+      // if (!("theme" in localStorage)) {
+      if (matches) {
+        setTheme("dark");
+      } else {
+        setTheme("light");
+      }
+      // }
+    };
+    // NEW
+
+    //-- Listen for OS theme changes --//
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", handleThemeChange);
+
+    return window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .removeEventListener("change", handleThemeChange);
+  }, []);
 
   //-- Return context provider --//
   return (
