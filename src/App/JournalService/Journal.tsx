@@ -1,10 +1,7 @@
 //-- react, react-router-dom, Auth0 --//
-import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
 import CTA401Fallback from "./CTA401Fallback";
-
-import { useJournalContext } from "../../Context/JournalContext";
 
 import PL_45_Days from "./PL_45_Days";
 
@@ -21,7 +18,6 @@ import PL_45_Days from "./PL_45_Days";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Journal() {
   //-- React State --//
-  let JC = useJournalContext();
 
   //-- Auth0 --//
 

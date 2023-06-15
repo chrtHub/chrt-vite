@@ -1,10 +1,10 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- TSX Components --//
-import { useJournalContext } from "../../Context/JournalContext";
+import { useJournalContext } from "../Context/JournalContext";
 import { ErrorBoundary } from "react-error-boundary";
-import { EChartsFallback } from "../ECharts/EChartsFallback";
-import PL_45_Days_Config from "./PL_45_Days_Config";
+import { EChartsFallback } from "../App/ECharts/EChartsFallback";
+// import Some_Config from "../App/JournalService/Some_Config";
 
 //-- NPM Components --//
 
@@ -13,7 +13,7 @@ import PL_45_Days_Config from "./PL_45_Days_Config";
 //-- NPM Functions --//
 
 //-- Utility Functions --//
-import classNames from "../../Util/classNames";
+import classNames from "../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
@@ -41,18 +41,18 @@ export default function PL_45_Days({ tw_height, tw_width }: IProps) {
         `${tw_height} ${tw_width}`, // DEV - to be resizeable
         "mt-1 flex flex-col rounded-2xl px-3 pb-3 pt-4 shadow-md",
         "ring-1 ring-inset ring-zinc-800/10 dark:ring-zinc-100/10",
-        "bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-100",
-        !JC.pl45DaysFetched || JC.pl45DaysUpdating ? "animate-pulse" : ""
+        "bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-100"
+        // !JC.somethingFetched || JC.somethingUpdating ? "animate-pulse" : ""
       )}
     >
       {/* Title */}
       <p className="text-center font-medium text-zinc-600 dark:text-zinc-200">
-        Profit & Loss, Trading Days in Past 45 Calendar Days
+        Some Chart Title
       </p>
 
       {/* Chart and Fallback */}
       <ErrorBoundary FallbackComponent={EChartsFallback}>
-        <PL_45_Days_Config />
+        {/* <Some_Config /> */}
       </ErrorBoundary>
     </div>
   );

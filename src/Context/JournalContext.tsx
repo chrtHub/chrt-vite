@@ -14,6 +14,8 @@ export interface IJournalContext {
   setPL45Days: React.Dispatch<React.SetStateAction<PL45DayRow[] | null>>;
   pl45DaysFetched: boolean;
   setPL45DaysFetched: React.Dispatch<React.SetStateAction<boolean>>;
+  pl45DaysUpdating: boolean;
+  setPL45DaysUpdating: React.Dispatch<React.SetStateAction<boolean>>;
   //----//
 }
 
@@ -42,6 +44,8 @@ function JournalContextProvider({ children }: PropsWithChildren) {
   //-- Charts --//
   const [pl45Days, setPL45Days] = useState<PL45DayRow[] | null>(null);
   const [pl45DaysFetched, setPL45DaysFetched] = useState<boolean>(false);
+  const [pl45DaysUpdating, setPL45DaysUpdating] = useState<boolean>(false);
+  //----//
 
   //-- Bundle values into journalContextValue --//
   const journalContextValue: IJournalContext = {
@@ -53,6 +57,8 @@ function JournalContextProvider({ children }: PropsWithChildren) {
     setPL45Days,
     pl45DaysFetched,
     setPL45DaysFetched,
+    pl45DaysUpdating,
+    setPL45DaysUpdating,
     //----//
   };
 
