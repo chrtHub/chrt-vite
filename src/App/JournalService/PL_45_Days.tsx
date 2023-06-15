@@ -1,4 +1,5 @@
 //-- react, react-router-dom, Auth0 --//
+import { useEffect, useState, useRef } from "react";
 
 //-- TSX Components --//
 import { useJournalContext } from "../../Context/JournalContext";
@@ -21,6 +22,10 @@ import classNames from "../../Util/classNames";
 export default function PL_45_Days() {
   //-- React State --//
   const JC = useJournalContext();
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [containerHeight, setContainerHeight] = useState<number | null>(null);
+  const [containerWidth, setContainerWidth] = useState<number | null>(null);
+
   //-- Auth --//
 
   //-- Other --//
@@ -33,6 +38,7 @@ export default function PL_45_Days() {
   return (
     // TODO - refactor this div and tailwind CSS into a wrapper
     <div
+      ref={containerRef}
       className={classNames(
         `h-full w-full`,
         "flex flex-col rounded-2xl px-3 pb-3 pt-4 shadow-md",

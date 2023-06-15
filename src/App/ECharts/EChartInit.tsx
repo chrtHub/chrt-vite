@@ -105,5 +105,5 @@ export default function EChartInit({ option }: IProps) {
   }, [option, SiteContext.theme]);
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
-  return <div ref={chartRef} style={{ height: "100%", width: "100%" }} />;
+  return <div ref={chartRef} style={{ height: `100%`, width: `100%` }} />;
 }
