@@ -2,8 +2,12 @@
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
-import PL_45_Days from "./Charts/PL_45_Days";
 import CTA401Fallback from "./CTA401Fallback";
+
+import { useJournalContext } from "../../Context/JournalContext";
+
+import PL_45_Days from "./PL_45_Days";
+
 //-- NPM Components --//
 
 //-- Icons --//
@@ -17,6 +21,7 @@ import CTA401Fallback from "./CTA401Fallback";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Journal() {
   //-- React State --//
+  let JC = useJournalContext();
 
   //-- Auth0 --//
 
@@ -31,7 +36,7 @@ export default function Journal() {
   return (
     <>
       <CTA401Fallback />
-      <PL_45_Days />
+      <PL_45_Days tw_height={"h-[300px]"} tw_width={"w-[100%]"} />
     </>
   );
 }
