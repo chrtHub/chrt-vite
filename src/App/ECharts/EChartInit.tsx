@@ -26,6 +26,7 @@ import {
 } from "echarts/components";
 import { LabelLayout, UniversalTransition } from "echarts/features";
 import { CanvasRenderer } from "echarts/renderers";
+import classNames from "../../Util/classNames";
 // type ECOption = echarts.ComposeOption<
 //   | BarSeriesOption
 //   | LineSeriesOption
@@ -64,10 +65,8 @@ echarts.use([
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 interface IProps {
   option: {}; //-- ECharts options types are very poor :( --//
-  height: string;
-  width: string;
 }
-export default function EChart({ option, height, width }: IProps) {
+export default function EChartInit({ option }: IProps) {
   //-- React State --//
   let SiteContext = useSiteContext();
 
@@ -106,5 +105,5 @@ export default function EChart({ option, height, width }: IProps) {
   }, [option, SiteContext.theme]);
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
-  return <div ref={chartRef} style={{ width: width, height: height }} />;
+  return <div ref={chartRef} style={{ height: "100%", width: "100%" }} />;
 }
