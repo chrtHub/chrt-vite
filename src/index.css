@@ -1,6 +1,11 @@
+/* Tailwind */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* React Grid Layout */
+@import "/node_modules/react-grid-layout/css/styles.css";
+@import "/node_modules/react-resizable/css/styles.css";
 
 /* TODO - Any size issue caused by this?  */
 @layer base {

@@ -18,11 +18,7 @@ import classNames from "../../Util/classNames";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-interface IProps {
-  tw_height: string;
-  tw_width: string;
-}
-export default function PL_45_Days({ tw_height, tw_width }: IProps) {
+export default function PL_45_Days() {
   //-- React State --//
   const JC = useJournalContext();
   //-- Auth --//
@@ -38,8 +34,8 @@ export default function PL_45_Days({ tw_height, tw_width }: IProps) {
     // TODO - refactor this div and tailwind CSS into a wrapper
     <div
       className={classNames(
-        `${tw_height} ${tw_width}`, // DEV - to be resizeable
-        "mt-1 flex flex-col rounded-2xl px-3 pb-3 pt-4 shadow-md",
+        `h-full w-auto`,
+        "flex flex-col rounded-2xl px-3 pb-3 pt-4 shadow-md",
         "ring-1 ring-inset ring-zinc-800/10 dark:ring-zinc-100/10",
         "bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-100",
         !JC.pl45DaysFetched || JC.pl45DaysUpdating ? "animate-pulse" : ""

@@ -1,11 +1,12 @@
 //-- react, react-router-dom, Auth0 --//
-
+import { useState } from "react";
 //-- TSX Components --//
 import CTA401Fallback from "./CTA401Fallback";
 
 import PL_45_Days from "./PL_45_Days";
 
 //-- NPM Components --//
+import GridLayout from "react-grid-layout";
 
 //-- Icons --//
 
@@ -32,7 +33,12 @@ export default function Journal() {
   return (
     <>
       <CTA401Fallback />
-      <PL_45_Days tw_height={"h-[400px]"} tw_width={"w-[100%]"} />
+      <div className="h-[300px] w-[100%]">
+        <PL_45_Days />
+      </div>
+
+      {/* Grid Layout */}
+      <div className="h-full w-full bg-zinc-100">{/* TODO */}</div>
     </>
   );
 }
