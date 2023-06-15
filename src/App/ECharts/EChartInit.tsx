@@ -93,12 +93,25 @@ export default function EChartInit({ option }: IProps) {
       chart = echarts.init(chartRef.current, SiteContext.theme);
       chart.setOption(option);
 
-      //-- Listen for resize events --//
-      window.addEventListener("resize", handleResize);
+      //-- Listen for container resize events --//
+      const resizeObserver = new ResizeObserver(() => {
+        console.log("resizing EChartInit (caused by container"); // DEV
+        handleResize();
+      });
+      resizeObserver.observe(chartRef.current);
+
+      //-- Listen for window resize events --//
+      window.addEventListener("resize", () => {
+        console.log("resizing EChartInit (caused by window)"); // DEV
+        handleResize();
+      });
 
       //-- Cleanup --//
       return () => {
         chart?.dispose();
+        if (chartRef.current) {
+          resizeObserver.unobserve(chartRef.current);
+        }
         window.removeEventListener("resize", handleResize);
       };
     }

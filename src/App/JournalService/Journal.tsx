@@ -6,8 +6,7 @@ import CTA401Fallback from "./CTA401Fallback";
 import PL_45_Days from "./PL_45_Days";
 
 //-- NPM Components --//
-import { Responsive, WidthProvider } from "react-grid-layout";
-
+import GridLayout from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 
@@ -28,7 +27,6 @@ export default function Journal() {
   //-- Data Fetching --//
 
   //-- Other --//
-  const ResponsiveGridLayout = WidthProvider(Responsive);
   let layouts = [{}];
 
   //-- Click Handlers --//
@@ -41,10 +39,12 @@ export default function Journal() {
 
       {/* Grid Layout */}
       <div className="h-full w-full bg-zinc-100">
-        <ResponsiveGridLayout
+        <GridLayout
           className="layout"
-          cols={{ lg: 12, md: 8, sm: 4, xs: 4, xxs: 4 }}
+          cols={12}
           rowHeight={30}
+          width={600}
+          //
         >
           <div
             key="a"
@@ -75,7 +75,7 @@ export default function Journal() {
           >
             c
           </div>
-        </ResponsiveGridLayout>
+        </GridLayout>
       </div>
     </>
   );
