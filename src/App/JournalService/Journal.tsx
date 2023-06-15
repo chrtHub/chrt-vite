@@ -1,5 +1,5 @@
 //-- react, react-router-dom, Auth0 --//
-import { useState } from "react";
+
 //-- TSX Components --//
 import CTA401Fallback from "./CTA401Fallback";
 
@@ -7,6 +7,9 @@ import PL_45_Days from "./PL_45_Days";
 
 //-- NPM Components --//
 import GridLayout from "react-grid-layout";
+
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
 
 //-- Icons --//
 
@@ -33,12 +36,46 @@ export default function Journal() {
   return (
     <>
       <CTA401Fallback />
-      <div className="h-[300px] w-[100%]">
-        <PL_45_Days />
-      </div>
 
       {/* Grid Layout */}
-      <div className="h-full w-full bg-zinc-100">{/* TODO */}</div>
+      <div className="h-full w-full bg-zinc-100">
+        <GridLayout
+          className="layout"
+          cols={12}
+          rowHeight={30}
+          width={500} // DEV - make dynamic
+        >
+          <div
+            key="a"
+            data-grid={{
+              x: 0,
+              y: 0,
+              w: 12,
+              h: 6,
+              minW: 4,
+              minH: 6,
+            }}
+            className="rounded-lg bg-emerald-200 py-1"
+          >
+            <PL_45_Days />
+          </div>
+
+          <div
+            key="b"
+            data-grid={{ x: 0, y: 0, w: 12, h: 5, minW: 4, minH: 3 }}
+            className="rounded-lg bg-pink-200 py-1"
+          >
+            b
+          </div>
+          <div
+            key="c"
+            data-grid={{ x: 0, y: 0, w: 12, h: 5, minW: 4, minH: 3 }}
+            className="rounded-lg bg-pink-200 py-1"
+          >
+            c
+          </div>
+        </GridLayout>
+      </div>
     </>
   );
 }

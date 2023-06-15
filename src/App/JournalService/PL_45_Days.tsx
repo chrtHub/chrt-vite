@@ -34,7 +34,7 @@ export default function PL_45_Days() {
     // TODO - refactor this div and tailwind CSS into a wrapper
     <div
       className={classNames(
-        `h-full w-auto`,
+        `h-full w-full`,
         "flex flex-col rounded-2xl px-3 pb-3 pt-4 shadow-md",
         "ring-1 ring-inset ring-zinc-800/10 dark:ring-zinc-100/10",
         "bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-100",
