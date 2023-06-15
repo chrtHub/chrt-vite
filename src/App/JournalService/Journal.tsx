@@ -45,7 +45,7 @@ export default function Journal() {
       <CTA401Fallback />
 
       {/* Grid Layout */}
-      <div className="h-full w-full bg-zinc-100">
+      <div className="h-full w-full">
         <ResponsiveGridLayout
           className="layout"
           // layouts={}
@@ -53,7 +53,13 @@ export default function Journal() {
           rowHeight={30}
           resizeHandles={["se"]}
           resizeHandle={
-            <div className="react-resizable-handle absolute bottom-0 right-0 mb-2 mr-2 cursor-se-resize rounded-full p-2 hover:bg-zinc-200" />
+            <div
+              className={classNames(
+                "react-resizable-handle cursor-se-resize",
+                "absolute bottom-0 right-0 mb-2 mr-2 rounded-full",
+                "hover:bg-zinc-200"
+              )}
+            />
           }
           draggableHandle=".react-grid-dragHandle"
         >
@@ -63,7 +69,7 @@ export default function Journal() {
               x: 0,
               y: 0,
               w: 12,
-              h: 6,
+              h: 8,
               minW: 4,
               minH: 6,
             }}
@@ -76,21 +82,6 @@ export default function Journal() {
               />
             </div>
             <PL_45_Days />
-          </div>
-
-          <div
-            key="b"
-            data-grid={{ x: 0, y: 0, w: 8, h: 8, minW: 4, minH: 4 }}
-            className="rounded-lg bg-pink-200 py-1"
-          >
-            b
-          </div>
-          <div
-            key="c"
-            data-grid={{ x: 0, y: 0, w: 4, h: 4, minW: 4, minH: 4 }}
-            className="rounded-lg bg-pink-200 py-1"
-          >
-            c
           </div>
         </ResponsiveGridLayout>
       </div>
