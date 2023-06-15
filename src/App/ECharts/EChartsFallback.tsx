@@ -51,7 +51,7 @@ export const EChartsFallback = ({ error }: { error: Error }) => {
     return (
       <div
         className={classNames(
-          "flex flex-col items-center justify-center rounded-2xl py-3 text-center",
+          "mb-1 mt-3 flex h-full w-full flex-col items-center justify-center rounded-2xl p-6 text-center",
           "ring-1 ring-inset ring-amber-100",
           "bg-amber-50 dark:bg-amber-950 dark:ring-amber-900"
         )}
