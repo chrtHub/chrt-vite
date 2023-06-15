@@ -6,11 +6,16 @@ import CTA401Fallback from "./CTA401Fallback";
 import PL_45_Days from "./PL_45_Days";
 
 //-- NPM Components --//
-import GridLayout from "react-grid-layout";
+import { WidthProvider, Responsive } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
+import classNames from "../../Util/classNames";
 
 //-- Icons --//
+import {
+  ArrowDownRightIcon,
+  ArrowsPointingOutIcon,
+} from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
 
@@ -27,6 +32,8 @@ export default function Journal() {
   //-- Data Fetching --//
 
   //-- Other --//
+  const ResponsiveGridLayout = WidthProvider(Responsive);
+
   let layouts = [{}];
 
   //-- Click Handlers --//
@@ -39,12 +46,16 @@ export default function Journal() {
 
       {/* Grid Layout */}
       <div className="h-full w-full bg-zinc-100">
-        <GridLayout
+        <ResponsiveGridLayout
           className="layout"
-          cols={12}
+          // layouts={}
+          cols={{ lg: 12, md: 8, sm: 4, xs: 4, xxs: 4 }}
           rowHeight={30}
-          width={600}
-          //
+          resizeHandles={["se"]}
+          resizeHandle={
+            <div className="react-resizable-handle absolute bottom-0 right-0 mb-2 mr-2 cursor-se-resize rounded-full p-2 hover:bg-zinc-200" />
+          }
+          draggableHandle=".react-grid-dragHandle"
         >
           <div
             key="a"
@@ -56,8 +67,14 @@ export default function Journal() {
               minW: 4,
               minH: 6,
             }}
-            className="rounded-lg bg-emerald-200 py-1"
+            className="rounded-lg py-1"
           >
+            <div className="react-grid-dragHandle bg-zing-900 absolute right-0 top-0 mr-2 mt-2 cursor-move rounded-full p-2 hover:bg-zinc-200">
+              <ArrowsPointingOutIcon
+                className="h-5 w-5"
+                style={{ transform: "rotate(45deg)" }}
+              />
+            </div>
             <PL_45_Days />
           </div>
 
@@ -75,8 +92,10 @@ export default function Journal() {
           >
             c
           </div>
-        </GridLayout>
+        </ResponsiveGridLayout>
       </div>
     </>
   );
 }
+
+// resizeHandle={<div className="absolute bottom-0 right-0">foo</div>}
