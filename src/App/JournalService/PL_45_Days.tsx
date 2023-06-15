@@ -1,12 +1,9 @@
 //-- react, react-router-dom, Auth0 --//
-import { useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useSiteContext } from "../../Context/SiteContext";
 
 //-- TSX Components --//
 import { useJournalContext } from "../../Context/JournalContext";
 import { ErrorBoundary } from "react-error-boundary";
-import { EChartsFallback } from "./EChartsFallback";
+import { EChartsFallback } from "../ECharts/EChartsFallback";
 import PL_45_Days_Config from "./PL_45_Days_Config";
 
 //-- NPM Components --//
@@ -40,7 +37,8 @@ export default function PL_45_Days({ tw_height, tw_width }: IProps) {
   return (
     <div
       className={classNames(
-        "mt-1 rounded-2xl px-3 pb-3 pt-4",
+        `${tw_height} ${tw_width}`, // DEV - to be resizeable
+        "mt-1 flex flex-col rounded-2xl px-3 pb-3 pt-4",
         "shadow-md",
         "ring-1 ring-inset ring-zinc-800/10 dark:ring-zinc-100/10",
         JC.pl45DaysFetched
@@ -53,16 +51,9 @@ export default function PL_45_Days({ tw_height, tw_width }: IProps) {
         "Profit & Loss, Trading Days in Past 45 Calendar Days"
       </p>
 
-      <ErrorBoundary
-        FallbackComponent={(fallbackProps) => (
-          <EChartsFallback
-            {...fallbackProps}
-            tw_height={tw_height}
-            tw_width={tw_width}
-          />
-        )}
-      >
-        <PL_45_Days_Config tw_height={tw_height} tw_width={tw_width} />
+      {/* Chart and Fallback */}
+      <ErrorBoundary FallbackComponent={EChartsFallback}>
+        <PL_45_Days_Config />
       </ErrorBoundary>
     </div>
   );

@@ -16,15 +16,7 @@ import classNames from "../../Util/classNames";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
-export const EChartsFallback = ({
-  error,
-  tw_height,
-  tw_width,
-}: {
-  error: Error;
-  tw_height: string;
-  tw_width: string;
-}) => {
+export const EChartsFallback = ({ error }: { error: Error }) => {
   //-- Error info --//
   const {
     errorMessage,
@@ -60,7 +52,6 @@ export const EChartsFallback = ({
       <div
         className={classNames(
           "flex flex-col items-center justify-center rounded-2xl py-3 text-center",
-          `${tw_height} ${tw_width}`,
           "ring-1 ring-inset ring-amber-100",
           "bg-amber-50 dark:bg-amber-950 dark:ring-amber-900"
         )}

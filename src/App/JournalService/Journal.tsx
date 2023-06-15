@@ -36,7 +36,7 @@ export default function Journal() {
   return (
     <>
       <CTA401Fallback />
-      <PL_45_Days tw_height={"h-[300px]"} tw_width={"w-[100%]"} />
+      <PL_45_Days tw_height={"h-[400px]"} tw_width={"w-[100%]"} />
     </>
   );
 }

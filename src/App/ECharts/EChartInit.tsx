@@ -65,14 +65,10 @@ echarts.use([
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 interface IProps {
   option: {}; //-- ECharts options types are very poor :( --//
-  tw_height: string;
-  tw_width: string;
 }
-export default function EChartInit({ option, tw_height, tw_width }: IProps) {
+export default function EChartInit({ option }: IProps) {
   //-- React State --//
   let SiteContext = useSiteContext();
-
-  const foo = "h-[400px]"; // dev
 
   //-- Auth --//
 
@@ -109,11 +105,5 @@ export default function EChartInit({ option, tw_height, tw_width }: IProps) {
   }, [option, SiteContext.theme]);
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
-  return (
-    <div
-      ref={chartRef}
-      style={{ height: "100%", width: "100%" }}
-      // className={classNames(`${foo} w-[100%]`)}
-    />
-  );
+  return <div ref={chartRef} style={{ height: "100%", width: "100%" }} />;
 }

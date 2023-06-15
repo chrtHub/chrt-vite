@@ -22,15 +22,11 @@ import { throwAxiosError } from "../../Errors/throwAxiosError";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { DateAndProfitRow, PL45DayRow } from "./Types/journal_types";
-import { zinc } from "../../Util/TailwindPalette";
+import { zinc, green } from "../../Util/TailwindPalette";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-interface IProps {
-  tw_height: string;
-  tw_width: string;
-}
-export default function PL_45_Days_Config({ tw_height, tw_width }: IProps) {
+export default function PL_45_Days_Config() {
   //-- React State --//
 
   // TODO - error boundary
@@ -175,7 +171,5 @@ export default function PL_45_Days_Config({ tw_height, tw_width }: IProps) {
   }, [getAccessTokenSilently]);
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
-  return (
-    <EChartInit option={option} tw_height={tw_height} tw_width={tw_width} />
-  );
+  return <EChartInit option={option} />;
 }
