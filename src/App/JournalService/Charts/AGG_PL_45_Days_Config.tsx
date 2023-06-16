@@ -26,7 +26,7 @@ import { zinc, green } from "../../../Util/TailwindPalette";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function PL_45_Days_Config() {
+export default function AGG_PL_45_Days_Config() {
   //== React State, Custom Hooks ==//
   let JC = useJournalContext();
   let SC = useSiteContext();
