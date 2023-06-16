@@ -1,5 +1,4 @@
 //-- react, react-router-dom, Auth0 --//
-import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 //-- TSX Components and Functions --//
@@ -24,9 +23,6 @@ import ConversationsRows from "./ConversationsRows";
 export default function Conversations() {
   //-- State --//
   const CC = useChatContext();
-  // const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [textareaOnFocusToggle, setTextareaOnFocusToggle] =
-    useState<boolean>(false);
 
   //-- Auth, react-router-dom, react-error-boundary --//
   const navigate = useNavigate();

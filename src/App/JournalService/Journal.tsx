@@ -46,7 +46,6 @@ export default function Journal() {
   //-- Handlers --//
   const onLayoutChange = (layout: {}, layouts: {}) => {
     console.log("onLayoutChange: ", layouts); // DEV
-
     // localStorage.setItem("rgl", JSON.stringify(layouts)); // todo
     // setLayouts(layouts);
   };
@@ -68,7 +67,7 @@ export default function Journal() {
           layouts={chrt_1}
           onLayoutChange={onLayoutChange}
           breakpoints={{ lg: 1024, md: 768, sm: 640, xs: 1, xxs: 0 }} //-- Matching Tailwind CSS --//
-          cols={{ lg: 12, md: 4, sm: 4, xs: 4, xxs: 4 }}
+          cols={{ lg: 12, md: 12, sm: 4, xs: 4, xxs: 4 }} //-- Aribtrary --//
           // margin={{ lg: [10, 10] }}
           // containerPadding={{ lg: [10, 10] }}
           rowHeight={30}
