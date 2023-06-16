@@ -22,7 +22,7 @@ import { throwAxiosError } from "../../../Errors/throwAxiosError"; // DEV
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { DateAndProfitRow, PL45DayRow } from "../Types/journal_types";
-import { zinc } from "../../../Util/TailwindPalette";
+import { zinc, green } from "../../../Util/TailwindPalette";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
@@ -41,7 +41,7 @@ export default function PL_45_Days_Config() {
     grid: {
       left: "12",
       right: "12",
-      top: "18",
+      top: "12",
       bottom: "0",
       containLabel: true,
     },
@@ -125,7 +125,7 @@ export default function PL_45_Days_Config() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // throwAxiosError(400); // DEV
+        throwAxiosError(400); // DEV
 
         //-- Get access token from memory or request new token --//
         let accessToken = await getAccessTokenSilently();
