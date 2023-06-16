@@ -11,7 +11,7 @@ import PL_45_Days from "./Charts/PL_45_Days";
 import { WidthProvider, Responsive } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import classNames from "../../Util/classNames";
+import "./rgl-overrides.css";
 
 //-- Icons --//
 import { ArrowsPointingOutIcon } from "@heroicons/react/24/solid";
@@ -19,6 +19,7 @@ import { ArrowsPointingOutIcon } from "@heroicons/react/24/solid";
 //-- NPM Functions --//
 
 //-- Utility Functions --//
+import classNames from "../../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
 
@@ -86,12 +87,14 @@ export default function Journal() {
           // margin={{ lg: [10, 10] }}
           // containerPadding={{ lg: [10, 10] }}
           resizeHandles={["se"]}
+          // TODO - better styling for resizeHandle
           resizeHandle={
             <div
               className={classNames(
                 "react-resizable-handle cursor-se-resize",
                 "absolute bottom-3 right-3 rounded-full",
-                "hover:bg-zinc-200 dark:bg-zinc-600 dark:hover:bg-zinc-500"
+                "hover:bg-zinc-200",
+                "dark:bg-zinc-500 dark:hover:bg-zinc-500"
               )}
             />
           }
@@ -111,5 +114,3 @@ export default function Journal() {
     </>
   );
 }
-
-// resizeHandle={<div className="absolute bottom-0 right-0">foo</div>}
