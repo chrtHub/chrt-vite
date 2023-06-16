@@ -97,6 +97,11 @@ export default function AGG_PL_45_Days_Config() {
         name: "Quantity",
         type: "line",
         data: JC.aggPL45Days,
+        lineStyle: {
+          color: SC.theme === "light" ? zinc._500 : zinc._50,
+          width: 3,
+          opacity: 0.5,
+        },
         itemStyle: {
           color: function (params: any) {
             const profit = params.data[1];

@@ -38,7 +38,7 @@ export default function PL_45_Days() {
       <EChartContainer
         fetched={JC.pl45DaysFetched}
         updating={JC.pl45DaysUpdating}
-        title={"Profit & Loss, Trading Days in Past 45 Calendar Days"}
+        title={"Profit & Loss (45 Days)"}
       >
         <ErrorBoundary FallbackComponent={EChartsFallback}>
           <PL_45_Days_Config />
