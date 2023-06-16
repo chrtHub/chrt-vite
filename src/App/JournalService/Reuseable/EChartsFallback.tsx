@@ -1,7 +1,7 @@
 //== react, react-router-dom, Auth0 ==//
 
 //== TSX Components, Functions ==//
-import { getErrorDetails } from "../../Errors/getErrorDetails";
+import { getErrorDetails } from "../../../Errors/getErrorDetails";
 
 //== NPM Components ==//
 
@@ -11,7 +11,7 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 //== NPM Functions ==//
 
 //== Utility Functions ==//
-import classNames from "../../Util/classNames";
+import classNames from "../../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 

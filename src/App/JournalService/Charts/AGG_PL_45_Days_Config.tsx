@@ -1,39 +1,30 @@
 //-- react, react-router-dom, Auth0 --//
-import { useEffect } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
 import { useJournalContext } from "../../../Context/JournalContext";
 import { useSiteContext } from "../../../Context/SiteContext";
-import { useErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components --//
-import EChartInit from "../../ECharts/EChartInit";
+import EChartInit from "../Reuseable/EChartInit";
 
 //-- NPM Components --//
 
 //-- Icons --//
 
 //-- NPM Functions --//
-import axios from "axios";
 import { format, parseISO } from "date-fns";
 import numeral from "numeral";
 
 //-- Utility Functions --//
-import { throwAxiosError } from "../../../Errors/throwAxiosError"; // DEV
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { DateAndProfitRow, PL45DayRow } from "../Types/journal_types";
-import { zinc, green } from "../../../Util/TailwindPalette";
-let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
+import { zinc, green, red, rose } from "../../../Util/TailwindPalette";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function AGG_PL_45_Days_Config() {
   //== React State, Custom Hooks ==//
   let JC = useJournalContext();
   let SC = useSiteContext();
-  const { showBoundary } = useErrorBoundary();
 
   //== Auth ==//
-  const { getAccessTokenSilently } = useAuth0();
 
   //== Other [ECharts options] ==//
   const option = {
@@ -106,13 +97,20 @@ export default function AGG_PL_45_Days_Config() {
         name: "Quantity",
         type: "line",
         data: JC.aggPL45Days,
+        lineStyle: {
+          color: SC.theme === "light" ? zinc._500 : zinc._50,
+          width: 3,
+          opacity: 0.5,
+        },
         itemStyle: {
           color: function (params: any) {
             const profit = params.data[1];
-            if (profit >= 0) {
-              return "#4ade80"; //-- green 400 --//
+            if (profit == 0) {
+              return SC.theme === "light" ? zinc._500 : zinc._200;
+            } else if (profit > 0) {
+              return green._500;
             } else {
-              return "#ef4444"; //-- red 500 --//
+              return red._500;
             }
           },
         },

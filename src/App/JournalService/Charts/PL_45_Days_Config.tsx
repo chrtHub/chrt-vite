@@ -6,7 +6,7 @@ import { useSiteContext } from "../../../Context/SiteContext";
 import { useErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components --//
-import EChartInit from "../../ECharts/EChartInit";
+import EChartInit from "../Reuseable/EChartInit";
 
 //-- NPM Components --//
 
@@ -22,7 +22,7 @@ import { throwAxiosError } from "../../../Errors/throwAxiosError"; // DEV
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { DateAndProfitRow, PL45DayRow } from "../Types/journal_types";
-import { zinc, green } from "../../../Util/TailwindPalette";
+import { zinc, green, red, rose } from "../../../Util/TailwindPalette";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
@@ -110,9 +110,9 @@ export default function PL_45_Days_Config() {
           color: function (params: any) {
             const profit = params.data[1];
             if (profit >= 0) {
-              return "#4ade80"; //-- green 400 --//
+              return green._500;
             } else {
-              return "#ef4444"; //-- red 500 --//
+              return red._500;
             }
           },
         },

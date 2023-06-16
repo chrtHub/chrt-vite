@@ -5,10 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import { useJournalContext } from "../../../Context/JournalContext";
 import { ErrorBoundary } from "react-error-boundary";
 import { EChartsFallback } from "../Reuseable/EChartsFallback";
-import EChartContainer from "../Reuseable/EChartContainer";
-
-import PL_45_Days_Config from "./PL_45_Days_Config";
-import AGG_PL_45_Days_Config from "./AGG_PL_45_Days_Config";
+import TableContainer from "../Reuseable/TableContainer";
 
 //-- NPM Components --//
 
@@ -21,7 +18,7 @@ import AGG_PL_45_Days_Config from "./AGG_PL_45_Days_Config";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function AGG_PL_45_Days() {
+export default function StatsTable() {
   //-- React State --//
   const JC = useJournalContext();
 
@@ -36,15 +33,18 @@ export default function AGG_PL_45_Days() {
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <>
-      <EChartContainer
-        fetched={JC.pl45DaysFetched}
-        updating={JC.pl45DaysUpdating}
-        title={"Aggregate Profit & Loss (45 Days)"}
+      <TableContainer
+        fetched={true} // TODO
+        updating={false} // TODO
+        title={"Stats Table"}
       >
         <ErrorBoundary FallbackComponent={EChartsFallback}>
-          <AGG_PL_45_Days_Config />
+          {/* TODO - table config? */}
+          <div className="flex h-full w-full flex-col items-center justify-center px-2">
+            <p className="text-xl font-medium text-zinc-500">coming soon</p>
+          </div>
         </ErrorBoundary>
-      </EChartContainer>
+      </TableContainer>
     </>
   );
 }
