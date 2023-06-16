@@ -35,7 +35,6 @@ export default function PL_45_Days() {
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <>
-      {/* Start of PL 45 Days */}
       <EChartWrapper
         fetched={JC.pl45DaysFetched}
         updating={JC.pl45DaysUpdating}
@@ -45,11 +44,6 @@ export default function PL_45_Days() {
           <PL_45_Days_Config />
         </ErrorBoundary>
       </EChartWrapper>
-      {/* End of PL 45 Days */}
-
-      {/* Start of  */}
-
-      {/* End of  */}
     </>
   );
 }

@@ -5,6 +5,8 @@ import { PropsWithChildren } from "react";
 //== TSX Components, Functions ==//
 
 //== NPM Components ==//
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
 
 //== Icons ==//
 

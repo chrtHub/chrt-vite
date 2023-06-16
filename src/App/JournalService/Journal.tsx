@@ -1,9 +1,9 @@
 //-- react, react-router-dom, Auth0 --//
-import { useState } from "react";
+import { PropsWithChildren, useState } from "react";
 
 //-- TSX Components --//
 import CTA401Fallback from "./CTA401Fallback";
-import { chrt_1 } from "./Layouts/LayoutTemplates";
+import { chrt_1 } from "./Layouts/Templates";
 
 import PL_45_Days from "./PL_45_Days";
 
@@ -14,10 +14,7 @@ import "react-resizable/css/styles.css";
 import classNames from "../../Util/classNames";
 
 //-- Icons --//
-import {
-  ArrowDownRightIcon,
-  ArrowsPointingOutIcon,
-} from "@heroicons/react/24/solid";
+import { ArrowsPointingOutIcon } from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
 
@@ -60,17 +57,17 @@ export default function Journal() {
     <>
       <CTA401Fallback />
 
-      {/* Grid Layout */}
+      {/* ----- Grid Layout ----- */}
       <div className="h-full w-full">
         <ResponsiveGridLayout
           className="layout"
           layouts={chrt_1}
           onLayoutChange={onLayoutChange}
           breakpoints={{ lg: 1024, md: 768, sm: 640, xs: 1, xxs: 0 }} //-- Matching Tailwind CSS --//
+          rowHeight={30}
           cols={{ lg: 12, md: 12, sm: 4, xs: 4, xxs: 4 }} //-- Aribtrary --//
           // margin={{ lg: [10, 10] }}
           // containerPadding={{ lg: [10, 10] }}
-          rowHeight={30}
           resizeHandles={["se"]}
           resizeHandle={
             <div
@@ -83,17 +80,15 @@ export default function Journal() {
           }
           draggableHandle=".react-grid-dragHandle"
         >
-          {/* START OF PL_45_DAYS */}
+          {/* ----- Charts ----- */}
+          {/* START OF PL_45_Days */}
           <div key="a" className="rounded-lg py-1">
-            <div className="react-grid-dragHandle bg-zing-900 absolute right-0 top-0 mr-2 mt-2 cursor-move rounded-full p-2 hover:bg-zinc-200">
-              <ArrowsPointingOutIcon
-                className="h-5 w-5"
-                style={{ transform: "rotate(45deg)" }}
-              />
-            </div>
+            <DraggableHandle />
             <PL_45_Days />
           </div>
-          {/* END OF PL_45_DAYS */}
+          {/* END OF PL_45_Days */}
+
+          {/* End of Charts */}
         </ResponsiveGridLayout>
       </div>
     </>
@@ -101,3 +96,14 @@ export default function Journal() {
 }
 
 // resizeHandle={<div className="absolute bottom-0 right-0">foo</div>}
+
+const DraggableHandle = () => {
+  return (
+    <div className="react-grid-dragHandle bg-zing-900 absolute right-0 top-0 mr-2 mt-2 cursor-move rounded-full p-2 hover:bg-zinc-200">
+      <ArrowsPointingOutIcon
+        className="h-5 w-5"
+        style={{ transform: "rotate(45deg)" }}
+      />
+    </div>
+  );
+};
