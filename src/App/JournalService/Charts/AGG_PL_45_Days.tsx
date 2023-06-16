@@ -39,7 +39,7 @@ export default function AGG_PL_45_Days() {
       <EChartContainer
         fetched={JC.pl45DaysFetched}
         updating={JC.pl45DaysUpdating}
-        title={"Aggregate Profit & Loss, Trading Days in Past 45 Calendar Days"}
+        title={"Aggregate Profit & Loss, Past 45 Calendar Days"}
       >
         <ErrorBoundary FallbackComponent={EChartsFallback}>
           <AGG_PL_45_Days_Config />

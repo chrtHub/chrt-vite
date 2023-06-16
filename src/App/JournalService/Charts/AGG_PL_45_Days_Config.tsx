@@ -104,8 +104,8 @@ export default function AGG_PL_45_Days_Config() {
     series: [
       {
         name: "Quantity",
-        type: "bar",
-        data: JC.pl45Days,
+        type: "line",
+        data: JC.aggPL45Days,
         itemStyle: {
           color: function (params: any) {
             const profit = params.data[1];
@@ -122,43 +122,6 @@ export default function AGG_PL_45_Days_Config() {
   };
 
   //== Side Effects ==//
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // throwAxiosError(400); // DEV
-
-        //-- Get access token from memory or request new token --//
-        let accessToken = await getAccessTokenSilently();
-
-        //-- pl_last_45_calendar_days --//
-        let res = await axios.get(
-          `${VITE_ALB_BASE_URL}/journal/dashboard/pl_last_45_calendar_days`,
-          {
-            headers: {
-              authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        let data: DateAndProfitRow[] = res.data;
-
-        //-- Make array for dates and profits --//
-        let datesAndProfits: PL45DayRow[] = data.map((x) => {
-          return [x.date, x.profit];
-        });
-        let reversedDatesAndProfits = datesAndProfits.reverse();
-
-        //-- Set state --//
-        JC.setPL45Days(reversedDatesAndProfits);
-      } catch (err) {
-        //-- Show error boundary --//
-        showBoundary(err);
-      } finally {
-        //-- Set fetched --//
-        JC.setPL45DaysFetched(true);
-      }
-    };
-    fetchData();
-  }, [getAccessTokenSilently]);
 
   //== Handlers ==//
 

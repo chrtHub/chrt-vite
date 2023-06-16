@@ -128,10 +128,10 @@ export default function PL_45_Days_Config() {
         // throwAxiosError(400); // DEV
 
         //-- Get access token from memory or request new token --//
-        let accessToken = await getAccessTokenSilently();
+        const accessToken = await getAccessTokenSilently();
 
         //-- pl_last_45_calendar_days --//
-        let res = await axios.get(
+        const res = await axios.get(
           `${VITE_ALB_BASE_URL}/journal/dashboard/pl_last_45_calendar_days`,
           {
             headers: {
@@ -139,16 +139,25 @@ export default function PL_45_Days_Config() {
             },
           }
         );
-        let data: DateAndProfitRow[] = res.data;
+        const data: DateAndProfitRow[] = res.data;
+        const reversedData = data.reverse();
 
-        //-- Make array for dates and profits --//
-        let datesAndProfits: PL45DayRow[] = data.map((x) => {
+        //-- Make array for PL_45_days --//
+        const pl45Days: PL45DayRow[] = reversedData.map((x) => {
           return [x.date, x.profit];
         });
-        let reversedDatesAndProfits = datesAndProfits.reverse();
 
-        //-- Set state --//
-        JC.setPL45Days(reversedDatesAndProfits);
+        //-- Calculate Agg_PL_45_Days --//
+        const aggPL45Days: PL45DayRow[] = [];
+        let aggPL: number = 0;
+        for (const row of data) {
+          aggPL += parseFloat(row.profit);
+          aggPL45Days.push([row.date, String(aggPL)]);
+        }
+
+        //-- Update state in context --//
+        JC.setPL45Days(pl45Days);
+        JC.setAggPL45Days(aggPL45Days);
       } catch (err) {
         //-- Show error boundary --//
         showBoundary(err);
