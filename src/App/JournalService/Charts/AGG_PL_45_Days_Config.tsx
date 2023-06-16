@@ -16,7 +16,7 @@ import numeral from "numeral";
 //-- Utility Functions --//
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { zinc, green } from "../../../Util/TailwindPalette";
+import { zinc, green, red, rose } from "../../../Util/TailwindPalette";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function AGG_PL_45_Days_Config() {
@@ -100,10 +100,12 @@ export default function AGG_PL_45_Days_Config() {
         itemStyle: {
           color: function (params: any) {
             const profit = params.data[1];
-            if (profit >= 0) {
-              return "#4ade80"; //-- green 400 --//
+            if (profit == 0) {
+              return SC.theme === "light" ? zinc._500 : zinc._200;
+            } else if (profit > 0) {
+              return green._500;
             } else {
-              return "#ef4444"; //-- red 500 --//
+              return red._500;
             }
           },
         },
