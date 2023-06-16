@@ -1,51 +1,43 @@
 //-- react, react-router-dom, Auth0 --//
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useJournalContext } from "../../Context/JournalContext";
 import { useSiteContext } from "../../Context/SiteContext";
+import { useErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components --//
 import EChartInit from "../ECharts/EChartInit";
-import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
 
 //-- NPM Components --//
 
 //-- Icons --//
 
 //-- NPM Functions --//
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { format, parseISO } from "date-fns";
 import numeral from "numeral";
 
 //-- Utility Functions --//
-import { throwAxiosError } from "../../Errors/throwAxiosError";
+import { throwAxiosError } from "../../Errors/throwAxiosError"; // DEV
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { DateAndProfitRow, PL45DayRow } from "./Types/journal_types";
-import { zinc, green } from "../../Util/TailwindPalette";
+import { zinc } from "../../Util/TailwindPalette";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function PL_45_Days_Config() {
-  //-- React State --//
+  //== React State, Custom Hooks ==//
+  let JC = useJournalContext();
+  let SC = useSiteContext();
+  const { showBoundary } = useErrorBoundary();
 
-  // TODO - error boundary
-  // throwAxiosError(400); // DEV
-
-  // TODO - implement FUED
-  // fetched
-  // updating
-
-  const [loading, setLoading] = useState<boolean>(false);
-  let JournalContext = useJournalContext();
-  let SiteContext = useSiteContext();
-
-  //-- Auth --//
+  //== Auth ==//
   const { getAccessTokenSilently } = useAuth0();
 
-  //-- Other [ECharts options] --//
+  //== Other [ECharts options] ==//
   const option = {
-    backgroundColor: SiteContext.theme === "light" ? zinc._50 : zinc._800,
+    backgroundColor: SC.theme === "light" ? zinc._50 : zinc._800,
     grid: {
       left: "12",
       right: "12",
@@ -113,7 +105,7 @@ export default function PL_45_Days_Config() {
       {
         name: "Quantity",
         type: "bar",
-        data: JournalContext.pl45Days,
+        data: JC.pl45Days,
         itemStyle: {
           color: function (params: any) {
             const profit = params.data[1];
@@ -129,13 +121,12 @@ export default function PL_45_Days_Config() {
     animation: false,
   };
 
-  //-- Click Handlers --//
-
-  //-- Side Effects --//
+  //== Side Effects ==//
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       try {
+        // throwAxiosError(400); // DEV
+
         //-- Get access token from memory or request new token --//
         let accessToken = await getAccessTokenSilently();
 
@@ -157,18 +148,19 @@ export default function PL_45_Days_Config() {
         let reversedDatesAndProfits = datesAndProfits.reverse();
 
         //-- Set state --//
-        JournalContext.setPL45Days(reversedDatesAndProfits);
+        JC.setPL45Days(reversedDatesAndProfits);
       } catch (err) {
-        if (err instanceof AxiosError) {
-          axiosErrorToaster(err);
-        } else {
-          console.log(err);
-        }
+        //-- Show error boundary --//
+        showBoundary(err);
+      } finally {
+        //-- Set fetched --//
+        JC.setPL45DaysFetched(true);
       }
-      setLoading(false);
     };
     fetchData();
   }, [getAccessTokenSilently]);
+
+  //== Handlers ==//
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return <EChartInit option={option} />;

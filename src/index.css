@@ -1,3 +1,4 @@
+/* Tailwind */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,3 +16,8 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 }
+
+/* React Grid Layout */
+/* TODO - figure out how to globally import styles for react-grid-layout and react-sizeable here */
+/* @import "../node_modules/react-grid-layout/css/styles.css"; */
+/* @import "../node_modules/react-resizable/css/styles.css"; */

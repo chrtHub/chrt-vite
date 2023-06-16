@@ -1,12 +1,10 @@
 //-- react, react-router-dom, Auth0 --//
 import { Outlet, NavLink, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components and Functions --//;
 import { useAccountContext } from "../../Context/AccountContext";
-import { axiosErrorToaster } from "../../Errors/axiosErrorToaster";
 
 //-- NPM Components --//
 
@@ -19,7 +17,6 @@ import {
 import { Cog8ToothIcon } from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
-import { toast } from "react-toastify";
 
 //-- Utility Functions --//
 import classNames from "../../Util/classNames";
@@ -28,14 +25,12 @@ import { getUserPermissions } from "./Subscriptions/Util/getUserPermissions";
 import { getUserClickwrapData } from "./DataPrivacy/Clickwrap/Util/getUserClickwrapData";
 
 //-- Data Objects, Types --//
-import { AxiosError } from "axios";
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function AccountOutlet() {
   //== React State, Custom Hooks ==//
   const AccountContext = useAccountContext();
   const { getAccessTokenSilently } = useAuth0();
-  const { showBoundary } = useErrorBoundary();
   const location = useLocation();
 
   //-- Navigation items, determine current item --//
