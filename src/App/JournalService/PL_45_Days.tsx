@@ -5,6 +5,8 @@ import { useEffect, useState, useRef } from "react";
 import { useJournalContext } from "../../Context/JournalContext";
 import { ErrorBoundary } from "react-error-boundary";
 import { EChartsFallback } from "../ECharts/EChartsFallback";
+import EChartWrapper from "../ECharts/EChartWrapper";
+
 import PL_45_Days_Config from "./PL_45_Days_Config";
 
 //-- NPM Components --//
@@ -14,7 +16,6 @@ import PL_45_Days_Config from "./PL_45_Days_Config";
 //-- NPM Functions --//
 
 //-- Utility Functions --//
-import classNames from "../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
@@ -33,25 +34,22 @@ export default function PL_45_Days() {
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    // TODO - refactor this div and tailwind CSS into a wrapper
-    <div
-      className={classNames(
-        `h-full w-full`,
-        "flex flex-col rounded-2xl px-3 pb-3 pt-4 shadow-md",
-        "ring-1 ring-inset ring-zinc-800/10 dark:ring-zinc-100/10",
-        "bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-100",
-        !JC.pl45DaysFetched || JC.pl45DaysUpdating ? "animate-pulse" : ""
-      )}
-    >
-      {/* Title */}
-      <p className="mx-8 text-center font-medium text-zinc-600 dark:text-zinc-200">
-        Profit & Loss, Trading Days in Past 45 Calendar Days
-      </p>
+    <>
+      {/* Start of PL 45 Days */}
+      <EChartWrapper
+        fetched={JC.pl45DaysFetched}
+        updating={JC.pl45DaysUpdating}
+        title={"Profit & Loss, Trading Days in Past 45 Calendar Days"}
+      >
+        <ErrorBoundary FallbackComponent={EChartsFallback}>
+          <PL_45_Days_Config />
+        </ErrorBoundary>
+      </EChartWrapper>
+      {/* End of PL 45 Days */}
 
-      {/* Chart and Fallback */}
-      <ErrorBoundary FallbackComponent={EChartsFallback}>
-        <PL_45_Days_Config />
-      </ErrorBoundary>
-    </div>
+      {/* Start of  */}
+
+      {/* End of  */}
+    </>
   );
 }
