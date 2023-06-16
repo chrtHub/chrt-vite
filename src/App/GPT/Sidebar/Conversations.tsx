@@ -35,7 +35,7 @@ export default function Conversations() {
   return (
     <div className="flex h-full flex-col">
       {/*-- DIVIDER --*/}
-      <div className="mb-0.5 mt-1.5">
+      <div className="mb-0.5">
         <div
           className={classNames(
             "rounded-full border-t-2 border-zinc-300 dark:border-zinc-500"
