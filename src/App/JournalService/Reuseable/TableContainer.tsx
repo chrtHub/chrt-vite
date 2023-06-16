@@ -13,7 +13,7 @@ import "react-resizable/css/styles.css";
 //== NPM Functions ==//
 
 //== Utility Functions ==//
-import classNames from "../../Util/classNames";
+import classNames from "../../../Util/classNames";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
@@ -23,7 +23,7 @@ interface IProps extends PropsWithChildren {
   fetched: boolean;
   updating: boolean;
 }
-export default function EChartContainer({
+export default function TableContainer({
   children,
   title,
   fetched,

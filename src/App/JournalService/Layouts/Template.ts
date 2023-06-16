@@ -17,6 +17,15 @@ const chrt_1_default = [
     minW: 4,
     minH: 6,
   },
+  {
+    i: "StatsTable",
+    x: 0,
+    y: 0,
+    w: 6,
+    h: 8,
+    minW: 4,
+    minH: 6,
+  },
 ];
 
 export const chrt_1 = {

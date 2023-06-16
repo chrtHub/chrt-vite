@@ -2,9 +2,11 @@
 
 //-- TSX Components --//
 import CTA401Fallback from "./CTA401Fallback";
-import { chrt_1 } from "./Layouts/Templates";
+import { chrt_1 } from "./Layouts/Template";
 
 import PL_45_Days from "./Charts/PL_45_Days";
+
+import StatsTable from "./Tables/StatsTable";
 
 //-- NPM Components --//
 import { WidthProvider, Responsive } from "react-grid-layout";
@@ -120,6 +122,13 @@ export default function Journal() {
             <DraggableHandle />
           </div>
           {/* END OF AGG_PL_45_DAYS */}
+
+          {/* START OF STATS TABLE */}
+          <div key="StatsTable" className="rounded-lg py-1">
+            <StatsTable />
+            <DraggableHandle />
+          </div>
+          {/* END OF STATS TABLE */}
 
           {/* ----- End of Charts ----- */}
         </ResponsiveGridLayout>

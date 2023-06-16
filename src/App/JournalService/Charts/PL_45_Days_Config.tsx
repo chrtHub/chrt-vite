@@ -6,7 +6,7 @@ import { useSiteContext } from "../../../Context/SiteContext";
 import { useErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components --//
-import EChartInit from "../../ECharts/EChartInit";
+import EChartInit from "../Reuseable/EChartInit";
 
 //-- NPM Components --//
 

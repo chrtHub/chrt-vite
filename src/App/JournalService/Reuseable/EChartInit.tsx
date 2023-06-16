@@ -1,6 +1,6 @@
 //-- react, react-router-dom, Auth0 --//
 import { useEffect, useRef } from "react";
-import { useSiteContext } from "../../Context/SiteContext";
+import { useSiteContext } from "../../../Context/SiteContext";
 
 //-- TSX Components --//
 

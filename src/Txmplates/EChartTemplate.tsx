@@ -4,8 +4,8 @@ import { useEffect, useState, useRef } from "react";
 //-- TSX Components --//
 import { useJournalContext } from "../Context/JournalContext";
 import { ErrorBoundary } from "react-error-boundary";
-import { EChartsFallback } from "../App/ECharts/EChartsFallback";
-import EChartContainer from "../App/ECharts/EChartContainer";
+import { EChartsFallback } from "../App/JournalService/Reuseable/EChartsFallback";
+import EChartContainer from "../App/JournalService/Reuseable/EChartContainer";
 
 import PL_45_Days_Config from "../App/JournalService/Charts/PL_45_Days_Config";
 

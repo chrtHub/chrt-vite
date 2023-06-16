@@ -3,7 +3,7 @@ import { useJournalContext } from "../../../Context/JournalContext";
 import { useSiteContext } from "../../../Context/SiteContext";
 
 //-- TSX Components --//
-import EChartInit from "../../ECharts/EChartInit";
+import EChartInit from "../Reuseable/EChartInit";
 
 //-- NPM Components --//
 
