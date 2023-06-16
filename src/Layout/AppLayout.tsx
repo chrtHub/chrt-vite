@@ -36,6 +36,7 @@ import classNames from "../Util/classNames";
 import chartLogo from "../Assets/twemoji_bar_chart/android-chrome-192x192.png";
 import { DARK_THEME_BG, LIGHT_THEME_BG } from "../Layout/Theme";
 import MainMenu from "./MainMenu";
+import Layouts from "../App/JournalService/Sidebar/Layouts";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function AppLayout() {
@@ -250,9 +251,10 @@ export default function AppLayout() {
                   {/* START OF SECONDARY ITEMS */}
                   <div
                     id="secondary-items-list"
-                    className="mx-2 flex-grow overflow-y-auto"
+                    className="mx-2 mb-1.5 flex-grow overflow-y-auto"
                   >
                     {pathname.startsWith("/gpt") && <Conversations />}
+                    {pathname.startsWith("/journal") && <Layouts />}
                   </div>
                   {/* END OF SECONDARY ITEMS */}
 
@@ -334,9 +336,10 @@ export default function AppLayout() {
             {/* START OF SECONDARY ITEMS */}
             <div
               id="secondary-items-list"
-              className="ml-3 flex-grow overflow-y-auto"
+              className="my-1.5 ml-3 flex-grow overflow-y-auto"
             >
               {pathname.startsWith("/gpt") && <Conversations />}
+              {pathname.startsWith("/journal") && <Layouts />}
             </div>
             {/* END OF SECONDARY ITEMS */}
 

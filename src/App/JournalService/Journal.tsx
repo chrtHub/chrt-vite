@@ -1,15 +1,17 @@
 //-- react, react-router-dom, Auth0 --//
+import { PropsWithChildren, useState } from "react";
 
 //-- TSX Components --//
 import CTA401Fallback from "./CTA401Fallback";
+import { chrt_1 } from "./Layouts/Templates";
 
-import PL_45_Days from "./PL_45_Days";
+import PL_45_Days from "./Charts/PL_45_Days";
 
 //-- NPM Components --//
 import { WidthProvider, Responsive } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import classNames from "../../Util/classNames";
+import "./rgl-overrides.css";
 
 //-- Icons --//
 import {
@@ -20,12 +22,38 @@ import {
 //-- NPM Functions --//
 
 //-- Utility Functions --//
+import classNames from "../../Util/classNames";
 
 //-- Data Objects, Environment Variables --//
+
+const DraggableHandle = () => {
+  return (
+    <div
+      className={classNames(
+        "react-grid-dragHandle cursor-move",
+        "absolute right-0 top-0 z-20 mr-1.5 mt-2.5 rounded-full p-2",
+        "text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800",
+        "dark:text-zinc-300 dark:hover:bg-zinc-600 dark:hover:text-zinc-100"
+      )}
+    >
+      <ArrowsPointingOutIcon
+        className="h-5 w-5"
+        style={{ transform: "rotate(45deg)" }}
+      />
+    </div>
+  );
+};
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Journal() {
   //-- React State --//
+  // const initialLayouts = localStorage.getItem("rgl") || {};
+  // console.log("initialLayouts:", initialLayouts); // DEV
+
+  // const [layouts, setLayouts] = useState(
+  //   JSON.parse(JSON.stringify(initialLayouts))
+  // );
+  // console.log("layouts:", layouts); // DEV
 
   //-- Auth0 --//
 
@@ -34,9 +62,16 @@ export default function Journal() {
   //-- Other --//
   const ResponsiveGridLayout = WidthProvider(Responsive);
 
-  let layouts = [{}];
+  //-- Handlers --//
+  const onLayoutChange = (layout: {}, layouts: {}) => {
+    console.log("onLayoutChange: ", layouts); // DEV
+    // localStorage.setItem("rgl", JSON.stringify(layouts)); // todo
+    // setLayouts(layouts);
+  };
 
-  //-- Click Handlers --//
+  // const resetLayout = () => {
+  //   setLayouts({});
+  // };
 
   //-- Side Effects --//
 
@@ -44,49 +79,43 @@ export default function Journal() {
     <>
       <CTA401Fallback />
 
-      {/* Grid Layout */}
+      {/* ----- Grid Layout ----- */}
       <div className="h-full w-full">
         <ResponsiveGridLayout
           className="layout"
-          // layouts={}
-          cols={{ lg: 12, md: 8, sm: 4, xs: 4, xxs: 4 }}
+          layouts={chrt_1}
+          onLayoutChange={onLayoutChange}
+          breakpoints={{ lg: 1024, md: 768, sm: 640, xs: 1, xxs: 0 }} //-- Matching Tailwind CSS --//
           rowHeight={30}
+          cols={{ lg: 12, md: 12, sm: 4, xs: 4, xxs: 4 }} //-- Aribtrary --//
+          // margin={{ lg: [10, 10] }}
+          // containerPadding={{ lg: [10, 10] }}
           resizeHandles={["se"]}
           resizeHandle={
-            <div
+            <span
               className={classNames(
-                "react-resizable-handle cursor-se-resize",
-                "absolute bottom-0 right-0 mb-2 mr-2 rounded-full",
-                "hover:bg-zinc-200"
+                "react-resize-handle cursor-se-resize",
+                "absolute bottom-0 right-0 z-20 mb-2.5 mr-1.5 rounded-full p-2",
+                "text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800",
+                "dark:text-zinc-300 dark:hover:bg-zinc-600 dark:hover:text-zinc-100"
               )}
-            />
+            >
+              <ArrowDownRightIcon className="h-5 w-5" />
+            </span>
           }
           draggableHandle=".react-grid-dragHandle"
         >
-          <div
-            key="a"
-            data-grid={{
-              x: 0,
-              y: 0,
-              w: 12,
-              h: 8,
-              minW: 4,
-              minH: 6,
-            }}
-            className="rounded-lg py-1"
-          >
-            <div className="react-grid-dragHandle bg-zing-900 absolute right-0 top-0 mr-2 mt-2 cursor-move rounded-full p-2 hover:bg-zinc-200">
-              <ArrowsPointingOutIcon
-                className="h-5 w-5"
-                style={{ transform: "rotate(45deg)" }}
-              />
-            </div>
+          {/* ----- Charts ----- */}
+          {/* START OF PL_45_Days */}
+          <div key="a" className="rounded-lg py-1">
+            <DraggableHandle />
             <PL_45_Days />
           </div>
+          {/* END OF PL_45_Days */}
+
+          {/* End of Charts */}
         </ResponsiveGridLayout>
       </div>
     </>
   );
 }
-
-// resizeHandle={<div className="absolute bottom-0 right-0">foo</div>}
