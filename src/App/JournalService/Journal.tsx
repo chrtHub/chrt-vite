@@ -82,6 +82,7 @@ export default function Journal() {
       {/* ----- Grid Layout ----- */}
       <div className="h-full w-full">
         <ResponsiveGridLayout
+          style={{ transition: "none" }}
           className="layout"
           layouts={chrt_1}
           onLayoutChange={onLayoutChange}

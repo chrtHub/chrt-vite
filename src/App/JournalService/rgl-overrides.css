@@ -7,3 +7,12 @@
 .dark .react-grid-item.react-grid-placeholder {
   @apply rounded-2xl bg-green-600;
 }
+
+/* disable transition */
+/* https://github.com/react-grid-layout/react-grid-layout/issues/103 */
+.react-grid-item.cssTransforms {
+  transition-property: none;
+}
+.animated .react-grid-item.cssTransforms {
+  transition-property: transform;
+}

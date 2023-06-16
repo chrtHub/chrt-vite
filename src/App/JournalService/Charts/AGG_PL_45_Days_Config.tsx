@@ -1,9 +1,6 @@
 //-- react, react-router-dom, Auth0 --//
-import { useEffect } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
 import { useJournalContext } from "../../../Context/JournalContext";
 import { useSiteContext } from "../../../Context/SiteContext";
-import { useErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components --//
 import EChartInit from "../../ECharts/EChartInit";
@@ -13,27 +10,21 @@ import EChartInit from "../../ECharts/EChartInit";
 //-- Icons --//
 
 //-- NPM Functions --//
-import axios from "axios";
 import { format, parseISO } from "date-fns";
 import numeral from "numeral";
 
 //-- Utility Functions --//
-import { throwAxiosError } from "../../../Errors/throwAxiosError"; // DEV
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { DateAndProfitRow, PL45DayRow } from "../Types/journal_types";
 import { zinc, green } from "../../../Util/TailwindPalette";
-let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function AGG_PL_45_Days_Config() {
   //== React State, Custom Hooks ==//
   let JC = useJournalContext();
   let SC = useSiteContext();
-  const { showBoundary } = useErrorBoundary();
 
   //== Auth ==//
-  const { getAccessTokenSilently } = useAuth0();
 
   //== Other [ECharts options] ==//
   const option = {
