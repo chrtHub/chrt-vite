@@ -14,7 +14,10 @@ import "react-resizable/css/styles.css";
 import "./rgl-overrides.css";
 
 //-- Icons --//
-import { ArrowsPointingOutIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowDownRightIcon,
+  ArrowsPointingOutIcon,
+} from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
 
@@ -27,7 +30,8 @@ const DraggableHandle = () => {
   return (
     <div
       className={classNames(
-        "react-grid-dragHandle bg-zing-900 absolute right-0 top-0 mr-2 mt-2 cursor-move rounded-full p-2",
+        "react-grid-dragHandle cursor-move",
+        "absolute right-0 top-0 z-20 mr-1.5 mt-2.5 rounded-full p-2",
         "text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800",
         "dark:text-zinc-300 dark:hover:bg-zinc-600 dark:hover:text-zinc-100"
       )}
@@ -87,16 +91,17 @@ export default function Journal() {
           // margin={{ lg: [10, 10] }}
           // containerPadding={{ lg: [10, 10] }}
           resizeHandles={["se"]}
-          // TODO - better styling for resizeHandle
           resizeHandle={
-            <div
+            <span
               className={classNames(
-                "react-resizable-handle cursor-se-resize",
-                "absolute bottom-3 right-3 rounded-full",
-                "hover:bg-zinc-200",
-                "dark:bg-zinc-500 dark:hover:bg-zinc-500"
+                "react-resize-handle cursor-se-resize",
+                "absolute bottom-0 right-0 z-20 mb-2.5 mr-1.5 rounded-full p-2",
+                "text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800",
+                "dark:text-zinc-300 dark:hover:bg-zinc-600 dark:hover:text-zinc-100"
               )}
-            />
+            >
+              <ArrowDownRightIcon className="h-5 w-5" />
+            </span>
           }
           draggableHandle=".react-grid-dragHandle"
         >

@@ -1,9 +1,9 @@
 /* Light mode */
 .react-grid-item.react-grid-placeholder {
-  @apply rounded-lg bg-green-500;
+  @apply rounded-2xl bg-green-500;
 }
 
 /* Dark mode */
 .dark .react-grid-item.react-grid-placeholder {
-  @apply rounded-lg bg-green-600;
+  @apply rounded-2xl bg-green-600;
 }
