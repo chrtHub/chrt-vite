@@ -44,7 +44,7 @@ export default function PL_45_Days() {
       )}
     >
       {/* Title */}
-      <p className="text-center font-medium text-zinc-600 dark:text-zinc-200">
+      <p className="mx-8 text-center font-medium text-zinc-600 dark:text-zinc-200">
         Profit & Loss, Trading Days in Past 45 Calendar Days
       </p>
 

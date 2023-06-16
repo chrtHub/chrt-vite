@@ -1,4 +1,5 @@
 //-- react, react-router-dom, Auth0 --//
+import { useState } from "react";
 
 //-- TSX Components --//
 import CTA401Fallback from "./CTA401Fallback";
@@ -26,6 +27,13 @@ import {
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Journal() {
   //-- React State --//
+  const initialLayouts = localStorage.getItem("rgl") || {};
+  console.log("initialLayouts:", initialLayouts); // DEV
+
+  const [layouts, setLayouts] = useState(
+    JSON.parse(JSON.stringify(initialLayouts))
+  );
+  console.log("layouts:", layouts); // DEV
 
   //-- Auth0 --//
 
@@ -34,9 +42,30 @@ export default function Journal() {
   //-- Other --//
   const ResponsiveGridLayout = WidthProvider(Responsive);
 
-  let layouts = [{}];
+  const layout = [
+    {
+      i: "a",
+      x: 0,
+      y: 0,
+      w: 12,
+      h: 8,
+      minW: 4,
+      minH: 6,
+    },
+  ];
 
-  //-- Click Handlers --//
+  //-- Handlers --//
+  const onLayoutChange = (layout: {}, layouts: {}) => {
+    console.log("layout: ", layout); // DEV
+    console.log("layouts: ", layouts); // DEV
+
+    localStorage.setItem("rgl", JSON.stringify(layouts)); // todo
+    // setLayouts(layouts);
+  };
+
+  const resetLayout = () => {
+    setLayouts({});
+  };
 
   //-- Side Effects --//
 
@@ -48,8 +77,12 @@ export default function Journal() {
       <div className="h-full w-full">
         <ResponsiveGridLayout
           className="layout"
-          // layouts={}
-          cols={{ lg: 12, md: 8, sm: 4, xs: 4, xxs: 4 }}
+          layouts={layouts}
+          onLayoutChange={onLayoutChange}
+          breakpoints={{ lg: 1024, md: 768, sm: 640, xs: 1, xxs: 0 }} //-- Matching Tailwind CSS --//
+          cols={{ lg: 12, md: 4, sm: 4, xs: 4, xxs: 4 }}
+          // margin={{ lg: [10, 10] }}
+          // containerPadding={{ lg: [10, 10] }}
           rowHeight={30}
           resizeHandles={["se"]}
           resizeHandle={
@@ -63,18 +96,7 @@ export default function Journal() {
           }
           draggableHandle=".react-grid-dragHandle"
         >
-          <div
-            key="a"
-            data-grid={{
-              x: 0,
-              y: 0,
-              w: 12,
-              h: 8,
-              minW: 4,
-              minH: 6,
-            }}
-            className="rounded-lg py-1"
-          >
+          <div key="a" className="rounded-lg py-1">
             <div className="react-grid-dragHandle bg-zing-900 absolute right-0 top-0 mr-2 mt-2 cursor-move rounded-full p-2 hover:bg-zinc-200">
               <ArrowsPointingOutIcon
                 className="h-5 w-5"
