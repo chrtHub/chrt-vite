@@ -107,16 +107,16 @@ export default function Journal() {
         >
           {/* ----- Start of Charts ----- */}
           {/* START OF PL_45_Days */}
-          <div key="a" className="rounded-lg py-1">
-            <DraggableHandle />
+          <div key="PL_45_Days" className="rounded-lg py-1">
             <PL_45_Days />
+            <DraggableHandle />
           </div>
           {/* END OF PL_45_Days */}
 
           {/* START OF AGG_PL_45_DAYS */}
-          <div key="b" className="rounded-lg py-1">
-            <DraggableHandle />
+          <div key="AGG_PL_45_Days" className="rounded-lg py-1">
             <AGG_PL_45_Days />
+            <DraggableHandle />
           </div>
           {/* END OF AGG_PL_45_DAYS */}
 

@@ -1,6 +1,6 @@
 const chrt_1_default = [
   {
-    i: "a",
+    i: "PL_45_Days",
     x: 0,
     y: 0,
     w: 12,
@@ -9,7 +9,7 @@ const chrt_1_default = [
     minH: 6,
   },
   {
-    i: "b",
+    i: "AGG_PL_45_Days",
     x: 0,
     y: 0,
     w: 12,
