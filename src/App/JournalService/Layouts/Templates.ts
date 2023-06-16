@@ -1,57 +1,28 @@
+const chrt_1_default = [
+  {
+    i: "PL_45_Days",
+    x: 0,
+    y: 0,
+    w: 12,
+    h: 8,
+    minW: 4,
+    minH: 6,
+  },
+  {
+    i: "AGG_PL_45_Days",
+    x: 0,
+    y: 0,
+    w: 12,
+    h: 8,
+    minW: 4,
+    minH: 6,
+  },
+];
+
 export const chrt_1 = {
-  lg: [
-    {
-      i: "a",
-      x: 0,
-      y: 0,
-      w: 12,
-      h: 8,
-      minW: 4,
-      minH: 6,
-    },
-  ],
-  md: [
-    {
-      i: "a",
-      x: 0,
-      y: 0,
-      w: 12,
-      h: 8,
-      minW: 4,
-      minH: 6,
-    },
-  ],
-  sm: [
-    {
-      i: "a",
-      x: 0,
-      y: 0,
-      w: 12,
-      h: 8,
-      minW: 4,
-      minH: 6,
-    },
-  ],
-  xs: [
-    {
-      i: "a",
-      x: 0,
-      y: 0,
-      w: 12,
-      h: 8,
-      minW: 4,
-      minH: 6,
-    },
-  ],
-  xxs: [
-    {
-      i: "a",
-      x: 0,
-      y: 0,
-      w: 12,
-      h: 8,
-      minW: 4,
-      minH: 6,
-    },
-  ],
+  lg: chrt_1_default,
+  md: chrt_1_default,
+  sm: chrt_1_default,
+  xs: chrt_1_default,
+  xxs: chrt_1_default,
 };

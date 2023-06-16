@@ -1,5 +1,4 @@
 //-- react, react-router-dom, Auth0 --//
-import { PropsWithChildren, useState } from "react";
 
 //-- TSX Components --//
 import CTA401Fallback from "./CTA401Fallback";
@@ -23,6 +22,7 @@ import {
 
 //-- Utility Functions --//
 import classNames from "../../Util/classNames";
+import AGG_PL_45_Days from "./Charts/AGG_PL_45_Days";
 
 //-- Data Objects, Environment Variables --//
 
@@ -105,15 +105,22 @@ export default function Journal() {
           }
           draggableHandle=".react-grid-dragHandle"
         >
-          {/* ----- Charts ----- */}
+          {/* ----- Start of Charts ----- */}
           {/* START OF PL_45_Days */}
-          <div key="a" className="rounded-lg py-1">
-            <DraggableHandle />
+          <div key="PL_45_Days" className="rounded-lg py-1">
             <PL_45_Days />
+            <DraggableHandle />
           </div>
           {/* END OF PL_45_Days */}
 
-          {/* End of Charts */}
+          {/* START OF AGG_PL_45_DAYS */}
+          <div key="AGG_PL_45_Days" className="rounded-lg py-1">
+            <AGG_PL_45_Days />
+            <DraggableHandle />
+          </div>
+          {/* END OF AGG_PL_45_DAYS */}
+
+          {/* ----- End of Charts ----- */}
         </ResponsiveGridLayout>
       </div>
     </>

@@ -26,7 +26,7 @@ import { zinc, green } from "../../../Util/TailwindPalette";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
-export default function PL_45_Days_Config() {
+export default function AGG_PL_45_Days_Config() {
   //== React State, Custom Hooks ==//
   let JC = useJournalContext();
   let SC = useSiteContext();
@@ -104,8 +104,8 @@ export default function PL_45_Days_Config() {
     series: [
       {
         name: "Quantity",
-        type: "bar",
-        data: JC.pl45Days,
+        type: "line",
+        data: JC.aggPL45Days,
         itemStyle: {
           color: function (params: any) {
             const profit = params.data[1];
@@ -122,52 +122,6 @@ export default function PL_45_Days_Config() {
   };
 
   //== Side Effects ==//
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // throwAxiosError(400); // DEV
-
-        //-- Get access token from memory or request new token --//
-        const accessToken = await getAccessTokenSilently();
-
-        //-- pl_last_45_calendar_days --//
-        const res = await axios.get(
-          `${VITE_ALB_BASE_URL}/journal/dashboard/pl_last_45_calendar_days`,
-          {
-            headers: {
-              authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        const data: DateAndProfitRow[] = res.data;
-        const reversedData = data.reverse();
-
-        //-- Make array for PL_45_days --//
-        const pl45Days: PL45DayRow[] = reversedData.map((x) => {
-          return [x.date, x.profit];
-        });
-
-        //-- Calculate Agg_PL_45_Days --//
-        const aggPL45Days: PL45DayRow[] = [];
-        let aggPL: number = 0;
-        for (const row of data) {
-          aggPL += parseFloat(row.profit);
-          aggPL45Days.push([row.date, String(aggPL)]);
-        }
-
-        //-- Update state in context --//
-        JC.setPL45Days(pl45Days);
-        JC.setAggPL45Days(aggPL45Days);
-      } catch (err) {
-        //-- Show error boundary --//
-        showBoundary(err);
-      } finally {
-        //-- Set fetched --//
-        JC.setPL45DaysFetched(true);
-      }
-    };
-    fetchData();
-  }, [getAccessTokenSilently]);
 
   //== Handlers ==//
 

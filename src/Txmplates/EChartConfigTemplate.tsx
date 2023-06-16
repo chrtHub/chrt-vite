@@ -1,12 +1,12 @@
 //-- react, react-router-dom, Auth0 --//
 import { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useJournalContext } from "../../../Context/JournalContext";
-import { useSiteContext } from "../../../Context/SiteContext";
+import { useJournalContext } from "../Context/JournalContext";
+import { useSiteContext } from "../Context/SiteContext";
 import { useErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components --//
-import EChartInit from "../../ECharts/EChartInit";
+import EChartInit from "../App/ECharts/EChartInit";
 
 //-- NPM Components --//
 
@@ -18,11 +18,14 @@ import { format, parseISO } from "date-fns";
 import numeral from "numeral";
 
 //-- Utility Functions --//
-import { throwAxiosError } from "../../../Errors/throwAxiosError"; // DEV
+import { throwAxiosError } from "../Errors/throwAxiosError"; // DEV
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { DateAndProfitRow, PL45DayRow } from "../Types/journal_types";
-import { zinc, green } from "../../../Util/TailwindPalette";
+import {
+  DateAndProfitRow,
+  PL45DayRow,
+} from "../App/JournalService/Types/journal_types";
+import { zinc, green } from "../Util/TailwindPalette";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
@@ -128,10 +131,10 @@ export default function PL_45_Days_Config() {
         // throwAxiosError(400); // DEV
 
         //-- Get access token from memory or request new token --//
-        const accessToken = await getAccessTokenSilently();
+        let accessToken = await getAccessTokenSilently();
 
         //-- pl_last_45_calendar_days --//
-        const res = await axios.get(
+        let res = await axios.get(
           `${VITE_ALB_BASE_URL}/journal/dashboard/pl_last_45_calendar_days`,
           {
             headers: {
@@ -139,25 +142,16 @@ export default function PL_45_Days_Config() {
             },
           }
         );
-        const data: DateAndProfitRow[] = res.data;
-        const reversedData = data.reverse();
+        let data: DateAndProfitRow[] = res.data;
 
-        //-- Make array for PL_45_days --//
-        const pl45Days: PL45DayRow[] = reversedData.map((x) => {
+        //-- Make array for dates and profits --//
+        let datesAndProfits: PL45DayRow[] = data.map((x) => {
           return [x.date, x.profit];
         });
+        let reversedDatesAndProfits = datesAndProfits.reverse();
 
-        //-- Calculate Agg_PL_45_Days --//
-        const aggPL45Days: PL45DayRow[] = [];
-        let aggPL: number = 0;
-        for (const row of data) {
-          aggPL += parseFloat(row.profit);
-          aggPL45Days.push([row.date, String(aggPL)]);
-        }
-
-        //-- Update state in context --//
-        JC.setPL45Days(pl45Days);
-        JC.setAggPL45Days(aggPL45Days);
+        //-- Set state --//
+        JC.setPL45Days(reversedDatesAndProfits);
       } catch (err) {
         //-- Show error boundary --//
         showBoundary(err);

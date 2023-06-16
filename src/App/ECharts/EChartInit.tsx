@@ -9,7 +9,7 @@ import * as echarts from "echarts/core";
 import {
   BarChart,
   // BarSeriesOption,
-  // LineChart,
+  LineChart,
   // LineSeriesOption,
 } from "echarts/charts";
 import {
@@ -24,20 +24,23 @@ import {
   TransformComponent,
   LegendComponent,
 } from "echarts/components";
+
 import { LabelLayout, UniversalTransition } from "echarts/features";
 import { CanvasRenderer } from "echarts/renderers";
-import classNames from "../../Util/classNames";
+
 // type ECOption = echarts.ComposeOption<
-//   | BarSeriesOption
-//   | LineSeriesOption
+// | BarSeriesOption
+// | LineSeriesOption
 //   | TitleComponentOption
 //   | TooltipComponentOption
 //   | GridComponentOption
 //   | DatasetComponentOption
 // >;
+
 echarts.use([
   //-- Charts --//
   BarChart,
+  LineChart,
   //-- Components --//
   TitleComponent,
   TooltipComponent,
