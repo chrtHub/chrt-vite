@@ -23,7 +23,7 @@ interface IProps extends PropsWithChildren {
   fetched: boolean;
   updating: boolean;
 }
-export default function ComponentName({
+export default function EChartContainer({
   children,
   title,
   fetched,

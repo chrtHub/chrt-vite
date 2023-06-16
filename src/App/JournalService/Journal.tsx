@@ -5,7 +5,7 @@ import { PropsWithChildren, useState } from "react";
 import CTA401Fallback from "./CTA401Fallback";
 import { chrt_1 } from "./Layouts/Templates";
 
-import PL_45_Days from "./PL_45_Days";
+import PL_45_Days from "./Charts/PL_45_Days";
 
 //-- NPM Components --//
 import { WidthProvider, Responsive } from "react-grid-layout";
@@ -21,6 +21,23 @@ import { ArrowsPointingOutIcon } from "@heroicons/react/24/solid";
 //-- Utility Functions --//
 
 //-- Data Objects, Environment Variables --//
+
+const DraggableHandle = () => {
+  return (
+    <div
+      className={classNames(
+        "react-grid-dragHandle bg-zing-900 absolute right-0 top-0 mr-2 mt-2 cursor-move rounded-full p-2",
+        "text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800",
+        "dark:text-zinc-300 dark:hover:bg-zinc-600 dark:hover:text-zinc-100"
+      )}
+    >
+      <ArrowsPointingOutIcon
+        className="h-5 w-5"
+        style={{ transform: "rotate(45deg)" }}
+      />
+    </div>
+  );
+};
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Journal() {
@@ -73,8 +90,8 @@ export default function Journal() {
             <div
               className={classNames(
                 "react-resizable-handle cursor-se-resize",
-                "absolute bottom-0 right-0 mb-2 mr-2 rounded-full",
-                "hover:bg-zinc-200"
+                "absolute bottom-3 right-3 rounded-full",
+                "hover:bg-zinc-200 dark:bg-zinc-600 dark:hover:bg-zinc-500"
               )}
             />
           }
@@ -96,14 +113,3 @@ export default function Journal() {
 }
 
 // resizeHandle={<div className="absolute bottom-0 right-0">foo</div>}
-
-const DraggableHandle = () => {
-  return (
-    <div className="react-grid-dragHandle bg-zing-900 absolute right-0 top-0 mr-2 mt-2 cursor-move rounded-full p-2 hover:bg-zinc-200">
-      <ArrowsPointingOutIcon
-        className="h-5 w-5"
-        style={{ transform: "rotate(45deg)" }}
-      />
-    </div>
-  );
-};
