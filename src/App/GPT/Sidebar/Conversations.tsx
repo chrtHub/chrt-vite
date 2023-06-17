@@ -30,16 +30,6 @@ export default function Conversations() {
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <div className="flex h-full flex-col">
-      {/*-- DIVIDER --*/}
-      <div className="mb-0.5">
-        <div
-          className={classNames(
-            "rounded-full border-t-2 border-zinc-300 dark:border-zinc-500"
-          )}
-          aria-hidden="true"
-        />
-      </div>
-
       {/* 'New Conversation' Button, 'Sort By' Button Group */}
       <div className="mb-1.5 flex flex-col justify-center">
         {/* 'New Conversation' Button */}
