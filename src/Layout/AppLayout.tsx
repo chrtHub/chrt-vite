@@ -384,7 +384,7 @@ export default function AppLayout() {
             <div
               className={classNames(
                 `${LIGHT_THEME_BG} ${DARK_THEME_BG}`,
-                "sticky top-0 z-30 flex h-16 flex-shrink-0"
+                "sticky top-0 flex h-16 flex-shrink-0"
               )}
             >
               {/* START OF HAMBURGER BUTTON (hidden after lg) */}
