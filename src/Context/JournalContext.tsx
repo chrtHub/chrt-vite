@@ -2,7 +2,10 @@
 import { useState, createContext, useContext, PropsWithChildren } from "react";
 
 //-- types --//
-import { PL45DayRow } from "../App/JournalService/Types/journal_types";
+import {
+  PL45DayRow,
+  StatsAllTime,
+} from "../App/JournalService/Types/journal_types";
 
 //-- Create interface and Context --//
 export interface IJournalContext {
@@ -19,8 +22,8 @@ export interface IJournalContext {
   pl45DaysUpdating: boolean;
   setPL45DaysUpdating: React.Dispatch<React.SetStateAction<boolean>>;
   //-- Stats All Time --//
-  statsAllTime: {}; // todo - define keys
-  setStatsAllTime: React.Dispatch<React.SetStateAction<{}>>; // todo - define keys
+  statsAllTime: StatsAllTime | null;
+  setStatsAllTime: React.Dispatch<React.SetStateAction<StatsAllTime | null>>;
   statsAllTimeFetched: boolean;
   setStatsAllTimeFetched: React.Dispatch<React.SetStateAction<boolean>>;
   statsAllTimeUpdating: boolean;
@@ -55,7 +58,7 @@ function JournalContextProvider({ children }: PropsWithChildren) {
   const [pl45DaysFetched, setPL45DaysFetched] = useState<boolean>(false);
   const [pl45DaysUpdating, setPL45DaysUpdating] = useState<boolean>(false);
   //-- Stats All Time --//
-  const [statsAllTime, setStatsAllTime] = useState<{}>({}); // todo - define keys
+  const [statsAllTime, setStatsAllTime] = useState<StatsAllTime | null>(null);
   const [statsAllTimeFetched, setStatsAllTimeFetched] =
     useState<boolean>(false);
   const [statsAllTimeUpdating, setStatsAllTimeUpdating] =
