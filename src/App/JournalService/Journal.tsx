@@ -110,21 +110,21 @@ export default function Journal() {
         >
           {/* ----- Start of Charts ----- */}
           {/* START OF PL_45_Days */}
-          <div key="PL_45_Days" className="rounded-lg py-1">
+          <div key="PL_45_Days" className="rounded-lg">
             <PL_45_Days />
             <DraggableHandle />
           </div>
           {/* END OF PL_45_Days */}
 
           {/* START OF AGG_PL_45_DAYS */}
-          <div key="AGG_PL_45_Days" className="rounded-lg py-1">
+          <div key="AGG_PL_45_Days" className="rounded-lg">
             <AGG_PL_45_Days />
             <DraggableHandle />
           </div>
           {/* END OF AGG_PL_45_DAYS */}
 
           {/* START OF STATS TABLE */}
-          <div key="StatsTable" className="rounded-lg py-1">
+          <div key="StatsTable" className="rounded-lg">
             <StatsTable />
             <DraggableHandle />
           </div>

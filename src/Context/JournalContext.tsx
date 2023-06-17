@@ -9,7 +9,7 @@ export interface IJournalContext {
   //-- Files --//
   filesListState: IFileMetadata[];
   setFilesList: React.Dispatch<React.SetStateAction<IFileMetadata[]>>;
-  //-- Charts --//
+  //-- PL 45 Days --//
   pl45Days: PL45DayRow[] | null;
   setPL45Days: React.Dispatch<React.SetStateAction<PL45DayRow[] | null>>;
   aggPL45Days: PL45DayRow[] | null;
@@ -18,7 +18,7 @@ export interface IJournalContext {
   setPL45DaysFetched: React.Dispatch<React.SetStateAction<boolean>>;
   pl45DaysUpdating: boolean;
   setPL45DaysUpdating: React.Dispatch<React.SetStateAction<boolean>>;
-  //-- Stats --//
+  //-- Stats All Time --//
   statsAllTime: {}; // todo - define keys
   setStatsAllTime: React.Dispatch<React.SetStateAction<{}>>; // todo - define keys
   statsAllTimeFetched: boolean;
@@ -49,19 +49,17 @@ function JournalContextProvider({ children }: PropsWithChildren) {
   //-- Files --//
   const [filesListState, setFilesList] =
     useState<IFileMetadata[]>(defaultFilesList);
-  //-- Charts --//
+  //-- PL 45 Days --//
   const [pl45Days, setPL45Days] = useState<PL45DayRow[] | null>(null);
   const [aggPL45Days, setAggPL45Days] = useState<PL45DayRow[] | null>(null);
   const [pl45DaysFetched, setPL45DaysFetched] = useState<boolean>(false);
   const [pl45DaysUpdating, setPL45DaysUpdating] = useState<boolean>(false);
-  //----//
+  //-- Stats All Time --//
   const [statsAllTime, setStatsAllTime] = useState<{}>({}); // todo - define keys
   const [statsAllTimeFetched, setStatsAllTimeFetched] =
     useState<boolean>(false);
   const [statsAllTimeUpdating, setStatsAllTimeUpdating] =
     useState<boolean>(false);
-  //----//
-
   //-- ***** ***** END OF STATE VALUES ***** ***** --//
 
   //-- ***** Bundle values into journalContextValue *****--//
@@ -69,7 +67,7 @@ function JournalContextProvider({ children }: PropsWithChildren) {
     //-- Files --//
     filesListState,
     setFilesList,
-    //-- Charts --//
+    //-- PL 45 Days --//
     pl45Days,
     setPL45Days,
     aggPL45Days,
@@ -78,7 +76,7 @@ function JournalContextProvider({ children }: PropsWithChildren) {
     setPL45DaysFetched,
     pl45DaysUpdating,
     setPL45DaysUpdating,
-    //-- Stats --//
+    //-- Stats All Time --//
     statsAllTime,
     setStatsAllTime,
     statsAllTimeFetched,

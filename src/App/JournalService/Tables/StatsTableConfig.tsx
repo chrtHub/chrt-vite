@@ -11,10 +11,9 @@ import { useJournalContext } from "../../../Context/JournalContext";
 //== Icons ==//
 
 //== NPM Functions ==//
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 
 //== Utility Functions ==//
-import { axiosErrorToaster } from "../../../Errors/axiosErrorToaster";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
@@ -41,12 +40,19 @@ export default function StatsTableConfig() {
           authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(res.data); // DEV
-      JC.setStatsAllTime(res.data);
-      //----//
+      let data = res.data; // todo - add type interface here
+
+      // todo - manipulate data if needed
+      console.log(data); // DEV
+
+      //-- Update State in Context --//
+      JC.setStatsAllTime(data);
     } catch (err) {
       console.log(err); // dev
       showBoundary(err);
+    } finally {
+      //-- Set fetched --//
+      JC.setStatsAllTimeFetched(true);
     }
   };
   //== Side Effects ==//
@@ -60,7 +66,10 @@ export default function StatsTableConfig() {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center px-2">
       <p className="text-xl font-medium text-zinc-500">being built...</p>
-      <p className="mt-2 text-zinc-700 dark:text-zinc-200">{JC.statsAllTime}</p>
+      {/* Very DEV */}
+      <p className="mt-2 text-zinc-700 dark:text-zinc-200">
+        {JC.statsAllTime.toString()}
+      </p>
     </div>
   );
 }

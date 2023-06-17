@@ -35,8 +35,8 @@ export default function StatsTable() {
   return (
     <>
       <TableContainer
-        fetched={true} // TODO
-        updating={false} // TODO
+        fetched={JC.statsAllTimeFetched}
+        updating={JC.statsAllTimeUpdating}
         title={"Stats Table (All Time)"}
       >
         <ErrorBoundary FallbackComponent={EChartsFallback}>

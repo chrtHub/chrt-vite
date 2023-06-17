@@ -19,9 +19,9 @@ const chrt_1_default = [
   },
   {
     i: "AGG_PL_45_Days",
-    x: 0,
-    y: 16,
-    w: 12,
+    x: 8,
+    y: 0,
+    w: 6,
     h: 8,
     minW: 4,
     minH: 6,
