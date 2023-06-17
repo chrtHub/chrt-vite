@@ -43,7 +43,7 @@ export default function StatsTableConfig() {
       let data = res.data; // todo - add type interface here
 
       // todo - manipulate data if needed
-      console.log(data.totalTrades); // DEV
+      console.log(data); // DEV
 
       //-- Update State in Context --//
       JC.setStatsAllTime(data);
@@ -66,7 +66,7 @@ export default function StatsTableConfig() {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center px-2">
       {/* DEV */}
-      <p className="mt-2 text-zinc-700 dark:text-zinc-200">
+      <p className="mt-2 break-words text-zinc-700 dark:text-zinc-200">
         {JSON.stringify(JC.statsAllTime)}
       </p>
     </div>
