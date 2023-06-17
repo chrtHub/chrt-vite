@@ -96,7 +96,7 @@ export default function PL_45_Days_Config() {
       type: "value",
       axisLabel: {
         formatter: function (x: any) {
-          let valueStr = numeral(x).format("$0,0");
+          let valueStr = numeral(x).format("$0,0a");
           return `${valueStr}`;
         },
       },
