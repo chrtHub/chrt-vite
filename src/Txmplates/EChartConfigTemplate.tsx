@@ -22,8 +22,8 @@ import { throwAxiosError } from "../Errors/throwAxiosError"; // DEV
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import {
-  DateAndProfitRow,
-  PL45DayRow,
+  IDateAndProfitRow,
+  IPL45DayRow,
 } from "../App/JournalService/Types/journal_types";
 import { zinc, green } from "../Util/TailwindPalette";
 let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
@@ -142,10 +142,10 @@ export default function PL_45_Days_Config() {
             },
           }
         );
-        let data: DateAndProfitRow[] = res.data;
+        let data: IDateAndProfitRow[] = res.data;
 
         //-- Make array for dates and profits --//
-        let datesAndProfits: PL45DayRow[] = data.map((x) => {
+        let datesAndProfits: IPL45DayRow[] = data.map((x) => {
           return [x.date, x.profit];
         });
         let reversedDatesAndProfits = datesAndProfits.reverse();

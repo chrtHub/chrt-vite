@@ -1,15 +1,14 @@
 //-- react, react-router-dom, Auth0 --//
+import { useState, useMemo } from "react";
 
 //-- TSX Components --//
 import CTA401Fallback from "./CTA401Fallback";
-import { chrt_1 } from "./Layouts/Template";
-
+import { useJournalContext } from "../../Context/JournalContext";
 import PL_45_Days from "./Charts/PL_45_Days";
-
 import StatsTable from "./Tables/StatsTable";
 
 //-- NPM Components --//
-import { WidthProvider, Responsive } from "react-grid-layout";
+import { WidthProvider, Responsive, Layouts, Layout } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import "./rgl-overrides.css";
@@ -25,9 +24,11 @@ import {
 //-- Utility Functions --//
 import classNames from "../../Util/classNames";
 import AGG_PL_45_Days from "./Charts/AGG_PL_45_Days";
+import { chrt_1 } from "./Layouts/Template";
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
 
 //-- Data Objects, Environment Variables --//
-
 const DraggableHandle = () => {
   return (
     <div
@@ -45,35 +46,21 @@ const DraggableHandle = () => {
     </div>
   );
 };
-
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Journal() {
   //-- React State --//
-  // const initialLayouts = localStorage.getItem("rgl") || {};
-  // console.log("initialLayouts:", initialLayouts); // DEV
-
-  // const [layouts, setLayouts] = useState(
-  //   JSON.parse(JSON.stringify(initialLayouts))
-  // );
-  // console.log("layouts:", layouts); // DEV
+  const JC = useJournalContext();
 
   //-- Auth0 --//
 
   //-- Data Fetching --//
 
   //-- Other --//
-  const ResponsiveGridLayout = WidthProvider(Responsive);
 
   //-- Handlers --//
-  const onLayoutChange = (layout: {}, layouts: {}) => {
-    console.log("onLayoutChange: ", layouts); // DEV
-    // localStorage.setItem("rgl", JSON.stringify(layouts)); // todo
-    // setLayouts(layouts);
-  };
-
-  // const resetLayout = () => {
-  //   setLayouts({});
-  // };
+  // const onResetLayouts = () => {
+  //   JC.setLayouts(JC.defaultLayouts)
+  // }
 
   //-- Side Effects --//
 
@@ -87,12 +74,16 @@ export default function Journal() {
           style={{ transition: "none" }}
           className="layout"
           layouts={chrt_1}
-          onLayoutChange={onLayoutChange}
-          breakpoints={{ lg: 1024, md: 768, sm: 640, xs: 1, xxs: 0 }} //-- Matching Tailwind CSS --//
+          // onLayoutChange={onLayoutChange}
+          breakpoints={{
+            lg: 1024, //-- 12 cols --//
+            md: 768, //-- 12 cols --//
+            sm: 640, //-- 4 cols --//
+            xs: 1, //-- 4 cols --//
+            xxs: 0, //-- 4 cols --//
+          }} //-- Matching Tailwind CSS - but note that this is for the container, not the screen --//
           rowHeight={30}
           cols={{ lg: 12, md: 12, sm: 4, xs: 4, xxs: 4 }} //-- Aribtrary --//
-          // margin={{ lg: [10, 10] }}
-          // containerPadding={{ lg: [10, 10] }}
           resizeHandles={["se"]}
           resizeHandle={
             <span
@@ -108,7 +99,7 @@ export default function Journal() {
           }
           draggableHandle=".react-grid-dragHandle"
         >
-          {/* ----- Start of Charts ----- */}
+          {/* ----- Start of Content ----- */}
           {/* START OF PL_45_Days */}
           <div key="PL_45_Days" className="rounded-lg">
             <PL_45_Days />
@@ -130,9 +121,21 @@ export default function Journal() {
           </div>
           {/* END OF STATS TABLE */}
 
-          {/* ----- End of Charts ----- */}
+          {/* ----- End of Content ----- */}
         </ResponsiveGridLayout>
       </div>
     </>
   );
 }
+// const initialLayouts = localStorage.getItem("rgl") || {};
+
+// const [layouts, setLayouts] = useState(
+//   JSON.parse(JSON.stringify(initialLayouts))
+// );
+
+// const onLayoutChange = (currentLayout: Layout[], allLayouts: Layouts) => {
+//   console.log("onLayoutChange, currentLayout: ", currentLayout); // DEV
+//   console.log("onLayoutChange, allLayouts: ", allLayouts); // DEV
+//   // localStorage.setItem("rgl", JSON.stringify(allLayouts)); // todo
+//   // setLayouts(allLayouts);
+// };

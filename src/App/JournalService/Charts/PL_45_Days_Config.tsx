@@ -21,15 +21,15 @@ import numeral from "numeral";
 import { throwAxiosError } from "../../../Errors/throwAxiosError"; // DEV
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { DateAndProfitRow, PL45DayRow } from "../Types/journal_types";
+import { IDateAndProfitRow, IPL45DayRow } from "../Types/journal_types";
 import { zinc, green, red, rose } from "../../../Util/TailwindPalette";
-let VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
+const VITE_ALB_BASE_URL = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function PL_45_Days_Config() {
   //== React State, Custom Hooks ==//
-  let JC = useJournalContext();
-  let SC = useSiteContext();
+  const JC = useJournalContext();
+  const SC = useSiteContext();
   const { showBoundary } = useErrorBoundary();
 
   //== Auth ==//
@@ -139,16 +139,16 @@ export default function PL_45_Days_Config() {
             },
           }
         );
-        const data: DateAndProfitRow[] = res.data;
+        const data: IDateAndProfitRow[] = res.data;
         const reversedData = data.reverse();
 
         //-- Make array for PL_45_days --//
-        const pl45Days: PL45DayRow[] = reversedData.map((x) => {
+        const pl45Days: IPL45DayRow[] = reversedData.map((x) => {
           return [x.date, x.profit];
         });
 
         //-- Calculate Agg_PL_45_Days --//
-        const aggPL45Days: PL45DayRow[] = [];
+        const aggPL45Days: IPL45DayRow[] = [];
         let aggPL: number = 0;
         for (const row of data) {
           aggPL += parseFloat(row.profit);

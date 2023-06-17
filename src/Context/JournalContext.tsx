@@ -1,29 +1,39 @@
 //-- react --//
 import { useState, createContext, useContext, PropsWithChildren } from "react";
 
+//-- tsx --//
+import { chrt_1, chrt_2 } from "../App/JournalService/Layouts/Template";
+
 //-- types --//
 import {
-  PL45DayRow,
-  StatsAllTime,
+  IPL45DayRow,
+  IStatsAllTime,
 } from "../App/JournalService/Types/journal_types";
+import { Layouts } from "react-grid-layout";
+
+import { IFileMetadata } from "../App/JournalFiles/types";
 
 //-- Create interface and Context --//
 export interface IJournalContext {
   //-- Files --//
   filesListState: IFileMetadata[];
   setFilesList: React.Dispatch<React.SetStateAction<IFileMetadata[]>>;
+  //-- react-grid-layout --//
+  defaultLayouts: Layouts;
+  layouts: Layouts;
+  setLayouts: React.Dispatch<React.SetStateAction<Layouts>>;
   //-- PL 45 Days --//
-  pl45Days: PL45DayRow[] | null;
-  setPL45Days: React.Dispatch<React.SetStateAction<PL45DayRow[] | null>>;
-  aggPL45Days: PL45DayRow[] | null;
-  setAggPL45Days: React.Dispatch<React.SetStateAction<PL45DayRow[] | null>>;
+  pl45Days: IPL45DayRow[] | null;
+  setPL45Days: React.Dispatch<React.SetStateAction<IPL45DayRow[] | null>>;
+  aggPL45Days: IPL45DayRow[] | null;
+  setAggPL45Days: React.Dispatch<React.SetStateAction<IPL45DayRow[] | null>>;
   pl45DaysFetched: boolean;
   setPL45DaysFetched: React.Dispatch<React.SetStateAction<boolean>>;
   pl45DaysUpdating: boolean;
   setPL45DaysUpdating: React.Dispatch<React.SetStateAction<boolean>>;
   //-- Stats All Time --//
-  statsAllTime: StatsAllTime | null;
-  setStatsAllTime: React.Dispatch<React.SetStateAction<StatsAllTime | null>>;
+  statsAllTime: IStatsAllTime | null;
+  setStatsAllTime: React.Dispatch<React.SetStateAction<IStatsAllTime | null>>;
   statsAllTimeFetched: boolean;
   setStatsAllTimeFetched: React.Dispatch<React.SetStateAction<boolean>>;
   statsAllTimeUpdating: boolean;
@@ -32,8 +42,6 @@ export interface IJournalContext {
 
 //-- Create context --//
 const JournalContext = createContext<IJournalContext | undefined>(undefined);
-
-import { IFileMetadata } from "../App/JournalFiles/types";
 
 //-- Custom Provider Component --//
 function JournalContextProvider({ children }: PropsWithChildren) {
@@ -52,13 +60,16 @@ function JournalContextProvider({ children }: PropsWithChildren) {
   //-- Files --//
   const [filesListState, setFilesList] =
     useState<IFileMetadata[]>(defaultFilesList);
+  //-- react-grid-layout --//
+  const defaultLayouts: Layouts = chrt_1;
+  const [layouts, setLayouts] = useState<Layouts>(defaultLayouts);
   //-- PL 45 Days --//
-  const [pl45Days, setPL45Days] = useState<PL45DayRow[] | null>(null);
-  const [aggPL45Days, setAggPL45Days] = useState<PL45DayRow[] | null>(null);
+  const [pl45Days, setPL45Days] = useState<IPL45DayRow[] | null>(null);
+  const [aggPL45Days, setAggPL45Days] = useState<IPL45DayRow[] | null>(null);
   const [pl45DaysFetched, setPL45DaysFetched] = useState<boolean>(false);
   const [pl45DaysUpdating, setPL45DaysUpdating] = useState<boolean>(false);
   //-- Stats All Time --//
-  const [statsAllTime, setStatsAllTime] = useState<StatsAllTime | null>(null);
+  const [statsAllTime, setStatsAllTime] = useState<IStatsAllTime | null>(null);
   const [statsAllTimeFetched, setStatsAllTimeFetched] =
     useState<boolean>(false);
   const [statsAllTimeUpdating, setStatsAllTimeUpdating] =
@@ -70,6 +81,10 @@ function JournalContextProvider({ children }: PropsWithChildren) {
     //-- Files --//
     filesListState,
     setFilesList,
+    //-- react-grid-layout --//
+    defaultLayouts,
+    layouts,
+    setLayouts,
     //-- PL 45 Days --//
     pl45Days,
     setPL45Days,
