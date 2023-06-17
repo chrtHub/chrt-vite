@@ -1,9 +1,8 @@
 //-- react, react-router-dom, Auth0 --//
-import { useEffect, useState, useRef } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 //-- TSX Components --//
 import { useJournalContext } from "../../../Context/JournalContext";
-import { ErrorBoundary } from "react-error-boundary";
 import { EChartsFallback } from "../Reuseable/EChartsFallback";
 import TableContainer from "../Reuseable/TableContainer";
 
@@ -15,20 +14,22 @@ import TableContainer from "../Reuseable/TableContainer";
 
 //-- Utility Functions --//
 
+import StatsTableConfig from "./StatsTableConfig";
+
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function StatsTable() {
-  //-- React State --//
+  //== React State, Custom Hooks ==//
   const JC = useJournalContext();
 
-  //-- Auth --//
+  //== Auth ==//
 
-  //-- Other --//
+  //== Other ==//
 
-  //-- Click Handlers --//
+  //== Side Effects ==//
 
-  //-- Side Effects --//
+  //== Handlers ==//
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
@@ -36,13 +37,10 @@ export default function StatsTable() {
       <TableContainer
         fetched={true} // TODO
         updating={false} // TODO
-        title={"Stats Table"}
+        title={"Stats Table (All Time)"}
       >
         <ErrorBoundary FallbackComponent={EChartsFallback}>
-          {/* TODO - table config? */}
-          <div className="flex h-full w-full flex-col items-center justify-center px-2">
-            <p className="text-xl font-medium text-zinc-500">coming soon</p>
-          </div>
+          <StatsTableConfig />
         </ErrorBoundary>
       </TableContainer>
     </>

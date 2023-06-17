@@ -18,7 +18,13 @@ export interface IJournalContext {
   setPL45DaysFetched: React.Dispatch<React.SetStateAction<boolean>>;
   pl45DaysUpdating: boolean;
   setPL45DaysUpdating: React.Dispatch<React.SetStateAction<boolean>>;
-  //----//
+  //-- Stats --//
+  statsAllTime: {}; // todo - define keys
+  setStatsAllTime: React.Dispatch<React.SetStateAction<{}>>; // todo - define keys
+  statsAllTimeFetched: boolean;
+  setStatsAllTimeFetched: React.Dispatch<React.SetStateAction<boolean>>;
+  statsAllTimeUpdating: boolean;
+  setStatsAllTimeUpdating: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 //-- Create context --//
@@ -39,7 +45,7 @@ function JournalContextProvider({ children }: PropsWithChildren) {
     },
   ];
 
-  //-- State values --//
+  //-- ***** ***** START OF STATE VALUES ***** ***** --//
   //-- Files --//
   const [filesListState, setFilesList] =
     useState<IFileMetadata[]>(defaultFilesList);
@@ -49,8 +55,16 @@ function JournalContextProvider({ children }: PropsWithChildren) {
   const [pl45DaysFetched, setPL45DaysFetched] = useState<boolean>(false);
   const [pl45DaysUpdating, setPL45DaysUpdating] = useState<boolean>(false);
   //----//
+  const [statsAllTime, setStatsAllTime] = useState<{}>({}); // todo - define keys
+  const [statsAllTimeFetched, setStatsAllTimeFetched] =
+    useState<boolean>(false);
+  const [statsAllTimeUpdating, setStatsAllTimeUpdating] =
+    useState<boolean>(false);
+  //----//
 
-  //-- Bundle values into journalContextValue --//
+  //-- ***** ***** END OF STATE VALUES ***** ***** --//
+
+  //-- ***** Bundle values into journalContextValue *****--//
   const journalContextValue: IJournalContext = {
     //-- Files --//
     filesListState,
@@ -64,10 +78,16 @@ function JournalContextProvider({ children }: PropsWithChildren) {
     setPL45DaysFetched,
     pl45DaysUpdating,
     setPL45DaysUpdating,
-    //----//
+    //-- Stats --//
+    statsAllTime,
+    setStatsAllTime,
+    statsAllTimeFetched,
+    setStatsAllTimeFetched,
+    statsAllTimeUpdating,
+    setStatsAllTimeUpdating,
   };
 
-  //-- Return context provider --//
+  //-- ***** Return context provider ***** --//
   return (
     <JournalContext.Provider value={journalContextValue}>
       {children}
