@@ -1,8 +1,17 @@
 const chrt_1_default = [
   {
-    i: "PL_45_Days",
+    i: "StatsTable",
     x: 0,
     y: 0,
+    w: 6,
+    h: 8,
+    minW: 4,
+    minH: 6,
+  },
+  {
+    i: "PL_45_Days",
+    x: 0,
+    y: 8,
     w: 12,
     h: 8,
     minW: 4,
@@ -10,16 +19,7 @@ const chrt_1_default = [
   },
   {
     i: "AGG_PL_45_Days",
-    x: 0,
-    y: 0,
-    w: 12,
-    h: 8,
-    minW: 4,
-    minH: 6,
-  },
-  {
-    i: "StatsTable",
-    x: 0,
+    x: 8,
     y: 0,
     w: 6,
     h: 8,

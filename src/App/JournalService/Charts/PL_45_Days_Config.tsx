@@ -96,7 +96,7 @@ export default function PL_45_Days_Config() {
       type: "value",
       axisLabel: {
         formatter: function (x: any) {
-          let valueStr = numeral(x).format("$0,0");
+          let valueStr = numeral(x).format("$0,0a");
           return `${valueStr}`;
         },
       },
@@ -132,7 +132,7 @@ export default function PL_45_Days_Config() {
 
         //-- pl_last_45_calendar_days --//
         const res = await axios.get(
-          `${VITE_ALB_BASE_URL}/journal/dashboard/pl_last_45_calendar_days`,
+          `${VITE_ALB_BASE_URL}/journal/pl_last_45_calendar_days`,
           {
             headers: {
               authorization: `Bearer ${accessToken}`,

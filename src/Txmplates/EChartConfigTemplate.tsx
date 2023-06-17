@@ -135,7 +135,7 @@ export default function PL_45_Days_Config() {
 
         //-- pl_last_45_calendar_days --//
         let res = await axios.get(
-          `${VITE_ALB_BASE_URL}/journal/dashboard/pl_last_45_calendar_days`,
+          `${VITE_ALB_BASE_URL}/journal/pl_last_45_calendar_days`,
           {
             headers: {
               authorization: `Bearer ${accessToken}`,

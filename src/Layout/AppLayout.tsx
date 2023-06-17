@@ -248,10 +248,19 @@ export default function AppLayout() {
                   </div>
                   {/* END OF NAVIGATION ITEMS */}
 
+                  {/*-- START OF DIVIDER --*/}
+                  <div
+                    className={classNames(
+                      "mx-2 mt-1.5 rounded-full border-t-2 border-zinc-300 dark:border-zinc-500"
+                    )}
+                    aria-hidden="true"
+                  />
+                  {/*-- END OF DIVIDER --*/}
+
                   {/* START OF SECONDARY ITEMS */}
                   <div
-                    id="secondary-items-list"
-                    className="mx-2 mb-1.5 flex-grow overflow-y-auto"
+                    id="mobile-sidebar-secondary-items-list"
+                    className="mx-2 my-1.5 flex-grow overflow-y-auto"
                   >
                     {pathname.startsWith("/gpt") && <Conversations />}
                     {pathname.startsWith("/journal") && <Layouts />}
@@ -333,11 +342,21 @@ export default function AppLayout() {
             </div>
             {/* END OF NAVIGATION ITEMS */}
 
+            {/*-- START OF DIVIDER --*/}
+            <div
+              className={classNames(
+                "ml-3 mt-1.5 rounded-full border-t-2 border-zinc-300 dark:border-zinc-500"
+              )}
+              aria-hidden="true"
+            />
+            {/*-- END OF DIVIDER --*/}
+
             {/* START OF SECONDARY ITEMS */}
             <div
-              id="secondary-items-list"
+              id="static-sidebar-secondary-items-list"
               className="my-1.5 ml-3 flex-grow overflow-y-auto"
             >
+              {/* Secondary Items per Route */}
               {pathname.startsWith("/gpt") && <Conversations />}
               {pathname.startsWith("/journal") && <Layouts />}
             </div>
@@ -365,7 +384,7 @@ export default function AppLayout() {
             <div
               className={classNames(
                 `${LIGHT_THEME_BG} ${DARK_THEME_BG}`,
-                "sticky top-0 z-30 flex h-16 flex-shrink-0"
+                "sticky top-0 flex h-16 flex-shrink-0"
               )}
             >
               {/* START OF HAMBURGER BUTTON (hidden after lg) */}

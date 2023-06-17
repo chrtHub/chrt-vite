@@ -22,20 +22,10 @@ export default function Layouts() {
   //== Handlers ==//
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="flex h-full flex-col">
-      {/*-- DIVIDER --*/}
-      <div className="mb-0.5">
-        <div
-          className={classNames(
-            "rounded-full border-t-2 border-zinc-300 dark:border-zinc-500"
-          )}
-          aria-hidden="true"
-        />
-      </div>
-
-      {/* TODO - new layout button, similar to New Converation button */}
-
-      <p>Layouts</p>
+    <div className="flex h-full flex-col items-center justify-center rounded-lg bg-zinc-200 dark:bg-zinc-800">
+      <p className="font-semibold text-zinc-700 dark:text-zinc-300">
+        Layouts Coming Soon
+      </p>
     </div>
   );
 }

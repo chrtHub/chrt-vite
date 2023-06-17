@@ -29,4 +29,7 @@ try {
   if (err instanceof AxiosError) {
     axiosErrorToaster(err, "");
   }
+} finally {
+  //-- Set fetched --//
+  // Context.setFetched(true)
 }

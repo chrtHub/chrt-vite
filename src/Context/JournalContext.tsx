@@ -2,14 +2,17 @@
 import { useState, createContext, useContext, PropsWithChildren } from "react";
 
 //-- types --//
-import { PL45DayRow } from "../App/JournalService/Types/journal_types";
+import {
+  PL45DayRow,
+  StatsAllTime,
+} from "../App/JournalService/Types/journal_types";
 
 //-- Create interface and Context --//
 export interface IJournalContext {
   //-- Files --//
   filesListState: IFileMetadata[];
   setFilesList: React.Dispatch<React.SetStateAction<IFileMetadata[]>>;
-  //-- Charts --//
+  //-- PL 45 Days --//
   pl45Days: PL45DayRow[] | null;
   setPL45Days: React.Dispatch<React.SetStateAction<PL45DayRow[] | null>>;
   aggPL45Days: PL45DayRow[] | null;
@@ -18,7 +21,13 @@ export interface IJournalContext {
   setPL45DaysFetched: React.Dispatch<React.SetStateAction<boolean>>;
   pl45DaysUpdating: boolean;
   setPL45DaysUpdating: React.Dispatch<React.SetStateAction<boolean>>;
-  //----//
+  //-- Stats All Time --//
+  statsAllTime: StatsAllTime | null;
+  setStatsAllTime: React.Dispatch<React.SetStateAction<StatsAllTime | null>>;
+  statsAllTimeFetched: boolean;
+  setStatsAllTimeFetched: React.Dispatch<React.SetStateAction<boolean>>;
+  statsAllTimeUpdating: boolean;
+  setStatsAllTimeUpdating: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 //-- Create context --//
@@ -39,23 +48,29 @@ function JournalContextProvider({ children }: PropsWithChildren) {
     },
   ];
 
-  //-- State values --//
+  //-- ***** ***** START OF STATE VALUES ***** ***** --//
   //-- Files --//
   const [filesListState, setFilesList] =
     useState<IFileMetadata[]>(defaultFilesList);
-  //-- Charts --//
+  //-- PL 45 Days --//
   const [pl45Days, setPL45Days] = useState<PL45DayRow[] | null>(null);
   const [aggPL45Days, setAggPL45Days] = useState<PL45DayRow[] | null>(null);
   const [pl45DaysFetched, setPL45DaysFetched] = useState<boolean>(false);
   const [pl45DaysUpdating, setPL45DaysUpdating] = useState<boolean>(false);
-  //----//
+  //-- Stats All Time --//
+  const [statsAllTime, setStatsAllTime] = useState<StatsAllTime | null>(null);
+  const [statsAllTimeFetched, setStatsAllTimeFetched] =
+    useState<boolean>(false);
+  const [statsAllTimeUpdating, setStatsAllTimeUpdating] =
+    useState<boolean>(false);
+  //-- ***** ***** END OF STATE VALUES ***** ***** --//
 
-  //-- Bundle values into journalContextValue --//
+  //-- ***** Bundle values into journalContextValue *****--//
   const journalContextValue: IJournalContext = {
     //-- Files --//
     filesListState,
     setFilesList,
-    //-- Charts --//
+    //-- PL 45 Days --//
     pl45Days,
     setPL45Days,
     aggPL45Days,
@@ -64,10 +79,16 @@ function JournalContextProvider({ children }: PropsWithChildren) {
     setPL45DaysFetched,
     pl45DaysUpdating,
     setPL45DaysUpdating,
-    //----//
+    //-- Stats All Time --//
+    statsAllTime,
+    setStatsAllTime,
+    statsAllTimeFetched,
+    setStatsAllTimeFetched,
+    statsAllTimeUpdating,
+    setStatsAllTimeUpdating,
   };
 
-  //-- Return context provider --//
+  //-- ***** Return context provider ***** --//
   return (
     <JournalContext.Provider value={journalContextValue}>
       {children}
