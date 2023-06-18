@@ -11,7 +11,7 @@ import { Switch } from "@headlessui/react";
 
 //== Icons ==//
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
-import { BsCloudCheck } from "react-icons/bs";
+import { BsCloudCheck as CloudCheckReactIcon } from "react-icons/bs";
 
 //== NPM Functions ==//
 import { useMediaQuery } from "usehooks-ts";
@@ -75,23 +75,32 @@ export default function Layouts() {
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
     <div className="flex h-full flex-col items-center justify-start rounded-lg dark:bg-zinc-800 dark:text-zinc-200">
-      {/* Narrow mode? */}
-      {!md ? <p>narrow mode</p> : <p>not narrow mode</p>}
-      <div className="mb-8 rounded-lg bg-zinc-700 p-6">
-        {/* Saves / Unsaved Layouts */}
+      {/* START OF NARROW MODE */}
+      {!md && (
+        <div className="mb-1.5 flex w-full items-center justify-center rounded-full bg-zinc-200">
+          <p className="font-bold text-zinc-700">Narrow Mode Layout</p>
+        </div>
+      )}
+      {/* END OF NARROW MODE */}
+
+      {/* START OF SAVE LAYOUT */}
+      <div className="mb-8 w-full">
         {JC.unsavedLayoutsChanges ? (
-          <>
-            <p className="dark:text-zinc-200">unsaved changes</p>
-            <p className="dark:text-zinc-200">click to save</p>
+          <div className="flex w-full flex-row items-center justify-center rounded-full bg-pink-200">
+            <p className="text-zinc-500 dark:text-zinc-200">
+              click to save changes
+            </p>
             <CloudArrowUpIcon className="h-6 w-6 dark:text-zinc-200" />
-          </>
+          </div>
         ) : (
-          <>
+          <div className="flex w-full flex-row items-center justify-center rounded-md bg-blue-200">
             <p className="dark:text-zinc-200">saved</p>
-            <BsCloudCheck className="h-6 w-6 dark:text-zinc-200" />
-          </>
+            <CloudCheckReactIcon className="h-6 w-6 dark:text-zinc-200" />
+          </div>
         )}
       </div>
+      {/* END OF SAVE LAYOUT */}
+
       {/* START OF LAYOUTS OPTIONS COMBOBOX */}
       <Combobox
         as="div"
