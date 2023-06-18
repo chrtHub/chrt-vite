@@ -21,7 +21,7 @@ const chrt_1_md: ILayout[] = [
   },
   {
     i: "AGG_PL_45_Days",
-    x: 8,
+    x: 6,
     y: 16,
     w: 6,
     h: 8,

@@ -10,10 +10,12 @@ import { useJournalContext } from "../../../Context/JournalContext";
 import { BsCloudCheck } from "react-icons/bs";
 
 //== NPM Functions ==//
+import { useMediaQuery } from "usehooks-ts";
 
 //== Utility Functions ==//
 import classNames from "../../../Util/classNames";
 import { ILayoutsOption } from "../Types/journal_types";
+import { breakpoints } from "../../../Util/TailwindBreakpoints";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
@@ -24,11 +26,16 @@ export default function Layouts() {
 
   //== Auth ==//
   //== Other ==//
+  const md = useMediaQuery(`(min-width: ${breakpoints.md})`);
+
   //== Side Effects ==//
   //== Handlers ==//
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="flex h-full flex-col items-center justify-start rounded-lg bg-zinc-200 dark:bg-zinc-800">
+    <div className="flex h-full flex-col items-center justify-start rounded-lg bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200">
+      {/* Narrow mode? */}
+      {!md ? <p>narrow mode</p> : <p>not narrow mode</p>}
+
       <div className="mb-8 rounded-lg bg-zinc-700 p-6">
         {/* Saves / Unsaved Layouts */}
         {JC.unsavedLayoutsChanges ? (

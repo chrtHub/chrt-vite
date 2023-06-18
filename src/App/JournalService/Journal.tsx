@@ -34,12 +34,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive); //-- NOTE - don't call t
 export default function Journal() {
   //-- React State --//
   const JC = useJournalContext();
-  console.log("layouts", JC.layouts); // DEV
-  console.log("saveableLayouts: ", JC.saveableLayouts); // DEV
 
-  const onLayoutChange = (currentLayout: Layout[], allLayouts: Layouts) => {
-    JC.setSaveableLayouts(allLayouts);
-  };
   //-- Auth0 --//
 
   //-- Data Fetching --//
@@ -48,14 +43,18 @@ export default function Journal() {
   const md = useMediaQuery(`(min-width: ${breakpoints.md})`);
 
   //-- Handlers --//
+  const onLayoutChange = (currentLayout: Layout[], allLayouts: Layouts) => {
+    JC.setSaveableLayouts(allLayouts);
+  };
 
   //-- Side Effects --//
   useEffect(() => {
     //-- Check if there's unsaved layouts changes --//
     if (JC.saveableLayouts) {
       processSaveableLayouts(
-        JC.saveableLayouts,
         md ? "md" : "sm", //-- From useMediaQuery --//
+        JC.layouts,
+        JC.saveableLayouts,
         JC.setUnsavedLayoutsChanges
       );
     }
