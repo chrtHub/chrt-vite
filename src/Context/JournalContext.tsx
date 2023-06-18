@@ -9,8 +9,10 @@ import {
   IPL45DayRow,
   IStatsAllTime,
 } from "../App/JournalService/Types/journal_types";
-import { Layouts } from "react-grid-layout";
-import { LayoutsOption } from "../App/JournalService/Types/journal_types";
+import {
+  ILayouts,
+  ILayoutsOption,
+} from "../App/JournalService/Types/journal_types";
 import { IFileMetadata } from "../App/JournalFiles/types";
 
 //-- Create interface and Context --//
@@ -19,11 +21,15 @@ export interface IJournalContext {
   filesListState: IFileMetadata[];
   setFilesList: React.Dispatch<React.SetStateAction<IFileMetadata[]>>;
   //-- react-grid-layout --//
-  layoutsOptions: LayoutsOption[];
-  setLayoutsOptions: React.Dispatch<React.SetStateAction<LayoutsOption[]>>;
-  defaultLayoutsOption: LayoutsOption;
-  layouts: Layouts;
-  setLayouts: React.Dispatch<React.SetStateAction<Layouts>>;
+  layoutsOptions: ILayoutsOption[];
+  setLayoutsOptions: React.Dispatch<React.SetStateAction<ILayoutsOption[]>>;
+  defaultLayoutsOption: ILayoutsOption;
+  layouts: ILayouts;
+  setLayouts: React.Dispatch<React.SetStateAction<ILayouts>>;
+  saveableLayouts: ILayouts | null;
+  setSaveableLayouts: React.Dispatch<React.SetStateAction<ILayouts | null>>;
+  unsavedLayoutsChanges: boolean;
+  setUnsavedLayoutsChanges: React.Dispatch<React.SetStateAction<boolean>>;
   //-- PL 45 Days --//
   pl45Days: IPL45DayRow[] | null;
   setPL45Days: React.Dispatch<React.SetStateAction<IPL45DayRow[] | null>>;
@@ -64,9 +70,14 @@ function JournalContextProvider({ children }: PropsWithChildren) {
     useState<IFileMetadata[]>(defaultFilesList);
   //-- react-grid-layout --//
   const [layoutsOptions, setLayoutsOptions] =
-    useState<LayoutsOption[]>(chrtLayoutsOptions);
-  const defaultLayoutsOption = chrtLayoutsOptions[0].layoutsObject;
-  const [layouts, setLayouts] = useState<Layouts>(defaultLayoutsOption);
+    useState<ILayoutsOption[]>(chrtLayoutsOptions);
+  const defaultLayoutsOption: ILayoutsOption = chrtLayoutsOptions[0];
+  const [layouts, setLayouts] = useState<ILayouts>(
+    defaultLayoutsOption.layouts
+  );
+  const [saveableLayouts, setSaveableLayouts] = useState<ILayouts | null>(null);
+  const [unsavedLayoutsChanges, setUnsavedLayoutsChanges] =
+    useState<boolean>(false);
   //-- PL 45 Days --//
   const [pl45Days, setPL45Days] = useState<IPL45DayRow[] | null>(null);
   const [aggPL45Days, setAggPL45Days] = useState<IPL45DayRow[] | null>(null);
@@ -91,6 +102,10 @@ function JournalContextProvider({ children }: PropsWithChildren) {
     defaultLayoutsOption,
     layouts,
     setLayouts,
+    saveableLayouts,
+    setSaveableLayouts,
+    unsavedLayoutsChanges,
+    setUnsavedLayoutsChanges,
     //-- PL 45 Days --//
     pl45Days,
     setPL45Days,

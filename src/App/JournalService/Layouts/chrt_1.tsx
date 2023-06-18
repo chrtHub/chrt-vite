@@ -1,7 +1,6 @@
-import { Layout } from "react-grid-layout";
-import { LayoutsOption } from "../Types/journal_types";
+import { ILayout, ILayoutsOption } from "../Types/journal_types";
 
-const chrt_1_big: Layout[] = [
+const chrt_1_md: ILayout[] = [
   {
     i: "StatsTable",
     x: 0,
@@ -22,7 +21,7 @@ const chrt_1_big: Layout[] = [
   },
   {
     i: "AGG_PL_45_Days",
-    x: 8,
+    x: 6,
     y: 16,
     w: 6,
     h: 8,
@@ -31,7 +30,7 @@ const chrt_1_big: Layout[] = [
   },
 ];
 
-const chrt_1_small: Layout[] = [
+const chrt_1_sm: ILayout[] = [
   {
     i: "StatsTable",
     x: 0,
@@ -61,13 +60,11 @@ const chrt_1_small: Layout[] = [
   },
 ];
 
-export const chrt_1: LayoutsOption = {
-  name: "chrt_1",
-  layoutsObject: {
-    lg: chrt_1_big,
-    md: chrt_1_big,
-    sm: chrt_1_small,
-    xs: chrt_1_small,
-    xxs: chrt_1_small,
+export const chrt_1: ILayoutsOption = {
+  author: "chrt",
+  name: "CHRT 1",
+  layouts: {
+    md: chrt_1_md,
+    sm: chrt_1_sm,
   },
 };
