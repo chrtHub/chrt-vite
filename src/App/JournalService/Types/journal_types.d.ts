@@ -1,3 +1,9 @@
+//-- react-grid-layout --//
+interface LayoutsOption {
+  name: string;
+  layoutsObject: Layouts;
+}
+
 //-- Charts --//
 //-- PL 45 Days --//
 export interface IDateAndProfitRow {

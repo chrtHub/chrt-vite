@@ -2,7 +2,7 @@
 import { useState, createContext, useContext, PropsWithChildren } from "react";
 
 //-- tsx --//
-import { chrt_1, chrt_2 } from "../App/JournalService/Layouts/Template";
+import { chrtLayoutsOptions } from "../App/JournalService/Layouts/bundle";
 
 //-- types --//
 import {
@@ -10,7 +10,7 @@ import {
   IStatsAllTime,
 } from "../App/JournalService/Types/journal_types";
 import { Layouts } from "react-grid-layout";
-
+import { LayoutsOption } from "../App/JournalService/Types/journal_types";
 import { IFileMetadata } from "../App/JournalFiles/types";
 
 //-- Create interface and Context --//
@@ -19,7 +19,9 @@ export interface IJournalContext {
   filesListState: IFileMetadata[];
   setFilesList: React.Dispatch<React.SetStateAction<IFileMetadata[]>>;
   //-- react-grid-layout --//
-  defaultLayouts: Layouts;
+  layoutsOptions: LayoutsOption[];
+  setLayoutsOptions: React.Dispatch<React.SetStateAction<LayoutsOption[]>>;
+  defaultLayoutsOption: LayoutsOption;
   layouts: Layouts;
   setLayouts: React.Dispatch<React.SetStateAction<Layouts>>;
   //-- PL 45 Days --//
@@ -61,8 +63,10 @@ function JournalContextProvider({ children }: PropsWithChildren) {
   const [filesListState, setFilesList] =
     useState<IFileMetadata[]>(defaultFilesList);
   //-- react-grid-layout --//
-  const defaultLayouts: Layouts = chrt_1;
-  const [layouts, setLayouts] = useState<Layouts>(defaultLayouts);
+  const [layoutsOptions, setLayoutsOptions] =
+    useState<LayoutsOption[]>(chrtLayoutsOptions);
+  const defaultLayoutsOption = chrtLayoutsOptions[0].layoutsObject;
+  const [layouts, setLayouts] = useState<Layouts>(defaultLayoutsOption);
   //-- PL 45 Days --//
   const [pl45Days, setPL45Days] = useState<IPL45DayRow[] | null>(null);
   const [aggPL45Days, setAggPL45Days] = useState<IPL45DayRow[] | null>(null);
@@ -82,7 +86,9 @@ function JournalContextProvider({ children }: PropsWithChildren) {
     filesListState,
     setFilesList,
     //-- react-grid-layout --//
-    defaultLayouts,
+    layoutsOptions,
+    setLayoutsOptions,
+    defaultLayoutsOption,
     layouts,
     setLayouts,
     //-- PL 45 Days --//

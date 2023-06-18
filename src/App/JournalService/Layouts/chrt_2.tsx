@@ -1,6 +1,7 @@
-import { Layout, Layouts } from "react-grid-layout";
+import { Layout } from "react-grid-layout";
+import { LayoutsOption } from "../Types/journal_types";
 
-const chrt_1_layouts: Layout[] = [
+const chrt_2_big: Layout[] = [
   {
     i: "StatsTable",
     x: 0,
@@ -30,15 +31,7 @@ const chrt_1_layouts: Layout[] = [
   },
 ];
 
-export const chrt_1: Layouts = {
-  lg: chrt_1_layouts,
-  md: chrt_1_layouts,
-  sm: chrt_1_layouts,
-  xs: chrt_1_layouts,
-  xxs: chrt_1_layouts,
-};
-
-const chrt_2_layouts: Layout[] = [
+const chrt_2_small: Layout[] = [
   {
     i: "StatsTable",
     x: 0,
@@ -68,10 +61,13 @@ const chrt_2_layouts: Layout[] = [
   },
 ];
 
-export const chrt_2: Layouts = {
-  lg: chrt_2_layouts,
-  md: chrt_2_layouts,
-  sm: chrt_2_layouts,
-  xs: chrt_2_layouts,
-  xxs: chrt_2_layouts,
+export const chrt_2: LayoutsOption = {
+  name: "chrt_2",
+  layoutsObject: {
+    lg: chrt_2_big,
+    md: chrt_2_big,
+    sm: chrt_2_small,
+    xs: chrt_2_small,
+    xxs: chrt_2_small,
+  },
 };

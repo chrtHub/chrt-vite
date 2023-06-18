@@ -1,6 +1,7 @@
 //== react, react-router-dom, Auth0 ==//
 
 //== TSX Components, Functions ==//
+import { useJournalContext } from "../../../Context/JournalContext";
 
 //== NPM Components ==//
 
@@ -10,46 +11,37 @@
 
 //== Utility Functions ==//
 import classNames from "../../../Util/classNames";
+import { LayoutsOption } from "../Types/journal_types";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function Layouts() {
   //== React State, Custom Hooks ==//
+  let JC = useJournalContext();
+
   //== Auth ==//
   //== Other ==//
   //== Side Effects ==//
   //== Handlers ==//
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="flex h-full flex-col items-center justify-center rounded-lg bg-zinc-200 dark:bg-zinc-800">
-      <p className="font-semibold text-zinc-700 dark:text-zinc-300">
-        Layouts Coming Soon
-      </p>
-
-      <p>Layout</p>
-      <p>Desktop</p>
-      <p>Mobile</p>
-      <span className="isolate inline-flex rounded-md shadow-sm">
-        <button
-          type="button"
-          className="relative inline-flex items-center rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-        >
-          chrt 1
-        </button>
-        <button
-          type="button"
-          className="relative -ml-px inline-flex items-center bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-        >
-          chrt 2
-        </button>
-        <button
-          type="button"
-          className="relative -ml-px inline-flex items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-        >
-          chrt 3
-        </button>
-      </span>
+    <div className="flex h-full flex-col items-center justify-start rounded-lg bg-zinc-200 dark:bg-zinc-800">
+      <p className="dark:text-zinc-200">layouts options</p>
+      {JC.layoutsOptions.map((layoutsOption) => {
+        return (
+          <div key={layoutsOption.name}>
+            <button
+              className="m-2 rounded-lg bg-blue-500 p-2"
+              onClick={() => {
+                JC.setLayouts(layoutsOption.layoutsObject);
+              }}
+            >
+              <p>{JSON.stringify(layoutsOption.name)}</p>
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 }

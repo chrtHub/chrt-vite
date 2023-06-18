@@ -22,7 +22,7 @@ import { ArrowDownRightIcon } from "@heroicons/react/24/solid";
 //-- Utility Functions --//
 import classNames from "../../Util/classNames";
 import AGG_PL_45_Days from "./Charts/AGG_PL_45_Days";
-import { chrt_1 } from "./Layouts/Template";
+import { chrt_1 } from "./Layouts/chrt_1";
 
 const ResponsiveGridLayout = WidthProvider(Responsive); //-- NOTE - don't call this inside the Journal component because its reference keeps changing and it will tangle with useJournalContext to cause an infinite render loop --//
 
@@ -32,12 +32,6 @@ const ResponsiveGridLayout = WidthProvider(Responsive); //-- NOTE - don't call t
 export default function Journal() {
   //-- React State --//
   const JC = useJournalContext();
-
-  // const initialLayouts = localStorage.getItem("rgl") || {};
-
-  // const [layouts, setLayouts] = useState(
-  //   JSON.parse(JSON.stringify(initialLayouts))
-  // );
 
   // const onLayoutChange = (currentLayout: Layout[], allLayouts: Layouts) => {
   //   console.log("onLayoutChange, currentLayout: ", currentLayout); // DEV
