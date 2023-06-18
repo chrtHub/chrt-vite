@@ -17,7 +17,7 @@ import numeral from "numeral";
 //== Utility Functions ==//
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
-import { StatsAllTime } from "../Types/journal_types";
+import { IStatsAllTime } from "../Types/journal_types";
 let VITE_ALB_BASE_URL: string | undefined = import.meta.env.VITE_ALB_BASE_URL;
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
@@ -30,33 +30,35 @@ export default function StatsTableConfig() {
   //== Auth ==//
 
   //== Other ==//
-  const fetch = async () => {
-    try {
-      //-- Get access token from memory or request new token --//
-      let accessToken = await getAccessTokenSilently();
 
-      //-- Make GET request --//
-      let res = await axios.get(`${VITE_ALB_BASE_URL}/journal/stats/all_time`, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      });
-      let data: StatsAllTime = res.data;
-
-      console.log(data); // DEV
-
-      //-- Update State in Context --//
-      JC.setStatsAllTime(data);
-    } catch (err) {
-      console.log(err); // DEV
-      showBoundary(err);
-    } finally {
-      //-- Set fetched --//
-      JC.setStatsAllTimeFetched(true);
-    }
-  };
   //== Side Effects ==//
   useEffect(() => {
+    const fetch = async () => {
+      try {
+        //-- Get access token from memory or request new token --//
+        let accessToken = await getAccessTokenSilently();
+
+        //-- Make GET request --//
+        let res = await axios.get(
+          `${VITE_ALB_BASE_URL}/journal/stats/all_time`,
+          {
+            headers: {
+              authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        let data: IStatsAllTime = res.data;
+
+        //-- Update State in Context --//
+        JC.setStatsAllTime(data);
+      } catch (err) {
+        console.log(err); // DEV
+        showBoundary(err);
+      } finally {
+        //-- Set fetched --//
+        JC.setStatsAllTimeFetched(true);
+      }
+    };
     fetch();
   }, []);
 

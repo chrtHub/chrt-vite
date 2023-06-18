@@ -1,79 +1,55 @@
 //-- react, react-router-dom, Auth0 --//
+import { useState, useMemo } from "react";
 
 //-- TSX Components --//
 import CTA401Fallback from "./CTA401Fallback";
-import { chrt_1 } from "./Layouts/Template";
-
+import { useJournalContext } from "../../Context/JournalContext";
 import PL_45_Days from "./Charts/PL_45_Days";
-
 import StatsTable from "./Tables/StatsTable";
+import { DraggableHandle } from "./Reuseable/DraggableHandle";
 
 //-- NPM Components --//
-import { WidthProvider, Responsive } from "react-grid-layout";
+import { WidthProvider, Responsive, Layouts, Layout } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import "./rgl-overrides.css";
 
 //-- Icons --//
-import {
-  ArrowDownRightIcon,
-  ArrowsPointingOutIcon,
-} from "@heroicons/react/24/solid";
+import { ArrowDownRightIcon } from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
 
 //-- Utility Functions --//
 import classNames from "../../Util/classNames";
 import AGG_PL_45_Days from "./Charts/AGG_PL_45_Days";
+import { chrt_1 } from "./Layouts/chrt_1";
+
+const ResponsiveGridLayout = WidthProvider(Responsive); //-- NOTE - don't call this inside the Journal component because its reference keeps changing and it will tangle with useJournalContext to cause an infinite render loop --//
 
 //-- Data Objects, Environment Variables --//
-
-const DraggableHandle = () => {
-  return (
-    <div
-      className={classNames(
-        "react-grid-dragHandle cursor-move",
-        "absolute right-0 top-0 z-20 mr-1.5 mt-2.5 rounded-full p-2",
-        "text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800",
-        "dark:text-zinc-300 dark:hover:bg-zinc-600 dark:hover:text-zinc-100"
-      )}
-    >
-      <ArrowsPointingOutIcon
-        className="h-5 w-5"
-        style={{ transform: "rotate(45deg)" }}
-      />
-    </div>
-  );
-};
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Journal() {
   //-- React State --//
-  // const initialLayouts = localStorage.getItem("rgl") || {};
-  // console.log("initialLayouts:", initialLayouts); // DEV
+  const JC = useJournalContext();
 
-  // const [layouts, setLayouts] = useState(
-  //   JSON.parse(JSON.stringify(initialLayouts))
-  // );
-  // console.log("layouts:", layouts); // DEV
+  // const onLayoutChange = (currentLayout: Layout[], allLayouts: Layouts) => {
+  //   console.log("onLayoutChange, currentLayout: ", currentLayout); // DEV
+  //   console.log("onLayoutChange, allLayouts: ", allLayouts); // DEV
+  //   // localStorage.setItem("rgl", JSON.stringify(allLayouts)); // todo
+  //   // setLayouts(allLayouts);
+  // };
 
   //-- Auth0 --//
 
   //-- Data Fetching --//
 
   //-- Other --//
-  const ResponsiveGridLayout = WidthProvider(Responsive);
 
   //-- Handlers --//
-  const onLayoutChange = (layout: {}, layouts: {}) => {
-    console.log("onLayoutChange: ", layouts); // DEV
-    // localStorage.setItem("rgl", JSON.stringify(layouts)); // todo
-    // setLayouts(layouts);
-  };
-
-  // const resetLayout = () => {
-  //   setLayouts({});
-  // };
+  // const onResetLayouts = () => {
+  //   JC.setLayouts(JC.defaultLayouts)
+  // }
 
   //-- Side Effects --//
 
@@ -86,13 +62,17 @@ export default function Journal() {
         <ResponsiveGridLayout
           style={{ transition: "none" }}
           className="layout"
-          layouts={chrt_1}
-          onLayoutChange={onLayoutChange}
-          breakpoints={{ lg: 1024, md: 768, sm: 640, xs: 1, xxs: 0 }} //-- Matching Tailwind CSS --//
+          layouts={JC.layouts}
+          // onLayoutChange={onLayoutChange}
+          breakpoints={{
+            lg: 1024, //-- 12 cols --//
+            md: 768, //-- 12 cols --//
+            sm: 640, //-- 4 cols --//
+            xs: 1, //-- 4 cols --//
+            xxs: 0, //-- 4 cols --//
+          }} //-- Matching Tailwind CSS - but note that this is for the container, not the screen --//
           rowHeight={30}
           cols={{ lg: 12, md: 12, sm: 4, xs: 4, xxs: 4 }} //-- Aribtrary --//
-          // margin={{ lg: [10, 10] }}
-          // containerPadding={{ lg: [10, 10] }}
           resizeHandles={["se"]}
           resizeHandle={
             <span
@@ -108,7 +88,7 @@ export default function Journal() {
           }
           draggableHandle=".react-grid-dragHandle"
         >
-          {/* ----- Start of Charts ----- */}
+          {/* ----- Start of Content ----- */}
           {/* START OF PL_45_Days */}
           <div key="PL_45_Days" className="rounded-lg">
             <PL_45_Days />
@@ -130,7 +110,7 @@ export default function Journal() {
           </div>
           {/* END OF STATS TABLE */}
 
-          {/* ----- End of Charts ----- */}
+          {/* ----- End of Content ----- */}
         </ResponsiveGridLayout>
       </div>
     </>

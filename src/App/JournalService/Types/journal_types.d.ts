@@ -1,15 +1,21 @@
+//-- react-grid-layout --//
+interface LayoutsOption {
+  name: string;
+  layoutsObject: Layouts;
+}
+
 //-- Charts --//
 //-- PL 45 Days --//
-export interface DateAndProfitRow {
+export interface IDateAndProfitRow {
   date: string;
   profit: string;
 }
-export interface PL45DayRow {
+export interface IPL45DayRow {
   [string, string];
 }
 
 //-- Stats All Time --//
-export interface StatsAllTime {
+export interface IStatsAllTime {
   total_trades: number;
   total_symbols: number;
   winning_trades: number;
