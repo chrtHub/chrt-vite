@@ -62,7 +62,8 @@ const chrt_1_small: Layout[] = [
 ];
 
 export const chrt_1: LayoutsOption = {
-  name: "chrt_1",
+  author: "chrt",
+  name: "CHRT 1",
   layoutsObject: {
     lg: chrt_1_big,
     md: chrt_1_big,

@@ -1,5 +1,6 @@
 //-- react-grid-layout --//
 interface LayoutsOption {
+  author: string;
   name: string;
   layoutsObject: Layouts;
 }

@@ -37,7 +37,7 @@ export default function Layouts() {
                 JC.setLayouts(layoutsOption.layoutsObject);
               }}
             >
-              <p>{JSON.stringify(layoutsOption.name)}</p>
+              <p>{layoutsOption.name}</p>
             </button>
           </div>
         );

@@ -36,8 +36,7 @@ export default function Journal() {
   // const onLayoutChange = (currentLayout: Layout[], allLayouts: Layouts) => {
   //   console.log("onLayoutChange, currentLayout: ", currentLayout); // DEV
   //   console.log("onLayoutChange, allLayouts: ", allLayouts); // DEV
-  //   // localStorage.setItem("rgl", JSON.stringify(allLayouts)); // todo
-  //   // setLayouts(allLayouts);
+  //   // setMostRecentOnLayoutChangeResult(allLayouts);
   // };
 
   //-- Auth0 --//
@@ -47,9 +46,6 @@ export default function Journal() {
   //-- Other --//
 
   //-- Handlers --//
-  // const onResetLayouts = () => {
-  //   JC.setLayouts(JC.defaultLayouts)
-  // }
 
   //-- Side Effects --//
 
@@ -64,6 +60,7 @@ export default function Journal() {
           className="layout"
           layouts={JC.layouts}
           // onLayoutChange={onLayoutChange}
+
           breakpoints={{
             lg: 1024, //-- 12 cols --//
             md: 768, //-- 12 cols --//
