@@ -2,7 +2,7 @@
 import { useState, createContext, useContext, PropsWithChildren } from "react";
 
 //-- tsx --//
-import { chrtLayoutsOptions } from "../App/JournalService/Layouts/bundle";
+import { chrtLayoutsOptions as _chrtLayoutsOptions } from "../App/JournalService/Layouts/bundle";
 
 //-- types --//
 import {
@@ -21,8 +21,12 @@ export interface IJournalContext {
   filesListState: IFileMetadata[];
   setFilesList: React.Dispatch<React.SetStateAction<IFileMetadata[]>>;
   //-- react-grid-layout --//
-  layoutsOptions: ILayoutsOption[];
-  setLayoutsOptions: React.Dispatch<React.SetStateAction<ILayoutsOption[]>>;
+  chrtLayoutsOptions: ILayoutsOption[];
+  setCHRTLayoutsOptions: React.Dispatch<React.SetStateAction<ILayoutsOption[]>>;
+  customLayoutsOptions: ILayoutsOption[];
+  setCustomLayoutsOptions: React.Dispatch<
+    React.SetStateAction<ILayoutsOption[]>
+  >;
   defaultLayoutsOption: ILayoutsOption;
   currentLayoutsOption: ILayoutsOption;
   setCurrentLayoutsOption: React.Dispatch<React.SetStateAction<ILayoutsOption>>;
@@ -69,8 +73,11 @@ function JournalContextProvider({ children }: PropsWithChildren) {
   const [filesListState, setFilesList] =
     useState<IFileMetadata[]>(defaultFilesList);
   //-- react-grid-layout --//
-  const [layoutsOptions, setLayoutsOptions] =
-    useState<ILayoutsOption[]>(chrtLayoutsOptions);
+  const [chrtLayoutsOptions, setCHRTLayoutsOptions] =
+    useState<ILayoutsOption[]>(_chrtLayoutsOptions);
+  const [customLayoutsOptions, setCustomLayoutsOptions] = useState<
+    ILayoutsOption[]
+  >([]); // TODO - get from MongoDB
   const defaultLayoutsOption: ILayoutsOption = chrtLayoutsOptions[0];
   const [currentLayoutsOption, setCurrentLayoutsOption] =
     useState<ILayoutsOption>(defaultLayoutsOption);
@@ -96,8 +103,10 @@ function JournalContextProvider({ children }: PropsWithChildren) {
     filesListState,
     setFilesList,
     //-- react-grid-layout --//
-    layoutsOptions,
-    setLayoutsOptions,
+    chrtLayoutsOptions,
+    setCHRTLayoutsOptions,
+    customLayoutsOptions,
+    setCustomLayoutsOptions,
     defaultLayoutsOption,
     currentLayoutsOption,
     setCurrentLayoutsOption,

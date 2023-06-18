@@ -11,9 +11,9 @@ export const processSaveableLayouts = (
   const existing = layouts[breakpoint];
   const saveable = saveableLayouts[breakpoint];
 
-  console.log("processSaveableLayouts"); // DEV
-  console.log("existing: ", existing); // DEV
-  console.log("saveable: ", saveable); // DEV
+  // console.log("processSaveableLayouts"); // DEV
+  // console.log("existing: ", existing); // DEV
+  // console.log("saveable: ", saveable); // DEV
 
   if (!existing || !saveable) {
     console.error("Missing layouts for the specified breakpoint");
