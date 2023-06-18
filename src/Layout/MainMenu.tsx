@@ -1,5 +1,5 @@
 //== react, react-router-dom, Auth0 ==//
-import { Fragment, useEffect, useRef, useState, SetStateAction } from "react";
+import { Fragment, SetStateAction } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAccountContext } from "../Context/AccountContext";
@@ -51,7 +51,6 @@ export default function MainMenu({
   const { user } = useAuth0();
 
   //== Other ==//
-  const MainMenuNotificationsCount = 3;
 
   //== Side Effects ==//
 
@@ -65,11 +64,13 @@ export default function MainMenu({
     >
       <div>
         <Menu.Button
+          id="main-menu-button"
           className={classNames(
             "inline-flex w-full flex-row items-center justify-start rounded-md px-2 py-1.5 text-sm font-medium focus:outline-none",
-            "focus:ring-inset focus-visible:ring-2",
-            "hover:bg-zinc-200 focus-visible:ring-zinc-400 ui-open:bg-zinc-200",
-            "dark:hover:bg-zinc-800 dark:ui-open:bg-zinc-800"
+            "ring-1 ring-inset ring-zinc-300 dark:ring-zinc-700",
+            "bg-zinc-100 dark:bg-zinc-800",
+            "hover:bg-zinc-200 ui-open:bg-zinc-300",
+            "dark:hover:bg-zinc-700 dark:ui-open:bg-zinc-700"
           )}
         >
           {user?.picture ? (
@@ -104,7 +105,7 @@ export default function MainMenu({
                 </span>
               ) : (
                 <EllipsisHorizontalCircleIcon
-                  className="ml-auto h-7 w-7 text-zinc-600 dark:text-zinc-400"
+                  className="ml-auto h-7 w-7 text-zinc-500 dark:text-zinc-500"
                   aria-hidden="true"
                 />
               )}
