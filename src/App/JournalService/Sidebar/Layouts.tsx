@@ -30,58 +30,43 @@ export default function Layouts() {
   const [comboboxQuery, setComboboxQuery] = useState("");
   const [chrtLayoutsEnabled, setCHRTLayoutsEnabled] = useState(true);
   const [customLayoutsEnabled, setCustomLayoutsEnabled] = useState(true);
-  const [filteredCHRTLayoutsOptions, setFilteredCHRTLayoutsOptions] = useState(
-    JC.chrtLayoutsOptions
+  const [filteredLayoutsOptions, setFilteredLayoutsOptions] = useState(
+    JC.layoutsOptions
   );
 
   //== Auth ==//
+
   //== Other ==//
   const md = useMediaQuery(`(min-width: ${breakpoints.md})`);
 
   const getFilteredOptions = () => {
-    let filteredOptions: ILayoutsOption[] = JC.chrtLayoutsOptions;
-
-    console.log("1 - ", filteredOptions); // dev
-
-    //-- Filter by combobox query --//
-    if (comboboxQuery != "") {
-      filteredOptions = filteredOptions.filter((layoutsOption) => {
-        return layoutsOption.name
-          .toLowerCase()
-          .includes(comboboxQuery.toLowerCase());
-      });
+    let filteredOptions = JC.layoutsOptions;
+    //-- Filter by combobox query--//
+    if (comboboxQuery !== "") {
+      filteredOptions = filteredOptions.filter((layoutsOption) =>
+        layoutsOption.name.toLowerCase().includes(comboboxQuery.toLowerCase())
+      );
     }
-
-    console.log("2 - ", filteredOptions); // dev
-
-    //-- Filter by 'chrtLayoutsEnabled' --//
+    //-- Filter by 'chrtLayoutsEnabled'--//
     if (!chrtLayoutsEnabled) {
-      filteredOptions = filteredOptions.filter((layoutsOption) => {
-        return layoutsOption.author != "chrt";
-      });
+      filteredOptions = filteredOptions.filter(
+        (layoutsOption) => layoutsOption.author !== "chrt"
+      );
     }
-
-    console.log("3 - ", filteredOptions); // dev
-
-    //-- Filter by 'customLayoutsEnabled' --//
+    //-- Filter by 'customLayoutsEnabled'--//
     if (!customLayoutsEnabled) {
-      filteredOptions = filteredOptions.filter((layoutsOption) => {
-        return layoutsOption.author == "chrt";
-      });
+      filteredOptions = filteredOptions.filter(
+        (layoutsOption) => layoutsOption.author === "chrt"
+      );
     }
-
-    console.log("4 - ", filteredOptions); // dev
-
     return filteredOptions;
   };
 
   //== Side Effects ==//
   useEffect(() => {
-    console.log("chrtLayoutsEnabled: ", chrtLayoutsEnabled); // DEV
     let filteredOptions = getFilteredOptions();
     if (filteredOptions) {
-      console.log("filteredOptions: ", filteredOptions); // DEV
-      setFilteredCHRTLayoutsOptions(filteredOptions);
+      setFilteredLayoutsOptions(filteredOptions);
     }
   }, [comboboxQuery, chrtLayoutsEnabled, customLayoutsEnabled]);
 
@@ -130,9 +115,9 @@ export default function Layouts() {
             />
           </Combobox.Button>
 
-          {filteredCHRTLayoutsOptions.length > 0 && (
+          {filteredLayoutsOptions?.length > 0 && (
             <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-              {filteredCHRTLayoutsOptions.map((layoutsOption) => (
+              {filteredLayoutsOptions.map((layoutsOption) => (
                 <Combobox.Option
                   key={layoutsOption.name}
                   value={layoutsOption}

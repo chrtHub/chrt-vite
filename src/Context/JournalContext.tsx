@@ -21,12 +21,8 @@ export interface IJournalContext {
   filesListState: IFileMetadata[];
   setFilesList: React.Dispatch<React.SetStateAction<IFileMetadata[]>>;
   //-- react-grid-layout --//
-  chrtLayoutsOptions: ILayoutsOption[];
-  setCHRTLayoutsOptions: React.Dispatch<React.SetStateAction<ILayoutsOption[]>>;
-  customLayoutsOptions: ILayoutsOption[];
-  setCustomLayoutsOptions: React.Dispatch<
-    React.SetStateAction<ILayoutsOption[]>
-  >;
+  layoutsOptions: ILayoutsOption[];
+  setLayoutsOptions: React.Dispatch<React.SetStateAction<ILayoutsOption[]>>;
   defaultLayoutsOption: ILayoutsOption;
   currentLayoutsOption: ILayoutsOption;
   setCurrentLayoutsOption: React.Dispatch<React.SetStateAction<ILayoutsOption>>;
@@ -73,12 +69,9 @@ function JournalContextProvider({ children }: PropsWithChildren) {
   const [filesListState, setFilesList] =
     useState<IFileMetadata[]>(defaultFilesList);
   //-- react-grid-layout --//
-  const [chrtLayoutsOptions, setCHRTLayoutsOptions] =
+  const [layoutsOptions, setLayoutsOptions] =
     useState<ILayoutsOption[]>(_chrtLayoutsOptions);
-  const [customLayoutsOptions, setCustomLayoutsOptions] = useState<
-    ILayoutsOption[]
-  >([]); // TODO - get from MongoDB
-  const defaultLayoutsOption: ILayoutsOption = chrtLayoutsOptions[0];
+  const defaultLayoutsOption: ILayoutsOption = layoutsOptions[0];
   const [currentLayoutsOption, setCurrentLayoutsOption] =
     useState<ILayoutsOption>(defaultLayoutsOption);
   const [saveableLayouts, setSaveableLayouts] = useState<ILayouts | null>(null);
@@ -103,10 +96,8 @@ function JournalContextProvider({ children }: PropsWithChildren) {
     filesListState,
     setFilesList,
     //-- react-grid-layout --//
-    chrtLayoutsOptions,
-    setCHRTLayoutsOptions,
-    customLayoutsOptions,
-    setCustomLayoutsOptions,
+    layoutsOptions,
+    setLayoutsOptions,
     defaultLayoutsOption,
     currentLayoutsOption,
     setCurrentLayoutsOption,
