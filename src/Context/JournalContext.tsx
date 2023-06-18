@@ -24,8 +24,8 @@ export interface IJournalContext {
   layoutsOptions: ILayoutsOption[];
   setLayoutsOptions: React.Dispatch<React.SetStateAction<ILayoutsOption[]>>;
   defaultLayoutsOption: ILayoutsOption;
-  layouts: ILayouts;
-  setLayouts: React.Dispatch<React.SetStateAction<ILayouts>>;
+  currentLayoutsOption: ILayoutsOption;
+  setCurrentLayoutsOption: React.Dispatch<React.SetStateAction<ILayoutsOption>>;
   saveableLayouts: ILayouts | null;
   setSaveableLayouts: React.Dispatch<React.SetStateAction<ILayouts | null>>;
   unsavedLayoutsChanges: boolean;
@@ -72,9 +72,8 @@ function JournalContextProvider({ children }: PropsWithChildren) {
   const [layoutsOptions, setLayoutsOptions] =
     useState<ILayoutsOption[]>(chrtLayoutsOptions);
   const defaultLayoutsOption: ILayoutsOption = chrtLayoutsOptions[0];
-  const [layouts, setLayouts] = useState<ILayouts>(
-    defaultLayoutsOption.layouts
-  );
+  const [currentLayoutsOption, setCurrentLayoutsOption] =
+    useState<ILayoutsOption>(defaultLayoutsOption);
   const [saveableLayouts, setSaveableLayouts] = useState<ILayouts | null>(null);
   const [unsavedLayoutsChanges, setUnsavedLayoutsChanges] =
     useState<boolean>(false);
@@ -100,8 +99,8 @@ function JournalContextProvider({ children }: PropsWithChildren) {
     layoutsOptions,
     setLayoutsOptions,
     defaultLayoutsOption,
-    layouts,
-    setLayouts,
+    currentLayoutsOption,
+    setCurrentLayoutsOption,
     saveableLayouts,
     setSaveableLayouts,
     unsavedLayoutsChanges,
