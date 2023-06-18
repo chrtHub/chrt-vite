@@ -21,7 +21,6 @@ import PL_45_Days_Config from "./PL_45_Days_Config";
 
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function PL_45_Days() {
-  console.log("--- PL_45_Days ---");
   //-- React State --//
   const JC = useJournalContext();
 

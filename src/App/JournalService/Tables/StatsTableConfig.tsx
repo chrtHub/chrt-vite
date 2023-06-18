@@ -49,8 +49,6 @@ export default function StatsTableConfig() {
         );
         let data: IStatsAllTime = res.data;
 
-        console.log(data); // DEV
-
         //-- Update State in Context --//
         JC.setStatsAllTime(data);
       } catch (err) {
