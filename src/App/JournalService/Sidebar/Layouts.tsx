@@ -1,17 +1,19 @@
 //== react, react-router-dom, Auth0 ==//
 
 //== TSX Components, Functions ==//
+import { CloudArrowUpIcon } from "@heroicons/react/24/outline";
 import { useJournalContext } from "../../../Context/JournalContext";
 
 //== NPM Components ==//
 
 //== Icons ==//
+import { BsCloudCheck } from "react-icons/bs";
 
 //== NPM Functions ==//
 
 //== Utility Functions ==//
 import classNames from "../../../Util/classNames";
-import { LayoutsOption } from "../Types/journal_types";
+import { ILayoutsOption } from "../Types/journal_types";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
@@ -27,6 +29,23 @@ export default function Layouts() {
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
     <div className="flex h-full flex-col items-center justify-start rounded-lg bg-zinc-200 dark:bg-zinc-800">
+      <div className="mb-8 rounded-lg bg-zinc-700 p-6">
+        {/* Saves / Unsaved Layouts */}
+        {JC.unsavedLayoutsChanges ? (
+          <>
+            <p className="dark:text-zinc-200">unsaved changes</p>
+            <p className="dark:text-zinc-200">click to save</p>
+            <CloudArrowUpIcon className="h-6 w-6 dark:text-zinc-200" />
+          </>
+        ) : (
+          <>
+            <p className="dark:text-zinc-200">saved</p>
+            <BsCloudCheck className="h-6 w-6 dark:text-zinc-200" />
+          </>
+        )}
+      </div>
+
+      {/* List of Layouts Options */}
       <p className="dark:text-zinc-200">layouts options</p>
       {JC.layoutsOptions.map((layoutsOption) => {
         return (
@@ -34,7 +53,7 @@ export default function Layouts() {
             <button
               className="m-2 rounded-lg bg-blue-500 p-2"
               onClick={() => {
-                JC.setLayouts(layoutsOption.layoutsObject);
+                JC.setLayouts(layoutsOption.layouts);
               }}
             >
               <p>{layoutsOption.name}</p>

@@ -1,7 +1,6 @@
-import { Layout } from "react-grid-layout";
-import { LayoutsOption } from "../Types/journal_types";
+import { ILayout, ILayoutsOption } from "../Types/journal_types";
 
-const chrt_2_big: Layout[] = [
+const chrt_2_md: ILayout[] = [
   {
     i: "StatsTable",
     x: 0,
@@ -31,7 +30,7 @@ const chrt_2_big: Layout[] = [
   },
 ];
 
-const chrt_2_small: Layout[] = [
+const chrt_2_sm: ILayout[] = [
   {
     i: "StatsTable",
     x: 0,
@@ -61,14 +60,11 @@ const chrt_2_small: Layout[] = [
   },
 ];
 
-export const chrt_2: LayoutsOption = {
+export const chrt_2: ILayoutsOption = {
   author: "chrt",
   name: "CHRT 2",
-  layoutsObject: {
-    lg: chrt_2_big,
-    md: chrt_2_big,
-    sm: chrt_2_small,
-    xs: chrt_2_small,
-    xxs: chrt_2_small,
+  layouts: {
+    md: chrt_2_md,
+    sm: chrt_2_sm,
   },
 };

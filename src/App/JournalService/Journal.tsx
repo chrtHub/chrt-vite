@@ -1,5 +1,5 @@
 //-- react, react-router-dom, Auth0 --//
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 //-- TSX Components --//
 import CTA401Fallback from "./CTA401Fallback";
@@ -18,11 +18,13 @@ import "./rgl-overrides.css";
 import { ArrowDownRightIcon } from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
+import { useMediaQuery } from "usehooks-ts";
 
 //-- Utility Functions --//
+import { processSaveableLayouts } from "./Util/processSaveableLayouts";
 import classNames from "../../Util/classNames";
 import AGG_PL_45_Days from "./Charts/AGG_PL_45_Days";
-import { chrt_1 } from "./Layouts/chrt_1";
+import { breakpoints } from "../../Util/TailwindBreakpoints";
 
 const ResponsiveGridLayout = WidthProvider(Responsive); //-- NOTE - don't call this inside the Journal component because its reference keeps changing and it will tangle with useJournalContext to cause an infinite render loop --//
 
@@ -32,22 +34,32 @@ const ResponsiveGridLayout = WidthProvider(Responsive); //-- NOTE - don't call t
 export default function Journal() {
   //-- React State --//
   const JC = useJournalContext();
+  console.log("layouts", JC.layouts); // DEV
+  console.log("saveableLayouts: ", JC.saveableLayouts); // DEV
 
-  // const onLayoutChange = (currentLayout: Layout[], allLayouts: Layouts) => {
-  //   console.log("onLayoutChange, currentLayout: ", currentLayout); // DEV
-  //   console.log("onLayoutChange, allLayouts: ", allLayouts); // DEV
-  //   // setMostRecentOnLayoutChangeResult(allLayouts);
-  // };
-
+  const onLayoutChange = (currentLayout: Layout[], allLayouts: Layouts) => {
+    JC.setSaveableLayouts(allLayouts);
+  };
   //-- Auth0 --//
 
   //-- Data Fetching --//
 
   //-- Other --//
+  const md = useMediaQuery(`(min-width: ${breakpoints.md})`);
 
   //-- Handlers --//
 
   //-- Side Effects --//
+  useEffect(() => {
+    //-- Check if there's unsaved layouts changes --//
+    if (JC.saveableLayouts) {
+      processSaveableLayouts(
+        JC.saveableLayouts,
+        md ? "md" : "sm", //-- From useMediaQuery --//
+        JC.setUnsavedLayoutsChanges
+      );
+    }
+  }, [JC.saveableLayouts]);
 
   return (
     <>
@@ -59,17 +71,14 @@ export default function Journal() {
           style={{ transition: "none" }}
           className="layout"
           layouts={JC.layouts}
-          // onLayoutChange={onLayoutChange}
-
-          breakpoints={{
-            lg: 1024, //-- 12 cols --//
-            md: 768, //-- 12 cols --//
-            sm: 640, //-- 4 cols --//
-            xs: 1, //-- 4 cols --//
-            xxs: 0, //-- 4 cols --//
-          }} //-- Matching Tailwind CSS - but note that this is for the container, not the screen --//
+          onLayoutChange={onLayoutChange}
+          breakpoint={md ? "md" : "sm"} //-- From useMediaQuery --//
+          breakpoints={{ md: 700, sm: 0 }} //-- Overridden by using 'breakpoint' based on media query value above --//
+          cols={{
+            md: 12,
+            sm: 4,
+          }} //-- Aribtrary --//
           rowHeight={30}
-          cols={{ lg: 12, md: 12, sm: 4, xs: 4, xxs: 4 }} //-- Aribtrary --//
           resizeHandles={["se"]}
           resizeHandle={
             <span
