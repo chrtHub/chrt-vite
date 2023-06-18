@@ -24,6 +24,7 @@ import {
 } from "@heroicons/react/24/outline";
 import {
   ExclamationTriangleIcon,
+  PlusIcon,
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 
@@ -380,25 +381,22 @@ export default function AppLayout() {
             id="app-layout-rhs-content"
             className="mx-auto flex h-full max-w-screen-2xl flex-col px-4 lg:pl-2 lg:pr-4"
           >
-            {/* START OF TOP BAR */}
-            <div
+            {/* START OF HAMBURGER BUTTON (hidden after lg) */}
+            <span className="sr-only">Open sidebar</span>
+            <button
+              type="button"
+              onClick={() => setMobileSidebarOpen(true)}
               className={classNames(
-                `${LIGHT_THEME_BG} ${DARK_THEME_BG}`,
-                "sticky top-0 flex h-16 flex-shrink-0"
+                "absolute left-3 top-4 z-30",
+                "flex h-10 w-10 items-center justify-center rounded-full p-2 shadow-sm lg:hidden",
+                "bg-zinc-600 text-white opacity-40 hover:bg-zinc-500",
+                "dark:bg-zinc-300 dark:text-zinc-900 dark:opacity-40",
+                "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
               )}
             >
-              {/* START OF HAMBURGER BUTTON (hidden after lg) */}
-              <button
-                type="button"
-                className="pr-4 text-zinc-500 hover:text-green-600 hover:outline-none hover:ring-2 hover:ring-inset hover:ring-transparent lg:hidden"
-                onClick={() => setMobileSidebarOpen(true)}
-              >
-                <span className="sr-only">Open sidebar</span>
-                <Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
-              </button>
-              {/* END OF HAMBURGER BUTTON (hidden after lg) */}
-            </div>
-            {/* END OF TOP BAR */}
+              <Bars3BottomLeftIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
+            {/* END OF HAMBURGER BUTTON (hidden after lg) */}
 
             {/* START OF MAIN */}
             <main id="app-layout-react-router-Outlet" className="h-full">
@@ -413,3 +411,5 @@ export default function AppLayout() {
     </>
   );
 }
+
+// className=
