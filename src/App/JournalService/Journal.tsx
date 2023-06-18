@@ -1,5 +1,5 @@
 //-- react, react-router-dom, Auth0 --//
-import { useState, useMemo, useEffect } from "react";
+import { useEffect } from "react";
 
 //-- TSX Components --//
 import CTA401Fallback from "./CTA401Fallback";
@@ -53,7 +53,7 @@ export default function Journal() {
     if (JC.saveableLayouts) {
       processSaveableLayouts(
         md ? "md" : "sm", //-- From useMediaQuery --//
-        JC.layouts,
+        JC.currentLayoutsOption.layouts,
         JC.saveableLayouts,
         JC.setUnsavedLayoutsChanges
       );
@@ -69,7 +69,7 @@ export default function Journal() {
         <ResponsiveGridLayout
           style={{ transition: "none" }}
           className="layout"
-          layouts={JC.layouts}
+          layouts={JC.currentLayoutsOption.layouts}
           onLayoutChange={onLayoutChange}
           breakpoint={md ? "md" : "sm"} //-- From useMediaQuery --//
           breakpoints={{ md: 700, sm: 0 }} //-- Overridden by using 'breakpoint' based on media query value above --//

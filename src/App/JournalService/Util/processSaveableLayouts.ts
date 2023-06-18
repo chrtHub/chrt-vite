@@ -11,6 +11,10 @@ export const processSaveableLayouts = (
   const existing = layouts[breakpoint];
   const saveable = saveableLayouts[breakpoint];
 
+  // console.log("processSaveableLayouts"); // DEV
+  // console.log("existing: ", existing); // DEV
+  // console.log("saveable: ", saveable); // DEV
+
   if (!existing || !saveable) {
     console.error("Missing layouts for the specified breakpoint");
     return;
@@ -34,7 +38,7 @@ export const processSaveableLayouts = (
         setUnsavedLayoutsChanges(false);
       }
     } else {
-      // setUnsavedLayoutsChanges(true); // DEV - is this needed here? What about when an item is added to the grid?
+      // DEV - what's needed here? What about when an item is added to the grid? Perhaps check if saveableLayout has an "i" that existingLayout does not?
       console.error(`Saveable layout item '${existingLayout.i}' not found.`);
     }
   }
