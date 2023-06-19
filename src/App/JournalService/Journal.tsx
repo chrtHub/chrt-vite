@@ -1,5 +1,5 @@
 //-- react, react-router-dom, Auth0 --//
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 //-- TSX Components --//
@@ -8,6 +8,7 @@ import { useJournalContext } from "../../Context/JournalContext";
 import PL_45_Days from "./Charts/PL_45_Days";
 import StatsTable from "./Tables/StatsTable";
 import { DraggableHandle } from "./Reuseable/DraggableHandle";
+import ActiveDevelopmentBanner from "./ActiveDevelopmentBanner";
 
 //-- NPM Components --//
 import { WidthProvider, Responsive, Layouts, Layout } from "react-grid-layout";
@@ -38,6 +39,7 @@ export default function Journal() {
   //-- React State --//
   const JC = useJournalContext();
   const { layoutType, layoutUrlNameOrObjectId } = useParams();
+  const [showBanner, setShowBanner] = useState<boolean>(true);
 
   //-- Auth0 --//
 
@@ -118,6 +120,7 @@ export default function Journal() {
   return (
     <>
       <CTA401Fallback />
+      {showBanner && <ActiveDevelopmentBanner setShowBanner={setShowBanner} />}
 
       {/* ----- Grid Layout ----- */}
       <div className="h-full w-full">

@@ -29,6 +29,7 @@ import Subscriptions from "./App/Account/Subscriptions/Subscriptions";
 import DataPrivacy from "./App/Account/DataPrivacy/DataPrivacy";
 
 //-- TSX Components: Special --//
+import JournalRoadmap from "./App/JournalService/JournalRoadmap";
 import DevResources from "./App/Dev/DevResources";
 
 //-- TSX Components: Info --//
@@ -65,6 +66,10 @@ const router = createBrowserRouter(
         <Route
           path="/journal/:layoutType?/:layoutUrlNameOrObjectId?"
           element={<AuthGuard component={Journal} />}
+        />
+        <Route
+          path="/journal_roadmap"
+          element={<AuthGuard component={JournalRoadmap} />}
         />
         <Route
           path="/journal_files"
