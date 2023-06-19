@@ -42,7 +42,7 @@ const NoSavedConversations = () => {
       <p className="font-semibold text-zinc-600 dark:text-zinc-300">
         No Saved Conversations
       </p>
-      <ChatBubbleLeftIcon className="mt-2 h-20 w-20 text-zinc-200 dark:text-zinc-950" />
+      <ChatBubbleLeftIcon className="mt-2 h-20 w-20 text-zinc-200 dark:text-zinc-900" />
     </div>
   );
 };
