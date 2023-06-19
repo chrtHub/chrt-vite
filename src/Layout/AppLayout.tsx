@@ -390,12 +390,18 @@ export default function AppLayout() {
               onClick={() => setMobileSidebarOpen(true)}
               className={classNames(
                 pathname.startsWith("/gpt")
-                  ? "absolute left-3 top-3" //-- Top of screen for /gpt --//
-                  : "absolute bottom-3 left-3", //-- bottom of screen elsewhere --//
+                  ? classNames(
+                      "absolute bottom-0.5 left-0.5", //-- Top of screen for /gpt --//
+                      "h-14 w-14"
+                    )
+                  : classNames(
+                      "absolute bottom-1.5 left-1.5", //-- bottom of screen elsewhere --//
+                      "h-16 w-16"
+                    ),
                 "z-30",
-                "flex h-16 w-16 items-center justify-center rounded-full p-2 shadow-sm lg:hidden",
-                "bg-zinc-600 text-white opacity-40 hover:bg-zinc-500",
-                "dark:bg-zinc-300 dark:text-zinc-900 dark:opacity-40",
+                "flex items-center justify-center rounded-lg p-2 shadow-sm lg:hidden",
+                "bg-zinc-600 text-white opacity-50 hover:bg-zinc-500",
+                "dark:bg-zinc-300 dark:text-zinc-900 dark:opacity-50",
                 "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
               )}
             >

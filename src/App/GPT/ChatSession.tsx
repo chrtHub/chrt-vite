@@ -512,7 +512,7 @@ export default function ChatSession() {
         <div>
           <div
             id="llm-prompt-input"
-            className="mb-3 flex justify-center align-bottom lg:mb-4"
+            className="mb-5 flex justify-center align-bottom lg:mb-4"
           >
             <label htmlFor="prompt-input" className="sr-only">
               Prompt Input
@@ -569,7 +569,7 @@ export default function ChatSession() {
               )}
             </div>
           </div>
-          <div className="mb-0.5 lg:mb-1">
+          <div className="mb-0.5 pl-12 lg:mb-1">
             {/* Smaller than large screens */}
             <p className="flex-row justify-center text-center font-sans text-xs italic text-zinc-500 dark:text-zinc-400 lg:hidden">
               Due to the&nbsp;
