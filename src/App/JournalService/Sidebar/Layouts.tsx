@@ -74,46 +74,79 @@ export default function Layouts() {
 
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="flex h-full flex-col items-center justify-start rounded-lg dark:bg-zinc-800 dark:text-zinc-200">
+    <div className="flex h-full flex-col items-center justify-start rounded-lg dark:text-zinc-200">
       {/* START OF NARROW MODE */}
       {!md && (
         <div className="mb-1.5 flex w-full items-center justify-center rounded-full bg-zinc-200">
-          <p className="font-bold text-zinc-700">Narrow Mode Layout</p>
+          <p className="font-bold text-zinc-700 dark:text-zinc-200">
+            Narrow Mode Layout
+          </p>
         </div>
       )}
       {/* END OF NARROW MODE */}
 
       {/* START OF SAVE LAYOUT */}
-      <div className="mb-8 w-full">
+      <div className="w-full">
         {JC.unsavedLayoutsChanges ? (
-          <div className="flex w-full flex-row items-center justify-center rounded-full bg-pink-200">
-            <p className="text-zinc-500 dark:text-zinc-200">
-              click to save changes
-            </p>
-            <CloudArrowUpIcon className="h-6 w-6 dark:text-zinc-200" />
-          </div>
+          <button
+            onClick={() => {
+              console.log("TODO save layout");
+            }}
+            className={classNames(
+              "flex w-full flex-row items-center justify-center gap-x-1.5 rounded-full py-1.5 text-sm",
+              "bg-orange-200 text-orange-800 hover:bg-orange-300 hover:text-orange-900",
+              "dark:bg-orange-900 dark:text-orange-200 dark:hover:bg-orange-800 dark:hover:text-orange-100"
+            )}
+          >
+            <p className="">Click to Save Changes</p>
+            <CloudArrowUpIcon className="h-5 w-5" />
+          </button>
         ) : (
-          <div className="flex w-full flex-row items-center justify-center rounded-md bg-blue-200">
-            <p className="dark:text-zinc-200">saved</p>
-            <CloudCheckReactIcon className="h-6 w-6 dark:text-zinc-200" />
+          <div
+            className={classNames(
+              "flex w-full cursor-not-allowed flex-row items-center justify-center gap-x-1.5 rounded-full py-1.5 text-sm",
+              "bg-sky-300 text-sky-800 ",
+              "dark:bg-sky-700 dark:text-sky-200"
+            )}
+          >
+            <p className="font-semibold">Saved to Cloud</p>
+            <CloudCheckReactIcon className="h-5 w-5" />
           </div>
         )}
       </div>
       {/* END OF SAVE LAYOUT */}
+
+      {/* START OF CURRENT LAYOUT NAME */}
+      <div className="mt-2 flex w-full justify-start">
+        <p className="text-zinc-500 dark:text-zinc-300">
+          Current Layout:{" "}
+          <span className="text-zinc-800 dark:text-zinc-100">
+            {JC.currentLayoutsOption.name}
+          </span>
+        </p>
+      </div>
+      {/* END OF CURRENT LAYOUT NAME */}
 
       {/* START OF LAYOUTS OPTIONS COMBOBOX */}
       <Combobox
         as="div"
         value={JC.currentLayoutsOption}
         onChange={JC.setCurrentLayoutsOption}
-        className="w-full"
+        className="mt-2 w-full"
       >
-        <Combobox.Label className="text-sm font-medium leading-6 text-zinc-900">
+        <Combobox.Label className="text-sm font-medium leading-6 text-zinc-900 dark:text-zinc-200">
           Layouts
         </Combobox.Label>
         <div className="relative">
           <Combobox.Input
-            className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+            className={classNames(
+              "w-full rounded-md border-0  py-1.5 pl-3 pr-10 text-zinc-900 shadow-sm sm:text-sm sm:leading-6",
+              "ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-green-600",
+              "ring-zinc-300",
+              "dark:ring-zinc-700",
+              "bg-white",
+              "dark:bg-zinc-800 dark:text-zinc-100"
+            )}
             onChange={(event) => setComboboxQuery(event.target.value)}
             displayValue={(layoutsOption: ILayoutsOption) => layoutsOption.name}
           />
@@ -125,7 +158,14 @@ export default function Layouts() {
           </Combobox.Button>
 
           {filteredLayoutsOptions?.length > 0 && (
-            <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            <Combobox.Options
+              className={classNames(
+                "absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md py-1 text-base shadow-lg focus:outline-none sm:text-sm",
+                "ring-1 ring-black ring-opacity-5",
+                "bg-white",
+                "dark:bg-zinc-800"
+              )}
+            >
               {filteredLayoutsOptions.map((layoutsOption) => (
                 <Combobox.Option
                   key={layoutsOption.name}
@@ -133,7 +173,9 @@ export default function Layouts() {
                   className={({ active }) =>
                     classNames(
                       "relative cursor-default select-none py-2 pl-8 pr-4",
-                      active ? "bg-green-600 text-white" : "text-zinc-900"
+                      active
+                        ? "bg-green-600 text-white dark:bg-green-700"
+                        : "text-zinc-900 dark:text-zinc-100"
                     )
                   }
                 >
@@ -152,7 +194,9 @@ export default function Layouts() {
                         <span
                           className={classNames(
                             "absolute inset-y-0 left-0 flex items-center pl-1.5",
-                            active ? "text-white" : "text-green-600"
+                            active
+                              ? "text-white"
+                              : "text-green-600 dark:text-green-400"
                           )}
                         >
                           <CheckIcon className="h-5 w-5" aria-hidden="true" />
@@ -180,20 +224,22 @@ export default function Layouts() {
             >
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute h-full w-full rounded-md bg-white"
+                className="pointer-events-none absolute h-full w-full rounded-md"
               />
+              {/* Toggle Slide Area */}
               <span
                 aria-hidden="true"
                 className={classNames(
-                  chrtLayoutsEnabled ? "bg-green-600" : "bg-gray-200",
+                  chrtLayoutsEnabled ? "bg-green-600" : "bg-zinc-200",
                   "pointer-events-none absolute mx-auto h-4 w-9 rounded-full transition-colors duration-200 ease-in-out"
                 )}
               />
+              {/* Toggle Knob */}
               <span
                 aria-hidden="true"
                 className={classNames(
                   chrtLayoutsEnabled ? "translate-x-5" : "translate-x-0",
-                  "pointer-events-none absolute left-0 inline-block h-5 w-5 transform rounded-full border border-gray-200 bg-white shadow ring-0 transition-transform duration-200 ease-in-out"
+                  "pointer-events-none absolute left-0 inline-block h-5 w-5 transform rounded-full border border-zinc-200 bg-white shadow ring-0 transition-transform duration-200 ease-in-out"
                 )}
               />
             </Switch>
@@ -212,20 +258,22 @@ export default function Layouts() {
             >
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute h-full w-full rounded-md bg-white"
+                className="pointer-events-none absolute h-full w-full rounded-md"
               />
+              {/* Toggle Slide Area */}
               <span
                 aria-hidden="true"
                 className={classNames(
-                  customLayoutsEnabled ? "bg-green-600" : "bg-gray-200",
+                  customLayoutsEnabled ? "bg-green-600" : "bg-zinc-200",
                   "pointer-events-none absolute mx-auto h-4 w-9 rounded-full transition-colors duration-200 ease-in-out"
                 )}
               />
+              {/* Toggle Knob */}
               <span
                 aria-hidden="true"
                 className={classNames(
                   customLayoutsEnabled ? "translate-x-5" : "translate-x-0",
-                  "pointer-events-none absolute left-0 inline-block h-5 w-5 transform rounded-full border border-gray-200 bg-white shadow ring-0 transition-transform duration-200 ease-in-out"
+                  "pointer-events-none absolute left-0 inline-block h-5 w-5 transform rounded-full border border-zinc-200 bg-white shadow ring-0 transition-transform duration-200 ease-in-out"
                 )}
               />
             </Switch>

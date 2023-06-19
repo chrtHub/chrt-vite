@@ -61,8 +61,10 @@ const chrt_1_sm: ILayout[] = [
 ];
 
 export const chrt_1: ILayoutsOption = {
+  _id: "dummy_id_1",
   author: "chrt",
   name: "CHRT 1",
+  urlName: "chrt_2",
   layouts: {
     md: chrt_1_md,
     sm: chrt_1_sm,

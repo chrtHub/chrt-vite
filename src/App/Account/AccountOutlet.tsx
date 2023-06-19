@@ -85,7 +85,7 @@ export default function AccountOutlet() {
 
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div>
+    <div className="mt-3 lg:mt-6">
       {/* Tabs */}
       <div className="mb-3 border-b border-zinc-300 dark:border-zinc-400">
         <nav className="flex overflow-x-auto pb-2">

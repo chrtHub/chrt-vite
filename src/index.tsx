@@ -62,8 +62,14 @@ const router = createBrowserRouter(
       <Route path="/" element={<App />}>
         {/* Services */}
         <Route index element={<Home />} />
-        <Route path="/journal" element={<AuthGuard component={Journal} />} />
-        <Route path="/files" element={<AuthGuard component={JournalFiles} />} />
+        <Route
+          path="/journal/:layoutType?/:layoutUrlNameOrObjectId?"
+          element={<AuthGuard component={Journal} />}
+        />
+        <Route
+          path="/journal_files"
+          element={<AuthGuard component={JournalFiles} />}
+        />
         <Route
           path="gpt/:entity_type?/:conversation_id?"
           element={<AuthGuard component={GPT} />}
