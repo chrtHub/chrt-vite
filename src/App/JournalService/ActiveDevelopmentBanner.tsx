@@ -27,14 +27,14 @@ export default function ActiveDevelopmentBanner({ setShowBanner }: IProps) {
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
     <>
-      <div
-        className={classNames(
-          "mt-2 flex items-center justify-center gap-x-6 rounded-md px-6 py-2.5 text-center sm:px-3.5",
-          "bg-indigo-600 hover:bg-indigo-500",
-          "dark:bg-indigo-900 dark:hover:bg-indigo-800"
-        )}
-      >
-        <NavLink to={"/journal_roadmap"} className={classNames("", "")}>
+      <NavLink to={"/journal_roadmap"}>
+        <div
+          className={classNames(
+            "mt-2 flex items-center justify-center gap-x-6 rounded-md px-6 py-2.5 text-center sm:px-3.5",
+            "bg-indigo-600 hover:bg-indigo-500",
+            "dark:bg-indigo-900 dark:hover:bg-indigo-800"
+          )}
+        >
           <p className="text-sm leading-6 text-white">
             <strong className="font-semibold">CHRT Journal</strong>
             <svg
@@ -47,20 +47,20 @@ export default function ActiveDevelopmentBanner({ setShowBanner }: IProps) {
             currently in Active Development, click to view the roadmap&nbsp;
             <span aria-hidden="true">&rarr;</span>
           </p>
-        </NavLink>
-        {/* <div className="flex flex-1 justify-end">
+          {/* <div className="flex flex-1 justify-end">
           <button
-            type="button"
-            className="-m-3 p-3 focus-visible:outline-offset-[-4px]"
-            onClick={() => {
+          type="button"
+          className="-m-3 p-3 focus-visible:outline-offset-[-4px]"
+          onClick={() => {
               setShowBanner(false);
             }}
-          >
+            >
             <span className="sr-only">Dismiss</span>
             <XMarkIcon className="h-5 w-5 text-white" aria-hidden="true" />
-          </button>
+            </button>
         </div> */}
-      </div>
+        </div>
+      </NavLink>
     </>
   );
 }
