@@ -60,7 +60,7 @@ export default function MainMenu({
   return (
     <Menu
       as="div"
-      className="relative mb-0 w-full pl-3 pr-3 text-left lg:mb-2 lg:pr-0"
+      className="relative mb-0 w-full px-2 text-left lg:mb-2 lg:pl-3 lg:pr-0"
     >
       {({ open }) => (
         <>

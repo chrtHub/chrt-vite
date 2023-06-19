@@ -156,7 +156,7 @@ export default function AppLayout() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div className="fixed inset-0 bg-zinc-600 bg-opacity-50 dark:bg-zinc-900 dark:bg-opacity-75" />
+              <div className="fixed inset-0 bg-zinc-400 bg-opacity-50 dark:bg-zinc-700 dark:bg-opacity-50" />
             </Transition.Child>
 
             <div className="fixed inset-0 z-40 flex">
@@ -184,15 +184,15 @@ export default function AppLayout() {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                   >
-                    <div className="absolute right-0 top-0 -mr-12 pt-2">
+                    <div className="absolute right-0 top-0 -mr-14 pt-2">
                       <button
                         type="button"
-                        className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black dark:focus:ring-white"
+                        className="ml-1 flex h-10 w-10 items-center justify-center rounded-full bg-zinc-50 opacity-60 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black dark:bg-zinc-700 dark:focus:ring-white"
                         onClick={() => setMobileSidebarOpen(false)}
                       >
                         <span className="sr-only">Close sidebar</span>
                         <XMarkIcon
-                          className="h-6 w-6 text-black dark:text-white"
+                          className="h-6 w-6 text-zinc-700 dark:text-zinc-50"
                           aria-hidden="true"
                         />
                       </button>
@@ -279,7 +279,7 @@ export default function AppLayout() {
                 </Dialog.Panel>
               </Transition.Child>
               {/* SPACER FOR 'CLOSE' ICON */}
-              <div className="w-14 flex-shrink-0" />
+              <div className="w-16 flex-shrink-0" />
             </div>
           </Dialog>
         </Transition.Root>
@@ -379,7 +379,7 @@ export default function AppLayout() {
         >
           <div
             id="app-layout-rhs-content"
-            className="mx-auto flex h-full max-w-screen-2xl flex-col px-4 lg:pl-2 lg:pr-4"
+            className="mx-auto flex h-full max-w-screen-2xl flex-col px-2 lg:pl-2 lg:pr-4"
           >
             {/* START OF HAMBURGER BUTTON (hidden after lg) */}
             <span className="sr-only">Open sidebar</span>
@@ -387,8 +387,11 @@ export default function AppLayout() {
               type="button"
               onClick={() => setMobileSidebarOpen(true)}
               className={classNames(
-                "absolute left-3 top-4 z-30",
-                "flex h-10 w-10 items-center justify-center rounded-full p-2 shadow-sm lg:hidden",
+                pathname.startsWith("/gpt")
+                  ? "absolute left-3 top-3" //-- Top of screen for /gpt --//
+                  : "absolute bottom-3 left-3", //-- bottom of screen elsewhere --//
+                "z-30",
+                "flex h-16 w-16 items-center justify-center rounded-full p-2 shadow-sm lg:hidden",
                 "bg-zinc-600 text-white opacity-40 hover:bg-zinc-500",
                 "dark:bg-zinc-300 dark:text-zinc-900 dark:opacity-40",
                 "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"

@@ -79,7 +79,7 @@ export default function Journal() {
   // think differently about the "default" chart. probably show skeleton instead until one of these layout loading situations resolves
   // // chrt layout
   // // custom layout
-  // what to do at /journal? show some default stuff. For now, chrt_1, later on, P&L Calendar.
+  // what to do at /journal? show some default stuff. For now, chrt_1, later on, P&L
   if (layoutType === "chrt") {
     // (1) search by name or id, (2) if found, set that as the current layout (else toast)
     let foundLayoutsOption = JC.layoutsOptions.find((layoutsOption) => {
