@@ -97,7 +97,7 @@ export default function InfoPagesNav() {
   return (
     <div>
       {/* Tabs */}
-      <div className="border-b border-zinc-300 dark:border-zinc-400">
+      <div className="border-b border-zinc-300 pt-6 dark:border-zinc-400">
         <nav className="flex overflow-x-auto pb-2">
           <ul
             role="list"
