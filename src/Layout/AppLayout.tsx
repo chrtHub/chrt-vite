@@ -359,7 +359,8 @@ export default function AppLayout() {
             >
               {/* Secondary Items per Route */}
               {pathname.startsWith("/gpt") && <Conversations />}
-              {pathname.startsWith("/journal") && <Layouts />}
+              {pathname.startsWith("/journal") &&
+                !pathname.startsWith("/journal_") && <Layouts />}
             </div>
             {/* END OF SECONDARY ITEMS */}
 
