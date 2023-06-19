@@ -92,17 +92,25 @@ export default function Layouts() {
             onClick={() => {
               console.log("TODO save layout");
             }}
-            className="flex w-full flex-row items-center justify-center gap-x-3 rounded-full py-1 hover:bg-zinc-500 dark:bg-yellow-800"
+            className={classNames(
+              "flex w-full flex-row items-center justify-center gap-x-1.5 rounded-full py-1.5 text-sm",
+              "bg-orange-200 text-orange-800 hover:bg-orange-300 hover:text-orange-900",
+              "dark:bg-orange-900 dark:text-orange-200 dark:hover:bg-orange-800 dark:hover:text-orange-100"
+            )}
           >
-            <p className="text-zinc-500 dark:text-zinc-200">
-              Click to Save Changes
-            </p>
-            <CloudArrowUpIcon className="h-6 w-6 dark:text-zinc-200" />
+            <p className="">Click to Save Changes</p>
+            <CloudArrowUpIcon className="h-5 w-5" />
           </button>
         ) : (
-          <div className="flex w-full cursor-not-allowed flex-row items-center justify-center gap-x-3 rounded-full py-1 dark:bg-green-700">
-            <p className="text-zinc-700 dark:text-zinc-200">Saved</p>
-            <CloudCheckReactIcon className="h-6 w-6 text-zinc-700 dark:text-zinc-200" />
+          <div
+            className={classNames(
+              "flex w-full cursor-not-allowed flex-row items-center justify-center gap-x-1.5 rounded-full py-1.5 text-sm",
+              "bg-sky-300 text-sky-800 ",
+              "dark:bg-sky-700 dark:text-sky-200"
+            )}
+          >
+            <p className="font-semibold">Saved to Cloud</p>
+            <CloudCheckReactIcon className="h-5 w-5" />
           </div>
         )}
       </div>
