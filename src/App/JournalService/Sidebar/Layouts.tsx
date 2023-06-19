@@ -75,16 +75,6 @@ export default function Layouts() {
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
     <div className="flex h-full flex-col items-center justify-start rounded-lg dark:text-zinc-200">
-      {/* START OF NARROW MODE */}
-      {!md && (
-        <div className="mb-1.5 flex w-full items-center justify-center rounded-full bg-zinc-200">
-          <p className="font-bold text-zinc-700 dark:text-zinc-200">
-            Narrow Mode Layout
-          </p>
-        </div>
-      )}
-      {/* END OF NARROW MODE */}
-
       {/* START OF SAVE LAYOUT */}
       <div className="w-full">
         {JC.unsavedLayoutsChanges ? (
@@ -115,6 +105,16 @@ export default function Layouts() {
         )}
       </div>
       {/* END OF SAVE LAYOUT */}
+
+      {/* START OF NARROW MODE */}
+      {!md && (
+        <div className="mt-1.5 flex w-full items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-700">
+          <p className="font-bold text-zinc-700 dark:text-zinc-200">
+            Narrow Mode Layout
+          </p>
+        </div>
+      )}
+      {/* END OF NARROW MODE */}
 
       {/* START OF CURRENT LAYOUT NAME */}
       <div className="mt-2 flex w-full justify-start">

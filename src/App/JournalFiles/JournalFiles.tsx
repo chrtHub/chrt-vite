@@ -284,7 +284,7 @@ export default function JournalFiles({}: IProps) {
   return (
     <div
       id="journal-files"
-      className="relative mt-6 flex h-full flex-col justify-start"
+      className="relative flex h-full flex-col justify-start pt-6"
     >
       <CTA401Fallback />
 

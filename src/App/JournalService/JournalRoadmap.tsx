@@ -18,7 +18,7 @@ import { MapIcon } from "@heroicons/react/24/outline";
 const steps = [
   {
     name: "Data",
-    description: "Store data from brokerage files in database",
+    description: "Store data from brokerage files to database",
     status: "complete",
   },
   {
