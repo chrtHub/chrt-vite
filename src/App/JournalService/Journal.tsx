@@ -38,7 +38,7 @@ export default function Journal() {
   //-- React State --//
   const JC = useJournalContext();
   const { layoutType, layoutUrlNameOrObjectId } = useParams();
-  console.log(layoutType, layoutUrlNameOrObjectId); // dev
+
   //-- Auth0 --//
 
   //-- Data Fetching --//
@@ -75,18 +75,27 @@ export default function Journal() {
     }
   }, [layoutType, layoutUrlNameOrObjectId]);
 
+  // TODO - put this in a useEffect
+  // think differently about the "default" chart. probably show skeleton instead until one of these layout loading situations resolves
+  // // chrt layout
+  // // custom layout
+  // what to do at /journal? show some default stuff. For now, chrt_1, later on, P&L Calendar.
   if (layoutType === "chrt") {
     // (1) search by name or id, (2) if found, set that as the current layout (else toast)
-    let foundLayout = JC.layoutsOptions.find((layoutsOption) => {
+    let foundLayoutsOption = JC.layoutsOptions.find((layoutsOption) => {
       if (layoutsOption.author === "chrt") {
         if (layoutsOption.urlName === layoutUrlNameOrObjectId) {
-          return layoutsOption;
+          return true;
         } else if (layoutsOption._id === layoutUrlNameOrObjectId) {
-          return layoutsOption;
+          return true;
         }
       }
-      return;
+      return false;
     });
+    console.log("foundLayoutsOption: ", foundLayoutsOption); // DEV
+    if (foundLayoutsOption) {
+      JC.setCurrentLayoutsOption(foundLayoutsOption);
+    }
   } else if (layoutType === "custom") {
     // // (1) wait for MongoDB fetch to return custom layouts, (2) seach by name or id, (3) if found, set that as the current layout (else, toast)
     // // until resolved, show loading state
