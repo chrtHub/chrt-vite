@@ -1,4 +1,7 @@
 //-- Charts --//
+
+import { ObjectId } from "bson";
+
 //-- PL 45 Days --//
 export interface IDateAndProfitRow {
   date: string;
@@ -35,10 +38,18 @@ export interface IStatsAllTime {
 // },
 
 //-- Note - 'ILayouts' is a breakpoint name + ILayout[] --//
-
 interface ILayoutsOption {
+  _id: string; //-- {MONGOIZE} ObjectId --//
   author: string;
   name: string;
+  urlName: string; //-- Allow letters, numbers, hyphens, and underscores --//
+  layouts: ILayouts;
+}
+interface ILayoutsOption_Mongo {
+  _id: ObjectId; //-- MONGOIZED --//
+  author: string;
+  name: string;
+  urlName: string; //-- Allow letters, numbers, hyphens, and underscores --//
   layouts: ILayouts;
 }
 

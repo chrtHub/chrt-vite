@@ -87,7 +87,7 @@ export default function AppLayout() {
   let navigationItems: INavigationItem[] = [
     { name: "Home", to: "/", icon: HomeIcon },
     { name: "Journal", to: "/journal", icon: CalendarDaysIcon },
-    { name: "Journal Files", to: "/files", icon: FolderIcon },
+    { name: "Journal Files", to: "/journal_files", icon: FolderIcon },
     { name: "ChrtGPT", to: "/gpt", icon: ChatBubbleLeftRightIcon },
   ];
   const pathMatchForNavItems = pathname.match(/^\/([^/]+)/)?.[0] || "/";

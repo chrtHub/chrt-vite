@@ -21,6 +21,10 @@ export interface IJournalContext {
   filesListState: IFileMetadata[];
   setFilesList: React.Dispatch<React.SetStateAction<IFileMetadata[]>>;
   //-- react-grid-layout --//
+  layoutUrlNameOrObjectId: { type: string; value: string } | null;
+  setLayoutUrlNameOrObjectId: React.Dispatch<
+    React.SetStateAction<{ type: string; value: string } | null>
+  >;
   layoutsOptions: ILayoutsOption[];
   setLayoutsOptions: React.Dispatch<React.SetStateAction<ILayoutsOption[]>>;
   defaultLayoutsOption: ILayoutsOption;
@@ -69,6 +73,10 @@ function JournalContextProvider({ children }: PropsWithChildren) {
   const [filesListState, setFilesList] =
     useState<IFileMetadata[]>(defaultFilesList);
   //-- react-grid-layout --//
+  const [layoutUrlNameOrObjectId, setLayoutUrlNameOrObjectId] = useState<{
+    type: string;
+    value: string;
+  } | null>(null);
   const [layoutsOptions, setLayoutsOptions] =
     useState<ILayoutsOption[]>(_chrtLayoutsOptions);
   const defaultLayoutsOption: ILayoutsOption = layoutsOptions[0];
@@ -96,6 +104,8 @@ function JournalContextProvider({ children }: PropsWithChildren) {
     filesListState,
     setFilesList,
     //-- react-grid-layout --//
+    layoutUrlNameOrObjectId,
+    setLayoutUrlNameOrObjectId,
     layoutsOptions,
     setLayoutsOptions,
     defaultLayoutsOption,

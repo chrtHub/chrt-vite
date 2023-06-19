@@ -2,18 +2,17 @@
 import { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 
 //-- TSX Components --//
 import ChatSession from "./ChatSession";
-import { ObjectId } from "bson";
-import { useChatContext } from "../../Context/ChatContext";
 
 //-- NPM Components --//
 
 //-- Icons --//
 
 //-- NPM Functions --//
+import { toast } from "react-toastify";
+import { ObjectId } from "bson";
 
 //-- Utility Functions --//
 
@@ -38,13 +37,12 @@ export default function GPT() {
 
   //-- Side Effects --//
   //-- Validate path params --//
-
   useEffect(() => {
     const validEntityTypes = [
       "c", //-- for "conversation" --//
     ];
 
-    //-- invalid entity type, toast --//
+    //-- If invalid entity type, toast --//
     if (entity_type && !validEntityTypes.includes(entity_type)) {
       toast(`Invalid URL parameter: "/${entity_type}"`);
     }

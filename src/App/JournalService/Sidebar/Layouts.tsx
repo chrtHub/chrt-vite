@@ -84,7 +84,7 @@ export default function Layouts() {
       {/* END OF NARROW MODE */}
 
       {/* START OF SAVE LAYOUT */}
-      <div className="mb-8 w-full">
+      <div className="w-full">
         {JC.unsavedLayoutsChanges ? (
           <div className="flex w-full flex-row items-center justify-center rounded-full bg-pink-200">
             <p className="text-zinc-500 dark:text-zinc-200">
@@ -101,12 +101,21 @@ export default function Layouts() {
       </div>
       {/* END OF SAVE LAYOUT */}
 
+      {/* START OF CURRENT LAYOUT NAME */}
+      <div className="mt-2 flex w-full justify-start">
+        <p className="text-zinc-500">
+          Current Layout:{" "}
+          <span className="text-zinc-800">{JC.currentLayoutsOption.name}</span>
+        </p>
+      </div>
+      {/* END OF CURRENT LAYOUT NAME */}
+
       {/* START OF LAYOUTS OPTIONS COMBOBOX */}
       <Combobox
         as="div"
         value={JC.currentLayoutsOption}
         onChange={JC.setCurrentLayoutsOption}
-        className="w-full"
+        className="mt-2 w-full"
       >
         <Combobox.Label className="text-sm font-medium leading-6 text-zinc-900">
           Layouts

@@ -1,5 +1,6 @@
 //-- react, react-router-dom, Auth0 --//
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 //-- TSX Components --//
 import CTA401Fallback from "./CTA401Fallback";
@@ -19,6 +20,8 @@ import { ArrowDownRightIcon } from "@heroicons/react/24/solid";
 
 //-- NPM Functions --//
 import { useMediaQuery } from "usehooks-ts";
+import { toast } from "react-toastify";
+import { ObjectId } from "bson";
 
 //-- Utility Functions --//
 import { processSaveableLayouts } from "./Util/processSaveableLayouts";
@@ -34,7 +37,8 @@ const ResponsiveGridLayout = WidthProvider(Responsive); //-- NOTE - don't call t
 export default function Journal() {
   //-- React State --//
   const JC = useJournalContext();
-
+  const { layoutType, layoutUrlNameOrObjectId } = useParams();
+  console.log(layoutType, layoutUrlNameOrObjectId); // dev
   //-- Auth0 --//
 
   //-- Data Fetching --//
@@ -48,6 +52,48 @@ export default function Journal() {
   };
 
   //-- Side Effects --//
+  //-- Validate path params --//
+  useEffect(() => {
+    const validLayoutTypes = ["chrt", "custom"];
+
+    //-- If invalid layout type, toast --//
+    if (layoutType && !validLayoutTypes.includes(layoutType)) {
+      toast(`Invalid URL parameter: "/${layoutType}"`);
+    }
+
+    //-- Check if layoutUrlName or ObjectId --//
+    if (layoutUrlNameOrObjectId && ObjectId.isValid(layoutUrlNameOrObjectId)) {
+      JC.setLayoutUrlNameOrObjectId({
+        type: "ObjectId",
+        value: layoutUrlNameOrObjectId,
+      });
+    } else if (layoutUrlNameOrObjectId) {
+      JC.setLayoutUrlNameOrObjectId({
+        type: "name",
+        value: layoutUrlNameOrObjectId,
+      });
+    }
+  }, [layoutType, layoutUrlNameOrObjectId]);
+
+  if (layoutType === "chrt") {
+    // (1) search by name or id, (2) if found, set that as the current layout (else toast)
+    let foundLayout = JC.layoutsOptions.find((layoutsOption) => {
+      if (layoutsOption.author === "chrt") {
+        if (layoutsOption.urlName === layoutUrlNameOrObjectId) {
+          return layoutsOption;
+        } else if (layoutsOption._id === layoutUrlNameOrObjectId) {
+          return layoutsOption;
+        }
+      }
+      return;
+    });
+  } else if (layoutType === "custom") {
+    // // (1) wait for MongoDB fetch to return custom layouts, (2) seach by name or id, (3) if found, set that as the current layout (else, toast)
+    // // until resolved, show loading state
+    console.log("to handle custom");
+    //
+  }
+
   useEffect(() => {
     //-- Check if there's unsaved layouts changes --//
     if (JC.saveableLayouts) {
