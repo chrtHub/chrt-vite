@@ -38,7 +38,7 @@ import { useChatContext } from "../../../Context/ChatContext";
 //-- NoSavedConversations --//
 const NoSavedConversations = () => {
   return (
-    <div className="mb-2 mt-0.5 flex h-full w-full flex-col items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-900">
+    <div className="mb-2 mt-0.5 flex h-full w-full flex-col items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-800">
       <p className="font-semibold text-zinc-600 dark:text-zinc-300">
         No Saved Conversations
       </p>
