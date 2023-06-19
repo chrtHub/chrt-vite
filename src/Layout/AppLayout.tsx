@@ -264,7 +264,8 @@ export default function AppLayout() {
                     className="mx-2 my-1.5 flex-grow overflow-y-auto"
                   >
                     {pathname.startsWith("/gpt") && <Conversations />}
-                    {pathname.startsWith("/journal") && <Layouts />}
+                    {pathname.startsWith("/journal") &&
+                      !pathname.startsWith("/journal_") && <Layouts />}
                   </div>
                   {/* END OF SECONDARY ITEMS */}
 
