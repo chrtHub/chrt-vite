@@ -517,7 +517,7 @@ export default function ChatSession() {
             <label htmlFor="prompt-input" className="sr-only">
               Prompt Input
             </label>
-            <div className="relative mt-2 w-full max-w-prose rounded-md shadow-md">
+            <div className="relative mt-2 w-full max-w-prose rounded-lg shadow-md">
               <TextareaAutosize
                 autoFocus
                 ref={textareaRef}
@@ -569,7 +569,7 @@ export default function ChatSession() {
               )}
             </div>
           </div>
-          <div className="mb-0.5 pl-12 lg:mb-1">
+          <div className="mb-0.5 pl-14 pr-2 lg:mb-1">
             {/* Smaller than large screens */}
             <p className="flex-row justify-center text-center font-sans text-xs italic text-zinc-500 dark:text-zinc-400 lg:hidden">
               Due to the&nbsp;
