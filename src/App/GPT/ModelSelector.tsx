@@ -37,7 +37,7 @@ export default function ModelSelector() {
           <Listbox.Label className="sr-only">Change GPT Model</Listbox.Label>
 
           <div className="relative">
-            <Listbox.Button className="relative flex w-28 flex-row rounded-md bg-zinc-600 py-1.5 pr-5 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-50">
+            <Listbox.Button className="relative flex w-32 flex-row rounded-md bg-zinc-600 py-1.5 pr-5 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-50">
               {/*  */}
               <div className="flex-1">
                 <p className="text-sm font-semibold text-white">
@@ -65,7 +65,7 @@ export default function ModelSelector() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute bottom-full left-1/2 z-10 mb-2 w-48 origin-top-right -translate-x-1/2 transform divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:divide-zinc-200 dark:bg-zinc-800">
+              <Listbox.Options className="absolute bottom-full left-1/2 z-10 mb-2 w-64 origin-top-right -translate-x-1/2 transform divide-y divide-zinc-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:divide-zinc-200 dark:bg-zinc-800">
                 {Object.values(CC.model_options).map((model) => {
                   //-- Selected --//
                   const selected =

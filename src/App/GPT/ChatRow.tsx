@@ -298,11 +298,11 @@ export default function ChatRow({ row, prevRow, chatToast }: IProps) {
           className={classNames(
             mobile
               ? "flex flex-row items-center gap-x-1"
-              : "flex w-16 flex-col items-center"
+              : "flex w-full flex-col items-center"
           )}
         >
           <CpuChipIcon className="h-8 w-8 text-zinc-500 dark:text-zinc-400" />
-          <div className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+          <div className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
             {getFriendly(
               row.model.model_api_name,
               CC.model_friendly_names,
