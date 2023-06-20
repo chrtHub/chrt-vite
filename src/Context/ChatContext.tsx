@@ -60,6 +60,11 @@ function ChatContextProvider({ children }: PropsWithChildren) {
       model_developer_name: "openai",
       model_api_name: "gpt-3.5-turbo",
     },
+    "gpt-3.5-turbo-16k": {
+      api_provider_name: "openai",
+      model_developer_name: "openai",
+      model_api_name: "gpt-3.5-turbo-16k",
+    },
     "gpt-4": {
       api_provider_name: "openai",
       model_developer_name: "openai",
@@ -92,7 +97,14 @@ function ChatContextProvider({ children }: PropsWithChildren) {
       model_developer_friendly_name: "OpenAI",
       model_developer_link: "https://openai.com",
       model_friendly_name: "GPT-3.5",
-      model_description: "Power and Speed",
+      model_description: "Power and Speed (4k tokens)",
+    },
+    "gpt-3.5-turbo-16k": {
+      api_provider_friendly_name: "OpenAI",
+      model_developer_friendly_name: "OpenAI",
+      model_developer_link: "https://openai.com",
+      model_friendly_name: "GPT-3.5-16k",
+      model_description: "Power and Speed (16k tokens)",
     },
     "gpt-4": {
       api_provider_friendly_name: "OpenAI",
