@@ -23,34 +23,14 @@ interface ISteps {
 }
 const steps: ISteps[] = [
   {
-    name: "Name of step",
-    description: "description foo bar baz",
-    status: "complete",
+    name: "Journal",
+    description: "Ask an LLM questions about your own data",
+    status: "upcoming",
   },
   {
-    name: "Name of step",
-    description: "description foo bar baz",
-    status: "complete",
-  },
-  {
-    name: "Name of step",
-    description: "description foo bar baz",
-    status: "complete",
-  },
-  {
-    name: "Name of step",
-    description: "description foo bar baz",
-    status: "complete",
-  },
-  {
-    name: "Name of step",
-    description: "description foo bar baz",
-    status: "complete",
-  },
-  {
-    name: "Name of step",
-    description: "description foo bar baz",
-    status: "complete",
+    name: "Charts as responses",
+    description: "Receive charts powered by LLM-written code",
+    status: "upcoming",
   },
 ];
 
@@ -63,11 +43,11 @@ export default function ChrtGPTRoadmap() {
   //== Handlers ==//
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="flex h-full flex-col items-center justify-center">
+    <div className="mt-6 flex h-full w-full flex-col items-center justify-center rounded-lg bg-zinc-200">
       {/* TITLE */}
       <div className="mb-5 flex flex-row items-center justify-center gap-x-2">
         <p className="text-2xl font-bold text-zinc-700 dark:text-zinc-100">
-          ChrtGPT - Future
+          ChrtGPT + Journal
         </p>
         {/* <MapIcon className="h-6 w-6 text-zinc-700 dark:text-zinc-100" /> */}
       </div>

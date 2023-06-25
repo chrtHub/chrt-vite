@@ -8,21 +8,21 @@ import {
 
 const features = [
   {
-    name: "Journal Files",
-    description: "Upload your TD Ameritrade brokerage files",
-    to: "/journal_files",
-    icon: FolderIcon,
-  },
-  {
     name: "Journal",
     description: "See analysis of your trading data",
     to: "/journal",
     icon: ChartBarSquareIcon,
   },
   {
+    name: "Journal Files",
+    description: "Upload your TD Ameritrade brokerage files",
+    to: "/journal_files",
+    icon: FolderIcon,
+  },
+  {
     name: "ChrtGPT",
     description:
-      "Chat with OpenAI's latest LLMs, GPT-4 and GPT-3.5-Turbo (4k and 16k).",
+      "Chat with OpenAI's latest LLMs, GPT-4 and GPT-3.5-Turbo (4k and 16k)",
     to: "/gpt",
     icon: ChatBubbleLeftRightIcon,
   },
@@ -38,18 +38,23 @@ export default function Example() {
           </h2>
           {/* Start of Line 1 */}
           <p className="mt-6 text-lg leading-8 text-zinc-600">
-            CHRT is currently in active development.
-          </p>
-          {/* End of Line 1 */}
-
-          {/* Start of Line 1 */}
-          <p className="mt-6 text-lg leading-8 text-zinc-600">
-            Check out our running services below or view our{" "}
+            CHRT is currently in active development. Check out our running
+            services below or view our{" "}
             <Link to="/roadmap" className="text-blue-700 underline">
               roadmap
             </Link>
             .
           </p>
+          {/* End of Line 1 */}
+
+          {/* Start of Line 1 */}
+          {/* <p className="mt-6 text-lg leading-8 text-zinc-600">
+            Check out our running services below or view our{" "}
+            <Link to="/roadmap" className="text-blue-700 underline">
+              roadmap
+            </Link>
+            .
+          </p> */}
 
           {/* Start of Line 2 */}
           {/* <p className="mt-6 text-lg leading-8 text-zinc-600">

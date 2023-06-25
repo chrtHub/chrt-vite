@@ -29,7 +29,7 @@ const steps: ISteps[] = [
   },
   {
     name: "Charts (limited variety)",
-    description: "Generate charts from a user's data",
+    description: "Generate charts from trading data",
     status: "complete",
   },
   {
@@ -66,7 +66,7 @@ export default function JournalRoadmap() {
   //== Handlers ==//
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="flex h-full flex-col items-center justify-center">
+    <div className="flex h-full flex-col items-center justify-start">
       {/* TITLE */}
       <div className="mb-5 flex flex-row items-center justify-center gap-x-2">
         <p className="text-2xl font-bold text-zinc-700 dark:text-zinc-100">

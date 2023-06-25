@@ -23,33 +23,38 @@ interface ISteps {
 }
 const steps: ISteps[] = [
   {
-    name: "Name of step",
-    description: "description foo bar baz",
+    name: "LLM Response Streaming",
+    description: "Send a prompt to an LLM and ",
+    description2: "have a response streamed back",
     status: "complete",
   },
   {
-    name: "Name of step",
-    description: "description foo bar baz",
+    name: "Stop Response Generation",
+    description: "Stop a streaming response, saving",
+    description2: "what's already been received",
     status: "complete",
   },
   {
-    name: "Name of step",
-    description: "description foo bar baz",
+    name: "Conversation History",
+    description: "Save conversations and access",
+    description2: "them later",
     status: "complete",
   },
   {
-    name: "Name of step",
-    description: "description foo bar baz",
+    name: "Auto-title conversations",
+    description: "Use an LLM to create a conversation",
+    description2: "title when a conversation is started",
     status: "complete",
   },
   {
-    name: "Name of step",
-    description: "description foo bar baz",
+    name: "Resubmit edited and unedited prompts",
+    description: "Version history for any prompt and",
+    description2: "response pair",
     status: "complete",
   },
   {
-    name: "Name of step",
-    description: "description foo bar baz",
+    name: "LLM params",
+    description: "Set response temperature, etc.",
     status: "complete",
   },
 ];
@@ -63,11 +68,11 @@ export default function LLMChatRoadmap() {
   //== Handlers ==//
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="flex h-full flex-col items-center justify-center">
+    <div className="flex h-full flex-col items-center justify-start">
       {/* TITLE */}
       <div className="mb-5 flex flex-row items-center justify-center gap-x-2">
         <p className="text-2xl font-bold text-zinc-700 dark:text-zinc-100">
-          ChatGPT - Current
+          ChrtGPT
         </p>
         {/* <MapIcon className="h-6 w-6 text-zinc-700 dark:text-zinc-100" /> */}
       </div>

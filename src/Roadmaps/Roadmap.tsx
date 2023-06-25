@@ -2,8 +2,8 @@
 
 //== TSX Components, Functions ==//
 import JournalRoadmap from "./JournalRoadmap";
-import ChrtGPTRoadmap from "./ChrtGPTRoadmap";
-import LLMChatRoadmap from "./LLMChart";
+import ChrtGPTFutureRoadmap from "./ChrtGPTFutureRoadmap";
+import ChrtGPTCurrentRoadmap from "./ChrtGPTCurrentRoadmap";
 import { MapIcon } from "@heroicons/react/24/outline";
 
 //== NPM Components ==//
@@ -31,14 +31,14 @@ export default function ComponentName() {
         <MapIcon className="h-6 w-6 text-zinc-700 dark:text-zinc-100" />
       </div>
 
-      <div className="flex w-full flex-row justify-center bg-pink-200">
-        <LLMChatRoadmap />
+      <div className="flex w-full flex-col justify-center gap-x-6 gap-y-6 rounded-lg bg-zinc-100 py-6 lg:flex-row">
+        <ChrtGPTCurrentRoadmap />
         <JournalRoadmap />
       </div>
 
       {/* 3 */}
       <div className="flex w-full items-center justify-center">
-        <ChrtGPTRoadmap />
+        <ChrtGPTFutureRoadmap />
       </div>
     </div>
   );
