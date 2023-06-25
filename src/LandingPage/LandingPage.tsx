@@ -18,13 +18,18 @@ import Hero from "./Hero/Hero";
 interface IProps {}
 export default function ({}: IProps) {
   return (
-    <div className="flex h-full flex-col">
-      <div className="">
-        <Hero />
+    <>
+      <div className="flex h-full flex-col">
+        <div className="">
+          <Hero />
+        </div>
+        {/*  */}
+        {/* TODO - roadmap */}
+        {/*  */}
+        <div className="mt-auto">
+          <Footer />
+        </div>
       </div>
-      <div className="mt-auto">
-        <Footer />
-      </div>
-    </div>
+    </>
   );
 }

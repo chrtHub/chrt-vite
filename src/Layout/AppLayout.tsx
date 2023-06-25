@@ -16,7 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 // import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import {
   Bars3BottomLeftIcon,
-  CalendarDaysIcon,
+  ChartBarSquareIcon,
   FolderIcon,
   ChatBubbleLeftRightIcon,
   HomeIcon,
@@ -86,7 +86,7 @@ export default function AppLayout() {
   }
   let navigationItems: INavigationItem[] = [
     { name: "Home", to: "/", icon: HomeIcon },
-    { name: "Journal", to: "/journal", icon: CalendarDaysIcon },
+    { name: "Journal", to: "/journal", icon: ChartBarSquareIcon },
     { name: "Journal Files", to: "/journal_files", icon: FolderIcon },
     { name: "ChrtGPT", to: "/gpt", icon: ChatBubbleLeftRightIcon },
   ];

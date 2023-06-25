@@ -29,7 +29,7 @@ import Subscriptions from "./App/Account/Subscriptions/Subscriptions";
 import DataPrivacy from "./App/Account/DataPrivacy/DataPrivacy";
 
 //-- TSX Components: Special --//
-import JournalRoadmap from "./App/JournalService/JournalRoadmap";
+import JournalRoadmap from "./Roadmaps/JournalRoadmap";
 import DevResources from "./App/Dev/DevResources";
 
 //-- TSX Components: Info --//
@@ -40,6 +40,7 @@ import Privacy from "./Info/Privacy/Privacy";
 import Support from "./Info/Support/Support";
 import SystemRequirements from "./Info/SystemRequirements/SystemRequirements";
 import Terms from "./Info/Terms/Terms";
+import Roadmap from "./Roadmaps/Roadmap";
 
 //-- TSX Components: Navigation --//
 import NotFoundPage from "./Navigation/NotFoundPage";
@@ -106,6 +107,8 @@ const router = createBrowserRouter(
           path="/signin"
           element={<AuthGuard component={RedirectToSignIn} />}
         />
+
+        <Route path="/roadmap" element={<Roadmap />} />
 
         {/* Info Pages */}
         <Route path="/cookies" element={<Cookies />} />

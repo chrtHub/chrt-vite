@@ -77,48 +77,121 @@ export default function StatsTableConfig() {
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <div className="flex h-full flex-row justify-center">
-      <div className="flex h-full w-full flex-col items-center justify-center px-2">
-        <p className="mt-1 text-zinc-700 dark:text-zinc-200">
-          Total net proceeds:{" "}
-          {numeral(JC.statsAllTime?.total_net_proceeds).format("$0.0a")}
+    <div className="flex h-full flex-row justify-center space-x-4 p-6">
+      <div className="flex h-full w-full flex-col items-start justify-center space-y-3 px-2">
+        <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+          <span className="text-base">Total net proceeds:</span>{" "}
+          <span className="text-xl font-bold">
+            {numeral(JC.statsAllTime?.total_net_proceeds).format("$0.0a")}
+          </span>
         </p>
 
-        <p className="mt-1 text-zinc-700 dark:text-zinc-200">
+        <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
           Sum, winning trades:{" "}
-          {numeral(JC.statsAllTime?.sum_winning_trades).format("$0.0a")}
+          <span className="text-xl font-bold">
+            {numeral(JC.statsAllTime?.sum_winning_trades).format("$0.0a")}
+          </span>
         </p>
-        <p className="mt-1 text-zinc-700 dark:text-zinc-200">
+        <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
           Sum, losing trades:{" "}
-          {numeral(JC.statsAllTime?.sum_losing_trades).format("$0.0a")}
+          <span className="text-xl font-bold">
+            {numeral(JC.statsAllTime?.sum_losing_trades).format("$0.0a")}
+          </span>
         </p>
 
-        <p className="mt-1 text-zinc-700 dark:text-zinc-200">
-          Total Fees: {numeral(JC.statsAllTime?.total_fees).format("$0,0")}
+        <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+          Total Fees:{" "}
+          <span className="text-xl font-bold">
+            {numeral(JC.statsAllTime?.total_fees).format("$0,0")}
+          </span>
         </p>
       </div>
 
-      <div className="flex h-full w-full flex-col items-center justify-center px-2">
-        <p className="mt-1 text-zinc-700 dark:text-zinc-200">
-          Total trades: {JC.statsAllTime?.total_trades}
+      <div className="flex h-full w-full flex-col items-start justify-center space-y-3 px-2">
+        <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+          Total trades:{" "}
+          <span className="text-xl font-bold">
+            {JC.statsAllTime?.total_trades}
+          </span>
         </p>
 
-        <p className="mt-1 text-zinc-700 dark:text-zinc-200">
-          Win rate: {numeral(win_rate).format("0.00%")}
+        <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+          Win rate:{" "}
+          <span className="text-xl font-bold">
+            {numeral(win_rate).format("0.00%")}
+          </span>
         </p>
-        <p className="mt-1 text-zinc-700 dark:text-zinc-200">
-          Winning Trades: {JC.statsAllTime?.winning_trades}
+        <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+          Winning Trades:{" "}
+          <span className="text-xl font-bold">
+            {JC.statsAllTime?.winning_trades}
+          </span>
         </p>
-        <p className="mt-1 text-zinc-700 dark:text-zinc-200">
-          Losing Trades: {JC.statsAllTime?.losing_trades}
+        <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+          Losing Trades:{" "}
+          <span className="text-xl font-bold">
+            {JC.statsAllTime?.losing_trades}
+          </span>
         </p>
-        <p className="mt-1 text-zinc-700 dark:text-zinc-200">
-          Breakeven Trades: {JC.statsAllTime?.breakeven_trades}
+        <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+          Breakeven Trades:{" "}
+          <span className="text-xl font-bold">
+            {JC.statsAllTime?.breakeven_trades}
+          </span>
         </p>
-        <p className="mt-1 text-zinc-700 dark:text-zinc-200">
-          Total symbols: {JC.statsAllTime?.total_symbols}
+        <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+          Total symbols:{" "}
+          <span className="text-xl font-bold">
+            {JC.statsAllTime?.total_symbols}
+          </span>
         </p>
       </div>
     </div>
   );
+
+  // return (
+  //   <div className="flex h-full flex-row justify-center space-x-4 p-6">
+  //     <div className="flex h-full w-full flex-col items-start justify-center space-y-3 px-2">
+  //       <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+  //         Total net proceeds:{" "}
+  //         {numeral(JC.statsAllTime?.total_net_proceeds).format("$0.0a")}
+  //       </p>
+
+  //       <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+  //         Sum, winning trades:{" "}
+  //         {numeral(JC.statsAllTime?.sum_winning_trades).format("$0.0a")}
+  //       </p>
+  //       <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+  //         Sum, losing trades:{" "}
+  //         {numeral(JC.statsAllTime?.sum_losing_trades).format("$0.0a")}
+  //       </p>
+
+  //       <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+  //         Total Fees: {numeral(JC.statsAllTime?.total_fees).format("$0,0")}
+  //       </p>
+  //     </div>
+
+  //     <div className="flex h-full w-full flex-col items-start justify-center space-y-3 px-2">
+  //       <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+  //         Total trades: {JC.statsAllTime?.total_trades}
+  //       </p>
+
+  //       <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+  //         Win rate: {numeral(win_rate).format("0.00%")}
+  //       </p>
+  //       <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+  //         Winning Trades: {JC.statsAllTime?.winning_trades}
+  //       </p>
+  //       <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+  //         Losing Trades: {JC.statsAllTime?.losing_trades}
+  //       </p>
+  //       <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+  //         Breakeven Trades: {JC.statsAllTime?.breakeven_trades}
+  //       </p>
+  //       <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
+  //         Total symbols: {JC.statsAllTime?.total_symbols}
+  //       </p>
+  //     </div>
+  //   </div>
+  // );
 }

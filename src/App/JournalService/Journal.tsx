@@ -39,7 +39,6 @@ export default function Journal() {
   //-- React State --//
   const JC = useJournalContext();
   const { layoutType, layoutUrlNameOrObjectId } = useParams();
-  const [showBanner, setShowBanner] = useState<boolean>(true);
 
   //-- Auth0 --//
 
@@ -120,7 +119,7 @@ export default function Journal() {
   return (
     <>
       <CTA401Fallback />
-      {showBanner && <ActiveDevelopmentBanner setShowBanner={setShowBanner} />}
+      <ActiveDevelopmentBanner />
 
       {/* ----- Grid Layout ----- */}
       <div className="h-full w-full">

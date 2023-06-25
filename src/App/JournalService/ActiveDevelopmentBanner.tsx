@@ -5,7 +5,6 @@ import { NavLink } from "react-router-dom";
 //== NPM Components ==//
 
 //== Icons ==//
-import { XMarkIcon } from "@heroicons/react/24/solid";
 import classNames from "../../Util/classNames";
 
 //== NPM Functions ==//
@@ -15,10 +14,7 @@ import classNames from "../../Util/classNames";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
-interface IProps {
-  setShowBanner: React.Dispatch<React.SetStateAction<boolean>>;
-}
-export default function ActiveDevelopmentBanner({ setShowBanner }: IProps) {
+export default function ActiveDevelopmentBanner() {
   //== React State, Custom Hooks ==//
   //== Auth ==//
   //== Other ==//
@@ -27,7 +23,7 @@ export default function ActiveDevelopmentBanner({ setShowBanner }: IProps) {
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
     <>
-      <NavLink to={"/journal_roadmap"}>
+      <NavLink to={"/roadmap"}>
         <div
           className={classNames(
             "mt-2 flex items-center justify-center gap-x-6 rounded-md px-6 py-2.5 text-center sm:px-3.5",
@@ -36,29 +32,9 @@ export default function ActiveDevelopmentBanner({ setShowBanner }: IProps) {
           )}
         >
           <p className="text-sm leading-6 text-white">
-            <strong className="font-semibold">CHRT Journal</strong>
-            <svg
-              viewBox="0 0 2 2"
-              className="mx-2 inline h-0.5 w-0.5 fill-current"
-              aria-hidden="true"
-            >
-              <circle cx={1} cy={1} r={1} />
-            </svg>
-            currently in Active Development, click to view the roadmap&nbsp;
+            Currently in Active Development, click to view the roadmap&nbsp;
             <span aria-hidden="true">&rarr;</span>
           </p>
-          {/* <div className="flex flex-1 justify-end">
-          <button
-          type="button"
-          className="-m-3 p-3 focus-visible:outline-offset-[-4px]"
-          onClick={() => {
-              setShowBanner(false);
-            }}
-            >
-            <span className="sr-only">Dismiss</span>
-            <XMarkIcon className="h-5 w-5 text-white" aria-hidden="true" />
-            </button>
-        </div> */}
         </div>
       </NavLink>
     </>
