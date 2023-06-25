@@ -67,7 +67,7 @@ export default function ChrtGPTRoadmap() {
       {/* TITLE */}
       <div className="mb-5 flex flex-row items-center justify-center gap-x-2">
         <p className="text-2xl font-bold text-zinc-700 dark:text-zinc-100">
-          ChrtGPT Roadmap
+          ChrtGPT - Future
         </p>
         {/* <MapIcon className="h-6 w-6 text-zinc-700 dark:text-zinc-100" /> */}
       </div>

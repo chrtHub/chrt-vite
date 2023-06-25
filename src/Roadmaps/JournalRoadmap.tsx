@@ -70,9 +70,8 @@ export default function JournalRoadmap() {
       {/* TITLE */}
       <div className="mb-5 flex flex-row items-center justify-center gap-x-2">
         <p className="text-2xl font-bold text-zinc-700 dark:text-zinc-100">
-          CHRT Journal Roadmap
+          CHRT Journal
         </p>
-        {/* <MapIcon className="h-6 w-6 text-zinc-700 dark:text-zinc-100" /> */}
       </div>
 
       {/* STEPS */}
