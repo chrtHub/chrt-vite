@@ -64,7 +64,6 @@ const router = createBrowserRouter(
       <Route path="/" element={<App />}>
         {/* Services */}
         <Route index element={<Home />} />
-        <Route path="/roadmap" element={<Roadmap />} />
         <Route
           path="/journal/:layoutType?/:layoutUrlNameOrObjectId?"
           element={<AuthGuard component={Journal} />}
@@ -108,6 +107,8 @@ const router = createBrowserRouter(
           path="/signin"
           element={<AuthGuard component={RedirectToSignIn} />}
         />
+
+        <Route path="/roadmap" element={<Roadmap />} />
 
         {/* Info Pages */}
         <Route path="/cookies" element={<Cookies />} />

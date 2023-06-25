@@ -13,6 +13,7 @@ import ChatSession from "./ChatSession";
 //-- NPM Functions --//
 import { toast } from "react-toastify";
 import { ObjectId } from "bson";
+import ActiveDevelopmentBanner from "../JournalService/ActiveDevelopmentBanner";
 
 //-- Utility Functions --//
 
@@ -56,10 +57,13 @@ export default function GPT() {
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <div id="gpt-grid-div" className="grid h-full grid-cols-12 gap-2">
-      <div id="gpt-chat-current" className="col-span-12 h-full">
-        <ChatSession />
+    <>
+      <ActiveDevelopmentBanner />
+      <div id="gpt-grid-div" className="grid h-full grid-cols-12 gap-2">
+        <div id="gpt-chat-current" className="col-span-12 h-full">
+          <ChatSession />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

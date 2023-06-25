@@ -15,7 +15,7 @@ const features = [
   },
   {
     name: "Journal",
-    description: "See analysis of your trading data.",
+    description: "See analysis of your trading data",
     to: "/journal",
     icon: ChartBarSquareIcon,
   },
