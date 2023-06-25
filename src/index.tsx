@@ -29,7 +29,7 @@ import Subscriptions from "./App/Account/Subscriptions/Subscriptions";
 import DataPrivacy from "./App/Account/DataPrivacy/DataPrivacy";
 
 //-- TSX Components: Special --//
-import JournalRoadmap from "./App/JournalService/JournalRoadmap";
+import JournalRoadmap from "./Roadmaps/JournalRoadmap";
 import DevResources from "./App/Dev/DevResources";
 
 //-- TSX Components: Info --//
@@ -40,6 +40,7 @@ import Privacy from "./Info/Privacy/Privacy";
 import Support from "./Info/Support/Support";
 import SystemRequirements from "./Info/SystemRequirements/SystemRequirements";
 import Terms from "./Info/Terms/Terms";
+import Roadmap from "./Roadmaps/Roadmap";
 
 //-- TSX Components: Navigation --//
 import NotFoundPage from "./Navigation/NotFoundPage";
@@ -63,6 +64,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<App />}>
         {/* Services */}
         <Route index element={<Home />} />
+        <Route path="/roadmap" element={<Roadmap />} />
         <Route
           path="/journal/:layoutType?/:layoutUrlNameOrObjectId?"
           element={<AuthGuard component={Journal} />}

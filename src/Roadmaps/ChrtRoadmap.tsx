@@ -10,49 +10,52 @@ import { CheckIcon } from "@heroicons/react/20/solid";
 //== NPM Functions ==//
 
 //== Utility Functions ==//
-import classNames from "../../Util/classNames";
+import classNames from "../Util/classNames";
 import { MapIcon } from "@heroicons/react/24/outline";
 
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
-const steps = [
+interface ISteps {
+  name: string;
+  description: string;
+  description2?: string;
+  status: "complete" | "current" | "upcoming";
+}
+const steps: ISteps[] = [
   {
-    name: "Data",
-    description: "Store data from brokerage files to database",
+    name: "Name of step",
+    description: "description foo bar baz",
     status: "complete",
   },
   {
-    name: "Charts (limited variety)",
-    description: "Generate charts from a user's data",
+    name: "Name of step",
+    description: "description foo bar baz",
     status: "complete",
   },
   {
-    name: "Layouts (limited variety)",
-    description: "Implement layouts with resizable and draggable ",
-    description2: "components in a serializable format (for portability)",
+    name: "Name of step",
+    description: "description foo bar baz",
     status: "complete",
   },
   {
-    name: "Custom Layouts",
-    description: "Track changes to a layout and allow saving custom",
-    description2: "layouts to the cloud",
-    status: "current",
+    name: "Name of step",
+    description: "description foo bar baz",
+    status: "complete",
   },
   {
-    name: "More Charts and Layouts",
-    description: "Build out suite of user-requested charts and layouts",
-    status: "upcoming",
+    name: "Name of step",
+    description: "description foo bar baz",
+    status: "complete",
   },
   {
-    name: "Shareable layouts",
-    description: "Allow users to share layouts with other users in view",
-    description2: "or view+edit modes",
-    status: "upcoming",
+    name: "Name of step",
+    description: "description foo bar baz",
+    status: "complete",
   },
 ];
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
-export default function JournalRoadmap() {
+export default function ChrtRoadmap() {
   //== React State, Custom Hooks ==//
   //== Auth ==//
   //== Other ==//
@@ -64,9 +67,9 @@ export default function JournalRoadmap() {
       {/* TITLE */}
       <div className="mb-5 flex flex-row items-center justify-center gap-x-2">
         <p className="text-2xl font-bold text-zinc-700 dark:text-zinc-100">
-          CHRT Journal Roadmap
+          CHRT Roadmap
         </p>
-        <MapIcon className="h-6 w-6 text-zinc-700 dark:text-zinc-100" />
+        {/* <MapIcon className="h-6 w-6 text-zinc-700 dark:text-zinc-100" /> */}
       </div>
 
       {/* STEPS */}
