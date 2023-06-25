@@ -48,8 +48,8 @@ const steps: ISteps[] = [
   },
   {
     name: "Resubmit edited and unedited prompts",
-    description: "Version history for any prompt and",
-    description2: "response pair",
+    description: "Create a version history for any prompt",
+    description2: "and response pair",
     status: "complete",
   },
   {

@@ -17,7 +17,7 @@ import { MapIcon } from "@heroicons/react/24/outline";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
-export default function ComponentName() {
+export default function Roadmap() {
   //== React State, Custom Hooks ==//
   //== Auth ==//
   //== Other ==//
@@ -25,13 +25,13 @@ export default function ComponentName() {
   //== Handlers ==//
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="flex h-full w-full flex-col items-center justify-start pt-6 lg:pt-12">
+    <div className="flex h-full w-full flex-col items-center justify-start py-6 lg:py-12">
       <div className="flex flex-row items-center justify-center gap-x-3 pb-3 text-3xl font-bold text-zinc-600 dark:text-zinc-200">
-        Roadmap
+        CHRT Roadmap
         <MapIcon className="h-6 w-6 text-zinc-700 dark:text-zinc-100" />
       </div>
 
-      <div className="flex w-full flex-col justify-center gap-x-6 gap-y-6 rounded-lg bg-zinc-100 py-6 lg:flex-row">
+      <div className="flex w-full flex-col justify-center gap-x-6 gap-y-6 rounded-lg bg-zinc-100 py-6 dark:bg-zinc-800 lg:flex-row">
         <ChrtGPTCurrentRoadmap />
         <JournalRoadmap />
       </div>
@@ -40,6 +40,7 @@ export default function ComponentName() {
       <div className="flex w-full items-center justify-center">
         <ChrtGPTFutureRoadmap />
       </div>
+      <div className="mb-12 h-12 bg-blue-200" />
     </div>
   );
 }

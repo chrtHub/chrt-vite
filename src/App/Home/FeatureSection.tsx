@@ -6,7 +6,7 @@ import {
   ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
 
-const features = [
+const services = [
   {
     name: "Journal",
     description: "See analysis of your trading data",
@@ -31,57 +31,31 @@ const features = [
 export default function Example() {
   return (
     <div className="py-12">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl rounded-lg bg-zinc-200 px-6 py-3 dark:bg-zinc-800 lg:px-8">
         <div className="mx-auto mb-3 max-w-2xl lg:mx-0">
-          <h2 className="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
             Welcome to CHRT
           </h2>
           {/* Start of Line 1 */}
-          <p className="mt-6 text-lg leading-8 text-zinc-600">
+          <p className="mt-6 text-lg leading-8 text-zinc-600 dark:text-zinc-200">
             CHRT is currently in active development. Check out our running
             services below or view our{" "}
-            <Link to="/roadmap" className="text-blue-700 underline">
+            <Link
+              to="/roadmap"
+              className="text-blue-700 underline dark:text-blue-400"
+            >
               roadmap
             </Link>
             .
           </p>
           {/* End of Line 1 */}
 
-          {/* Start of Line 1 */}
-          {/* <p className="mt-6 text-lg leading-8 text-zinc-600">
-            Check out our running services below or view our{" "}
-            <Link to="/roadmap" className="text-blue-700 underline">
-              roadmap
-            </Link>
-            .
-          </p> */}
-
           {/* Start of Line 2 */}
-          {/* <p className="mt-6 text-lg leading-8 text-zinc-600">
-            Before using a service, you'll need to submit some{" "}
-            <Link
-              to="/account/data_privacy"
-              className="text-blue-700 underline"
-            >
-              agreements
-            </Link>{" "}
-            and sign up for our{" "}
-            <Link
-              to="/account/subscriptions"
-              className="text-blue-700 underline"
-            >
-              free trial
-            </Link>
-            .
-          </p> */}
-          {/* End of Line 2 */}
-
-          {/* Start of Line 3 */}
-          <p className="mt-6 text-lg leading-8 text-zinc-600">
+          <p className="mt-3 text-lg leading-8 text-zinc-600 dark:text-zinc-200">
             To download sample brokerage files, click{" "}
             <a
               href="https://drive.google.com/drive/folders/1SwhRXfl2RLggBW9-mU1orORdVIGnZKBj?usp=sharing"
-              className="text-blue-700 underline"
+              className="text-blue-700 underline dark:text-blue-400"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -89,26 +63,28 @@ export default function Example() {
             </a>
             .
           </p>
-          {/* End of Line 3 */}
+          {/* End of Line 2 */}
         </div>
-        <div className="mx-auto max-w-2xl sm:mt-6 lg:mt-12 lg:max-w-none">
+
+        {/* Start of Services List */}
+        <div className="mx-auto mt-6 max-w-2xl lg:max-w-none">
           <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
-            {features.map((feature) => (
-              <div key={feature.name} className="flex flex-col">
-                <dt className="text-base font-semibold leading-7 text-zinc-900">
-                  <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-600">
-                    <feature.icon
+            {services.map((service) => (
+              <div key={service.name} className="flex flex-col">
+                <dt className="text-base font-semibold leading-7 text-zinc-900 dark:text-zinc-50">
+                  <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-600 dark:bg-zinc-500">
+                    <service.icon
                       className="h-6 w-6 text-white"
                       aria-hidden="true"
                     />
                   </div>
-                  {feature.name}
+                  {service.name}
                 </dt>
-                <dd className="mt-1 flex flex-auto flex-col text-base leading-7 text-zinc-600">
-                  <p className="flex-auto">{feature.description}</p>
+                <dd className="mt-1 flex flex-auto flex-col text-base leading-7 text-zinc-600 dark:text-zinc-200">
+                  <p className="flex-auto">{service.description}</p>
                   <p className="mt-6">
                     <Link
-                      to={feature.to}
+                      to={service.to}
                       className="text-sm font-semibold leading-6 text-green-600"
                     >
                       Try it out <span aria-hidden="true">→</span>
@@ -119,6 +95,7 @@ export default function Example() {
             ))}
           </dl>
         </div>
+        {/* End of Services List */}
       </div>
     </div>
   );

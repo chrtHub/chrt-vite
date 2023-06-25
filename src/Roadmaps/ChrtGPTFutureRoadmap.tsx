@@ -23,19 +23,20 @@ interface ISteps {
 }
 const steps: ISteps[] = [
   {
-    name: "Journal",
+    name: "ChrtGPT as a tool for analyzing trading data",
     description: "Ask an LLM questions about your own data",
+    description2: "and receive text-based responses",
     status: "upcoming",
   },
   {
     name: "Charts as responses",
-    description: "Receive charts powered by LLM-written code",
+    description: "Receive charts as conversation responses",
     status: "upcoming",
   },
 ];
 
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
-export default function ChrtGPTRoadmap() {
+export default function ChrtGPTFutureRoadmap() {
   //== React State, Custom Hooks ==//
   //== Auth ==//
   //== Other ==//
@@ -43,7 +44,7 @@ export default function ChrtGPTRoadmap() {
   //== Handlers ==//
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="mt-6 flex h-full w-full flex-col items-center justify-center rounded-lg bg-zinc-200">
+    <div className="mb-12 mt-3 flex w-full flex-col items-center justify-center rounded-lg bg-zinc-200 py-6 dark:bg-zinc-700">
       {/* TITLE */}
       <div className="mb-5 flex flex-row items-center justify-center gap-x-2">
         <p className="text-2xl font-bold text-zinc-700 dark:text-zinc-100">
