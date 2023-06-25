@@ -32,22 +32,27 @@ export default function Example() {
   return (
     <div className="py-12">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl lg:mx-0">
+        <div className="mx-auto mb-3 max-w-2xl lg:mx-0">
           <h2 className="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">
             Welcome to CHRT
           </h2>
           {/* Start of Line 1 */}
           <p className="mt-6 text-lg leading-8 text-zinc-600">
-            CHRT is currently in active development. Check out our running
-            services below or view our{" "}
+            CHRT is currently in active development.
+          </p>
+          {/* End of Line 1 */}
+
+          {/* Start of Line 1 */}
+          <p className="mt-6 text-lg leading-8 text-zinc-600">
+            Check out our running services below or view our{" "}
             <Link to="/roadmap" className="text-blue-700 underline">
               roadmap
             </Link>
             .
           </p>
-          {/* End of Line 1 */}
+
           {/* Start of Line 2 */}
-          <p className="mt-6 text-lg leading-8 text-zinc-600">
+          {/* <p className="mt-6 text-lg leading-8 text-zinc-600">
             Before using a service, you'll need to submit some{" "}
             <Link
               to="/account/data_privacy"
@@ -63,10 +68,25 @@ export default function Example() {
               free trial
             </Link>
             .
+          </p> */}
+          {/* End of Line 2 */}
+
+          {/* Start of Line 3 */}
+          <p className="mt-6 text-lg leading-8 text-zinc-600">
+            To download sample brokerage files, click{" "}
+            <a
+              href="https://drive.google.com/drive/folders/1SwhRXfl2RLggBW9-mU1orORdVIGnZKBj?usp=sharing"
+              className="text-blue-700 underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              here
+            </a>
+            .
           </p>
-          {/* End of Line 1 */}
+          {/* End of Line 3 */}
         </div>
-        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
+        <div className="mx-auto max-w-2xl sm:mt-6 lg:mt-12 lg:max-w-none">
           <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
             {features.map((feature) => (
               <div key={feature.name} className="flex flex-col">
