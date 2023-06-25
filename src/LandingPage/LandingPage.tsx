@@ -22,6 +22,9 @@ export default function ({}: IProps) {
       <div className="">
         <Hero />
       </div>
+      {/*  */}
+      {/* TODO - roadmap */}
+      {/*  */}
       <div className="mt-auto">
         <Footer />
       </div>
