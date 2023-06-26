@@ -77,7 +77,7 @@ export default function StatsTableConfig() {
 
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
-    <div className="flex h-full flex-row justify-center space-x-4 p-6">
+    <div className="flex h-full flex-row justify-center space-x-4">
       <div className="flex h-full w-full flex-col items-start justify-center space-y-3 px-2">
         <p className="mt-1 text-zinc-700 transition-colors hover:text-zinc-500 dark:text-zinc-200">
           <span className="text-base">Total net proceeds:</span>{" "}

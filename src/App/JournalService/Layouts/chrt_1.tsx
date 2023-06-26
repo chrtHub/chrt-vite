@@ -8,7 +8,7 @@ const chrt_1_md: ILayout[] = [
     w: 6,
     h: 8,
     minW: 4,
-    minH: 6,
+    minH: 8,
   },
   {
     i: "PL_45_Days",
@@ -36,9 +36,9 @@ const chrt_1_sm: ILayout[] = [
     x: 0,
     y: 0,
     w: 6,
-    h: 8,
+    h: 12,
     minW: 4,
-    minH: 6,
+    minH: 12,
   },
   {
     i: "PL_45_Days",
