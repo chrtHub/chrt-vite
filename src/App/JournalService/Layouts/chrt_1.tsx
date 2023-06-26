@@ -7,7 +7,7 @@ const chrt_1_md: ILayout[] = [
     y: 16,
     w: 6,
     h: 8,
-    minW: 4,
+    minW: 6,
     minH: 8,
   },
   {
@@ -37,8 +37,9 @@ const chrt_1_sm: ILayout[] = [
     y: 0,
     w: 6,
     h: 12,
-    minW: 4,
+    minW: 6,
     minH: 12,
+    isResizable: false, // TODO - handle resizing properly
   },
   {
     i: "PL_45_Days",
