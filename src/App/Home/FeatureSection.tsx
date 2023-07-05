@@ -29,7 +29,8 @@ const services = [
 
 export default function FeatureSection() {
   return (
-    <div className="py-12">
+    //-- pt instead of mt here prevents needless scrollable area --//
+    <div className="pt-12">
       <div className="mx-auto max-w-7xl rounded-lg bg-zinc-100 px-6 py-3 dark:bg-zinc-800 lg:px-8">
         <div className="mx-auto mb-3 max-w-2xl lg:mx-0">
           <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
