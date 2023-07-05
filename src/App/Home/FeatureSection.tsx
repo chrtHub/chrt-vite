@@ -57,7 +57,7 @@ export default function FeatureSection() {
 
         {/* Start of Services List */}
         <div className="mx-auto mt-6 max-w-2xl lg:max-w-none">
-          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
+          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-3 lg:max-w-none lg:grid-cols-3 lg:gap-y-16">
             {services.map((service) => (
               <div
                 key={service.name}
