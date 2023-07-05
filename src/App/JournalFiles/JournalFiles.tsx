@@ -285,6 +285,22 @@ export default function JournalFiles({}: IProps) {
   return (
     <>
       <ActiveDevelopmentBanner />
+
+      {/* Start of Link to Sample Brokerage Files */}
+      <a
+        href="https://drive.google.com/drive/folders/1SwhRXfl2RLggBW9-mU1orORdVIGnZKBj?usp=sharing"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div className="mt-3 flex items-center justify-center rounded-md bg-green-600 p-2 text-white hover:bg-green-500 dark:bg-green-900 dark:hover:bg-green-800">
+          <p>
+            Click to access sample brokerage files&nbsp;
+            <span aria-hidden="true">&rarr;</span>
+          </p>
+        </div>
+      </a>
+      {/* End of Link to Sample Brokerage Files */}
+
       <div
         id="journal-files"
         className="relative flex h-full flex-col justify-start pt-3" // pt-6
@@ -405,7 +421,7 @@ export default function JournalFiles({}: IProps) {
                       : "",
                     "block w-full min-w-0 flex-1 rounded-l-md border-zinc-300 px-3 py-2 focus:border-green-500 focus:ring-green-500 dark:border-zinc-500 dark:bg-zinc-700 dark:text-zinc-100 sm:text-sm"
                   )}
-                  placeholder="some_file_name.csv"
+                  placeholder="fileName.csv"
                 />
               </div>
 
