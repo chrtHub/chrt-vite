@@ -85,14 +85,14 @@ export default function FeatureSection() {
                   {/* Decription */}
                   <p className="flex-auto">{service.description}</p>
                   {/* Button */}
-                  <div className="mt-2 flex items-center justify-center rounded-md bg-green-600 py-2 text-white hover:bg-green-500 dark:bg-green-900 dark:hover:bg-green-800">
-                    <Link
-                      to={service.to}
-                      className="text-sm font-semibold leading-6"
-                    >
+                  <Link
+                    to={service.to}
+                    className="text-sm font-semibold leading-6"
+                  >
+                    <div className="mt-2 flex items-center justify-center rounded-md bg-green-600 py-2 text-white hover:bg-green-500 dark:bg-green-900 dark:hover:bg-green-800">
                       Try it out <span aria-hidden="true">→</span>
-                    </Link>
-                  </div>
+                    </div>
+                  </Link>
                 </div>
               </div>
             ))}
