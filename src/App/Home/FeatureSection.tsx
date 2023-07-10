@@ -29,7 +29,8 @@ const services = [
 
 export default function FeatureSection() {
   return (
-    <div className="py-12">
+    //-- pt instead of mt here prevents needless scrollable area --//
+    <div className="pt-12">
       <div className="mx-auto max-w-7xl rounded-lg bg-zinc-100 px-6 py-3 dark:bg-zinc-800 lg:px-8">
         <div className="mx-auto mb-3 max-w-2xl lg:mx-0">
           <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
@@ -84,14 +85,14 @@ export default function FeatureSection() {
                   {/* Decription */}
                   <p className="flex-auto">{service.description}</p>
                   {/* Button */}
-                  <div className="mt-2 flex items-center justify-center rounded-md bg-green-600 py-2 text-white hover:bg-green-500 dark:bg-green-900 dark:hover:bg-green-800">
-                    <Link
-                      to={service.to}
-                      className="text-sm font-semibold leading-6"
-                    >
+                  <Link
+                    to={service.to}
+                    className="text-sm font-semibold leading-6"
+                  >
+                    <div className="mt-2 flex items-center justify-center rounded-md bg-green-600 py-2 text-white hover:bg-green-500 dark:bg-green-900 dark:hover:bg-green-800">
                       Try it out <span aria-hidden="true">→</span>
-                    </Link>
-                  </div>
+                    </div>
+                  </Link>
                 </div>
               </div>
             ))}

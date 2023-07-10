@@ -3,6 +3,7 @@
 //-- TSX Components --//
 
 import FeatureSection from "./FeatureSection";
+import HowItWorks from "./HowItWorks";
 
 //-- NPM Components --//
 
@@ -17,8 +18,11 @@ import FeatureSection from "./FeatureSection";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Home() {
   return (
-    <div className="flex h-full w-full flex-col items-center justify-start">
+    <div className="flex h-full w-full flex-col items-center justify-start gap-y-3">
       <FeatureSection />
+
+      {/* DEV */}
+      {/* <HowItWorks /> */}
     </div>
   );
 }
