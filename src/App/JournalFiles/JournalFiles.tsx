@@ -288,7 +288,7 @@ export default function JournalFiles({}: IProps) {
 
       {/* Start of Link to Sample Brokerage Files */}
       <a
-        href="https://drive.google.com/drive/folders/1SwhRXfl2RLggBW9-mU1orORdVIGnZKBj?usp=sharing"
+        href="https://drive.google.com/drive/folders/1lSkFOYQF5S30U85OgbjHtiSeUNW_WlYf?usp=sharing"
         target="_blank"
         rel="noopener noreferrer"
       >
