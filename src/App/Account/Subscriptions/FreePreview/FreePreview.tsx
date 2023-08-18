@@ -17,9 +17,9 @@ import { CheckIcon } from "@heroicons/react/20/solid";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
 const includedFeatures = [
+  "ChrtGPT",
   "Trading Journal",
   "Journal Files Service",
-  "ChrtGPT",
   "New features when they launch",
 ];
 
