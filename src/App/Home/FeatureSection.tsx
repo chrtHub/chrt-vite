@@ -8,6 +8,12 @@ import {
 
 const services = [
   {
+    name: "ChrtGPT",
+    description: "Chat with GPT-4 and GPT-3.5-Turbo",
+    to: "/gpt",
+    icon: ChatBubbleLeftRightIcon,
+  },
+  {
     name: "Journal",
     description: "See analysis of your trading data",
     to: "/journal",
@@ -15,15 +21,10 @@ const services = [
   },
   {
     name: "Journal Files",
-    description: "Upload your TD Ameritrade brokerage files",
+    description:
+      "Upload your brokerage files (currently for TD Ameritrade only)",
     to: "/journal_files",
     icon: FolderIcon,
-  },
-  {
-    name: "ChrtGPT",
-    description: "Chat with OpenAI's latest LLMs, GPT-4 and GPT-3.5-Turbo",
-    to: "/gpt",
-    icon: ChatBubbleLeftRightIcon,
   },
 ];
 
