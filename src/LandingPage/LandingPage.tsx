@@ -1,6 +1,8 @@
 //-- react, react-router-dom, Auth0 --//
 
 //-- TSX Components --//
+import GettingStartedSteps from "../App/Home/GettingStartedSteps";
+import SignUpSteps from "../App/Home/SignUpSteps";
 import Footer from "./Hero/Footer";
 import Hero from "./Hero/Hero";
 
@@ -23,9 +25,10 @@ export default function ({}: IProps) {
         <div className="">
           <Hero />
         </div>
-        {/*  */}
-        {/* TODO - roadmap */}
-        {/*  */}
+
+        <SignUpSteps />
+        <GettingStartedSteps />
+
         <div className="mt-auto">
           <Footer />
         </div>

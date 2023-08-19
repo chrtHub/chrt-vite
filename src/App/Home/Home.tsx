@@ -2,7 +2,7 @@
 
 //-- TSX Components --//
 
-import FeatureSection from "./FeatureSection";
+import GettingStartedSteps from "./GettingStartedSteps";
 import HowItWorks from "./HowItWorks";
 
 //-- NPM Components --//
@@ -19,10 +19,25 @@ import HowItWorks from "./HowItWorks";
 export default function Home() {
   return (
     <div className="flex h-full w-full flex-col items-center justify-start gap-y-3">
-      <FeatureSection />
+      {/* Start of Welcome to CHRT */}
+      <div className="mx-auto max-w-7xl rounded-lg bg-zinc-100 px-6 py-3 dark:bg-zinc-800 lg:px-8">
+        <div className="mx-auto mb-3 max-w-2xl lg:mx-0">
+          <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
+            Welcome to CHRT
+          </h2>
+          {/* Start of Line 1 */}
+          <p className="mt-6 text-lg leading-8 text-zinc-600 dark:text-zinc-200">
+            CHRT is currently in active development.
+          </p>
+          <p className="mt-6 text-lg leading-8 text-zinc-600 dark:text-zinc-200">
+            If you have feedback, please reach out to aaron@chrt.com
+          </p>
+          {/* End of Line 1 */}
+        </div>
+      </div>
+      {/* End of Welcome to CHRT */}
 
-      {/* DEV */}
-      {/* <HowItWorks /> */}
+      <GettingStartedSteps />
     </div>
   );
 }

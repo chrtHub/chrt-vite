@@ -1,11 +1,27 @@
+//== react, react-router-dom, Auth0 ==//
 import { Link } from "react-router-dom";
+
+//== TSX Components, Functions ==//
+
+//== NPM Components ==//
 import ReactPlayer from "react-player";
 
+//== Icons ==//
 import {
   ChartBarSquareIcon,
   FolderIcon,
   ChatBubbleLeftRightIcon,
+  KeyIcon,
+  ShieldCheckIcon,
+  UserCircleIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline";
+
+//== NPM Functions ==//
+
+//== Utility Functions ==//
+
+//== Environment Variables, TypeScript Interfaces, Data Objects ==//
 
 const services = [
   {
@@ -41,24 +57,13 @@ const services = [
 </Link> */
 }
 
-export default function FeatureSection() {
+export default function GettingStartedSteps() {
   return (
     //-- pt instead of mt here prevents needless scrollable area --//
     <div className="pt-12">
-      <div className="mx-auto max-w-7xl rounded-lg bg-zinc-100 px-6 py-3 dark:bg-zinc-800 lg:px-8">
-        <div className="mx-auto mb-3 max-w-2xl lg:mx-0">
-          <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
-            Welcome to CHRT
-          </h2>
-          {/* Start of Line 1 */}
-          <p className="mt-6 text-lg leading-8 text-zinc-600 dark:text-zinc-200">
-            CHRT is currently in active development.
-          </p>
-          {/* End of Line 1 */}
-        </div>
-      </div>
-
-      <div id="use-chrt-steps">
+      {/* Getting Started Video */}
+      <div className="my-2 rounded-lg bg-pink-200 p-3">
+        <p>Getting started with CHRT</p>
         {/* Start of Services List */}
         <div className="mx-auto mt-6 max-w-2xl lg:max-w-none">
           <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-3 lg:max-w-none lg:grid-cols-4 lg:gap-y-16">
@@ -102,13 +107,16 @@ export default function FeatureSection() {
           </dl>
         </div>
         {/* End of Services List */}
-        <ReactPlayer url="https://www.youtube.com/watch?v=dM8JRGSa58E" />
-      </div>
 
-      {/* Getting Started Video */}
-      <div className="bg-pink-200">
-        <p>Getting started with CHRT</p>
-        <ReactPlayer url="https://www.youtube.com/watch?v=zb3Qk8SG5Ms" />
+        {/* START OF GETTING STARTED VIDEO  */}
+        <div className="flex aspect-video flex-row items-center justify-center">
+          <ReactPlayer
+            url="https://www.youtube.com/watch?v=zb3Qk8SG5Ms"
+            width="100%"
+            height="100%"
+          />
+        </div>
+        {/* END OF GETTING STARTED VIDEO  */}
       </div>
     </div>
   );
