@@ -97,7 +97,7 @@ export default function Hero() {
         <div
           className={classNames(
             `${LIGHT_THEME_BG} ${DARK_THEME_BG}`,
-            "relative py-24 sm:py-32 lg:pb-40"
+            "relative py-12"
           )}
         >
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -128,8 +128,9 @@ export default function Hero() {
                 </button>
               </div>
 
-              <p className="mt-2 text-sm italic text-zinc-600 dark:text-zinc-400">
-                All you need is a Google account or email.
+              <p className="mb-2 mt-12 italic text-zinc-600 dark:text-zinc-300">
+                Video Demo: Creating a CHRT Account and Accessing the Site for
+                Free
               </p>
 
               {/* END OF BUTTONS */}
@@ -137,8 +138,8 @@ export default function Hero() {
             {/* END OF TITLE & SUBTITLE */}
 
             {/* START OF BORDERED AREA */}
-            <div className="mt-16 flow-root sm:mt-24">
-              <div className="-m-2 rounded-xl bg-zinc-900/5 p-2 ring-1 ring-inset ring-zinc-900/10 dark:bg-zinc-200/20 dark:ring-zinc-200/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+            <div className="flow-root">
+              <div className="rounded-xl bg-zinc-900/5 p-2 ring-1 ring-inset ring-zinc-900/10 dark:bg-zinc-200/20 dark:ring-zinc-200/10 lg:rounded-2xl lg:p-4">
                 <div className="flex aspect-video flex-row items-center justify-center">
                   <ReactPlayer
                     url="https://youtu.be/KHHY7zAq3Ew"

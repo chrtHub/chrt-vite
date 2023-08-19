@@ -30,7 +30,7 @@ export default function GettingStartedSteps() {
   return (
     //-- pt instead of mt here prevents needless scrollable area --//
 
-    <div className="my-2 rounded-lg bg-zinc-200 p-3 dark:bg-zinc-700">
+    <div className="my-2 rounded-lg bg-zinc-200 p-5 dark:bg-zinc-700">
       <h1 className="text-center text-2xl font-bold text-zinc-700 dark:text-zinc-50 sm:text-3xl">
         Getting started with CHRT
       </h1>
@@ -142,6 +142,12 @@ export default function GettingStartedSteps() {
         </dl>
       </div>
       {/* End of Steps List */}
+      {/* 
+      <div className="flex w-full flex-row justify-center">
+        <p className="mb-2 mt-3 italic text-zinc-800 dark:text-zinc-200">
+          Video Demo: Getting Started with CHRT
+        </p>
+      </div> */}
 
       {/* START OF GETTING STARTED VIDEO  */}
       <div className="flex aspect-video flex-row items-center justify-center">

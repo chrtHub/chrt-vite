@@ -24,11 +24,11 @@ export default function ({}: IProps) {
       <div className="flex h-full flex-col">
         <Hero />
 
-        <div className="mx-3">
+        <div className="px-6 lg:px-8">
           <GettingStartedSteps />
         </div>
 
-        <div className="mx-3 py-36">
+        <div className="px-6 py-12 lg:px-8">
           <Roadmap />
         </div>
 
