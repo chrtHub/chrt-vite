@@ -2,7 +2,7 @@
 
 //-- TSX Components --//
 import GettingStartedSteps from "../App/Home/GettingStartedSteps";
-import Roadmap from "../Roadmaps/Roadmap";
+import Roadmap from "../Roadmaps/Roadmaps";
 import Footer from "./Hero/Footer";
 import Hero from "./Hero/Hero";
 
@@ -28,7 +28,7 @@ export default function ({}: IProps) {
           <GettingStartedSteps />
         </div>
 
-        <div className="mx-3">
+        <div className="mx-3 py-36">
           <Roadmap />
         </div>
 

@@ -31,14 +31,14 @@ export default function GettingStartedSteps() {
     //-- pt instead of mt here prevents needless scrollable area --//
 
     <div className="my-2 rounded-lg bg-zinc-200 p-3 dark:bg-zinc-800">
-      <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-3xl">
+      <h1 className="text-center text-2xl font-bold text-zinc-700 dark:text-zinc-50 sm:text-3xl">
         Getting started with CHRT
       </h1>
       {/* Start of Steps List */}
       <div className="mx-auto mt-3 max-w-2xl lg:max-w-none">
-        <dl className="mb-3 grid max-w-xl grid-cols-1 gap-x-8 gap-y-3 lg:max-w-none lg:grid-cols-4 lg:gap-y-3">
+        <dl className="mb-3 grid max-w-xl grid-cols-1 gap-x-3 gap-y-3 lg:max-w-none lg:grid-cols-4 lg:gap-y-3">
           {/* START OF STEP 1 */}
-          <div className="flex flex-col rounded-lg bg-zinc-200 p-3 shadow-sm dark:bg-zinc-700">
+          <div className="flex flex-col rounded-lg bg-zinc-100 p-2 shadow-sm dark:bg-zinc-700">
             {/* Start of Icon + Name */}
             <div className="flex flex-row items-center justify-start text-base font-semibold leading-7">
               {/* Icon */}
@@ -56,14 +56,15 @@ export default function GettingStartedSteps() {
             <div className="mt-1 flex flex-auto flex-col text-base leading-7 text-zinc-600 dark:text-zinc-200">
               {/* Description */}
               <p className="flex-auto">
-                Upload brokerage files from TD Ameritrade (or use our examples)
+                Upload brokerage files from TD Ameritrade (or use our example
+                files)
               </p>
             </div>
           </div>
           {/* END OF STEP 1 */}
 
           {/* START OF STEP 2 */}
-          <div className="flex flex-col rounded-lg bg-zinc-200 p-3 shadow-sm dark:bg-zinc-700">
+          <div className="flex flex-col rounded-lg bg-zinc-100 p-2 shadow-sm dark:bg-zinc-700">
             {/* Start of Icon + Name */}
             <div className="flex flex-row items-center justify-start text-base font-semibold leading-7">
               {/* Icon */}
@@ -83,13 +84,15 @@ export default function GettingStartedSteps() {
 
             <div className="mt-1 flex flex-auto flex-col text-base leading-7 text-zinc-600 dark:text-zinc-200">
               {/* Description */}
-              <p className="flex-auto">See analysis of your trading data</p>
+              <p className="flex-auto">
+                See analysis of your trading performance
+              </p>
             </div>
           </div>
           {/* END OF STEP 2 */}
 
           {/* START OF STEP 3 */}
-          <div className="flex flex-col rounded-lg bg-zinc-200 p-3 shadow-sm dark:bg-zinc-700">
+          <div className="flex flex-col rounded-lg bg-zinc-100 p-2 shadow-sm dark:bg-zinc-700">
             {/* Start of Icon + Name */}
             <div className="flex flex-row items-center justify-start text-base font-semibold leading-7">
               {/* Icon */}
@@ -109,13 +112,13 @@ export default function GettingStartedSteps() {
 
             <div className="mt-1 flex flex-auto flex-col text-base leading-7 text-zinc-600 dark:text-zinc-200">
               {/* Description */}
-              <p className="flex-auto">Chat with GPT-4 and GPT-3.5-Turbo</p>
+              <p className="flex-auto">Chat with GPT-3.5 and GPT-4</p>
             </div>
           </div>
           {/* END OF STEP 3 */}
 
           {/* START OF STEP 4 */}
-          <div className="flex flex-col rounded-lg bg-zinc-200 p-3 shadow-sm dark:bg-zinc-700">
+          <div className="flex flex-col rounded-lg bg-zinc-100 p-2 shadow-sm dark:bg-zinc-700">
             {/* Start of Icon + Name */}
             <div className="flex flex-row items-center justify-start text-base font-semibold leading-7">
               {/* Icon */}
@@ -132,7 +135,7 @@ export default function GettingStartedSteps() {
 
             <div className="mt-1 flex flex-auto flex-col text-base leading-7 text-zinc-600 dark:text-zinc-200">
               {/* Description */}
-              <p className="flex-auto">See what CHRT is building next</p>
+              <p className="flex-auto">See the future of CHRT.com</p>
             </div>
           </div>
           {/* END OF STEP 4 */}
