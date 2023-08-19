@@ -2,6 +2,7 @@
 
 //== TSX Components, Functions ==//
 import { useAccountContext } from "../../../Context/AccountContext";
+import { ViewSubscriptionsButton } from "../Subscriptions/ViewSubscriptionsButton";
 import ClickwrapWithFallback from "./Clickwrap/ClickwrapWithFallback";
 
 //== NPM Components ==//
@@ -32,12 +33,10 @@ export default function DataPrivacy() {
       {/* START OF "CHOOSE A SUBSCRIPTION" */}
       {AccountContext.clickwrapIsActive && (
         <div className="flex w-full flex-col items-center justify-center rounded-lg bg-emerald-200 px-3 py-3 dark:bg-emerald-400">
-          <div className="max-w-md">
-            <p className="text-center font-semibold text-zinc-700 dark:text-emerald-900">
-              All user agreements are active
-            </p>
-            <button>choose a subscription</button>
-          </div>
+          <p className="mb-3 text-center font-semibold text-zinc-700 dark:text-emerald-900">
+            All user agreements are active!
+          </p>
+          <ViewSubscriptionsButton />
         </div>
       )}
       {/* END OF "CHOOSE A SUBSCRIPTION" */}
