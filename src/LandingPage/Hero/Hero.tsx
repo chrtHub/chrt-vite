@@ -4,7 +4,6 @@ import { useState } from "react";
 //-- AWS SDK --//
 
 //-- CHRT Components --//
-import SignUpSteps from "../../App/Home/SignUpSteps";
 
 //-- npm Package Functions --//
 import { useAuth0 } from "@auth0/auth0-react";
@@ -130,16 +129,12 @@ export default function Hero() {
               </div>
 
               <p className="mt-2 text-sm italic text-zinc-600 dark:text-zinc-400">
-                All you need is a Google account or email
+                All you need is a Google account or email.
               </p>
 
               {/* END OF BUTTONS */}
             </div>
             {/* END OF TITLE & SUBTITLE */}
-
-            {/* START OF SIGN UP STEPS */}
-            <SignUpSteps />
-            {/* END OF SIGN UP STEPS */}
 
             {/* START OF BORDERED AREA */}
             <div className="mt-16 flow-root sm:mt-24">

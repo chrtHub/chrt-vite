@@ -29,7 +29,7 @@ export default function Roadmap() {
   return (
     <div className="flex h-full w-full flex-col items-center justify-start py-6">
       <div className="flex flex-row items-center justify-center gap-x-3 pb-3 text-3xl font-bold text-zinc-600 dark:text-zinc-200">
-        CHRT Roadmap (as of {currentDate})
+        CHRT Product Roadmap (as of {currentDate})
       </div>
 
       <div className="flex w-full flex-col justify-center gap-x-6 gap-y-6 rounded-lg bg-zinc-100 py-6 dark:bg-zinc-800 lg:flex-row">
