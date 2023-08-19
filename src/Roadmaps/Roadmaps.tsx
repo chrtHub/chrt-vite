@@ -34,7 +34,7 @@ export default function Roadmaps() {
         </div>
 
         {/* ChrtGPT and CHRT Journal ROADMAPS */}
-        <div className="mx-3 mb-3 flex flex-col justify-center gap-x-6 gap-y-6 rounded-lg bg-zinc-100 py-6 lg:flex-row">
+        <div className="mx-3 mb-3 flex flex-col justify-center gap-x-6 gap-y-6 rounded-lg bg-zinc-100 py-6 dark:bg-zinc-800 lg:flex-row">
           <ChrtGPTCurrentRoadmap />
           <JournalRoadmap />
         </div>
