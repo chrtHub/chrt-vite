@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import ReactPlayer from "react-player";
 
 import {
   ChartBarSquareIcon,
@@ -28,12 +29,17 @@ const services = [
   },
   {
     name: "Roadmap",
-    description:
-      "Upload your brokerage files (currently for TD Ameritrade only)",
+    description: "Where we're at and where we're going on the product roadmap.",
     to: "/journal_files",
     icon: FolderIcon,
   },
 ];
+
+{
+  /* <Link to="/roadmap" className="text-blue-700 underline dark:text-blue-400">
+  roadmap
+</Link> */
+}
 
 export default function FeatureSection() {
   return (
@@ -49,24 +55,13 @@ export default function FeatureSection() {
             CHRT is currently in active development.
           </p>
           {/* End of Line 1 */}
-
-          {/* Start of Line 2 */}
-          <p className="mt-3 text-lg leading-8 text-zinc-600 dark:text-zinc-200">
-            Check out our running services below or view our{" "}
-            <Link
-              to="/roadmap"
-              className="text-blue-700 underline dark:text-blue-400"
-            >
-              roadmap
-            </Link>
-            .
-          </p>
-          {/* End of Line 2 */}
         </div>
+      </div>
 
+      <div id="use-chrt-steps">
         {/* Start of Services List */}
         <div className="mx-auto mt-6 max-w-2xl lg:max-w-none">
-          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-3 lg:max-w-none lg:grid-cols-3 lg:gap-y-16">
+          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-3 lg:max-w-none lg:grid-cols-4 lg:gap-y-16">
             {services.map((service) => (
               <div
                 key={service.name}
@@ -90,7 +85,7 @@ export default function FeatureSection() {
                 {/* End of Icon + Name */}
 
                 <div className="mt-1 flex flex-auto flex-col text-base leading-7 text-zinc-600 dark:text-zinc-200">
-                  {/* Decription */}
+                  {/* Description */}
                   <p className="flex-auto">{service.description}</p>
                   {/* Button */}
                   <Link
@@ -107,6 +102,13 @@ export default function FeatureSection() {
           </dl>
         </div>
         {/* End of Services List */}
+        <ReactPlayer url="https://www.youtube.com/watch?v=dM8JRGSa58E" />
+      </div>
+
+      {/* Getting Started Video */}
+      <div className="bg-pink-200">
+        <p>Getting started with CHRT</p>
+        <ReactPlayer url="https://www.youtube.com/watch?v=zb3Qk8SG5Ms" />
       </div>
     </div>
   );
