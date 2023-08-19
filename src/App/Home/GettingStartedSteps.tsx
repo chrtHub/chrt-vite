@@ -99,7 +99,7 @@ export default function GettingStartedSteps() {
       {/* START OF GETTING STARTED VIDEO  */}
       <div className="flex aspect-video flex-row items-center justify-center">
         <ReactPlayer
-          url="https://www.youtube.com/watch?v=zb3Qk8SG5Ms"
+          url="https://youtu.be/GXNyadBRp-g"
           width="100%"
           height="100%"
         />

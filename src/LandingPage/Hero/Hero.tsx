@@ -146,7 +146,7 @@ export default function Hero() {
               <div className="-m-2 rounded-xl bg-zinc-900/5 p-2 ring-1 ring-inset ring-zinc-900/10 dark:bg-zinc-200/20 dark:ring-zinc-200/10 lg:-m-4 lg:rounded-2xl lg:p-4">
                 <div className="flex aspect-video flex-row items-center justify-center">
                   <ReactPlayer
-                    url="https://www.youtube.com/watch?v=dM8JRGSa58E"
+                    url="https://youtu.be/KHHY7zAq3Ew"
                     width="100%"
                     height="100%"
                   />
