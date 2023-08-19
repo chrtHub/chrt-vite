@@ -78,7 +78,7 @@ const Fallback = ({ error }: { error: Error }) => {
   if (is401Error) {
     return (
       <>
-        <div className="mb-6 rounded-lg bg-zinc-300 dark:bg-zinc-500">
+        <div className="my-3 rounded-lg bg-zinc-300 dark:bg-zinc-500">
           <div className="px-12 py-12">
             <div className="mx-auto text-center">
               <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 lg:text-4xl">
