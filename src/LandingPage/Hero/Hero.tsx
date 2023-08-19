@@ -4,11 +4,11 @@ import { useState } from "react";
 //-- AWS SDK --//
 
 //-- CHRT Components --//
-import echartsBarchartExampleLight from "../../Assets/echarts/echarts-barchart-example-light.png";
-import echartsBarchartExampleDark from "../../Assets/echarts/echarts-barchart-example-dark.png";
+import SignUpSteps from "../../App/Home/SignUpSteps";
 
 //-- npm Package Functions --//
 import { useAuth0 } from "@auth0/auth0-react";
+import ReactPlayer from "react-player";
 
 import classNames from "../../Util/classNames";
 import { DARK_THEME_BG, LIGHT_THEME_BG } from "../../Layout/Theme";
@@ -54,7 +54,6 @@ export default function Hero() {
 
   return (
     <>
-      {/* <BackgroundGradientTop /> */}
       {/* START OF APP BAR */}
       <div className="px-6 pt-6 lg:px-8">
         <nav className="flex items-center justify-between" aria-label="Global">
@@ -109,27 +108,16 @@ export default function Hero() {
                 className={classNames(
                   "text-4xl font-bold tracking-tight  sm:text-6xl",
                   "text-zinc-900 dark:text-white"
-                  // "animate-text bg-gradient-to-r bg-clip-text text-transparent",
-                  // "from-green-500 via-zinc-500 to-green-500",
-                  // "dark:from-green-400 dark:via-zinc-300 dark:to-green-400"
                 )}
               >
                 Journal Your Day Trades
               </h1>
               <p className="mt-6 text-lg leading-8 text-zinc-600 dark:text-white">
                 Upload your brokerage files and see analysis of your trading
-                peformance
+                performance
               </p>
               {/* START OF BUTTONS */}
               <div className="mt-10 flex items-center justify-center gap-x-6">
-                {/* <button
-                  onClick={() => {}}
-                  disabled
-                  className="rounded-md bg-green-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
-                  // className="rounded-md bg-green-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-                >
-                  Demo Coming Soon!
-                </button> */}
                 <button
                   onClick={handleSignUp}
                   className={classNames(
@@ -149,23 +137,23 @@ export default function Hero() {
             </div>
             {/* END OF TITLE & SUBTITLE */}
 
-            {/* START OF SCREENSHOT */}
+            {/* START OF SIGN UP STEPS */}
+            <SignUpSteps />
+            {/* END OF SIGN UP STEPS */}
+
+            {/* START OF BORDERED AREA */}
             <div className="mt-16 flow-root sm:mt-24">
               <div className="-m-2 rounded-xl bg-zinc-900/5 p-2 ring-1 ring-inset ring-zinc-900/10 dark:bg-zinc-200/20 dark:ring-zinc-200/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-                <img
-                  src={
-                    darkMode
-                      ? echartsBarchartExampleDark
-                      : echartsBarchartExampleLight
-                  }
-                  alt="App screenshot"
-                  width={2432}
-                  height={1442}
-                  className="rounded-md shadow-2xl ring-1 ring-zinc-900/10"
-                />
+                <div className="flex aspect-video flex-row items-center justify-center">
+                  <ReactPlayer
+                    url="https://www.youtube.com/watch?v=dM8JRGSa58E"
+                    width="100%"
+                    height="100%"
+                  />
+                </div>
               </div>
             </div>
-            {/* END OF SCREENSHOT */}
+            {/* END OF BORDERED AREA */}
           </div>
           {/* <BackgroundGradientBottom /> */}
         </div>

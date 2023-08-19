@@ -2,7 +2,7 @@
 
 //-- TSX Components --//
 import GettingStartedSteps from "../App/Home/GettingStartedSteps";
-import SignUpSteps from "../App/Home/SignUpSteps";
+import Roadmap from "../Roadmaps/Roadmap";
 import Footer from "./Hero/Footer";
 import Hero from "./Hero/Hero";
 
@@ -22,12 +22,15 @@ export default function ({}: IProps) {
   return (
     <>
       <div className="flex h-full flex-col">
-        <div className="">
-          <Hero />
+        <Hero />
+
+        <div className="mx-3">
+          <GettingStartedSteps />
         </div>
 
-        <SignUpSteps />
-        <GettingStartedSteps />
+        <div className="mx-3">
+          <Roadmap />
+        </div>
 
         <div className="mt-auto">
           <Footer />
