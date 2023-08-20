@@ -384,7 +384,7 @@ export default function AppLayout() {
             className="mx-auto flex h-full max-w-screen-2xl flex-col px-2 lg:pl-2 lg:pr-4"
           >
             {/* Spacer for Top Bar */}
-            <div className="h-16" />
+            <div className="h-16 lg:hidden" />
             {/* START OF TOP BAR (hidden after lg) */}
             <span className="sr-only">Open sidebar</span>
             {/* Fixed Top Bar */}

@@ -30,15 +30,15 @@ export default function GettingStartedSteps() {
   return (
     //-- pt instead of mt here prevents needless scrollable area --//
 
-    <div className="my-2 rounded-lg bg-zinc-200 p-5 dark:bg-zinc-700">
+    <div className="my-2 w-full rounded-lg bg-zinc-200 p-5 dark:bg-zinc-700">
       <h1 className="text-center text-2xl font-bold text-zinc-700 dark:text-zinc-50 sm:text-3xl">
         Getting started with CHRT
       </h1>
       {/* Start of Steps List */}
-      <div className="mx-auto mt-3 max-w-2xl lg:max-w-none">
-        <dl className="mb-3 grid max-w-xl grid-cols-1 gap-x-3 gap-y-3 lg:max-w-none lg:grid-cols-4 lg:gap-y-3">
+      <div className="mx-auto mt-3">
+        <dl className="mb-3 grid grid-cols-1 gap-x-3 gap-y-3 lg:grid-cols-4 lg:gap-y-3">
           {/* START OF STEP 1 */}
-          <div className="flex flex-col rounded-lg bg-zinc-100 p-4 shadow-sm dark:bg-zinc-800">
+          <div className="flex flex-col items-start rounded-lg bg-zinc-100 p-4 shadow-sm dark:bg-zinc-800">
             {/* Start of Icon + Name */}
             <div className="flex flex-row items-center justify-start text-base font-semibold leading-7">
               {/* Icon */}

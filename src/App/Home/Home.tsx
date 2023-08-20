@@ -34,7 +34,7 @@ export default function Home() {
             If you have feedback, please reach out to{" "}
             <span>
               <a
-                className="text-green-700 dark:text-green-200"
+                className="text-green-700 dark:text-green-500"
                 href="mailto:aaron@chrt.com"
               >
                 aaron@chrt.com
