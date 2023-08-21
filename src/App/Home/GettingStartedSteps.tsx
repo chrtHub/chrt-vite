@@ -38,7 +38,7 @@ export default function GettingStartedSteps() {
       <div className="mx-auto mt-3">
         <dl className="mb-3 grid grid-cols-1 gap-x-3 gap-y-3 lg:grid-cols-4 lg:gap-y-3">
           {/* START OF STEP 1 */}
-          <div className="flex flex-col items-start rounded-lg bg-zinc-100 p-4 shadow-sm dark:bg-zinc-800">
+          <div className="flex flex-col items-start rounded-lg bg-zinc-100 p-4 shadow-sm dark:bg-zinc-600">
             {/* Start of Icon + Name */}
             <div className="flex flex-row items-center justify-start text-base font-semibold leading-7">
               {/* Icon */}
@@ -64,7 +64,7 @@ export default function GettingStartedSteps() {
           {/* END OF STEP 1 */}
 
           {/* START OF STEP 2 */}
-          <div className="flex flex-col rounded-lg bg-zinc-100 p-4 shadow-sm dark:bg-zinc-800">
+          <div className="flex flex-col rounded-lg bg-zinc-100 p-4 shadow-sm dark:bg-zinc-600">
             {/* Start of Icon + Name */}
             <div className="flex flex-row items-center justify-start text-base font-semibold leading-7">
               {/* Icon */}
@@ -92,7 +92,7 @@ export default function GettingStartedSteps() {
           {/* END OF STEP 2 */}
 
           {/* START OF STEP 3 */}
-          <div className="flex flex-col rounded-lg bg-zinc-100 p-4 shadow-sm dark:bg-zinc-800">
+          <div className="flex flex-col rounded-lg bg-zinc-100 p-4 shadow-sm dark:bg-zinc-600">
             {/* Start of Icon + Name */}
             <div className="flex flex-row items-center justify-start text-base font-semibold leading-7">
               {/* Icon */}
@@ -118,7 +118,7 @@ export default function GettingStartedSteps() {
           {/* END OF STEP 3 */}
 
           {/* START OF STEP 4 */}
-          <div className="flex flex-col rounded-lg bg-zinc-100 p-4 shadow-sm dark:bg-zinc-800">
+          <div className="flex flex-col rounded-lg bg-zinc-100 p-4 shadow-sm dark:bg-zinc-600">
             {/* Start of Icon + Name */}
             <div className="flex flex-row items-center justify-start text-base font-semibold leading-7">
               {/* Icon */}
