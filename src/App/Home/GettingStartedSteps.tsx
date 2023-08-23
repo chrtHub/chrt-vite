@@ -30,9 +30,9 @@ export default function GettingStartedSteps() {
   return (
     //-- pt instead of mt here prevents needless scrollable area --//
 
-    <div className="my-2 w-full rounded-lg bg-zinc-200 p-5 dark:bg-zinc-700">
+    <div className="w-full rounded-lg bg-zinc-200 p-5 dark:bg-zinc-700">
       <h1 className="text-center text-2xl font-bold text-zinc-700 dark:text-zinc-50 sm:text-3xl">
-        Getting started with CHRT
+        Getting Started with CHRT's Services
       </h1>
       {/* Start of Steps List */}
       <div className="mx-auto mt-3">

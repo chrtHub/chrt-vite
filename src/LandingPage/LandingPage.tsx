@@ -108,8 +108,8 @@ export default function LandingPage({}: IProps) {
       {/* END OF APP BAR */}
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        {/* START OF TITLE & SUBTITLE */}
-        <div className="mx-auto max-w-2xl pt-3 text-center">
+        {/* START OF TITLE/SUBTITLE/BUTTON */}
+        <div className="mx-auto max-w-2xl pt-6 text-center">
           <h1
             className={classNames(
               "text-4xl font-bold tracking-tight  sm:text-6xl",
@@ -118,12 +118,12 @@ export default function LandingPage({}: IProps) {
           >
             Journal Your Day Trades
           </h1>
-          <p className="mt-6 text-lg leading-8 text-zinc-600 dark:text-white">
-            Upload your brokerage files and see analysis of your trading
+          <p className="mt-6 text-lg leading-8 text-zinc-600 dark:text-white lg:text-xl">
+            Upload your brokerage files to see analysis of your trading
             performance
           </p>
-          {/* START OF BUTTONS */}
-          <div className="mt-10 flex items-center justify-center gap-x-6">
+          {/* START OF BUTTON */}
+          <div className="mt-8 flex items-center justify-center gap-x-6">
             <button
               onClick={handleSignUp}
               className={classNames(
@@ -134,35 +134,34 @@ export default function LandingPage({}: IProps) {
               Sign Up - Free Preview
             </button>
           </div>
-
-          <p className="mb-2 mt-12 italic text-zinc-600 dark:text-zinc-300">
-            Video Demo: Creating a CHRT Account and Accessing the Site for Free
-          </p>
-
-          {/* END OF BUTTONS */}
+          {/* END OF BUTTON */}
         </div>
-        {/* END OF TITLE & SUBTITLE */}
-
-        {/* START OF BORDERED AREA */}
-        <div className="flow-root">
-          <div className="rounded-xl bg-zinc-900/5 p-2 ring-1 ring-inset ring-zinc-900/10 dark:bg-zinc-200/20 dark:ring-zinc-200/10 lg:rounded-2xl lg:p-4">
-            <div className="flex aspect-video flex-row items-center justify-center">
-              <ReactPlayer
-                url="https://youtu.be/KHHY7zAq3Ew"
-                width="100%"
-                height="100%"
-              />
-            </div>
-          </div>
-        </div>
-        {/* END OF BORDERED AREA */}
+        {/* END OF TITLE/SUBTITLE/BUTTON */}
       </div>
 
-      <div className="max-w-7xl self-center px-6 lg:px-8">
+      {/* Container */}
+      <div className="mt-8 w-full max-w-7xl self-center px-6 lg:px-8">
+        {/* Card */}
+        <div className="my-2 w-full rounded-lg bg-zinc-200 p-5 dark:bg-zinc-700">
+          {/* Title */}
+          <h1 className="mb-3 text-center text-2xl font-bold text-zinc-700 dark:text-zinc-50 sm:text-3xl">
+            Create an Account and Access the Free Preview
+          </h1>
+          <div className="flex aspect-video flex-row items-center justify-center">
+            <ReactPlayer
+              url="https://youtu.be/KHHY7zAq3Ew"
+              width="100%"
+              height="100%"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-6 mt-12 max-w-7xl self-center lg:mx-8">
         <GettingStartedSteps />
       </div>
 
-      <div className=" min-w-7xl self-center px-6 py-12 lg:px-8">
+      <div className="mx-6 mt-12 w-full max-w-7xl self-center lg:px-8">
         <Roadmap />
       </div>
 
