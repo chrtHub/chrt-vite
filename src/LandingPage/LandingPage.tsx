@@ -149,7 +149,11 @@ export default function LandingPage({}: IProps) {
           </h1>
           <div className="flex aspect-video flex-row items-center justify-center">
             <ReactPlayer
-              url="https://youtu.be/KHHY7zAq3Ew"
+              url={
+                darkMode
+                  ? "https://youtu.be/PW_yyotQSdE" //-- dark mode --//
+                  : "https://youtu.be/eKPZmSY25zA" //-- light mode --//
+              }
               width="100%"
               height="100%"
             />
