@@ -47,11 +47,13 @@ export default function Home() {
       {/* End of Welcome to CHRT */}
 
       {/* Start of  Getting Started Steps */}
-      <GettingStartedSteps />
+      <div className="mt-6">
+        <GettingStartedSteps />
+      </div>
       {/* End of  Getting Started Steps */}
 
       {/* Start of Roadmap */}
-      <div className="w-full pb-6">
+      <div className="mt-6 w-full pb-6">
         <Roadmap />
       </div>
       {/* End of Roadmap */}
