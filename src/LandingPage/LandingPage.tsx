@@ -144,7 +144,7 @@ export default function LandingPage({}: IProps) {
         {/* Card */}
         <div className="my-2 w-full rounded-lg bg-zinc-200 p-5 dark:bg-zinc-700">
           {/* Title */}
-          <h1 className="mb-3 text-center text-2xl font-bold text-zinc-700 dark:text-zinc-50 sm:text-3xl">
+          <h1 className="mb-3 text-center text-2xl font-bold text-zinc-700 dark:text-zinc-50 lg:text-3xl">
             Create an Account and Access the Free Preview
           </h1>
           <div className="flex aspect-video flex-row items-center justify-center">
