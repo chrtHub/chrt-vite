@@ -4,7 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 //-- TSX Components --//
 import GettingStartedSteps from "../App/Home/GettingStartedSteps";
-import Roadmap from "../Roadmaps/Roadmaps";
+import Roadmaps from "../Roadmaps/Roadmaps";
 import Footer from "./Hero/Footer";
 
 //-- NPM Components --//
@@ -157,12 +157,12 @@ export default function LandingPage({}: IProps) {
         </div>
       </div>
 
-      <div className="mx-6 mt-12 max-w-7xl self-center lg:mx-8">
+      <div className="mt-12 w-full max-w-7xl self-center px-6 lg:px-8">
         <GettingStartedSteps />
       </div>
 
-      <div className="mx-6 mt-12 w-full max-w-7xl self-center lg:px-8">
-        <Roadmap />
+      <div className="mt-12 w-full max-w-7xl self-center px-6 lg:px-8">
+        <Roadmaps />
       </div>
 
       <div className="mt-auto">
