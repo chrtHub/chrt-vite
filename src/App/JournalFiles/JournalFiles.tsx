@@ -284,7 +284,9 @@ export default function JournalFiles({}: IProps) {
   //-- ***** ***** ***** Component Return ***** ***** ***** --//
   return (
     <>
-      <ActiveDevelopmentBanner />
+      <div className="my-3">
+        <ActiveDevelopmentBanner />
+      </div>
 
       {/* Start of Link to Sample Brokerage Files */}
       <a

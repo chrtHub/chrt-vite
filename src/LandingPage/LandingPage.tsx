@@ -109,10 +109,10 @@ export default function LandingPage({}: IProps) {
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* START OF TITLE/SUBTITLE/BUTTON */}
-        <div className="mx-auto max-w-2xl pt-6 text-center">
+        <div className="mx-auto max-w-2xl pt-10 text-center">
           <h1
             className={classNames(
-              "text-4xl font-bold tracking-tight  sm:text-6xl",
+              "text-4xl font-bold tracking-tight sm:text-6xl",
               "text-zinc-900 dark:text-white"
             )}
           >

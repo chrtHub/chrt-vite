@@ -19,7 +19,7 @@ import HowItWorks from "./HowItWorks";
 //-- ***** ***** ***** Exported Component ***** ***** ***** --//
 export default function Home() {
   return (
-    <div className="mt-16 flex h-full w-full flex-col items-center justify-start gap-y-2 lg:mt-0">
+    <div className="mt-6 flex h-full w-full flex-col items-center justify-start gap-y-2 lg:mt-0">
       {/* Start of Welcome to CHRT */}
       <div className="mx-auto mt-6 w-full max-w-screen-2xl rounded-lg bg-zinc-100 px-6 py-6 dark:bg-zinc-800 lg:px-6">
         <div className="mx-auto mb-3 max-w-screen-2xl lg:mx-0">

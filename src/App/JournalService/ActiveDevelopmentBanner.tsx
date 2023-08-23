@@ -26,7 +26,7 @@ export default function ActiveDevelopmentBanner() {
       <NavLink to={"/roadmap"}>
         <div
           className={classNames(
-            "my-3 flex items-center justify-center gap-x-6 rounded-md px-6 py-2.5 text-center sm:px-3.5",
+            "flex items-center justify-center gap-x-6 rounded-md px-6 py-2.5 text-center sm:px-3.5",
             "bg-indigo-600 hover:bg-indigo-500",
             "dark:bg-indigo-900 dark:hover:bg-indigo-800"
           )}
