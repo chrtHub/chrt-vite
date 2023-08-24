@@ -30,8 +30,32 @@ export const EChartsFallback = ({ error }: { error: Error }) => {
   //-- 401 errors --//
   if (is401Error) {
     return (
-      <div>
-        <p>{axiosHTTPStatus}</p>
+      <div
+        className={classNames(
+          "mb-1 mt-3 flex h-full w-full flex-col items-center justify-center overflow-y-scroll rounded-2xl p-6 text-center",
+          "ring-1 ring-inset ring-amber-100",
+          "bg-amber-50 dark:bg-amber-950 dark:ring-amber-900"
+        )}
+      >
+        {/* Icon */}
+        <div className="mx-auto mt-2 flex h-10 w-10 items-center justify-center rounded-full bg-amber-300 dark:bg-amber-900">
+          <ExclamationTriangleIcon
+            className="h-6 w-6 text-amber-700 dark:text-amber-500"
+            aria-hidden="true"
+          />
+        </div>
+        {/* Text */}
+        <div className="mx-auto px-8">
+          {/* <p className="mt-3 text-base font-semibold text-zinc-600 dark:text-zinc-100">
+            {axiosHTTPStatus}
+          </p> */}
+          <p className="mt-2 text-base text-zinc-500 dark:text-zinc-200">
+            A subscription is needed to access this content
+          </p>
+          <p className="mt-2 text-base italic text-zinc-400 dark:text-zinc-300">
+            {axiosHTTPStatus}
+          </p>
+        </div>
       </div>
     );
   }

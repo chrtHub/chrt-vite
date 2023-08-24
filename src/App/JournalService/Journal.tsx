@@ -117,9 +117,12 @@ export default function Journal() {
   }, [JC.saveableLayouts]);
 
   return (
-    <>
+    <div>
+      <div className="mb-1 mt-3">
+        <ActiveDevelopmentBanner />
+      </div>
+
       <CTA401Fallback />
-      <ActiveDevelopmentBanner />
 
       {/* ----- Grid Layout ----- */}
       <div className="h-full w-full">
@@ -175,6 +178,6 @@ export default function Journal() {
           {/* ----- End of Content ----- */}
         </ResponsiveGridLayout>
       </div>
-    </>
+    </div>
   );
 }

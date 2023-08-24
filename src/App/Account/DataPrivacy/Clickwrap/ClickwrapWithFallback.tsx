@@ -21,19 +21,6 @@ import { getUserClickwrapData } from "./Util/getUserClickwrapData";
 //== Environment Variables, TypeScript Interfaces, Data Objects ==//
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
-// TODO
-// Cookies list
-// Data request - request email link to download all your data
-// CCPA/CRPA
-// // right to know
-// // right to delete
-// // right to opt-out
-// // right to non-discrimination
-// // right to correct
-// // right to limit
-// GDPR
-// <<>>
-
 //== ***** ***** ***** Exported Component ***** ***** ***** ==//
 export default function ComponentNameWithFallback() {
   return (
@@ -73,10 +60,10 @@ const Component = () => {
   //== Event Handlers ==//
 
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
-  //-- Else if status is changing, show "Updating..." skeleton --//
+  //-- If status is changing, show "Updating..." skeleton --//
   if (AccountContext.clickwrapStatusChanging) {
     return (
-      <div className="flex h-32 max-w-lg animate-pulse items-center justify-center rounded-lg bg-zinc-200 dark:bg-zinc-700">
+      <div className="flex h-32 w-full animate-pulse items-center justify-center rounded-lg bg-zinc-200 dark:bg-zinc-700">
         <p className="text-zinc-500 dark:text-zinc-200">Updating...</p>
       </div>
     );
@@ -84,7 +71,7 @@ const Component = () => {
   //-- Before fetch, show "Loading..." skeleton --//
   else if (!AccountContext.clickwrapStatusFetched) {
     return (
-      <div className="flex h-32 max-w-lg animate-pulse items-center justify-center rounded-lg bg-zinc-200 dark:bg-zinc-700">
+      <div className="flex h-32 w-full animate-pulse items-center justify-center rounded-lg bg-zinc-200 dark:bg-zinc-700">
         <p className="text-zinc-500 dark:text-zinc-200">Loading...</p>
       </div>
     );

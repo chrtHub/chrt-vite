@@ -44,7 +44,7 @@ export default function ChrtGPTFutureRoadmap() {
   //== Handlers ==//
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="mb-12 mt-3 flex w-full flex-col items-center justify-center rounded-lg bg-zinc-200 py-6 dark:bg-zinc-700">
+    <div className="flex w-full flex-col items-center justify-center">
       {/* TITLE */}
       <div className="mb-5 flex flex-row items-center justify-center gap-x-2">
         <p className="text-2xl font-bold text-zinc-700 dark:text-zinc-100">

@@ -70,8 +70,8 @@ export default function FileDropArea({
           <div
             {...getRootProps()}
             className={classNames(
-              isDragAccept ? "bg-green-200" : "",
-              isDragReject ? "bg-orange-200" : "",
+              isDragAccept ? "bg-green-200 dark:bg-green-800" : "",
+              isDragReject ? "bg-orange-200 dark:bg-orange-800" : "",
               "flex cursor-pointer justify-center rounded-md border-2 border-dashed border-zinc-300 px-6 pb-6 pt-5 hover:bg-green-100 dark:hover:bg-green-900"
             )}
           >

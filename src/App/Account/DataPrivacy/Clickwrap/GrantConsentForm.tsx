@@ -80,7 +80,7 @@ export default function GrantConsentForm() {
 
   //== ***** ***** ***** Component Return ***** ***** ***** ==//
   return (
-    <div className="max-w-lg divide-y divide-zinc-300 rounded-lg bg-white px-6 pb-6 pt-3 shadow dark:divide-zinc-600 dark:bg-zinc-950">
+    <div className="w-full divide-y divide-zinc-300 rounded-lg bg-white px-6 pb-6 pt-3 shadow dark:divide-zinc-600 dark:bg-zinc-950">
       <h2 className="mb-2 flex w-full items-center justify-center font-semibold text-zinc-600 dark:text-zinc-100">
         User Agreements
       </h2>
@@ -97,11 +97,10 @@ export default function GrantConsentForm() {
               className="text-blue-600 underline dark:text-blue-400"
             >
               {CURRENT_AGREEMENTS.termsOfService.name}
-            </a>
-          </p>
-
-          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-            Effective: {CURRENT_AGREEMENTS.termsOfService.date}
+            </a>{" "}
+            <span className="text-sm font-normal italic text-zinc-500 dark:text-zinc-400">
+              (Effective: {CURRENT_AGREEMENTS.termsOfService.date})
+            </span>
           </p>
         </div>
 
@@ -129,11 +128,10 @@ export default function GrantConsentForm() {
               className="text-blue-600 underline dark:text-blue-400"
             >
               {CURRENT_AGREEMENTS.privacyStatement.name}
-            </a>
-          </p>
-
-          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-            Effective: {CURRENT_AGREEMENTS.privacyStatement.date}
+            </a>{" "}
+            <span className="text-sm font-normal italic text-zinc-500 dark:text-zinc-400">
+              (Effective: {CURRENT_AGREEMENTS.privacyStatement.date})
+            </span>
           </p>
         </div>
 
@@ -161,11 +159,10 @@ export default function GrantConsentForm() {
               className="text-blue-600 underline dark:text-blue-400"
             >
               {CURRENT_AGREEMENTS.cookiesPolicy.name}
-            </a>
-          </p>
-
-          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-            Effective: {CURRENT_AGREEMENTS.cookiesPolicy.date}
+            </a>{" "}
+            <span className="text-sm font-normal italic text-zinc-500 dark:text-zinc-400">
+              (Effective: {CURRENT_AGREEMENTS.cookiesPolicy.date})
+            </span>
           </p>
         </div>
 
@@ -201,7 +198,7 @@ export default function GrantConsentForm() {
 
       {/* START OF AGREEMENT STATEMENT AND BUTTON */}
       <div className="flex flex-row pt-3">
-        <div className="max-w-xs pr-2 text-sm text-zinc-600 dark:text-zinc-200">
+        <div className="w-full pr-2 text-sm text-zinc-600 dark:text-zinc-200">
           <p>
             By clicking "Agree" you agree to CHRT's{" "}
             <a

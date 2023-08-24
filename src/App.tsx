@@ -82,7 +82,11 @@ export default function App() {
   if (!isLoading && !isAuthenticated) {
     //-- For the '/' route, show the landing page --//
     if (window.location.pathname === "/") {
-      return <LandingPage />;
+      return (
+        <SiteContextProvider>
+          <LandingPage />
+        </SiteContextProvider>
+      );
     } else {
       //-- For protected routes, Outlet renders the AuthGuard component, redirecting users to sign in --//
       return <AppLayoutWithContexts />;

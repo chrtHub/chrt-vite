@@ -86,9 +86,9 @@ export default function AppLayout() {
   }
   let navigationItems: INavigationItem[] = [
     { name: "Home", to: "/", icon: HomeIcon },
+    { name: "ChrtGPT", to: "/gpt", icon: ChatBubbleLeftRightIcon },
     { name: "Journal", to: "/journal", icon: ChartBarSquareIcon },
     { name: "Journal Files", to: "/journal_files", icon: FolderIcon },
-    { name: "ChrtGPT", to: "/gpt", icon: ChatBubbleLeftRightIcon },
   ];
   const pathMatchForNavItems = pathname.match(/^\/([^/]+)/)?.[0] || "/";
 
@@ -379,48 +379,41 @@ export default function AppLayout() {
           id="app-layout-rhs-div"
           className="h-full overflow-y-auto overflow-x-hidden lg:pl-64"
         >
+          {/* START OF TOP BAR (hidden after lg) */}
+          <div id="spacer-for-top-bar" className="mt-12 lg:hidden" />
+          <div
+            className={classNames(
+              "absolute top-0 z-30 w-full lg:hidden",
+              "bg-zinc-50 dark:bg-zinc-900",
+              "border-b-2 border-b-zinc-300 dark:border-b-zinc-600"
+            )}
+          >
+            <div className="flex h-12 flex-row">
+              <button
+                type="button"
+                onClick={() => setMobileSidebarOpen(true)}
+                className="flex items-center justify-center px-4 text-zinc-400 hover:text-zinc-500 lg:hidden"
+              >
+                <Bars3BottomLeftIcon className="h-7 w-7" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+          {/* END OF TOP BAR (hidden after lg) */}
+
+          {/* START OF RHS */}
           <div
             id="app-layout-rhs-content"
             className="mx-auto flex h-full max-w-screen-2xl flex-col px-2 lg:pl-2 lg:pr-4"
           >
-            {/* START OF HAMBURGER BUTTON (hidden after lg) */}
-            <span className="sr-only">Open sidebar</span>
-            <button
-              type="button"
-              onClick={() => setMobileSidebarOpen(true)}
-              className={classNames(
-                pathname.startsWith("/gpt")
-                  ? classNames(
-                      "absolute bottom-0.5 left-0.5", //-- Top of screen for /gpt --//
-                      "h-14 w-14"
-                    )
-                  : classNames(
-                      "absolute bottom-1.5 left-1.5", //-- bottom of screen elsewhere --//
-                      "h-16 w-16"
-                    ),
-                "z-30",
-                "flex items-center justify-center rounded-lg p-2 shadow-sm lg:hidden",
-                "bg-zinc-600 text-white opacity-50 hover:bg-zinc-500",
-                "dark:bg-zinc-300 dark:text-zinc-900 dark:opacity-50",
-                "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-600"
-              )}
-            >
-              <Bars3BottomLeftIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
-            {/* END OF HAMBURGER BUTTON (hidden after lg) */}
-
-            {/* START OF MAIN */}
             <main id="app-layout-react-router-Outlet" className="h-full">
               {infoPagesMode && <InfoPagesNav />}
               <Outlet />
             </main>
-            {/* END OF MAIN */}
           </div>
+          {/* END OF RHS */}
         </div>
         {/* END OF RHS */}
       </div>
     </>
   );
 }
-
-// className=
