@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 //== NPM Components ==//
 import ReactPlayer from "react-player";
+import { useSiteContext } from "../../Context/SiteContext";
 
 //== Icons ==//
 import {
@@ -27,6 +28,8 @@ import {
 }
 
 export default function GettingStartedSteps() {
+  let SiteContext = useSiteContext();
+
   return (
     //-- pt instead of mt here prevents needless scrollable area --//
 
@@ -152,7 +155,11 @@ export default function GettingStartedSteps() {
       {/* START OF GETTING STARTED VIDEO  */}
       <div className="flex aspect-video flex-row items-center justify-center">
         <ReactPlayer
-          url="https://youtu.be/GXNyadBRp-g"
+          url={
+            SiteContext.theme === "dark"
+              ? "https://youtu.be/jD4-nc4aZGo" //-- Dark Mode --//
+              : "https://youtu.be/zE_c5r-3gNQ" //-- Light Mode --//
+          }
           width="100%"
           height="100%"
         />
