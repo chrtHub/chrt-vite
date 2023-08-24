@@ -1,11 +1,11 @@
 //== react, react-router-dom, Auth0 ==//
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 //== TSX Components, Functions ==//
 
 //== NPM Components ==//
 import ReactPlayer from "react-player";
-import { useSiteContext } from "../../Context/SiteContext";
 
 //== Icons ==//
 import {
@@ -28,7 +28,30 @@ import {
 }
 
 export default function GettingStartedSteps() {
-  let SiteContext = useSiteContext();
+  //-- Detect theme value (a) set in localStorage, or (b) from OS theme --//
+  let dark = false;
+  if (
+    localStorage.theme === "dark" ||
+    (!("theme" in localStorage) &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches)
+  ) {
+    dark = true;
+  }
+  const [darkMode, setDarkMode] = useState(dark);
+
+  //-- Listed for OS theme changes --//
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", ({ matches }) => {
+      //-- Only react to OS theme changes if no 'theme' value is set in localStorage --//
+      if (!("theme" in localStorage)) {
+        if (matches) {
+          setDarkMode(true);
+        } else {
+          setDarkMode(false);
+        }
+      }
+    });
 
   return (
     //-- pt instead of mt here prevents needless scrollable area --//
@@ -156,7 +179,7 @@ export default function GettingStartedSteps() {
       <div className="flex aspect-video flex-row items-center justify-center">
         <ReactPlayer
           url={
-            SiteContext.theme === "dark"
+            darkMode
               ? "https://youtu.be/jD4-nc4aZGo" //-- Dark Mode --//
               : "https://youtu.be/zE_c5r-3gNQ" //-- Light Mode --//
           }
