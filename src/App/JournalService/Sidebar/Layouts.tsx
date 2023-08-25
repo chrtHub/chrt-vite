@@ -76,7 +76,7 @@ export default function Layouts() {
   return (
     <div className="flex h-full flex-col items-center justify-start rounded-lg dark:text-zinc-200">
       {/* START OF SAVE LAYOUT */}
-      <div className="w-full">
+      {/* <div className="w-full">
         {JC.unsavedLayoutsChanges ? (
           <button
             onClick={() => {
@@ -103,7 +103,7 @@ export default function Layouts() {
             <CloudCheckReactIcon className="h-5 w-5" />
           </div>
         )}
-      </div>
+      </div> */}
       {/* END OF SAVE LAYOUT */}
 
       {/* START OF NARROW MODE */}
@@ -215,7 +215,7 @@ export default function Layouts() {
       {/* START OF TOGGLES */}
       <div className="mt-2 flex flex-row">
         {/* START OF CHRT LAYOUTS TOGGLE */}
-        <div className="flex w-full flex-row gap-x-1.5">
+        {/* <div className="flex w-full flex-row gap-x-1.5">
           <div className="flex flex-col items-center justify-center">
             <Switch
               checked={chrtLayoutsEnabled}
@@ -226,16 +226,18 @@ export default function Layouts() {
                 aria-hidden="true"
                 className="pointer-events-none absolute h-full w-full rounded-md"
               />
-              {/* Toggle Slide Area */}
+
               <span
+                //-- Toggle Slide Area --//
                 aria-hidden="true"
                 className={classNames(
                   chrtLayoutsEnabled ? "bg-green-600" : "bg-zinc-200",
                   "pointer-events-none absolute mx-auto h-4 w-9 rounded-full transition-colors duration-200 ease-in-out"
                 )}
               />
-              {/* Toggle Knob */}
+
               <span
+                //-- Toggle Knob --//
                 aria-hidden="true"
                 className={classNames(
                   chrtLayoutsEnabled ? "translate-x-5" : "translate-x-0",
@@ -245,11 +247,11 @@ export default function Layouts() {
             </Switch>
           </div>
           <p className="text-sm font-medium">CHRT Layouts</p>
-        </div>
+        </div> */}
         {/* END OF CHRT LAYOUTS TOGGLE */}
 
         {/* START OF CUSTOM LAYOUTS TOGGLE */}
-        <div className="flex w-full flex-row gap-x-1.5">
+        {/* <div className="flex w-full flex-row gap-x-1.5">
           <div className="flex flex-col items-center justify-center">
             <Switch
               checked={customLayoutsEnabled}
@@ -260,16 +262,16 @@ export default function Layouts() {
                 aria-hidden="true"
                 className="pointer-events-none absolute h-full w-full rounded-md"
               />
-              {/* Toggle Slide Area */}
               <span
+                //-- Toggle Slide Area --//
                 aria-hidden="true"
                 className={classNames(
                   customLayoutsEnabled ? "bg-green-600" : "bg-zinc-200",
                   "pointer-events-none absolute mx-auto h-4 w-9 rounded-full transition-colors duration-200 ease-in-out"
                 )}
               />
-              {/* Toggle Knob */}
               <span
+                //-- Toggle Knob --//
                 aria-hidden="true"
                 className={classNames(
                   customLayoutsEnabled ? "translate-x-5" : "translate-x-0",
@@ -279,7 +281,7 @@ export default function Layouts() {
             </Switch>
           </div>
           <p className="break-words text-sm font-medium">Custom Layouts</p>
-        </div>
+        </div> */}
         {/* END OF CUSTOM LAYOUTS TOGGLE */}
       </div>
       {/* END OF TOGGLES */}
