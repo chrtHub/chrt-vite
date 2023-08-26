@@ -400,7 +400,7 @@ export default function AppLayout() {
           </div>
           {/* END OF TOP BAR (hidden after lg) */}
 
-          {/* START OF RHS */}
+          {/* START OF RHS CONTENT */}
           <div
             id="app-layout-rhs-content"
             className="mx-auto flex h-full max-w-screen-2xl flex-col px-2 lg:pl-2 lg:pr-4"
@@ -410,7 +410,7 @@ export default function AppLayout() {
               <Outlet />
             </main>
           </div>
-          {/* END OF RHS */}
+          {/* END OF RHS CONTENT */}
         </div>
         {/* END OF RHS */}
       </div>
