@@ -1,6 +1,9 @@
 # :file_folder: React SPA repo
 
-- This repo is for a React SPA (Single-Page Application) available at [chrt.com](https://chrt.com)
+- This repo is for a React SPA (Single-Page Application) that was available at [chrt.com](https://chrt.com)
+- Demo
+  - [Dark Mode](https://www.youtube.com/watch?v=PW_yyotQSdE)
+  - [Light Mode](https://www.youtube.com/watch?v=eKPZmSY25zA)
 
 ### Dev Links
 
